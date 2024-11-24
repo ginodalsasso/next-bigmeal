@@ -1,0 +1,14 @@
+model Meal {
+    id                String         @id @default(auto()) @map("_id") @db.ObjectId
+    
+    name              String         @unique
+    description       String?
+
+    categoryMealId    String         @db.ObjectId
+    categoryMeal      CategoryMeal   @relation(fields: [categoryMealId], references: [id])
+
+    compositions      Composition[]
+    shoppingListItems ShoppingList[]
+
+    @@index([categoryMealId])
+}

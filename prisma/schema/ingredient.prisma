@@ -1,0 +1,14 @@
+model Ingredient {
+    id                   String             @id @default(auto()) @map("_id") @db.ObjectId
+    
+    name                 String             @unique
+    season               String?
+
+    categoryIngredientId String             @db.ObjectId
+    categoryIngredient   CategoryIngredient @relation(fields: [categoryIngredientId], references: [id])
+
+    compositions         Composition[]
+    shoppingListItems    ShoppingList[]
+
+    @@index([categoryIngredientId])
+}
