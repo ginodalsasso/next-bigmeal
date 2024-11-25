@@ -8,22 +8,21 @@ import "./globals.css";
 //   weight: "100 900",
 // });
 
-
 export const metadata: Metadata = {
-  title: "Big Meal App",
-  description: "A simple meal app",
+    title: "Big Meal App",
+    description: "A simple meal app",
 };
 
 export default function RootLayout({
-  children,
+    children,
 }: Readonly<{
-  children: React.ReactNode;
+    children: React.ReactNode;
 }>) {
-  return (
-    <html lang="en">
-      <body>
-        {children}
-      </body>
-    </html>
-  );
+    return (
+        <html lang="en">
+            <body>
+                <main>{children}</main>
+            </body>
+        </html>
+    );
 }

@@ -1,8 +1,15 @@
+enum Season {
+    SPRING
+    SUMMER
+    FALL
+    WINTER
+}
+
 model Ingredient {
     id                   String             @id @default(auto()) @map("_id") @db.ObjectId
     
     name                 String             @unique
-    season               String?
+    season               Season?
 
     categoryIngredientId String             @db.ObjectId
     categoryIngredient   CategoryIngredient @relation(fields: [categoryIngredientId], references: [id])

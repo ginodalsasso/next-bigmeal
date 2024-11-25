@@ -1,10 +1,19 @@
+enum Unit {
+    GRAM
+    KILOGRAM
+    LITER
+    CENTILITER
+    MILLILITER
+    PIECE
+}
+
 model Composition {
     id           String @id @default(auto()) @map("_id") @db.ObjectId
     ingredientId String @db.ObjectId
     mealId       String @db.ObjectId
     
     quantity     Float  @default(0.0)
-    unit         String
+    unit         Unit
 
     ingredient Ingredient @relation(fields: [ingredientId], references: [id])
     meal       Meal       @relation(fields: [mealId], references: [id])
