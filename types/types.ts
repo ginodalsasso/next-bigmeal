@@ -1,18 +1,18 @@
 // ENUMS
 enum IngredientUnit {
-    GRAM = "GRAM",
-    KILOGRAM = "KILOGRAM",
-    LITER = "LITER",
-    CENTILITER = "CENTILITER",
-    MILLILITER = "MILLILITER",
-    PIECE = "PIECE",
+    GRAM = "gramme",
+    KILOGRAM = "kilogramme",
+    LITER = "litre",
+    CENTILITER = "centilitre",
+    MILLILITER = "millilitre",
+    PIECE = "pièce",
 }
 
 enum Season {
-    SPRING = "SPRING",
-    SUMMER = "SUMMER",
-    FALL = "FALL",
-    WINTER = "WINTER",
+    SPRING = "printemps",
+    SUMMER = "été",
+    FALL = "automne",
+    WINTER = "hiver",
 }
 
 
