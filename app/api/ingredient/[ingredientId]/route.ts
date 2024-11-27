@@ -10,7 +10,12 @@ export async function GET(req: NextRequest, { params }: { params: { ingredientId
                 id: ingredientId
             },
             include: {
-                categoryIngredient: true
+                categoryIngredient: true,
+                compositions: {
+                    include: {
+                        meal: true, 
+                    },
+                },
             }
         });
 

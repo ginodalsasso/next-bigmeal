@@ -16,7 +16,7 @@ enum Season {
 }
 
 
-// INTERFACES TYPES
+// TYPES SCHEMA
 interface CategoryIngredientType {
     id: string;
     name: string;
@@ -111,3 +111,5 @@ interface UserType {
     // Relation One-to-Many 
     shoppingListItems: ShoppingListType[];
 }
+
+
