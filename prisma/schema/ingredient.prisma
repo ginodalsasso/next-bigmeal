@@ -1,8 +1,8 @@
 enum Season {
-    SPRING
-    SUMMER
-    FALL
-    WINTER
+    SPRING @map("printemps")
+    SUMMER @map("été")
+    FALL  @map("automne")
+    WINTER @map("hiver")
 }
 
 model Ingredient {
