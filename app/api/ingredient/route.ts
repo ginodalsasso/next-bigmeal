@@ -13,11 +13,11 @@ export async function GET() {
                 categoryIngredient: true // Inclure la catégorie
             }
         }); 
-        return NextResponse.json(ingredients);
+        return NextResponse.json(ingredients, {status: 200}); 
 
     } catch(error) {
-        console.log("[INGREDIENTS]", error); // Afficher l'erreur dans la console
-        return new NextResponse("Internal Error", {status: 500 }); // Retourner une erreur 500
+        console.log("[INGREDIENTS]", error); 
+        return new NextResponse("Internal Error", {status: 500 });
     }
 }
 

@@ -15,22 +15,9 @@ export async function POST(req: NextRequest) {
             },
         });
 
-        return NextResponse.json(newIngredient, {
-            status: 201,
-            headers: {
-                "Content-Type": "application/json",
-            },
-        });
+        return NextResponse.json(newIngredient, {status: 201});
     } catch (error) {
         console.error("[CREATE_INGREDIENT_ERROR]", error);
-        return NextResponse.json(
-            { error: "Internal server error" },
-            {
-                status: 500,
-                headers: {
-                    "Content-Type": "application/json",
-                },
-            }
-        );
+        return new NextResponse("Internal Error", {status: 500 });
     }
 }

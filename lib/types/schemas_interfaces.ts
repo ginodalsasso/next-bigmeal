@@ -1,23 +1,8 @@
-// ENUMS
-enum IngredientUnit {
-    GRAM = "gramme",
-    KILOGRAM = "kilogramme",
-    LITER = "litre",
-    CENTILITER = "centilitre",
-    MILLILITER = "millilitre",
-    PIECE = "pièce",
-}
-
-enum Season {
-    SPRING = "printemps",
-    SUMMER = "été",
-    FALL = "automne",
-    WINTER = "hiver",
-}
+import { IngredientUnit, Season } from './enums.ts';
 
 
 // TYPES SCHEMA
-interface CategoryIngredientType {
+export interface CategoryIngredientType {
     id: string;
     name: string;
 
@@ -26,7 +11,7 @@ interface CategoryIngredientType {
 }
 
 
-interface CategoryMealType {
+export interface CategoryMealType {
     id: string;
     name: string; 
 
@@ -35,7 +20,7 @@ interface CategoryMealType {
 }
 
 
-interface IngredientType {
+export interface IngredientType {
     id: string; 
     name: string; 
     season?: Season; 
@@ -52,7 +37,7 @@ interface IngredientType {
 }
 
 
-interface MealType {
+export interface MealType {
     id: string; 
     name: string; 
     description?: string; 
@@ -69,7 +54,7 @@ interface MealType {
 }
 
 
-interface CompositionType {
+export interface CompositionType {
     id: string;
     ingredientId: string; // Clé étrangère
     mealId: string; // Clé étrangère
@@ -83,7 +68,7 @@ interface CompositionType {
 }
 
 
-interface ShoppingListType {
+export interface ShoppingListType {
     id: string; 
     userId: string; // Clé étrangère
     ingredientId?: string; // Clé étrangère optionnelle
@@ -101,7 +86,7 @@ interface ShoppingListType {
 }
 
 
-interface UserType {
+export interface UserType {
     id: string; 
     username: string; 
     password: string;
@@ -111,5 +96,3 @@ interface UserType {
     // Relation One-to-Many 
     shoppingListItems: ShoppingListType[];
 }
-
-

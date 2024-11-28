@@ -3,14 +3,10 @@
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { z } from "zod";
+import { Season } from "@/lib/types/enums";
+import { CategoryIngredientType } from "@/lib/types/schemas_interfaces";
+import { IngredientFormErrorType, IngredientFormType } from "@/lib/types/forms_interfaces";
 
-
-enum Season {
-    SPRING = "SPRING",
-    SUMMER = "SUMMER",
-    FALL = "FALL",
-    WINTER = "WINTER",
-}
 
 // CONTRAINTES DE VALIDATION
 const ingredientConstraints = z.object({
@@ -18,22 +14,6 @@ const ingredientConstraints = z.object({
     season: z.nativeEnum(Season).nullable(),
     categoryIngredientId: z.string().min(1, "Une catégorie est obligatoire"),
 });
-
-
-// TYPES FORMULAIRES
-interface IngredientFormType {
-    name: string;
-    season: Season | null;
-    categoryIngredientId: string;
-}
-
-interface IngredientFormErrorType {
-    id?: string;
-    name?: string;
-    season?: string | null;
-    categoryIngredientId?: string;
-}
-
 
 const CreateIngredientPage = () => {
     const [form, setForm] = useState<IngredientFormType>({
@@ -152,7 +132,7 @@ const CreateIngredientPage = () => {
             {/* Sélection pour la catégorie */}
             <select
                 value={form.categoryIngredientId}
-                onChange={(e) => setForm({ ...form, categoryIngredientId: e.target.value })}
+                onChange={(e) => setForm({ ...form, categoryIngredientId: e.target.value })} 
                 className="border border-gray-300 p-2 rounded text-black mx-auto w-[90%]"
                 required
             >
