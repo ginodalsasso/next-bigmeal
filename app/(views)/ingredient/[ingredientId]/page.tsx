@@ -2,6 +2,8 @@
 
 import React, { useEffect, useState } from "react";
 
+import { IngredientType } from "@/lib/types/schemas_interfaces";
+
 const IngredientDetailPage = ({ params }: { params: Promise<{ ingredientId: string }> }) => {
 
     const [ingredient, setIngredient] = useState<IngredientType | null>(null);

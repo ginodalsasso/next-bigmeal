@@ -1,8 +1,9 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { z } from "zod";
+
 import { Season } from "@/lib/types/enums";
 import { CategoryIngredientType } from "@/lib/types/schemas_interfaces";
 import { IngredientFormErrorType, IngredientFormType } from "@/lib/types/forms_interfaces";
@@ -10,24 +11,35 @@ import { IngredientFormErrorType, IngredientFormType } from "@/lib/types/forms_i
 
 // CONTRAINTES DE VALIDATION
 const ingredientConstraints = z.object({
-    name: z.string().min(3, "Le nom doit comporter au moins 3 caractères").max(255),
-    season: z.nativeEnum(Season).nullable(),
-    categoryIngredientId: z.string().min(1, "Une catégorie est obligatoire"),
+    name: 
+        z.string().
+        min(3, "Le nom doit comporter au moins 3 caractères").
+        max(100, "Le nom doit comporter au maximum 100 caractères").
+        toLowerCase().
+        trim(),
+    season: 
+        z.nativeEnum(Season).
+        nullable(). 
+        optional(). 
+        default(null),
+    categoryIngredientId: 
+        z.string().
+        min(1, "Une catégorie est obligatoire"),
 });
 
 const CreateIngredientPage = () => {
+    
+    const router = useRouter();
+    const [categories, setCategories] = useState<CategoryIngredientType[]>([]);
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState<IngredientFormErrorType>({});
     const [form, setForm] = useState<IngredientFormType>({
         name: "",
         season: null,
         categoryIngredientId: "",
     });
 
-    const [categories, setCategories] = useState<CategoryIngredientType[]>([]);
-    const [error, setError] = useState<IngredientFormErrorType>({});
-    const [isLoading, setIsLoading] = useState(false);
-    const router = useRouter();
-
-    // Charger les catégories d'ingrédients
+    // Appel API pour récupérer les catégories d'ingrédients
     useEffect(() => {
         const fetchCategories = async () => {
             try {
@@ -44,7 +56,7 @@ const CreateIngredientPage = () => {
         fetchCategories();
     }, []);
 
-    
+    // Appel API pour créer un ingrédient
     const createIngredient = async (data: IngredientFormType) => {
         try {
             const response = await fetch("/api/ingredient/crud", {
@@ -62,7 +74,7 @@ const CreateIngredientPage = () => {
         }
     };
     
-
+    // Gestion de la soumission du formulaire
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsLoading(true);
@@ -98,8 +110,8 @@ const CreateIngredientPage = () => {
             <input
                 type="text"
                 placeholder="Nom de l'ingrédient"
-                value={form.name}
-                onChange={(e) => setForm({ ...form, name: e.target.value })}
+                value={form.name} 
+                onChange={(e) => setForm({ ...form, name: e.target.value })} 
                 className="border border-gray-300 p-2 rounded text-black mx-auto w-[90%]"
                 required
             />

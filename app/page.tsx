@@ -1,9 +1,21 @@
+import Link from "next/link";
+
+const links = [
+    { title: "ingredients", url: "/ingredient" },
+    { title: "creer ingredient", url: "/ingredient/create" },
+];
 
 export default function Home() {
     return (
         <div className="">
             <main className="">
-                <p>YYOYOOO</p>
+                {links.map((link) =>
+                    <Link key={link.title} href={link.url}>
+                        <div className="mr-5 cursor-pointer hover:text-gray-900">
+                            {link.title}
+                        </div>
+                    </Link>
+                )}
             </main>
         </div>
     );

@@ -1,7 +1,9 @@
 'use client' 
 
 import React, { useEffect, useState } from "react";
+
 import IngredientCard from "./_components/IngredientCard";
+import { IngredientType } from "@/lib/types/schemas_interfaces";
 
 const IngredientPage = () => {
     const [ingredients, setIngredients] = useState<IngredientType[]>([]); 

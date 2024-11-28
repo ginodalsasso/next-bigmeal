@@ -1,8 +1,6 @@
 import Link from "next/link";
 import React from "react";
-// import { formatDate } from "@/lib/utils"
-// import Button from "./Button";
-// import DeleteArticle from "@/app/article/[articleId]/delete/page";
+import { IngredientType } from "@/lib/types/schemas_interfaces";
 
 interface IngredientCardProps {
     ingredient: IngredientType; 
