@@ -1,22 +1,22 @@
 import { db } from "@/lib/db";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(req: NextRequest, { params }: { params: { ingredientId: string } }) {
-    const { ingredientId } = params;
+export async function GET(req: NextRequest, context: { params: { ingredientId: string } }) {
+    const { ingredientId } = context.params; 
 
     try {
         const ingredient = await db.ingredient.findUnique({
             where: {
-                id: ingredientId
+                id: ingredientId,
             },
             include: {
                 categoryIngredient: true,
                 compositions: {
                     include: {
-                        meal: true, 
+                        meal: true,
                     },
                 },
-            }
+            },
         });
 
         if (!ingredient) {
@@ -24,7 +24,6 @@ export async function GET(req: NextRequest, { params }: { params: { ingredientId
         }
 
         return NextResponse.json(ingredient);
-
     } catch (error) {
         console.log("[INGREDIENT]", error);
         return new NextResponse("Internal Error", { status: 500 });
