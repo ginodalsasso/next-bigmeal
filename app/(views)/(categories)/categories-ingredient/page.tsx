@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { CategoryIngredientType } from "@/lib/types/schemas_interfaces";
-import CategoryForm from "./_components/CategoryForm";
+import CategoryForm from "../_components/CategoryForm";
 
 const CategoryIngredientPage = () => {
     const [categoryIngredient, setCategoryIngredient] = useState<CategoryIngredientType[]>([]); 
@@ -56,11 +56,10 @@ const CategoryIngredientPage = () => {
     
     return (
         <div>
-            <h1>Liste des Catégories d&apos;Ingrédients</h1>
-
             {/* Composant de création */}
             <CategoryForm onAddCategory={addCategoryIngredient} />
 
+            <h1>Liste des catégories d&apos;ingrédients</h1>
             {/* Afficher les catégories existantes */}
             <div className="mt-6">
                 {categoryIngredient.map((category) => (
