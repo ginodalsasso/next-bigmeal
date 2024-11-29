@@ -9,7 +9,7 @@ export async function GET() {
         return NextResponse.json(categoryIngredient);
 
     } catch(error) {
-        console.log("[INGREDIENTS]", error); // Afficher l'erreur dans la console
+        console.log("[CATEGORY INGREDIENT]", error); // Afficher l'erreur dans la console
         return new NextResponse("Internal Error", {status: 500 }); // Retourner une erreur 500
     }
 }

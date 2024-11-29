@@ -14,7 +14,7 @@ const IngredientPage = () => {
     useEffect(() => {
         const fetchIngredients = async () => {
             try{
-                const response = await fetch('/api/ingredient');
+                const response = await fetch('/api/ingredients');
                 if (!response.ok) {
                     throw new Error('Failed to fetch ingredients');
                 }

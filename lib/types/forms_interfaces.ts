@@ -14,3 +14,7 @@ export interface IngredientFormErrorType {
     season?: string | null;
     categoryIngredientId?: string;
 }
+
+export interface CategoryFormErrorType {
+    name: string;
+}

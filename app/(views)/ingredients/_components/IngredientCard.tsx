@@ -10,7 +10,7 @@ const IngredientCard:React.FC<IngredientCardProps> = ({ ingredient }) => {
 
     return (
         <Link 
-            href={`/ingredient/${ingredient.id}`} 
+            href={`/ingredients/${ingredient.id}`} 
             >
             <div
                 key={ingredient.id}

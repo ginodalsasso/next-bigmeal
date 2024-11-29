@@ -16,7 +16,7 @@ const IngredientDetailPage = ({ params }: { params: Promise<{ ingredientId: stri
             try {
                 const resolvedParams = await params;
                 
-                const response = await fetch(`/api/ingredient/${resolvedParams.ingredientId}`);
+                const response = await fetch(`/api/ingredients/${resolvedParams.ingredientId}`);
                 
                 if (!response.ok) {
                     throw new Error("Failed to fetch ingredient");

@@ -1,8 +1,11 @@
 import Link from "next/link";
 
 const links = [
-    { title: "ingredients", url: "/ingredient" },
+    { title: "ingredients", url: "/ingredients" },
     { title: "creer ingredient", url: "/ingredient/create" },
+    { title: "catégorie ingrédient", url: "/categories-ingredient" },
+    { title: "creer catégorie ingrédient", url: "/categories-ingredient/create" },
+
 ];
 
 export default function Home() {

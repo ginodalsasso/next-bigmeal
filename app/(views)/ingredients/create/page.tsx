@@ -43,9 +43,9 @@ const CreateIngredientPage = () => {
     useEffect(() => {
         const fetchCategories = async () => {
             try {
-                const response = await fetch("/api/categoryIngredient");
+                const response = await fetch("/api/categories-ingredient");
                 if (!response.ok) {
-                    throw new Error("Erreur lors de la récupération des catégories");
+                    throw new Error("Erreur lors de la récupération des categories-ingredient");
                 }
                 const data: CategoryIngredientType[] = await response.json();
                 setCategories(data);
@@ -59,7 +59,7 @@ const CreateIngredientPage = () => {
     // Appel API pour créer un ingrédient
     const createIngredient = async (data: IngredientFormType) => {
         try {
-            const response = await fetch("/api/ingredient/crud", {
+            const response = await fetch("/api/ingredients/crud", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(data),
@@ -94,7 +94,7 @@ const CreateIngredientPage = () => {
         // Créer l'ingrédient avec les données du formulaire
         try {
             await createIngredient(form);
-            router.push("/ingredient");
+            router.push("/ingredients");
         } catch (error) {
             console.error("[CREATE_INGREDIENT]", error);
         } finally {
