@@ -19,6 +19,15 @@ export interface CategoryMealType {
     meals: MealType[];
 }
 
+export interface CategoryType {
+    id: string;
+    name: string;
+
+    // Relation One-to-Many
+    ingredients: IngredientType[];
+    meals: MealType[];
+}
+
 
 export interface IngredientType {
     id: string; 

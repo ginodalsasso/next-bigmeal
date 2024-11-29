@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 
 import { CategoryMealType } from "@/lib/types/schemas_interfaces";
 import CategoryForm from "../_components/CategoryForm";
+import CategoryCard from "../_components/CategoryCard";
 
 
 const CategoryMealPage = () => {
@@ -64,9 +65,7 @@ const CategoryMealPage = () => {
             {/* Afficher les catégories existantes */}
             <div className="mt-6">
                 {categoryMeal.map((category) => (
-                    <div key={category.id} className="border-b p-2">
-                        <h2>{category.name}</h2>
-                    </div>
+                    <CategoryCard<CategoryMealType> key={category.id} category={category} />
                 ))}
             </div>
         </div>
