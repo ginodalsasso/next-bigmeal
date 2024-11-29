@@ -1,26 +1,18 @@
 import { CategoryFormErrorType } from "@/lib/types/forms_interfaces";
 import React, { useState } from "react";
 
-import { z } from "zod";
+import { categoriesConstraints } from "@/lib/types/forms_constraints";
 
-// CONTRAINTES DE VALIDATION
-const categoriesConstraints = z.object({
-    name: 
-        z.string().
-        min(3, "Le nom doit comporter au moins 3 caractères").
-        max(100, "Le nom doit comporter au maximum 100 caractères").
-        toLowerCase().
-        trim(),
-});
 
 type CategoryFormProps = { onAddCategory: (name: string) => Promise<void>; };
 
 const CategoryForm: React.FC<CategoryFormProps> = ({ onAddCategory }) => {
     const [newCategoryName, setNewCategoryName] = useState('');
-    const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState<CategoryFormErrorType>({ name: '' });
 
+    const [isLoading, setIsLoading] = useState(false); // Indicateur de chargement
+    const [error, setError] = useState<CategoryFormErrorType>({ name: '' }); // Gestion des erreurs
 
+// Gestion de la soumission du formulaire de creation de catégorie
 const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
@@ -46,7 +38,6 @@ const handleSubmit = async (e: React.FormEvent) => {
         setIsLoading(false);
     }
 };
-
 
     return (
         <div className="mt-4 p-4 border rounded-lg">

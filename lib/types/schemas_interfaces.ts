@@ -24,8 +24,8 @@ export interface CategoryType {
     name: string;
 
     // Relation One-to-Many
-    ingredients: IngredientType[];
-    meals: MealType[];
+    ingredients?: IngredientType[];
+    meals?: MealType[];
 }
 
 

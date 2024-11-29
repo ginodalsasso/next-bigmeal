@@ -19,3 +19,30 @@ export async function POST(req: NextRequest) {
         return new NextResponse("Internal Error", {status: 500 });
     }
 }
+    
+
+export async function PUT (req: NextRequest) {
+    try {
+        const { id, name } = await req.json(); 
+        const updatedArticle = await db.categoryIngredient.update({
+            where: { id },
+            data: { 
+                name, 
+            },
+        });
+        return NextResponse.json(updatedArticle);
+    } catch (error) {
+        console.error("[UPDATE_CATEGORY_INGREDIENT_ERROR]", error);
+    }
+}
+
+export async function DELETE (req: NextRequest) {
+    try {
+        const { id } = await req.json();
+        await db.categoryIngredient.delete({ where: { id } }); 
+        return NextResponse.json({ message: "Catégorie supprimé" });
+    } catch (error) {
+        console.error("[DELETE_CATEGORY_INGREDIENT_ERROR]", error);
+    }
+}
+
