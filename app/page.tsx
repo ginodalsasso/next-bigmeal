@@ -2,9 +2,9 @@ import Link from "next/link";
 
 const links = [
     { title: "ingredients", url: "/ingredients" },
-    { title: "creer ingredient", url: "/ingredient/create" },
+    { title: "creer ingredient", url: "/ingredients/create" },
     { title: "catégorie ingrédient", url: "/categories-ingredient" },
-    { title: "creer catégorie ingrédient", url: "/categories-ingredient/create" },
+    { title: "catégorie repas", url: "/categories-meal" },
 
 ];
 

@@ -22,10 +22,6 @@ export interface CategoryMealType {
 export interface CategoryType {
     id: string;
     name: string;
-
-    // Relation One-to-Many
-    ingredients?: IngredientType[];
-    meals?: MealType[];
 }
 
 

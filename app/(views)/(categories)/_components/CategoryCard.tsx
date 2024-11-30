@@ -2,6 +2,7 @@ import { useState } from "react";
 import CategoryEditForm from "./CategoryEditForm";
 import CategoryView from "./CategoryView";
 import { CategoryType } from "@/lib/types/schemas_interfaces";
+import { categoriesConstraints } from "@/lib/types/forms_constraints";
 
 type CategoryCardProps<T extends CategoryType> = {
     category: T;
@@ -16,14 +17,23 @@ const CategoryCard = <T extends CategoryType>({
 }: CategoryCardProps<T>) => {
     const [isEditing, setIsEditing] = useState(false); // État pour basculer entre lecture et édition
     const [isDeleting, setIsDeleting] = useState(false); // Indicateur de chargement pour la suppression
-    
+
     const [isLoading, setIsLoading] = useState(false); // Indicateur de chargement pour la mise à jour
     const [error, setError] = useState<string | null>(null); // Gestion des erreurs
 
     // Gestion de la soumission du formulaire d'édition de catégorie
-    const handleEditSubmit = async (newName: string) => {
+    const handleEdit = async (newName: string) => {
         setIsLoading(true);
         setError(null);
+    
+        // Valider les données du formulaire
+        const validationResult = categoriesConstraints.safeParse({ name: newName }); 
+        if (!validationResult.success) {
+            const formattedErrors = validationResult.error.format();
+            setError(formattedErrors.name?._errors[0] || 'Erreur inconnue');
+            setIsLoading(false);
+            return;
+        }
 
         try {
             await onUpdateCategory(category.id, newName);
@@ -64,7 +74,7 @@ const CategoryCard = <T extends CategoryType>({
             ) : (
                 <CategoryEditForm
                     initialName={category.name}
-                    onSubmit={handleEditSubmit}
+                    onSubmit={handleEdit}
                     onCancel={() => setIsEditing(false)}
                     isLoading={isLoading}
                     error={error}

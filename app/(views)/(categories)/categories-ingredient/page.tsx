@@ -30,9 +30,9 @@ const CategoryIngredientPage = () => {
         fetchCategoryIngredient();
     }, []); 
 
-    // Ajouter une catégorie
+    // Appel API pour ajouter une catégorie
     const createCategoryIngredient = async (name: string) => {
-        const response = await fetch('/api/categories-ingredient/crud', {
+        const response = await fetch('/api/categories-ingredient', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -51,7 +51,7 @@ const CategoryIngredientPage = () => {
     // Appel API pour mettre à jour une catégorie
     const updateCategoryIngredient = async (id: string, newName: string) => {
         try {
-            const response = await fetch('/api/categories-ingredient/crud', {
+            const response = await fetch('/api/categories-ingredient', {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -78,7 +78,7 @@ const CategoryIngredientPage = () => {
     // Appel API pour supprimer une catégorie
     const deleteCategoryIngredient = async (id: string) => {
         try {
-            const response = await fetch('/api/categories-ingredient/crud', {
+            const response = await fetch('/api/categories-ingredient', {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
@@ -99,11 +99,14 @@ const CategoryIngredientPage = () => {
 
     if (loading) return <div>Loading...</div>;
     if (error) return <div>{error}</div>;
+    if (!categoryIngredient) return <div>Catégorie de repas introuvables.</div>;
 
     return (
         <div>
+            {/* Composant de création */}
             <CategoryForm onAddCategory={createCategoryIngredient} />
             <h1>Liste des catégories d&apos;ingrédients</h1>
+            {/* Afficher les catégories existantes */}
             <div className="mt-6">
                 {categoryIngredient.map((category) => (
                     <CategoryCard<CategoryIngredientType> 
