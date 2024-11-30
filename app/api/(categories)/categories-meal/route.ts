@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
+import { categoriesConstraints, idConstraints } from "@/lib/types/forms_constraints";
+import { z } from "zod";
+
 
 
 export async function GET() {
@@ -8,40 +11,66 @@ export async function GET() {
 
         return NextResponse.json(categoryMeal, {status: 200});
     } catch(error) {
-        console.log("[CATEGORY MEAL]", error); 
-        return new NextResponse("Internal Error", {status: 500 }); 
+        console.log("[CATEGORY INGREDIENT]", error); 
+        return new NextResponse("Internal Error", {status: 500 });
     }
 }
+
 
 export async function POST(req: NextRequest) {
     try {
         const body = await req.json();
-        const { name } = body;
 
-        const newCategoryMeal = await db.categoryMeal.create({
-            data: {
-                name,
-            },
+        // Valider les données avec Zod
+        const validationResult = categoriesConstraints.safeParse(body);
+
+        if (!validationResult.success) {
+            return NextResponse.json(
+                { error: validationResult.error.format() }, 
+                { status: 400 }
+            );
+        }
+
+        const { name } = validationResult.data;
+
+        const newcategoryMeal = await db.categoryMeal.create({
+            data: { name },
         });
 
-        return NextResponse.json(newCategoryMeal, {status: 201});
+        return NextResponse.json(newcategoryMeal, { status: 201 });
     } catch (error) {
         console.error("[CREATE_CATEGORY_MEAL_ERROR]", error);
         return new NextResponse("Internal Error", {status: 500 });
     }
 }
 
-export async function PUT (req: NextRequest) {
-    try {
-        const { id, name } = await req.json(); 
-        const updatedArticle = await db.categoryMeal.update({
-            where: { id },
-            data: { 
-                name, 
-            },
-        });
 
-        return NextResponse.json(updatedArticle, {status: 201});
+    
+export async function PUT(req: NextRequest) {
+
+        try {
+            const body = await req.json();
+    
+            // Valider et nettoyer les données
+            const validationResult = categoriesConstraints.extend({
+                id: z.string(),
+            }).safeParse(body);
+    
+            if (!validationResult.success) {
+                return NextResponse.json(
+                    { error: validationResult.error.format() },
+                    { status: 400 }
+                );
+            }
+    
+            const { id, name } = validationResult.data; 
+    
+            const updatedCategory = await db.categoryMeal.update({
+                where: { id },
+                data: { name },
+            });
+    
+            return NextResponse.json(updatedCategory, { status: 200 });
     } catch (error) {
         console.error("[UPDATE_CATEGORY_MEAL_ERROR]", error);
         return new NextResponse("Internal Error", {status: 500 });
@@ -51,13 +80,24 @@ export async function PUT (req: NextRequest) {
 
 export async function DELETE (req: NextRequest) {
     try {
-        const { id } = await req.json();
+        const body = await req.json();
 
-        await db.categoryMeal.delete({ where: { id } }); 
+        const validationResult = idConstraints.safeParse(body);
 
-        return NextResponse.json({ message: "Catégorie supprimé" }, {status: 200});
+        if (!validationResult.success) {
+            return NextResponse.json(
+                { error: validationResult.error.format() },
+                { status: 400 }
+            );
+        }
+
+        const { id } = validationResult.data;
+        await db.categoryMeal.delete({ where: { id } });
+
+        return NextResponse.json({ message: "Catégorie supprimée" }, {status: 200});
     } catch (error) {
         console.error("[DELETE_CATEGORY_MEAL_ERROR]", error);
         return new NextResponse("Internal Error", {status: 500 });
     }
 }
+

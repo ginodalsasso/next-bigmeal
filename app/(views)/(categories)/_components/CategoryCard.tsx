@@ -27,7 +27,7 @@ const CategoryCard = <T extends CategoryType>({
         setError(null);
     
         // Valider les données du formulaire
-        const validationResult = categoriesConstraints.safeParse({ name: newName }); 
+        const validationResult = categoriesConstraints.safeParse({ name: newName });
         if (!validationResult.success) {
             const formattedErrors = validationResult.error.format();
             setError(formattedErrors.name?._errors[0] || 'Erreur inconnue');
