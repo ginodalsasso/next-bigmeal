@@ -5,11 +5,16 @@ import { CategoryIngredientType } from "@/lib/types/schemas_interfaces";
 import CategoryForm from "../_components/CategoryForm";
 import CategoryCard from "../_components/CategoryCard";
 
+// _________________________ COMPOSANT _________________________
 const CategoryIngredientPage = () => {
+
+    // _________________________ ETATS _________________________
     const [categoryIngredient, setCategoryIngredient] = useState<CategoryIngredientType[]>([]); 
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
+
+    // _________________________ LOGIQUE _________________________
     // Récupérer les catégories d'ingrédients 
     useEffect(() => {
         const fetchCategoryIngredient = async () => {
@@ -97,6 +102,8 @@ const CategoryIngredientPage = () => {
         }
     };
 
+
+    // _________________________ RENDU _________________________
     if (loading) return <div>Loading...</div>;
     if (error) return <div>{error}</div>;
     if (!categoryIngredient) return <div>Catégorie de repas introuvables.</div>;

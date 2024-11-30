@@ -1,15 +1,18 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-
 import { IngredientType } from "@/lib/types/schemas_interfaces";
 
+// _________________________ COMPOSANT _________________________
 const IngredientDetailPage = ({ params }: { params: Promise<{ ingredientId: string }> }) => {
 
+    // _________________________ ETATS _________________________
     const [ingredient, setIngredient] = useState<IngredientType | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
+
+    // _________________________ LOGIQUE _________________________
     // Récupérer l'ingrédient avec l'ID passé en paramètre
     useEffect(() => {
         const fetchIngredient = async () => {
@@ -33,6 +36,8 @@ const IngredientDetailPage = ({ params }: { params: Promise<{ ingredientId: stri
         fetchIngredient();
     }, [params]);
 
+
+    // _________________________ RENDU _________________________
     if (loading) return <div>Loading...</div>;
     if (error) return <div>{error}</div>;
     if (!ingredient) return <div>Ingredient introuvable.</div>;

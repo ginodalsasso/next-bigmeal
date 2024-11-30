@@ -5,11 +5,16 @@ import { CategoryMealType } from "@/lib/types/schemas_interfaces";
 import CategoryForm from "../_components/CategoryForm";
 import CategoryCard from "../_components/CategoryCard";
 
+// _________________________ COMPOSANT _________________________
 const CategoryMealPage = () => {
+
+    // _________________________ ETATS _________________________
     const [categoryMeal, setCategoryMeal] = useState<CategoryMealType[]>([]); 
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
+
+    // _________________________ LOGIQUE _________________________
     // Récupérer les catégories de repas 
     useEffect(() => {
         const fetchCategoryMeal = async () => {
@@ -99,6 +104,8 @@ const CategoryMealPage = () => {
         }
     };
 
+
+    // _________________________ RENDU _________________________
     if (loading) return <div>Loading...</div>;
     if (error) return <div>{error}</div>;
     if (!categoryMeal) return <div>Catégorie de repas introuvables.</div>;

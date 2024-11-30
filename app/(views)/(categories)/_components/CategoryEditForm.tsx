@@ -1,5 +1,6 @@
 import { useState } from "react";
 
+// _________________________ TYPES _________________________
 interface CategoryEditFormProps {
     initialName: string;
     onSubmit: (newName: string) => Promise<void>;
@@ -8,6 +9,7 @@ interface CategoryEditFormProps {
     error: string | null;
 }
 
+// _________________________ COMPOSANT _________________________
 const CategoryEditForm: React.FC<CategoryEditFormProps> = ({
     initialName,
     onSubmit,
@@ -15,13 +17,20 @@ const CategoryEditForm: React.FC<CategoryEditFormProps> = ({
     isLoading,
     error,
 }) => {
+
+    // _________________________ ETATS _________________________
     const [name, setName] = useState(initialName);
 
+    
+    // _________________________ LOGIQUE _________________________
+    // Gestion de la soumission du formulaire d'édition de catégorie
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        await onSubmit(name.trim());
+        await onSubmit(name);
     };
 
+
+    // _________________________ RENDU _________________________
     return (
         <form onSubmit={handleSubmit} className="space-y-2">
             <input

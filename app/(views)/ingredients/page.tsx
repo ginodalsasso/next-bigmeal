@@ -5,11 +5,16 @@ import React, { useEffect, useState } from "react";
 import IngredientCard from "./_components/IngredientCard";
 import { IngredientType } from "@/lib/types/schemas_interfaces";
 
+// _________________________ COMPOSANT _________________________
 const IngredientPage = () => {
+
+    // _________________________ ETATS _________________________
     const [ingredients, setIngredients] = useState<IngredientType[]>([]); 
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
+
+    // _________________________ LOGIQUE _________________________
     // Récupérer les ingrédients 
     useEffect(() => {
         const fetchIngredients = async () => {
@@ -30,6 +35,8 @@ const IngredientPage = () => {
         fetchIngredients();
     }, []); 
 
+
+    // _________________________ RENDU _________________________
     if (loading) return <div>Loading...</div>;
     if (error) return <div>{error}</div>;
     if (!ingredients) return <div>Ingredients introuvables.</div>;

@@ -3,42 +3,51 @@ import React, { useState } from "react";
 
 import { categoriesConstraints } from "@/lib/types/forms_constraints";
 
+// _________________________ TYPES _________________________
+type CategoryFormProps = { 
+    onAddCategory: (name: string) => Promise<void>; 
+};
 
-type CategoryFormProps = { onAddCategory: (name: string) => Promise<void>; };
-
+// _________________________ COMPOSANT _________________________
 const CategoryForm: React.FC<CategoryFormProps> = ({ onAddCategory }) => {
+
+    // _________________________ ETATS __________________
     const [newCategoryName, setNewCategoryName] = useState('');
 
     const [isLoading, setIsLoading] = useState(false); // Indicateur de chargement
     const [error, setError] = useState<CategoryFormErrorType>({ name: '' }); // Gestion des erreurs
 
-// Gestion de la soumission du formulaire de creation de catégorie
-const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
-    setError({ name: '' });
 
-    // Valider les données du formulaire
-    const validationResult = categoriesConstraints.safeParse({ name: newCategoryName });
-    if (!validationResult.success) {
-        const formattedErrors = validationResult.error.format();
-        setError({
-            name: formattedErrors.name?._errors[0] || 'Erreur inconnue', // Récupère le premier message d'erreur
-        });
-        setIsLoading(false);
-        return;
-    }
+    // _________________________ LOGIQUE _________________________
+    // Gestion de la soumission du formulaire de creation de catégorie
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setIsLoading(true);
+        setError({ name: '' });
 
-    try {
-        await onAddCategory(newCategoryName.trim());
-        setNewCategoryName(''); // Réinitialiser le champ après ajout
-    } catch (error) {
-        console.error("[CREATE_CATEGORY]", error);
-    } finally {
-        setIsLoading(false);
-    }
-};
+        // Valider les données du formulaire
+        const validationResult = categoriesConstraints.safeParse({ name: newCategoryName });
+        if (!validationResult.success) {
+            const formattedErrors = validationResult.error.format();
+            setError({
+                name: formattedErrors.name?._errors[0] || 'Erreur inconnue', // Récupère le premier message d'erreur
+            });
+            setIsLoading(false);
+            return;
+        }
 
+        try {
+            await onAddCategory(newCategoryName);
+            setNewCategoryName(''); // Réinitialiser le champ après ajout
+        } catch (error) {
+            console.error("[CREATE_CATEGORY]", error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    
+    // _________________________ RENDU _________________________
     return (
         <div className="mt-4 p-4 border rounded-lg">
             <h2>Ajouter une nouvelle catégorie</h2>

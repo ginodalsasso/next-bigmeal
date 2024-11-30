@@ -1,3 +1,4 @@
+// _________________________ TYPES _________________________
 interface CategoryViewProps {
     categoryName: string;
     onEdit: () => void;
@@ -5,6 +6,7 @@ interface CategoryViewProps {
     isDeleting: boolean;
 }
 
+// _________________________ COMPOSANT _________________________
 const CategoryView: React.FC<CategoryViewProps> = ({ categoryName, onEdit, onDelete, isDeleting }) => (
     <div>
         <h2 className="text-xl font-bold">{categoryName}</h2>

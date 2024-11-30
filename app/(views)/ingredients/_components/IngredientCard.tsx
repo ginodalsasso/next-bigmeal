@@ -2,12 +2,15 @@ import Link from "next/link";
 import React from "react";
 import { IngredientType } from "@/lib/types/schemas_interfaces";
 
+// _________________________ TYPES _________________________
 interface IngredientCardProps {
     ingredient: IngredientType; 
 }
 
+// _________________________ COMPOSANT _________________________
 const IngredientCard:React.FC<IngredientCardProps> = ({ ingredient }) => {
 
+    // _________________________ RENDU _________________________
     return (
         <Link 
             href={`/ingredients/${ingredient.id}`} 

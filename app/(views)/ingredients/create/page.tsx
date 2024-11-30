@@ -2,33 +2,17 @@
 
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { z } from "zod";
 
 import { Season } from "@/lib/types/enums";
 import { CategoryIngredientType } from "@/lib/types/schemas_interfaces";
 import { IngredientFormErrorType, IngredientFormType } from "@/lib/types/forms_interfaces";
+import { ingredientConstraints } from "@/lib/types/forms_constraints";
 
 
-// CONTRAINTES DE VALIDATION
-const ingredientConstraints = z.object({
-    name: 
-        z.string().
-        min(3, "Le nom doit comporter au moins 3 caractères").
-        max(100, "Le nom doit comporter au maximum 100 caractères").
-        toLowerCase().
-        trim(),
-    season: 
-        z.nativeEnum(Season).
-        nullable(). 
-        optional(). 
-        default(null),
-    categoryIngredientId: 
-        z.string().
-        min(1, "Une catégorie est obligatoire"),
-});
-
+// _________________________ COMPOSANT _________________________
 const CreateIngredientPage = () => {
     
+    // _________________________ HOOKS _________________________
     const router = useRouter();
     const [categories, setCategories] = useState<CategoryIngredientType[]>([]);
     const [isLoading, setIsLoading] = useState(false);
@@ -39,6 +23,8 @@ const CreateIngredientPage = () => {
         categoryIngredientId: "",
     });
 
+
+    // _________________________ LOGIQUE _________________________
     // Appel API pour récupérer les catégories d'ingrédients
     useEffect(() => {
         const fetchCategories = async () => {
@@ -102,6 +88,8 @@ const CreateIngredientPage = () => {
         }
     };
 
+
+    // _________________________ RENDU _________________________
     return (
         <form className="flex flex-col w-full my-5 gap-5" onSubmit={handleSubmit}>
             <h1 className="text-2xl text-center mb-5">Créer un nouvel ingrédient</h1>
