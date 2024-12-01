@@ -2,18 +2,14 @@ import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 
 
-type Props = {
+type Context  = {
     params: Promise<{
         ingredientId: string
     }>
-  }
-// export async function GET(req: NextRequest, context: { params: { ingredientId: string } }) {
-    export async function GET(req: NextRequest, props: Props ) {
+}
+    export async function GET(req: NextRequest, context: Context  ) {
 
-    // const { ingredientId } = context.params; 
-    // const { ingredientId } = params;
-
-    const params = await props.params
+    const params = await context.params
 
     try {
         const ingredient = await db.ingredient.findUnique({
