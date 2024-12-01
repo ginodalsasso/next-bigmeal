@@ -1,8 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 
-export async function GET(req: NextRequest, context: { params: { ingredientId: string } }) {
-    const { ingredientId } = context.params; // Utilisez context.params
+// export async function GET(req: NextRequest, context: { params: { ingredientId: string } }) {
+    export async function GET(req: NextRequest, { params }: { params: { ingredientId: string } }) {
+
+    // const { ingredientId } = context.params; 
+    const { ingredientId } = params;
 
     console.log("Fetching ingredient with ID:", ingredientId); // Debugging
 
