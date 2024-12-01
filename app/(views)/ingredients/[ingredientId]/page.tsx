@@ -4,18 +4,19 @@ import React from "react";
 import { IngredientType } from "@/lib/types/schemas_interfaces";
 
 const IngredientDetailPage = ({ params }: { params: Promise<{ ingredientId: string }> }) => {
-
-    const { ingredientId } = React.use(params);
-
-    // _________________________ ETATS _________________________
+    // _________________________ ÉTATS _________________________
     const [ingredient, setIngredient] = React.useState<IngredientType | null>(null);
+    const [ingredientId, setIngredientId] = React.useState<string | null>(null);
     const [loading, setLoading] = React.useState(true);
     const [error, setError] = React.useState<string | null>(null);
 
     // _________________________ LOGIQUE _________________________
     React.useEffect(() => {
-        const fetchIngredient = async () => {
+        const resolveParams = async () => {
             try {
+                const { ingredientId } = await params; // Résolution de la promesse `params`
+                setIngredientId(ingredientId);
+
                 const response = await fetch(`/api/ingredients/${ingredientId}`);
                 if (!response.ok) {
                     throw new Error("Failed to fetch ingredient");
@@ -24,13 +25,14 @@ const IngredientDetailPage = ({ params }: { params: Promise<{ ingredientId: stri
                 setIngredient(data);
             } catch (error) {
                 console.error("Erreur lors de la récupération de l'ingrédient :", error);
-                setError('Erreur lors de la récupération de l\'ingrédient');
+                setError("Erreur lors de la récupération de l'ingrédient");
             } finally {
                 setLoading(false);
             }
         };
-        fetchIngredient();
-    }, [ingredientId]);
+
+        resolveParams();
+    }, [params]);
 
     // _________________________ RENDU _________________________
     if (loading) return <div>Loading...</div>;
