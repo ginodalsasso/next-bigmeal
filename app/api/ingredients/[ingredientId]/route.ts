@@ -1,18 +1,24 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 
+
+type Props = {
+    params: Promise<{
+        ingredientId: string
+    }>
+  }
 // export async function GET(req: NextRequest, context: { params: { ingredientId: string } }) {
-    export async function GET(req: NextRequest, { params }: { params: { ingredientId: string } }) {
+    export async function GET(req: NextRequest, props: Props ) {
 
     // const { ingredientId } = context.params; 
-    const { ingredientId } = params;
+    // const { ingredientId } = params;
 
-    console.log("Fetching ingredient with ID:", ingredientId); // Debugging
+    const params = await props.params
 
     try {
         const ingredient = await db.ingredient.findUnique({
             where: {
-                id: ingredientId,
+                id: params.ingredientId,
             },
             include: {
                 categoryIngredient: true,
