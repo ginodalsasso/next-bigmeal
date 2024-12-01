@@ -1,10 +1,8 @@
 import { db } from "@/lib/db";
 import { NextRequest, NextResponse } from "next/server";
 
-// export async function GET(req: NextRequest, context: { params: { ingredientId: string } }) {
-//     const { ingredientId } = context.params; 
 export async function GET(req: NextRequest, { params }: { params: { ingredientId: string } }) {
-    const { ingredientId } = params; 
+    const { ingredientId } = await params;
     try {
         const ingredient = await db.ingredient.findUnique({
             where: {
