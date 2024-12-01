@@ -1,25 +1,21 @@
 "use client";
-
 import React, { useEffect, useState } from "react";
 import { IngredientType } from "@/lib/types/schemas_interfaces";
 
-// _________________________ COMPOSANT _________________________
 const IngredientDetailPage = ({ params }: { params: Promise<{ ingredientId: string }> }) => {
+    const { ingredientId } = React.use(params);
 
     // _________________________ ETATS _________________________
     const [ingredient, setIngredient] = useState<IngredientType | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
-
     // _________________________ LOGIQUE _________________________
     // Récupérer l'ingrédient avec l'ID passé en paramètre
     useEffect(() => {
         const fetchIngredient = async () => {
             try {
-                const resolvedParams = await params;
-                
-                const response = await fetch(`/api/ingredients/${resolvedParams.ingredientId}`);
+                const response = await fetch(`/api/ingredients/${ingredientId}`);
                 
                 if (!response.ok) {
                     throw new Error("Failed to fetch ingredient");
@@ -34,8 +30,7 @@ const IngredientDetailPage = ({ params }: { params: Promise<{ ingredientId: stri
             }
         };
         fetchIngredient();
-    }, [params]);
-
+    }, [ingredientId]);
 
     // _________________________ RENDU _________________________
     if (loading) return <div>Loading...</div>;
