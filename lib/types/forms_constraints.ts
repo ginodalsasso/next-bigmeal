@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { Season } from "@prisma/client";
+import { Season } from "./enums";
 
 // _________________________ CONTRAINTES DE VALIDATION _________________________
 
