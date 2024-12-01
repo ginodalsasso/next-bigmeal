@@ -1,22 +1,22 @@
 "use client";
-import React, { useEffect, useState } from "react";
+
+import React from "react";
 import { IngredientType } from "@/lib/types/schemas_interfaces";
 
 const IngredientDetailPage = ({ params }: { params: Promise<{ ingredientId: string }> }) => {
+    // Utilisez React.use pour résoudre le Promise
     const { ingredientId } = React.use(params);
 
     // _________________________ ETATS _________________________
-    const [ingredient, setIngredient] = useState<IngredientType | null>(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
+    const [ingredient, setIngredient] = React.useState<IngredientType | null>(null);
+    const [loading, setLoading] = React.useState(true);
+    const [error, setError] = React.useState<string | null>(null);
 
     // _________________________ LOGIQUE _________________________
-    // Récupérer l'ingrédient avec l'ID passé en paramètre
-    useEffect(() => {
+    React.useEffect(() => {
         const fetchIngredient = async () => {
             try {
                 const response = await fetch(`/api/ingredients/${ingredientId}`);
-                
                 if (!response.ok) {
                     throw new Error("Failed to fetch ingredient");
                 }
@@ -49,9 +49,8 @@ const IngredientDetailPage = ({ params }: { params: Promise<{ ingredientId: stri
                 {ingredient.categoryIngredient?.name || "Catégorie non disponible"}
             </p>
             {ingredient.season && <p>Saison: {ingredient.season}</p>}
-            
             {ingredient.compositions.length > 0 ? (
-                ingredient.compositions.map(composition => (
+                ingredient.compositions.map((composition) => (
                     <div key={composition.id}>
                         <p>{composition.meal.name}</p>
                     </div>

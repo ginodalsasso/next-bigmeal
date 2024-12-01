@@ -1,8 +1,8 @@
 import { db } from "@/lib/db";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function GET( req: NextRequest, context: { params: { ingredientId: string } }) {
-    const { ingredientId } = await context.params;
+export async function GET(req: NextRequest, context: { params: { ingredientId: string } }) {
+    const { ingredientId } = context.params; 
     try {
         const ingredient = await db.ingredient.findUnique({
             where: {
@@ -25,6 +25,6 @@ export async function GET( req: NextRequest, context: { params: { ingredientId: 
         return NextResponse.json(ingredient);
     } catch (error) {
         console.log("[INGREDIENT]", error);
-        return new NextResponse("Internal Error", { status: 500 });
+        return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
     }
 }
