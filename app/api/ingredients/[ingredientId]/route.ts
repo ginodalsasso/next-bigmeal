@@ -1,21 +1,22 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 
+type Context = {
+    params: {
+        ingredientId: string;
+    };
+};
 
-type Context  = {
-    params: Promise<{
-        ingredientId: string
-    }>
-}
-    export async function GET(req: NextRequest, context: Context  ) {
+export async function GET(req: NextRequest, { params }: Context) {
+    const { ingredientId } = await params;
 
-    const params = await context.params
+    if (!ingredientId) {
+        return NextResponse.json({ error: "Ingredient ID is required" }, { status: 400 });
+    }
 
     try {
         const ingredient = await db.ingredient.findUnique({
-            where: {
-                id: params.ingredientId,
-            },
+            where: { id: ingredientId },
             include: {
                 categoryIngredient: true,
                 compositions: {

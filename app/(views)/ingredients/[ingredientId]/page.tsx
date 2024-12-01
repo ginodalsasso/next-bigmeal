@@ -5,7 +5,6 @@ import { IngredientType } from "@/lib/types/schemas_interfaces";
 
 const IngredientDetailPage = ({ params }: { params: Promise<{ ingredientId: string }> }) => {
 
-    // Utilisez React.use pour résoudre le Promise
     const { ingredientId } = React.use(params);
 
     // _________________________ ETATS _________________________
