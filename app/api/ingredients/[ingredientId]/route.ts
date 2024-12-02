@@ -1,19 +1,17 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 
-type Params = {
-        ingredientId: string;
-};
+// type Params = {
+//         ingredientId: string;
+// };
 
-export async function GET(req: NextRequest, context: { params: Params }) {
-
-    // const ingredientId =  await context.params.ingredientId;
-    const ingredientId = await context.params.ingredientId as string;
+export async function GET(req: Request, context: { params: { ingredientId: string } }) {
+    const { ingredientId } = await context.params;
 
     if (!ingredientId) {
         return NextResponse.json({ error: "Ingredient ID is required" }, { status: 400 });
     }
-
+    
     try {
         const ingredient = await db.ingredient.findUnique({
             where: { id: ingredientId },
