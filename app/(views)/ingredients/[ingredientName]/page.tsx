@@ -3,9 +3,9 @@
 import React, { useEffect, useState, use } from "react";
 import { IngredientType } from "@/lib/types/schemas_interfaces";
 
-const IngredientDetailPage = ({ params }: { params: Promise<{ ingredientId: string }> }) => {
+const IngredientDetailPage = ({ params }: { params: Promise<{ ingredientName: string }> }) => {
 
-    const { ingredientId } = use(params);
+    const { ingredientName } = use(params);
 
     // _________________________ ETATS _________________________
     const [ingredient, setIngredient] = useState<IngredientType | null>(null);
@@ -16,7 +16,7 @@ const IngredientDetailPage = ({ params }: { params: Promise<{ ingredientId: stri
     useEffect(() => {
         const fetchIngredient = async () => {
             try {
-                const response = await fetch(`/api/ingredients/${ingredientId}`);
+                const response = await fetch(`/api/ingredients/${ingredientName}`);
                 if (!response.ok) {
                     throw new Error("Failed to fetch ingredient");
                 }
@@ -30,7 +30,7 @@ const IngredientDetailPage = ({ params }: { params: Promise<{ ingredientId: stri
             }
         };
         fetchIngredient();
-    }, [ingredientId]);
+    }, [ingredientName]);
 
     // _________________________ RENDU _________________________
     if (loading) return <div>Loading...</div>;

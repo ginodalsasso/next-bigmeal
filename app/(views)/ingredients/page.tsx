@@ -36,6 +36,57 @@ const IngredientPage = () => {
     }, []); 
 
 
+    // Appel API pour mettre à jour un ingrédient
+    const updateIngredient = async (id: string, newName: string, newCategory: string) => {
+        try {
+            const response = await fetch('/api/ingredients/crud', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ id, name: newName, categoryIngredientId: newCategory }),
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to update ingredient');
+            }
+            // Mettre à jour l'ingredient dans le state
+            const updatedIngredient: IngredientType = await response.json();
+            setIngredients((prev) => // Remplacer l'ancienne ingredient par la nouvelle
+                prev.map((ingredient) =>
+                    ingredient.id === id ? updatedIngredient : ingredient // Si l'id correspond, on remplace
+                )
+            );
+        } catch (error) {
+            console.error('Erreur lors de la modification:', error);
+            setError('Erreur lors de la modification.');
+        }
+    };
+
+
+    // Appel API pour supprimer un ingrédient
+    const deleteIngredient = async (id: string) => {
+        try {
+            const response = await fetch('/api/ingredients/crud', {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ id }),
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to delete ingredient');
+            }
+            // Supprimer l'ingrédient du state 
+            setIngredients((prev) => prev.filter((ingredient) => ingredient.id !== id));
+        } catch (error) {
+            console.error('Erreur lors de la suppression:', error);
+            setError('Erreur lors de la suppression.');
+        }
+    };
+
+
     // _________________________ RENDU _________________________
     if (loading) return <div>Loading...</div>;
     if (error) return <div>{error}</div>;
@@ -44,7 +95,11 @@ const IngredientPage = () => {
     return <>
         {ingredients.map(ingredient => (
             <div key={ingredient.id}>
-                <IngredientCard ingredient = {ingredient} />
+                <IngredientCard 
+                    ingredient = {ingredient} 
+                    onUpdateIngredient= {updateIngredient}
+                    onDeleteIngredient = {deleteIngredient}
+                />
             </div>
         ))}
     </>;

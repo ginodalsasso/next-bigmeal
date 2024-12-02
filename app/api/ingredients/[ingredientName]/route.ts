@@ -3,17 +3,17 @@ import { db } from "@/lib/db";
 
 export async function GET(
     req: Request,
-    { params }: { params: { ingredientId: string } } // Use destructuring here for correct typing
+    { params }: { params: { ingredientName: string } } // Use destructuring here for correct typing
 ) {
-    const { ingredientId } = params;
+    const { ingredientName } = await params;
 
-    if (!ingredientId) {
+    if (!ingredientName) {
         return NextResponse.json({ error: "Ingredient ID is required" }, { status: 400 });
     }
 
     try {
         const ingredient = await db.ingredient.findUnique({
-            where: { id: ingredientId },
+            where: { name: ingredientName },
             include: {
                 categoryIngredient: true,
                 compositions: {
