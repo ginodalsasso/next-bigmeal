@@ -1,8 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 
-export async function GET(req: NextRequest, { params }: { params: { ingredientId: string } }) {
-    const ingredientId = params.ingredientId; 
+type Params = {
+        ingredientId: string;
+};
+
+export async function GET(req: NextRequest, context: { params: Params }) {
+
+    // const ingredientId =  await context.params.ingredientId;
+    const ingredientId = await context.params.ingredientId as string;
 
     if (!ingredientId) {
         return NextResponse.json({ error: "Ingredient ID is required" }, { status: 400 });

@@ -1,22 +1,21 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState, use } from "react";
 import { IngredientType } from "@/lib/types/schemas_interfaces";
 
 const IngredientDetailPage = ({ params }: { params: Promise<{ ingredientId: string }> }) => {
-    // _________________________ ÉTATS _________________________
-    const [ingredient, setIngredient] = React.useState<IngredientType | null>(null);
-    const [ingredientId, setIngredientId] = React.useState<string | null>(null);
-    const [loading, setLoading] = React.useState(true);
-    const [error, setError] = React.useState<string | null>(null);
+
+    const { ingredientId } = use(params);
+
+    // _________________________ ETATS _________________________
+    const [ingredient, setIngredient] = useState<IngredientType | null>(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
 
     // _________________________ LOGIQUE _________________________
-    React.useEffect(() => {
-        const resolveParams = async () => {
+    useEffect(() => {
+        const fetchIngredient = async () => {
             try {
-                const { ingredientId } = await params; // Résolution de la promesse `params`
-                setIngredientId(ingredientId);
-
                 const response = await fetch(`/api/ingredients/${ingredientId}`);
                 if (!response.ok) {
                     throw new Error("Failed to fetch ingredient");
@@ -25,14 +24,13 @@ const IngredientDetailPage = ({ params }: { params: Promise<{ ingredientId: stri
                 setIngredient(data);
             } catch (error) {
                 console.error("Erreur lors de la récupération de l'ingrédient :", error);
-                setError("Erreur lors de la récupération de l'ingrédient");
+                setError('Erreur lors de la récupération de l\'ingrédient');
             } finally {
                 setLoading(false);
             }
         };
-
-        resolveParams();
-    }, [params]);
+        fetchIngredient();
+    }, [ingredientId]);
 
     // _________________________ RENDU _________________________
     if (loading) return <div>Loading...</div>;
