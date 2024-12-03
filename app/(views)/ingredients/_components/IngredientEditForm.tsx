@@ -1,17 +1,7 @@
 import { Season } from "@/lib/types/enums";
 import { CategoryIngredientType } from "@/lib/types/schemas_interfaces";
 import { useEffect, useState } from "react";
-
-// _________________________ TYPES _________________________
-interface IngredientEditFormProps {
-    initialName: string;
-    initialCategory: string;
-    initialSeason: string;
-    onSubmit: (newName: string, newCategory: string, newSeason: string) => Promise<void>;
-    onCancel: () => void;
-    isLoading: boolean;
-    error: string | null;
-}
+import { IngredientEditFormProps } from "@/lib/types/forms_interfaces";
 
 // _________________________ COMPOSANT _________________________
 const IngredientEditForm: React.FC<IngredientEditFormProps> = ({
@@ -53,6 +43,7 @@ const IngredientEditForm: React.FC<IngredientEditFormProps> = ({
     // Gestion de la soumission du formulaire d'édition de catégorie
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+
         await onSubmit(name, category, season);
     };
 
@@ -77,10 +68,9 @@ const IngredientEditForm: React.FC<IngredientEditFormProps> = ({
                 onChange={(e) => setCategory(e.target.value)} 
                 className="border border-gray-300 p-2 rounded text-black mx-auto w-[90%]"
                 disabled={isLoading}
+                required
             >
-                <option value={category}>
-                    {category}
-                </option>
+                <option value="">-- Veuillez sélectionner une catégorie --</option>
 
                 {/* Liste des catégories */}
                 {categories.map((category) => (

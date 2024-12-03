@@ -18,3 +18,22 @@ export interface IngredientFormErrorType {
 export interface CategoryFormErrorType {
     name: string;
 }
+
+export interface CategoryEditFormProps {
+    initialName: string;
+    onSubmit: (newName: string) => Promise<void>;
+    onCancel: () => void;
+    isLoading: boolean;
+    error: string | null;
+}
+
+export interface IngredientEditFormProps {
+    initialName: string;
+    initialCategory: string;
+    initialSeason: string;
+    onSubmit: (newName: string, newCategory: string, newSeason: string) => Promise<void>;
+    onCancel: () => void;
+    isLoading: boolean;
+    error: string | null;
+}
+

@@ -1,13 +1,5 @@
 import { useState } from "react";
-
-// _________________________ TYPES _________________________
-interface CategoryEditFormProps {
-    initialName: string;
-    onSubmit: (newName: string) => Promise<void>;
-    onCancel: () => void;
-    isLoading: boolean;
-    error: string | null;
-}
+import { CategoryEditFormProps } from "@/lib/types/forms_interfaces";
 
 // _________________________ COMPOSANT _________________________
 const CategoryEditForm: React.FC<CategoryEditFormProps> = ({
