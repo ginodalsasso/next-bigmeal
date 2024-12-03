@@ -1,8 +1,8 @@
 import { useState } from "react";
 import CategoryEditForm from "./CategoryEditForm";
-import CategoryView from "./CategoryView";
 import { CategoryType } from "@/lib/types/schemas_interfaces";
 import { categoriesConstraints } from "@/lib/types/forms_constraints";
+import ItemView from "@/app/(views)/_components/ItemView";
 
 // _________________________ TYPES _________________________
 type CategoryCardProps<T extends CategoryType> = {
@@ -74,8 +74,9 @@ const CategoryCard = <T extends CategoryType>({
     return (
         <div className="border border-gray-500 p-6 rounded-xl">
             {!isEditing ? (
-                <CategoryView
-                    categoryName={category.name}
+                <ItemView
+                    title={category.name}
+                    details={{}}
                     onEdit={() => setIsEditing(true)}
                     onDelete={handleDelete}
                     isDeleting={isDeleting}

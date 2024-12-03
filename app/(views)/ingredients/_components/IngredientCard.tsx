@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { IngredientType } from "@/lib/types/schemas_interfaces";
-import IngredientView from "./IngredientView";
 import IngredientEditForm from "./IngredientEditForm";
 import { ingredientConstraints } from "@/lib/types/forms_constraints";
+import ItemView from "@/app/(views)/_components/ItemView";
 
 // _________________________ TYPES _________________________
 type IngredientCardProps<T extends IngredientType> = {
@@ -75,23 +75,26 @@ const IngredientCard = <T extends IngredientType>({
             className="border border-gray-500 p-6 rounded-xl"
         >
             {!isEditing ? (
-                <IngredientView
-                    ingredientName = {ingredient.name}
-                    ingredientCategory= {ingredient.categoryIngredient?.name}
-                    ingredientSeason = {ingredient.season}
+                <ItemView
+                    title= {ingredient.name}
+                    details={{
+                        category: ingredient.categoryIngredient?.name,
+                        season: ingredient.season,
+                    }}
                     onEdit={() => setIsEditing(true)}
                     onDelete={handleDelete}
                     isDeleting={isDeleting}
-                />) : (
-                    <IngredientEditForm
-                        initialName={ingredient.name}
-                        initialCategory={ingredient.categoryIngredient?.name}
-                        initialSeason={ingredient.season || ""}
-                        onSubmit={handleEdit}
-                        onCancel={() => setIsEditing(false)}
-                        isLoading={isLoading}
-                        error={error}
-                    />
+                />
+            ) : (
+                <IngredientEditForm
+                    initialName={ingredient.name}
+                    initialCategory={ingredient.categoryIngredient?.name}
+                    initialSeason={ingredient.season || ""}
+                    onSubmit={handleEdit}
+                    onCancel={() => setIsEditing(false)}
+                    isLoading={isLoading}
+                    error={error}
+                />
             )}
             
         </div>
