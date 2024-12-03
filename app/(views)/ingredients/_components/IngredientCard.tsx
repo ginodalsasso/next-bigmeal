@@ -2,11 +2,12 @@ import React, { useState } from "react";
 import { IngredientType } from "@/lib/types/schemas_interfaces";
 import IngredientView from "./IngredientView";
 import IngredientEditForm from "./IngredientEditForm";
+import { ingredientConstraints } from "@/lib/types/forms_constraints";
 
 // _________________________ TYPES _________________________
 type IngredientCardProps<T extends IngredientType> = {
     ingredient: T;
-    onUpdateIngredient: (id: string, newName: string, newCategory: string) => Promise<void>;
+    onUpdateIngredient: (id: string, newName: string, newCategory: string, newSeason: string) => Promise<void>;
     onDeleteIngredient: (id: string) => Promise<void>;
 };
 
@@ -19,28 +20,28 @@ const IngredientCard = <T extends IngredientType>({
 
     // _________________________ ETATS _________________________
     const [isEditing, setIsEditing] = useState(false); // État pour basculer entre lecture et édition
-    const [isDeleting, setIsDeleting] = useState(false); // Indicateur de chargement pour la suppression
+    const [isDeleting, setIsDeleting] = useState(false); // Indicateur de chasrgement pour la suppression
 
     const [isLoading, setIsLoading] = useState(false); // Indicateur de chargement pour la mise à jour
     const [error, setError] = useState<string | null>(null); // Gestion des erreurs
 
     // _________________________ LOGIQUE _________________________
     // Gestion de la soumission du formulaire d'édition d'ingrédient
-    const handleEdit = async (newName: string, newCategory: string) => {
+    const handleEdit = async (newName: string, newCategory: string, newSeason: string) => {
         setIsLoading(true);
         setError(null);
     
         // Valider les données du formulaire
-        // const validationResult = ingredientsConstraints.safeParse({ name: newName });
-        // if (!validationResult.success) {
-        //     const formattedErrors = validationResult.error.format();
-        //     setError(formattedErrors.name?._errors[0] || 'Erreur inconnue');
-        //     setIsLoading(false);
-        //     return;
-        // }
+        const validationResult = ingredientConstraints.safeParse({ name: newName, categoryIngredientId: newCategory, season: newSeason });
+        if (!validationResult.success) {
+            const formattedErrors = validationResult.error.format();
+            setError(formattedErrors.name?._errors[0] || 'Erreur inconnue');
+            setIsLoading(false);
+            return;
+        }
 
         try {
-            await onUpdateIngredient(ingredient.id, newName, newCategory);
+            await onUpdateIngredient(ingredient.id, newName, newCategory, newSeason);
             setIsEditing(false);
         } catch (error) {
             console.error("[UPDATE_INGREDIENT]", error);
@@ -85,7 +86,7 @@ const IngredientCard = <T extends IngredientType>({
                     <IngredientEditForm
                         initialName={ingredient.name}
                         initialCategory={ingredient.categoryIngredient?.name}
-                        // initialSeason={ingredient.season}
+                        initialSeason={ingredient.season || ""}
                         onSubmit={handleEdit}
                         onCancel={() => setIsEditing(false)}
                         isLoading={isLoading}

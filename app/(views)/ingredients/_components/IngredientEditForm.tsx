@@ -1,3 +1,4 @@
+import { Season } from "@/lib/types/enums";
 import { CategoryIngredientType } from "@/lib/types/schemas_interfaces";
 import { useEffect, useState } from "react";
 
@@ -5,7 +6,8 @@ import { useEffect, useState } from "react";
 interface IngredientEditFormProps {
     initialName: string;
     initialCategory: string;
-    onSubmit: (newName: string, newCategory: string) => Promise<void>;
+    initialSeason: string;
+    onSubmit: (newName: string, newCategory: string, newSeason: string) => Promise<void>;
     onCancel: () => void;
     isLoading: boolean;
     error: string | null;
@@ -15,6 +17,7 @@ interface IngredientEditFormProps {
 const IngredientEditForm: React.FC<IngredientEditFormProps> = ({
     initialName,
     initialCategory,
+    initialSeason,
     onSubmit,
     onCancel,
     isLoading,
@@ -23,8 +26,9 @@ const IngredientEditForm: React.FC<IngredientEditFormProps> = ({
 
     // _________________________ ETATS _________________________
     const [name, setName] = useState(initialName);
-    const [categories, setCategories] = useState<CategoryIngredientType[]>([]);
     const [category, setCategory] = useState(initialCategory);
+    const [season, setSeason] = useState(initialSeason);
+    const [categories, setCategories] = useState<CategoryIngredientType[]>([]);
 
     
     // _________________________ LOGIQUE _________________________
@@ -49,7 +53,7 @@ const IngredientEditForm: React.FC<IngredientEditFormProps> = ({
     // Gestion de la soumission du formulaire d'édition de catégorie
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        await onSubmit(name, category);
+        await onSubmit(name, category, season);
     };
 
 
@@ -74,10 +78,29 @@ const IngredientEditForm: React.FC<IngredientEditFormProps> = ({
                 className="border border-gray-300 p-2 rounded text-black mx-auto w-[90%]"
                 disabled={isLoading}
             >
-                <option value="">{category}</option>
+                <option value={category}>
+                    {category}
+                </option>
+
+                {/* Liste des catégories */}
                 {categories.map((category) => (
                     <option key={category.id} value={category.id}>
                         {category.name}
+                    </option>
+                ))}
+            </select>
+
+            {/* Sélection pour la saison */}
+            <select
+                value={season}
+                onChange={(e) => setSeason(e.target.value)} 
+                className="border border-gray-300 p-2 rounded text-black mx-auto w-[90%]"
+                disabled={isLoading}
+            >
+                <option value="">{season}</option>
+                {Object.values(Season).map((season) => (
+                    <option key={season} value={season}>
+                        {season}
                     </option>
                 ))}
             </select>

@@ -37,14 +37,14 @@ const IngredientPage = () => {
 
 
     // Appel API pour mettre à jour un ingrédient
-    const updateIngredient = async (id: string, newName: string, newCategory: string) => {
+    const updateIngredient = async (id: string, newName: string, newCategory: string, newSeason: string) => {
         try {
             const response = await fetch('/api/ingredients/crud', {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ id, name: newName, categoryIngredientId: newCategory }),
+                body: JSON.stringify({ id, name: newName, categoryIngredientId: newCategory, newSeason }),
             });
 
             if (!response.ok) {

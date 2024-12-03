@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
-import { idConstraints } from "@/lib/types/forms_constraints";
+import { idConstraints, ingredientConstraints } from "@/lib/types/forms_constraints";
 
 
 export async function POST(req: NextRequest) {
@@ -24,32 +24,29 @@ export async function POST(req: NextRequest) {
     }
 }
 
-export async function PUT(req: NextRequest) {
 
+export async function PUT(req: NextRequest) {
     try {
         const body = await req.json();
-        console.log(body);
 
-        // // Valider et nettoyer les données
-        // const validationResult = categoriesConstraints.extend({
-        //     id: z.string(),
-        // }).safeParse(body);
+        // Valider et nettoyer les données
+        const validationResult = ingredientConstraints.safeParse(body);
 
-        // if (!validationResult.success) {
-        //     return NextResponse.json(
-        //         { error: validationResult.error.format() },
-        //         { status: 400 }
-        //     );
-        // }
+        if (!validationResult.success) {
+            return NextResponse.json(
+                { error: validationResult.error.format() },
+                { status: 400 }
+            );
+        }
 
-        // const { id, name } = validationResult.data; 
-        const { id, name, categoryIngredientId } = body; 
+        const { id, name, season, categoryIngredientId } = body; 
 
         const updatedIngredient = await db.ingredient.update({
             where: { id },
             data: { 
                 name,
                 categoryIngredientId,
+                season,
             },
             include: { categoryIngredient: true }
         });
@@ -60,6 +57,7 @@ export async function PUT(req: NextRequest) {
         return new NextResponse("Internal Error", {status: 500 });
     }
 }
+
 
 export async function DELETE (req: NextRequest) {
     try {
