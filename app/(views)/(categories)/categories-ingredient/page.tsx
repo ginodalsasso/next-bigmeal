@@ -2,8 +2,8 @@
 
 import React, { useEffect, useState } from "react";
 import { CategoryIngredientType } from "@/lib/types/schemas_interfaces";
-import CategoryForm from "../_components/CategoryForm";
-import CategoryCard from "../_components/CategoryCard";
+import CategoryForm from "../../_components/CategoryForm";
+import CategoryCard from "../../_components/CategoryCard";
 
 // _________________________ COMPOSANT _________________________
 const CategoryIngredientPage = () => {
@@ -112,16 +112,19 @@ const CategoryIngredientPage = () => {
         <div>
             {/* Composant de création */}
             <CategoryForm onAddCategory={createCategoryIngredient} />
-            <h1>Liste des catégories d&apos;ingrédients</h1>
             {/* Afficher les catégories existantes */}
-            <div className="mt-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 pt-6">
                 {categoryIngredient.map((category) => (
-                    <CategoryCard<CategoryIngredientType> 
-                        key={category.id} 
-                        category={category} 
-                        onUpdateCategory={updateCategoryIngredient}
-                        onDeleteCategory={deleteCategoryIngredient}
-                    />
+                    <div 
+                        className="w-full" 
+                        key={category.id}
+                    >
+                        <CategoryCard<CategoryIngredientType> 
+                            category={category} 
+                            onUpdateCategory={updateCategoryIngredient}
+                            onDeleteCategory={deleteCategoryIngredient}
+                        />
+                    </div>
                 ))}
             </div>
         </div>

@@ -1,8 +1,11 @@
 import React, { useState } from "react";
-import { IngredientType } from "@/lib/types/schemas_interfaces";
+
+import ItemView from "./ItemView";
 import IngredientEditForm from "./IngredientEditForm";
+
 import { ingredientConstraints } from "@/lib/types/forms_constraints";
-import ItemView from "@/app/(views)/_components/ItemView";
+import { IngredientType } from "@/lib/types/schemas_interfaces";
+import { ucFirst } from "@/lib/utils";
 
 // _________________________ TYPES _________________________
 type IngredientCardProps<T extends IngredientType> = {
@@ -76,7 +79,7 @@ const IngredientCard = <T extends IngredientType>({
         >
             {!isEditing ? (
                 <ItemView
-                    title= {ingredient.name}
+                    title= {ucFirst(ingredient.name)}
                     details={{
                         category: ingredient.categoryIngredient?.name,
                         season: ingredient.season,

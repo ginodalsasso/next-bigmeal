@@ -1,6 +1,5 @@
-import { CategoryFormErrorType } from "@/lib/types/forms_interfaces";
 import React, { useState } from "react";
-
+import { CategoryFormErrorType } from "@/lib/types/forms_interfaces";
 import { categoriesConstraints } from "@/lib/types/forms_constraints";
 
 // _________________________ TYPES _________________________
@@ -49,9 +48,9 @@ const CategoryForm: React.FC<CategoryFormProps> = ({ onAddCategory }) => {
     
     // _________________________ RENDU _________________________
     return (
-        <div className="mt-4 p-4 border rounded-lg">
-            <h2>Ajouter une nouvelle catégorie</h2>
-            <div className="flex items-center gap-4">
+        <div className="w-fit border p-6 rounded-xl">
+            <h2>Nouvelle catégorie:</h2>
+            <div className="flex flex-col sm:flex-row gap-2">
                 <input
                     type="text"
                     value={newCategoryName}

@@ -38,14 +38,14 @@ const CategoryEditForm: React.FC<CategoryEditFormProps> = ({
                 <button
                     type="button"
                     onClick={onCancel}
-                    className="bg-gray-500 text-white px-4 py-2 rounded-lg"
+                    className="bg-gray-500 text-white px-4 py-2 rounded-lg font-bold"
                     disabled={isLoading}
                 >
                     Annuler
                 </button>
                 <button
                     type="submit"
-                    className="bg-emerald-500 text-white px-4 py-2 rounded-lg"
+                    className="bg-emerald-500 text-white px-4 py-2 rounded-lg font-bold"
                     disabled={isLoading}
                 >
                     {isLoading ? "En cours..." : "Valider"}

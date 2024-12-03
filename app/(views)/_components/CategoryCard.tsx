@@ -1,8 +1,10 @@
 import { useState } from "react";
+
+import ItemView from "@/app/(views)/_components/ItemView";
 import CategoryEditForm from "./CategoryEditForm";
+
 import { CategoryType } from "@/lib/types/schemas_interfaces";
 import { categoriesConstraints } from "@/lib/types/forms_constraints";
-import ItemView from "@/app/(views)/_components/ItemView";
 
 // _________________________ TYPES _________________________
 type CategoryCardProps<T extends CategoryType> = {

@@ -1,6 +1,7 @@
+import { useEffect, useState } from "react";
+
 import { Season } from "@/lib/types/enums";
 import { CategoryIngredientType } from "@/lib/types/schemas_interfaces";
-import { useEffect, useState } from "react";
 import { IngredientEditFormProps } from "@/lib/types/forms_interfaces";
 
 // _________________________ COMPOSANT _________________________
@@ -57,7 +58,7 @@ const IngredientEditForm: React.FC<IngredientEditFormProps> = ({
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="Nouveau nom"
-                className="border p-2 rounded-lg w-full text-black"
+                className="border p-2 rounded w-full text-black"
                 disabled={isLoading}
             />
             {error && <p className="text-red-500 text-sm">{error}</p>}
@@ -66,11 +67,11 @@ const IngredientEditForm: React.FC<IngredientEditFormProps> = ({
             <select
                 value={category}
                 onChange={(e) => setCategory(e.target.value)} 
-                className="border border-gray-300 p-2 rounded text-black mx-auto w-[90%]"
+                className="border p-2 rounded w-full text-black "
                 disabled={isLoading}
                 required
             >
-                <option value="">-- Veuillez sélectionner une catégorie --</option>
+                <option value="">-- Choisir une catégorie --</option>
 
                 {/* Liste des catégories */}
                 {categories.map((category) => (
@@ -84,7 +85,7 @@ const IngredientEditForm: React.FC<IngredientEditFormProps> = ({
             <select
                 value={season}
                 onChange={(e) => setSeason(e.target.value)} 
-                className="border border-gray-300 p-2 rounded text-black mx-auto w-[90%]"
+                className="border p-2 rounded w-full text-black"
                 disabled={isLoading}
             >
                 <option value="">{season}</option>
@@ -99,14 +100,14 @@ const IngredientEditForm: React.FC<IngredientEditFormProps> = ({
                 <button
                     type="button"
                     onClick={onCancel}
-                    className="bg-gray-500 text-white px-4 py-2 rounded-lg"
+                    className="bg-gray-500 text-white px-4 py-2 rounded-lg font-bold"
                     disabled={isLoading}
                 >
                     Annuler
                 </button>
                 <button
                     type="submit"
-                    className="bg-emerald-500 text-white px-4 py-2 rounded-lg"
+                    className="bg-emerald-500 text-white px-4 py-2 rounded-lg font-bold"
                     disabled={isLoading}
                 >
                     {isLoading ? "En cours..." : "Valider"}

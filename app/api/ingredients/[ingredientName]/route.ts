@@ -5,7 +5,7 @@ export async function GET(
     req: Request,
     { params }: { params: { ingredientName: string } } // Use destructuring here for correct typing
 ) {
-    const { ingredientName } = params;
+    const { ingredientName } = await params;
 
     if (!ingredientName) {
         return NextResponse.json({ error: "Ingredient ID is required" }, { status: 400 });

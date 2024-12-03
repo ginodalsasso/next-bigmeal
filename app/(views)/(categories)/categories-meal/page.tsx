@@ -2,8 +2,8 @@
 
 import React, { useEffect, useState } from "react";
 import { CategoryMealType } from "@/lib/types/schemas_interfaces";
-import CategoryForm from "../_components/CategoryForm";
-import CategoryCard from "../_components/CategoryCard";
+import CategoryForm from "../../_components/CategoryForm";
+import CategoryCard from "../../_components/CategoryCard";
 
 // _________________________ COMPOSANT _________________________
 const CategoryMealPage = () => {
@@ -112,18 +112,21 @@ const CategoryMealPage = () => {
 
     return (
         <div>
-            {/* Composant de création */}
+            {/* Formulaire pour ajouter une catégorie */}
             <CategoryForm onAddCategory={createCategoryMeal} />
-            <h1>Liste des catégories de repas</h1>
             {/* Afficher les catégories existantes */}
-            <div className="mt-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 pt-6">
                 {categoryMeal.map((category) => (
-                    <CategoryCard<CategoryMealType> 
-                        key={category.id} 
-                        category={category}
-                        onUpdateCategory={updateCategoryMeal}
-                        onDeleteCategory={deleteCategoryMeal}
-                    />
+                    <div 
+                        className="w-full" 
+                        key={category.id}
+                    >
+                        <CategoryCard<CategoryMealType> 
+                            category={category}
+                            onUpdateCategory={updateCategoryMeal}
+                            onDeleteCategory={deleteCategoryMeal}
+                        />
+                    </div>
                 ))}
             </div>
         </div>

@@ -91,7 +91,7 @@ const CreateIngredientPage = () => {
 
     // _________________________ RENDU _________________________
     return (
-        <form className="flex flex-col w-full my-5 gap-5" onSubmit={handleSubmit}>
+        <form className="flex flex-col lg:max-w-[50%] my-5 mx-auto gap-5" onSubmit={handleSubmit}>
             <h1 className="text-2xl text-center mb-5">Créer un nouvel ingrédient</h1>
 
             {/* Champ pour le nom de l'ingrédient */}

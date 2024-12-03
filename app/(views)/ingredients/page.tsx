@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 
-import IngredientCard from "./_components/IngredientCard";
+import IngredientCard from "../_components/IngredientCard";
 import { IngredientType } from "@/lib/types/schemas_interfaces";
 
 // _________________________ COMPOSANT _________________________
@@ -93,15 +93,20 @@ const IngredientPage = () => {
     if (!ingredients) return <div>Ingredients introuvables.</div>;
     
     return <>
-        {ingredients.map(ingredient => (
-            <div key={ingredient.id}>
-                <IngredientCard 
-                    ingredient = {ingredient} 
-                    onUpdateIngredient= {updateIngredient}
-                    onDeleteIngredient = {deleteIngredient}
-                />
-            </div>
-        ))}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-6">
+            {ingredients.map(ingredient => (
+                <div 
+                    className="w-full" 
+                    key={ingredient.id}
+                >
+                    <IngredientCard 
+                        ingredient = {ingredient} 
+                        onUpdateIngredient= {updateIngredient}
+                        onDeleteIngredient = {deleteIngredient}
+                    />
+                </div>
+            ))}
+        </div>
     </>;
 };
 
