@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Link from "next/link";
 import { ucFirst } from "@/lib/utils";
+import Navbar from "@/components/Navbar";
 
 // const geistSans = localFont({
 //   src: "./fonts/GeistVF.woff",
@@ -31,20 +32,10 @@ export default function RootLayout({
     return (
         <html lang="en">
             <body>
-                <header>
-                    <nav>
-                        <ul className="flex justify-center p-2">
-                        {links.map((link) =>
-                            <Link key={link.title} href={link.url}>
-                                <li className="mr-5 cursor-pointer hover:underline">
-                                    {ucFirst(link.title)}
-                                </li>
-                            </Link>
-                        )}
-                        </ul>
-                    </nav>
+                <header className="px-4 md:px-6 mx-auto max-w-7xl">
+                    <Navbar/>
                 </header>
-                <main className="md:p-6">{children}</main>
+                <main className="p-4 md:p-6 mx-auto max-w-7xl">{children}</main>
             </body>
         </html>
     );
