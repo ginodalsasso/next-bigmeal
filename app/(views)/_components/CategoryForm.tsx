@@ -48,28 +48,29 @@ const CategoryForm: React.FC<CategoryFormProps> = ({ onAddCategory }) => {
     
     // _________________________ RENDU _________________________
     return (
-        <div className="w-fit border p-6 rounded-xl">
-            <h2>Nouvelle catégorie:</h2>
-            <div className="flex flex-col sm:flex-row gap-2">
+        <>
+            <h2 className="mb-2 text-lg font-bold">Nouvelle catégorie:</h2>
+            <div className="flex flex-col gap-2">
                 <input
                     type="text"
                     value={newCategoryName}
                     onChange={(e) => setNewCategoryName(e.target.value)}
                     placeholder="Nom de la catégorie"
                     className="border p-2 rounded-lg text-black"
+                    required
                 />
                 {error.name && (
-                    <p className="text-red-500 text-sm mb-4 mx-auto w-[90%]">{error.name}</p>
+                    <p className="text-red-500 text-sm mb-4">{error.name}</p>
                 )}
                 <button
                     onClick={handleSubmit}
-                    className="bg-emerald-500 text-white px-4 py-2 rounded-lg"
+                    className="bg-emerald-500 text-white px-4 py-2 rounded-lg font-bold"
                     disabled={isLoading}
                 >
                     {isLoading ? 'Ajout en cours...' : 'Ajouter'}
                 </button>
             </div>
-        </div>
+        </>
     );
 };
 

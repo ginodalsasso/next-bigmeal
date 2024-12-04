@@ -109,11 +109,13 @@ const CategoryIngredientPage = () => {
     if (!categoryIngredient) return <div>Catégorie de repas introuvables.</div>;
 
     return (
-        <div>
+        <div className="cards-wrapper">
             {/* Composant de création */}
-            <CategoryForm onAddCategory={createCategoryIngredient} />
+            <div className="card mb-6 w-fit">
+                <CategoryForm onAddCategory={createCategoryIngredient} />
+            </div>
             {/* Afficher les catégories existantes */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 pt-6">
+            <div className="cards-list">
                 {categoryIngredient.map((category) => (
                     <div 
                         className="w-full" 

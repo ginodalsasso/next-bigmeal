@@ -19,3 +19,15 @@ body {
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+.cards-wrapper {
+  @apply border p-6 rounded-xl;
+}
+
+.cards-list {
+  @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4
+}
+
+.card {
+  @apply border border-gray-500 p-6 rounded-xl;
+}

@@ -74,7 +74,7 @@ const CategoryCard = <T extends CategoryType>({
     
     // _________________________ RENDU _________________________
     return (
-        <div className="border border-gray-500 p-6 rounded-xl">
+        <div className="card">
             {!isEditing ? (
                 <ItemView
                     title={category.name}

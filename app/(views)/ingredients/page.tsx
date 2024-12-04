@@ -93,19 +93,21 @@ const IngredientPage = () => {
     if (!ingredients) return <div>Ingredients introuvables.</div>;
     
     return <>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-6">
-            {ingredients.map(ingredient => (
-                <div 
-                    className="w-full" 
-                    key={ingredient.id}
-                >
-                    <IngredientCard 
-                        ingredient = {ingredient} 
-                        onUpdateIngredient= {updateIngredient}
-                        onDeleteIngredient = {deleteIngredient}
-                    />
-                </div>
-            ))}
+        <div className="cards-wrapper">
+            <div className="cards-list">
+                {ingredients.map(ingredient => (
+                    <div 
+                        className="w-full" 
+                        key={ingredient.id}
+                    >
+                        <IngredientCard 
+                            ingredient = {ingredient} 
+                            onUpdateIngredient= {updateIngredient}
+                            onDeleteIngredient = {deleteIngredient}
+                        />
+                    </div>
+                ))}
+            </div>
         </div>
     </>;
 };

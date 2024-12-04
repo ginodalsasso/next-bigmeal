@@ -75,7 +75,7 @@ const IngredientCard = <T extends IngredientType>({
     return (
         <div
             key={ingredient.id}
-            className="border border-gray-500 p-6 rounded-xl"
+            className="card"
         >
             {!isEditing ? (
                 <ItemView

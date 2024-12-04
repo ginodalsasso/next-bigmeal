@@ -111,11 +111,13 @@ const CategoryMealPage = () => {
     if (!categoryMeal) return <div>Catégorie de repas introuvables.</div>;
 
     return (
-        <div>
-            {/* Formulaire pour ajouter une catégorie */}
-            <CategoryForm onAddCategory={createCategoryMeal} />
+        <div className="cards-wrapper">
+            {/* Composant de création */}
+            <div className="card mb-6 w-fit">
+                <CategoryForm onAddCategory={createCategoryMeal} />
+            </div>
             {/* Afficher les catégories existantes */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 pt-6">
+            <div className="cards-list">
                 {categoryMeal.map((category) => (
                     <div 
                         className="w-full" 
