@@ -1,10 +1,10 @@
 import { useState } from "react";
-
 import ItemView from "@/app/(views)/_components/ItemView";
 import CategoryEditForm from "./CategoryEditForm";
 
 import { CategoryType } from "@/lib/types/schemas_interfaces";
 import { categoriesConstraints } from "@/lib/types/forms_constraints";
+
 
 // _________________________ TYPES _________________________
 type CategoryCardProps<T extends CategoryType> = {
@@ -12,6 +12,7 @@ type CategoryCardProps<T extends CategoryType> = {
     onUpdateCategory: (id: string, newName: string) => Promise<void>;
     onDeleteCategory: (id: string) => Promise<void>;
 };
+
 
 // _________________________ COMPOSANT _________________________
 const CategoryCard = <T extends CategoryType>({
@@ -22,7 +23,6 @@ const CategoryCard = <T extends CategoryType>({
 
     // _________________________ ETATS _________________________
     const [isEditing, setIsEditing] = useState(false); // État pour basculer entre lecture et édition
-    const [isDeleting, setIsDeleting] = useState(false); // Indicateur de chargement pour la suppression
 
     const [isLoading, setIsLoading] = useState(false); // Indicateur de chargement pour la mise à jour
     const [error, setError] = useState<string | null>(null); // Gestion des erreurs
@@ -33,7 +33,6 @@ const CategoryCard = <T extends CategoryType>({
     const handleEdit = async (newName: string) => {
         setIsLoading(true);
         setError(null);
-    
         // Valider les données du formulaire
         const validationResult = categoriesConstraints.safeParse({ name: newName });
         if (!validationResult.success) {
@@ -54,24 +53,6 @@ const CategoryCard = <T extends CategoryType>({
         }
     };
 
-
-    // Gestion de la suppression de la catégorie
-    const handleDelete = async () => {
-        const confirmDelete = window.confirm("Êtes-vous sûr de vouloir supprimer cette catégorie ?");
-        if (!confirmDelete) return;
-
-        setIsDeleting(true);
-        try {
-            await onDeleteCategory(category.id);
-        } catch (error) {
-            console.error("[DELETE_CATEGORY]", error);
-            alert("Erreur lors de la suppression de la catégorie.");
-        } finally {
-            setIsDeleting(false);
-        }
-    };
-
-    
     // _________________________ RENDU _________________________
     return (
         <div className="card">
@@ -80,8 +61,8 @@ const CategoryCard = <T extends CategoryType>({
                     title={category.name}
                     details={{}}
                     onEdit={() => setIsEditing(true)}
-                    onDelete={handleDelete}
-                    isDeleting={isDeleting}
+                    onDelete={() => onDeleteCategory(category.id)} // Passe la suppression comme prop
+                    isDeleting={false}
                 />
             ) : (
                 <CategoryEditForm
