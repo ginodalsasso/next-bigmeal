@@ -23,7 +23,6 @@ const IngredientCard = <T extends IngredientType>({
 
     // _________________________ ETATS _________________________
     const [isEditing, setIsEditing] = useState(false); // État pour basculer entre lecture et édition
-    const [isDeleting, setIsDeleting] = useState(false); // Indicateur de chasrgement pour la suppression
 
     const [isLoading, setIsLoading] = useState(false); // Indicateur de chargement pour la mise à jour
     const [error, setError] = useState<string | null>(null); // Gestion des erreurs
@@ -55,22 +54,6 @@ const IngredientCard = <T extends IngredientType>({
     };
 
 
-    // Gestion de la suppression de l'ingredient
-    const handleDelete = async () => {
-        const confirmDelete = window.confirm("Êtes-vous sûr de vouloir supprimer cet ingrédient ?");
-        if (!confirmDelete) return;
-
-        setIsDeleting(true);
-        try {
-            await onDeleteIngredient(ingredient.id);
-        } catch (error) {
-            console.error("[DELETE_Ingredient]", error);
-            alert("Erreur lors de la suppression de l'ingrédient.");
-        } finally {
-            setIsDeleting(false);
-        }
-    };
-
     // _________________________ RENDU _________________________
     return (
         <div
@@ -85,8 +68,8 @@ const IngredientCard = <T extends IngredientType>({
                         season: ingredient.season,
                     }}
                     onEdit={() => setIsEditing(true)}
-                    onDelete={handleDelete}
-                    isDeleting={isDeleting}
+                    onDelete={() => onDeleteIngredient(ingredient.id)} // Passe la suppression comme prop
+                    isDeleting={false}
                 />
             ) : (
                 <IngredientEditForm
