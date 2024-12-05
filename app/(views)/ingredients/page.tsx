@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 
 import IngredientCard from "../_components/IngredientCard";
 import { IngredientType } from "@/lib/types/schemas_interfaces";
+import { toast } from "sonner";
 
 // _________________________ COMPOSANT _________________________
 const IngredientPage = () => {
@@ -57,6 +58,7 @@ const IngredientPage = () => {
                     ingredient.id === id ? updatedIngredient : ingredient // Si l'id correspond, on remplace
                 )
             );
+            toast("Ingrédient modifié avec succès");
         } catch (error) {
             console.error('Erreur lors de la modification:', error);
             setError('Erreur lors de la modification.');
@@ -80,6 +82,7 @@ const IngredientPage = () => {
             }
             // Supprimer l'ingrédient du state 
             setIngredients((prev) => prev.filter((ingredient) => ingredient.id !== id));
+            toast("Ingrédient suprimmé avec succès");
         } catch (error) {
             console.error('Erreur lors de la suppression:', error);
             setError('Erreur lors de la suppression.');

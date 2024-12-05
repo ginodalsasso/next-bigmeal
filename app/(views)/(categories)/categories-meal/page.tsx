@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { CategoryMealType } from "@/lib/types/schemas_interfaces";
 import CategoryForm from "../../_components/CategoryForm";
 import CategoryCard from "../../_components/CategoryCard";
+import { toast } from "sonner";
 
 // _________________________ COMPOSANT _________________________
 const CategoryMealPage = () => {
@@ -53,6 +54,7 @@ const CategoryMealPage = () => {
 
         // Mettre à jour la liste des catégories localement
         setCategoryMeal((prev) => [...prev, newCategory]);
+        toast("Catégorie créé avec succès");
     };
 
     // Appel API pour mettre à jour une catégorie
@@ -76,6 +78,7 @@ const CategoryMealPage = () => {
                     category.id === id ? updatedCategory : category // Si l'id correspond, on remplace
                 )
             );
+            toast("Catégorie modifiée avec succès");
         } catch (error) {
             console.error('Erreur lors de la modification:', error);
             setError('Erreur lors de la modification.');
@@ -98,6 +101,7 @@ const CategoryMealPage = () => {
             }
             // Supprimer la catégorie du state 
             setCategoryMeal((prev) => prev.filter((category) => category.id !== id));
+            toast("Catégorie suprimmée avec succès");
         } catch (error) {
             console.error('Erreur lors de la suppression:', error);
             setError('Erreur lors de la suppression.');

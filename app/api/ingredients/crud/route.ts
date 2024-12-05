@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { idConstraints, ingredientConstraints } from "@/lib/types/forms_constraints";
 
-
 export async function POST(req: NextRequest) {
     try {
         const body = await req.json();
@@ -16,8 +15,8 @@ export async function POST(req: NextRequest) {
                 categoryIngredientId,
             },
         });
-
         return NextResponse.json(newIngredient, {status: 201});
+
     } catch (error) {
         console.error("[CREATE_INGREDIENT_ERROR]", error);
         return new NextResponse("Internal Error", {status: 500 });

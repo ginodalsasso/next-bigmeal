@@ -7,6 +7,7 @@ import { Season } from "@/lib/types/enums";
 import { CategoryIngredientType } from "@/lib/types/schemas_interfaces";
 import { IngredientFormErrorType, IngredientFormType } from "@/lib/types/forms_interfaces";
 import { ingredientConstraints } from "@/lib/types/forms_constraints";
+import { toast } from "sonner";
 
 
 // _________________________ COMPOSANT _________________________
@@ -54,6 +55,7 @@ const CreateIngredientPage = () => {
                 throw new Error("Erreur lors de la création de l'ingrédient");
             }
             return JSON.parse(await response.text());
+
         } catch (error) {
             console.error("[CREATE_INGREDIENT_API_ERROR]", error);
             throw error;
@@ -81,6 +83,7 @@ const CreateIngredientPage = () => {
         try {
             await createIngredient(form);
             router.push("/ingredients");
+            toast("Ingrédient créé avec succès");
         } catch (error) {
             console.error("[CREATE_INGREDIENT]", error);
         } finally {
