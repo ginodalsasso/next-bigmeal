@@ -155,7 +155,7 @@ const CreateIngredientPage = () => {
                 className="bg-emerald-500 text-white font-bold p-2 rounded mx-auto w-[90%] hover:bg-emerald-400"
                 disabled={isLoading}
             >
-                {isLoading ? "Chargement..." : "Créer"}
+                {isLoading ? "Ajout en cours..." : "Ajouter"}
             </button>
         </form>
     );

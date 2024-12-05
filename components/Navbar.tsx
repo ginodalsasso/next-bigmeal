@@ -62,12 +62,12 @@ const Navbar = () => {
                     <div
                         className={`${
                             !toggle ? "hidden" : "flex"
-                        } bg-black p-6 absolute top-0 right-0 w-full h-full z-10 border flex justify-end`}
+                        } bg-black p-6 absolute top-0 right-0 w-full h-full z-10 flex justify-end`}
                     >
                         <Image
                             src={closeMenu}
                             alt="menu"
-                            className="top-5 right-5 absolute"
+                            className="top-6 right-5 absolute"
                             onClick={() => setToggle(!toggle)}
                         />
                         <ul className="list-none flex justify-center items-end flex-col gap-5">

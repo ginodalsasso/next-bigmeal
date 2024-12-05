@@ -111,7 +111,7 @@ const CategoryIngredientPage = () => {
     return (
         <div className="cards-wrapper">
             {/* Composant de création */}
-            <div className="card mb-6 w-fit">
+            <div className="card mb-6 md:w-fit">
                 <CategoryForm onAddCategory={createCategoryIngredient} />
             </div>
             {/* Afficher les catégories existantes */}
