@@ -22,7 +22,7 @@ const ItemView = <T extends object>({
 }: GenericViewProps<T>) => {
     return (
         <div>
-            <h2 className="text-xl font-bold">{title}</h2>
+            <h2 className="text-xl font-bold">{ucFirst(title)}</h2>
             <div>
                 {Object.entries(details).map(([key, value]) => ( // Object.entries() retourne un tableau de paires clé-valeur
                     <p key={key}>

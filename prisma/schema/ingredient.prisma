@@ -12,7 +12,7 @@ model Ingredient {
     season               Season?
 
     categoryIngredientId String             @db.ObjectId
-    categoryIngredient   CategoryIngredient @relation(fields: [categoryIngredientId], references: [id])
+    categoryIngredient   CategoryIngredient @relation(fields: [categoryIngredientId], references: [id], onDelete: Cascade)
 
     compositions         Composition[]
     shoppingListItems    ShoppingList[]

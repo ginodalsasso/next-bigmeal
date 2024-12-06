@@ -16,7 +16,7 @@ model Composition {
     unit         Unit
 
     ingredient Ingredient @relation(fields: [ingredientId], references: [id])
-    meal       Meal       @relation(fields: [mealId], references: [id])
+    meal       Meal       @relation(fields: [mealId], references: [id], onDelete: Cascade)
 
     @@index([ingredientId])
     @@index([mealId])

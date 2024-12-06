@@ -5,7 +5,7 @@ model Meal {
     description       String?
 
     categoryMealId    String         @db.ObjectId
-    categoryMeal      CategoryMeal   @relation(fields: [categoryMealId], references: [id])
+    categoryMeal      CategoryMeal   @relation(fields: [categoryMealId], references: [id], onDelete: Cascade)
 
     compositions      Composition[]
     shoppingListItems ShoppingList[]
