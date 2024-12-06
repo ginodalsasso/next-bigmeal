@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { CategoryFormErrorType } from "@/lib/types/forms_interfaces";
 import { categoriesConstraints } from "@/lib/types/forms_constraints";
+import { Button } from "@/components/ui/button";
 
 // _________________________ TYPES _________________________
 type CategoryFormProps = { 
@@ -62,13 +63,13 @@ const CategoryForm: React.FC<CategoryFormProps> = ({ onAddCategory }) => {
                 {error.name && (
                     <p className="text-red-500 text-sm mb-4">{error.name}</p>
                 )}
-                <button
+                <Button
                     onClick={handleSubmit}
                     className="bg-emerald-500 text-white px-4 py-2 rounded-lg font-bold"
                     disabled={isLoading}
                 >
                     {isLoading ? 'Ajout en cours...' : 'Ajouter'}
-                </button>
+                </Button>
             </div>
         </>
     );

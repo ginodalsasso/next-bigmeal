@@ -1,10 +1,13 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 
+type Props = {
+    params: Promise<{ ingredientName: string }>;
+}
+
 export async function GET(
-    req: Request,
-    { params }: { params: { ingredientName: string } } // Use destructuring here for correct typing
-) {
+    req: NextRequest,
+    { params }: Props)   {
     const { ingredientName } = await params;
 
     if (!ingredientName) {
