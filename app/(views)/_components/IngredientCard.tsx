@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 import ItemView from "./ItemView";
-import IngredientEditForm from "./IngredientEditForm";
+import IngredientEditForm from "./(formsComponents)/IngredientEditForm";
 
 import { ingredientConstraints } from "@/lib/types/forms_constraints";
 import { IngredientType } from "@/lib/types/schemas_interfaces";

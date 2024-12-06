@@ -1,6 +1,6 @@
 import { useState } from "react";
 import ItemView from "@/app/(views)/_components/ItemView";
-import CategoryEditForm from "./CategoryEditForm";
+import CategoryEditForm from "./(formsComponents)/CategoryEditForm";
 
 import { CategoryType } from "@/lib/types/schemas_interfaces";
 import { categoriesConstraints } from "@/lib/types/forms_constraints";
