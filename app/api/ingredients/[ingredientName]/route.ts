@@ -8,6 +8,7 @@ type Props = {
 export async function GET(
     req: NextRequest,
     { params }: Props)   {
+        
     const { ingredientName } = await params;
 
     if (!ingredientName) {
