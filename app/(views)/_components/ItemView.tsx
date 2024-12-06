@@ -1,4 +1,5 @@
 import { AlertDialog, AlertDialogTrigger, AlertDialogContent, AlertDialogHeader, AlertDialogFooter, AlertDialogTitle, AlertDialogDescription } from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
 import { ucFirst } from "@/lib/utils";
 
 
@@ -31,22 +32,21 @@ const ItemView = <T extends object>({
                 ))}
             </div>
             <div className="flex gap-2">
-                <button
+                <Button
                     onClick={onEdit}
-                    className="bg-blue-500 text-white px-4 py-2 rounded-lg mt-2 font-bold"
+                    variant="edit"
                 >
                     Modifier
-                </button>
-
+                </Button>
                 {/* AlertDialog pour la suppression */}
                 <AlertDialog>
                     <AlertDialogTrigger asChild>
-                        <button
-                            className="bg-red-500 text-white px-4 py-2 rounded-lg mt-2 font-bold"
+                        <Button
+                            variant="delete"
                             disabled={isDeleting}
                         >
                             {isDeleting ? "Suppression..." : "Supprimer"}
-                        </button>
+                        </Button>
                     </AlertDialogTrigger>
                     <AlertDialogContent>
                         <AlertDialogHeader>
@@ -56,13 +56,13 @@ const ItemView = <T extends object>({
                             </AlertDialogDescription>
                         </AlertDialogHeader>
                         <AlertDialogFooter>
-                            <button
+                            <Button
                                 onClick={onDelete}
-                                className="bg-red-500 text-white px-4 py-2 rounded-lg font-bold"
+                                variant="delete"
                                 disabled={isDeleting}
                             >
                                 {isDeleting ? "Suppression..." : "Oui, supprimer"}
-                            </button>
+                            </Button>
                             <AlertDialogTrigger asChild>
                                 <button className="bg-gray-500 text-white px-4 py-2 rounded-lg font-bold">
                                     Annuler

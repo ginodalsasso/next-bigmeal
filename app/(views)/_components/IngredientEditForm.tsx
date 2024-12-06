@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Season } from "@/lib/types/enums";
 import { CategoryIngredientType } from "@/lib/types/schemas_interfaces";
 import { IngredientEditFormProps } from "@/lib/types/forms_interfaces";
+import {Button} from "@/components/ui/button";
 
 // _________________________ COMPOSANT _________________________
 const IngredientEditForm: React.FC<IngredientEditFormProps> = ({
@@ -97,21 +98,21 @@ const IngredientEditForm: React.FC<IngredientEditFormProps> = ({
             </select>
                 
             <div className="flex gap-2">
-                <button
+                <Button
                     type="button"
                     onClick={onCancel}
-                    className="bg-gray-500 text-white px-4 py-2 rounded-lg font-bold"
+                    variant="cancel"
                     disabled={isLoading}
                 >
                     Annuler
-                </button>
-                <button
+                </Button>
+                <Button
                     type="submit"
-                    className="bg-emerald-500 text-white px-4 py-2 rounded-lg font-bold"
+                    variant="success"
                     disabled={isLoading}
                 >
                     {isLoading ? "En cours..." : "Valider"}
-                </button>
+                </Button>
             </div>
         </form>
     );

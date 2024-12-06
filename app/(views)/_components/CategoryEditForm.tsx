@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { CategoryEditFormProps } from "@/lib/types/forms_interfaces";
+import { Button } from "@/components/ui/button";
 
 // _________________________ COMPOSANT _________________________
 const CategoryEditForm: React.FC<CategoryEditFormProps> = ({
@@ -35,21 +36,21 @@ const CategoryEditForm: React.FC<CategoryEditFormProps> = ({
             />
             {error && <p className="text-red-500 text-sm">{error}</p>}
             <div className="flex gap-2">
-                <button
+                <Button
                     type="button"
                     onClick={onCancel}
-                    className="bg-gray-500 text-white px-4 py-2 rounded-lg font-bold"
+                    variant="cancel"
                     disabled={isLoading}
                 >
                     Annuler
-                </button>
-                <button
+                </Button>
+                <Button
                     type="submit"
-                    className="bg-emerald-500 text-white px-4 py-2 rounded-lg font-bold"
+                    variant="success"
                     disabled={isLoading}
                 >
                     {isLoading ? "En cours..." : "Valider"}
-                </button>
+                </Button>
             </div>
         </form>
     );

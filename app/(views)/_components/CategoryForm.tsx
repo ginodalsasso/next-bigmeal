@@ -65,7 +65,7 @@ const CategoryForm: React.FC<CategoryFormProps> = ({ onAddCategory }) => {
                 )}
                 <Button
                     onClick={handleSubmit}
-                    className="bg-emerald-500 text-white px-4 py-2 rounded-lg font-bold"
+                    variant="success"
                     disabled={isLoading}
                 >
                     {isLoading ? 'Ajout en cours...' : 'Ajouter'}
