@@ -1,6 +1,6 @@
 import { db } from "@/lib/db";
 import { NextRequest, NextResponse } from "next/server";
-import { idConstraints, ingredientConstraints } from "@/lib/types/forms_constraints";
+import { idConstraints, ingredientConstraints } from "@/lib/constraints/forms_constraints";
 
 
 export async function GET() {

@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { Season } from "./enums";
+import { Season } from "../types/enums";
 
 // _________________________ CONTRAINTES DE VALIDATION _________________________
 

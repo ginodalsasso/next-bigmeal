@@ -5,10 +5,11 @@ import React, { useEffect, useState } from "react";
 import { Season } from "@/lib/types/enums";
 import { CategoryIngredientType, IngredientType } from "@/lib/types/schemas_interfaces";
 import { IngredientFormErrorType, IngredientFormType } from "@/lib/types/forms_interfaces";
-import { ingredientConstraints } from "@/lib/types/forms_constraints";
+import { ingredientConstraints } from "@/lib/constraints/forms_constraints";
 
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import { translatedSeason } from "@/lib/utils";
 
 
 // _________________________ COMPOSANT _________________________
@@ -123,7 +124,7 @@ const CreateIngredient = ({ onIngredientCreated, onClose }: { onIngredientCreate
                 <option value="">-- Choisir une saison --</option>
                 {Object.values(Season).map((season) => (
                     <option key={season} value={season}>
-                        {season}
+                        {translatedSeason(season)}
                     </option>
                 ))}
             </select>

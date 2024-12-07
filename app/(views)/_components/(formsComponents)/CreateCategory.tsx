@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { CategoryFormErrorType } from "@/lib/types/forms_interfaces";
-import { categoriesConstraints } from "@/lib/types/forms_constraints";
+import { categoriesConstraints } from "@/lib/constraints/forms_constraints";
 import { Button } from "@/components/ui/button";
 
 // _________________________ TYPES _________________________

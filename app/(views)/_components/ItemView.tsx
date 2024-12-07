@@ -3,6 +3,7 @@ import { AlertDialog, AlertDialogTrigger, AlertDialogContent, AlertDialogHeader,
 import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 import { ucFirst } from "@/lib/utils";
+import { Badge } from "@/components/ui/badge";
 
 // _________________________ TYPES _________________________
 interface GenericViewProps<T extends object> {
@@ -28,9 +29,12 @@ const ItemView = <T extends object>({
             <div className="card">
                 <h2 className="text-xl font-bold">{ucFirst(title)}</h2>
                     {Object.entries(details).map(([key, value]) => (
-                        <p key={key}>
+                        <Badge 
+                            key={key}
+                            // variant="outline"
+                        >
                             {ucFirst(value)}
-                        </p>
+                        </Badge>
                     ))}
                 <div className="flex gap-2 mt-4">
                     {/* Popover pour l'édition */}
