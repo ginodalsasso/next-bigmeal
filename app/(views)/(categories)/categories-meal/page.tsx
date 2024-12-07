@@ -1,118 +1,121 @@
-'use client' 
+'use client';
 
 import React, { useEffect, useState } from "react";
 import { CategoryMealType } from "@/lib/types/schemas_interfaces";
 import CategoryForm from "../../_components/(formsComponents)/CreateCategory";
-import CategoryCard from "../../_components/CategoryCard";
+import UpdateCategory from "../../_components/(formsComponents)/UpdateCategory";
+import ItemView from "@/app/(views)/_components/ItemView";
 import { toast } from "sonner";
 
 // _________________________ COMPOSANT _________________________
 const CategoryMealPage = () => {
 
+
     // _________________________ ETATS _________________________
-    const [categoryMeal, setCategoryMeal] = useState<CategoryMealType[]>([]); 
+    const [categoryMeal, setCategoryMeal] = useState<CategoryMealType[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
 
     // _________________________ LOGIQUE _________________________
-    // Récupérer les catégories de repas 
+    // Récupérer les catégories de repas
     useEffect(() => {
         const fetchCategoryMeal = async () => {
-            try{
-                const response = await fetch('/api/categories-meal');
+            try {
+                const response = await fetch("/api/categories-meal");
                 if (!response.ok) {
-                    throw new Error('Failed to fetch categories-meal');
+                    throw new Error("Failed to fetch categories-meal");
                 }
-                const data: CategoryMealType[] = await response.json(); 
+                const data: CategoryMealType[] = await response.json();
                 setCategoryMeal(data);
             } catch (error) {
-                console.error('Erreur lors de la récupération des catégories de repas:', error);
-                setError('Erreur lors de la récupération des catégories de repas');
+                console.error("Erreur lors de la récupération des catégories de repas:", error);
+                setError("Erreur lors de la récupération des catégories de repas");
             } finally {
                 setLoading(false);
             }
         };
         fetchCategoryMeal();
-    }, []); 
+    }, []);
 
     // Appel API pour ajouter une catégorie
     const createCategoryMeal = async (name: string) => {
-        const response = await fetch('/api/categories-meal', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ name }),
-        });
+        try {
+            const response = await fetch("/api/categories-meal", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ name }),
+            });
 
-        if (!response.ok) {
-            throw new Error('Failed to add category');
+            if (!response.ok) {
+                throw new Error("Failed to add category");
+            }
+
+            const newCategory: CategoryMealType = await response.json();
+            setCategoryMeal((prev) => [...prev, newCategory]);
+            toast("Catégorie créée avec succès");
+        } catch (error) {
+            console.error("Erreur lors de la création:", error);
+            setError("Erreur lors de la création.");
         }
-
-        const newCategory: CategoryMealType = await response.json();
-
-        // Mettre à jour la liste des catégories localement
-        setCategoryMeal((prev) => [...prev, newCategory]);
-        toast("Catégorie créé avec succès");
     };
 
     // Appel API pour mettre à jour une catégorie
     const updateCategoryMeal = async (id: string, newName: string) => {
         try {
-            const response = await fetch('/api/categories-meal', {
-                method: 'PUT',
+            const response = await fetch("/api/categories-meal", {
+                method: "PUT",
                 headers: {
-                    'Content-Type': 'application/json',
+                    "Content-Type": "application/json",
                 },
                 body: JSON.stringify({ id, name: newName }),
             });
 
             if (!response.ok) {
-                throw new Error('Failed to update category');
+                throw new Error("Failed to update category");
             }
             // Mettre à jour la catégorie dans le state
             const updatedCategory: CategoryMealType = await response.json();
             setCategoryMeal((prev) => // Remplacer l'ancienne catégorie par la nouvelle
-                prev.map((category) =>
-                    category.id === id ? updatedCategory : category // Si l'id correspond, on remplace
-                )
+                prev.map((category) => (category.id === id ? updatedCategory : category)) // Si l'id correspond, on remplace
             );
             toast("Catégorie modifiée avec succès");
         } catch (error) {
-            console.error('Erreur lors de la modification:', error);
-            setError('Erreur lors de la modification.');
+            console.error("Erreur lors de la modification:", error);
+            setError("Erreur lors de la modification.");
         }
     };
 
     // Appel API pour supprimer une catégorie
     const deleteCategoryMeal = async (id: string) => {
         try {
-            const response = await fetch('/api/categories-meal', {
-                method: 'DELETE',
+            const response = await fetch("/api/categories-meal", {
+                method: "DELETE",
                 headers: {
-                    'Content-Type': 'application/json',
+                    "Content-Type": "application/json",
                 },
                 body: JSON.stringify({ id }),
             });
 
             if (!response.ok) {
-                throw new Error('Failed to delete category');
+                throw new Error("Failed to delete category");
             }
-            // Supprimer la catégorie du state 
+            // Supprimer la catégorie du state
             setCategoryMeal((prev) => prev.filter((category) => category.id !== id));
-            toast("Catégorie suprimmée avec succès");
+            toast("Catégorie supprimée avec succès");
         } catch (error) {
-            console.error('Erreur lors de la suppression:', error);
-            setError('Erreur lors de la suppression.');
+            console.error("Erreur lors de la suppression:", error);
+            setError("Erreur lors de la suppression.");
         }
     };
 
-
+    
     // _________________________ RENDU _________________________
     if (loading) return <div>Loading...</div>;
     if (error) return <div>{error}</div>;
-    if (!categoryMeal) return <div>Catégorie de repas introuvables.</div>;
+    if (!categoryMeal) return <div>Catégories de repas introuvables.</div>;
 
     return (
         <div className="cards-wrapper">
@@ -120,19 +123,29 @@ const CategoryMealPage = () => {
             <div className="card mb-6 md:w-fit">
                 <CategoryForm onAddCategory={createCategoryMeal} />
             </div>
+
             {/* Afficher les catégories existantes */}
             <div className="cards-list">
                 {categoryMeal.map((category) => (
-                    <div 
-                        className="w-full" 
+                    <ItemView
                         key={category.id}
-                    >
-                        <CategoryCard<CategoryMealType> 
-                            category={category}
-                            onUpdateCategory={updateCategoryMeal}
-                            onDeleteCategory={deleteCategoryMeal}
-                        />
-                    </div>
+                        title={category.name}
+                        details={{}}
+                        renderEditForm={(onClose) => (
+                            <UpdateCategory
+                                initialName={category.name}
+                                onSubmit={async (newName) => {
+                                    await updateCategoryMeal(category.id, newName);
+                                    onClose();
+                                }}
+                                onCancel={onClose}
+                                isLoading={false}
+                                error={null}
+                            />
+                        )}
+                        onDelete={() => deleteCategoryMeal(category.id)}
+                        isDeleting={false}
+                    />
                 ))}
             </div>
         </div>

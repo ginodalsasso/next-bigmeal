@@ -1,43 +1,51 @@
+import React, { useState } from "react";
 import { AlertDialog, AlertDialogTrigger, AlertDialogContent, AlertDialogHeader, AlertDialogFooter, AlertDialogTitle, AlertDialogDescription } from "@/components/ui/alert-dialog";
+import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 import { ucFirst } from "@/lib/utils";
-
 
 // _________________________ TYPES _________________________
 interface GenericViewProps<T extends object> {
     title: string;
     details: T;
-    onEdit: () => void;
-    onDelete: () => Promise<void>; // Fonction pour supprimer l'élément
+    renderEditForm: (onClose: () => void) => React.ReactNode; // Fonction pour afficher le formulaire d'édition
+    onDelete: () => Promise<void>;
     isDeleting: boolean;
 }
-
 
 // _________________________ COMPOSANT _________________________
 const ItemView = <T extends object>({
     title,
     details,
-    onEdit,
+    renderEditForm,
     onDelete,
     isDeleting,
 }: GenericViewProps<T>) => {
+    const [isPopoverOpen, setIsPopoverOpen] = useState(false);
+
     return (
         <div>
             <h2 className="text-xl font-bold">{ucFirst(title)}</h2>
             <div>
-                {Object.entries(details).map(([key, value]) => ( // Object.entries() retourne un tableau de paires clé-valeur
+                {Object.entries(details).map(([key, value]) => (
                     <p key={key}>
                         {ucFirst(key)}: {value}
                     </p>
                 ))}
             </div>
             <div className="flex gap-2">
-                <Button
-                    onClick={onEdit}
-                    variant="edit"
-                >
-                    Modifier
-                </Button>
+                {/* Popover pour l'édition */}
+                <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
+                    <PopoverTrigger asChild>
+                        <Button variant="edit">
+                            Modifier
+                        </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-80 p-4">
+                        {renderEditForm(() => setIsPopoverOpen(false))}
+                    </PopoverContent>
+                </Popover>
+
                 {/* AlertDialog pour la suppression */}
                 <AlertDialog>
                     <AlertDialogTrigger asChild>
