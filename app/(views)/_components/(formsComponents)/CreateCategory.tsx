@@ -4,12 +4,12 @@ import { categoriesConstraints } from "@/lib/types/forms_constraints";
 import { Button } from "@/components/ui/button";
 
 // _________________________ TYPES _________________________
-type CategoryFormProps = { 
+type CreateCategoryProps = { 
     onAddCategory: (name: string) => Promise<void>; 
 };
 
 // _________________________ COMPOSANT _________________________
-const CategoryForm: React.FC<CategoryFormProps> = ({ onAddCategory }) => {
+const CreateCategory: React.FC<CreateCategoryProps> = ({ onAddCategory }) => {
 
     // _________________________ ETATS __________________
     const [newCategoryName, setNewCategoryName] = useState('');
@@ -75,4 +75,4 @@ const CategoryForm: React.FC<CategoryFormProps> = ({ onAddCategory }) => {
     );
 };
 
-export default CategoryForm;
+export default CreateCategory;

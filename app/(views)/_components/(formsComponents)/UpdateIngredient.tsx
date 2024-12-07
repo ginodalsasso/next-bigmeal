@@ -2,11 +2,11 @@ import { useEffect, useState } from "react";
 
 import { Season } from "@/lib/types/enums";
 import { CategoryIngredientType } from "@/lib/types/schemas_interfaces";
-import { IngredientEditFormProps } from "@/lib/types/forms_interfaces";
+import { UpdateIngredientProps } from "@/lib/types/forms_interfaces";
 import {Button} from "@/components/ui/button";
 
 // _________________________ COMPOSANT _________________________
-const IngredientEditForm: React.FC<IngredientEditFormProps> = ({
+const UpdateIngredient: React.FC<UpdateIngredientProps> = ({
     initialName,
     initialCategory,
     initialSeason,
@@ -118,4 +118,4 @@ const IngredientEditForm: React.FC<IngredientEditFormProps> = ({
     );
 };
 
-export default IngredientEditForm;
+export default UpdateIngredient;

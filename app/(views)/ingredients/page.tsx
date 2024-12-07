@@ -5,12 +5,23 @@ import React, { useEffect, useState } from "react";
 import IngredientCard from "../_components/IngredientCard";
 import { IngredientType } from "@/lib/types/schemas_interfaces";
 import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
+
+import CreateIngredient from "../_components/(formsComponents)/CreateIngredient";
+import {
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from "@/components/ui/dialog"
 
 // _________________________ COMPOSANT _________________________
 const IngredientPage = () => {
 
     // _________________________ ETATS _________________________
     const [ingredients, setIngredients] = useState<IngredientType[]>([]); 
+    const [isDialogOpen, setIsDialogOpen] = useState(false); 
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
@@ -37,10 +48,15 @@ const IngredientPage = () => {
     }, []); 
 
 
+    // Fonction pour ajouter un ingrédient à la liste
+    const addIngredient = (ingredient: IngredientType) => {
+        setIngredients((prevIngredients) => [...prevIngredients, ingredient]);
+    };
+
     // Appel API pour mettre à jour un ingrédient
     const updateIngredient = async (id: string, newName: string, newCategory: string, newSeason: string) => {
         try {
-            const response = await fetch('/api/ingredients/crud', {
+            const response = await fetch('/api/ingredients', {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -69,7 +85,7 @@ const IngredientPage = () => {
     // Appel API pour supprimer un ingrédient
     const deleteIngredient = async (id: string) => {
         try {
-            const response = await fetch('/api/ingredients/crud', {
+            const response = await fetch('/api/ingredients', {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
@@ -96,6 +112,23 @@ const IngredientPage = () => {
     if (!ingredients) return <div>Ingredients introuvables.</div>;
     
     return <>
+        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+            <DialogTrigger asChild>
+                <Button variant="success" onClick={() => setIsDialogOpen(true)}>
+                    Ajouter un ingrédient
+                </Button>                    
+            </DialogTrigger>
+            <DialogContent>
+                <DialogHeader>
+                    <DialogTitle className="mb-5 text-center">Ajouter un ingrédient</DialogTitle>
+                    {/* Formulaire de création d'ingrédient */}
+                    <CreateIngredient
+                        onIngredientCreated={addIngredient} 
+                        onClose={() => setIsDialogOpen(false)}
+                    />
+                </DialogHeader>
+            </DialogContent>
+        </Dialog>
         <div className="cards-wrapper">
             <div className="cards-list">
                 {ingredients.map(ingredient => (

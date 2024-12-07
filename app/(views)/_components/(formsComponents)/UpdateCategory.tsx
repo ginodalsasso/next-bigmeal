@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { CategoryEditFormProps } from "@/lib/types/forms_interfaces";
+import { UpdateCategoryProps } from "@/lib/types/forms_interfaces";
 import { Button } from "@/components/ui/button";
 
 // _________________________ COMPOSANT _________________________
-const CategoryEditForm: React.FC<CategoryEditFormProps> = ({
+const UpdateCategory: React.FC<UpdateCategoryProps> = ({
     initialName,
     onSubmit,
     onCancel,
@@ -56,4 +56,4 @@ const CategoryEditForm: React.FC<CategoryEditFormProps> = ({
     );
 };
 
-export default CategoryEditForm;
+export default UpdateCategory;

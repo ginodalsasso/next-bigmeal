@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 import ItemView from "./ItemView";
-import IngredientEditForm from "./(formsComponents)/IngredientEditForm";
+import UpdateIngredient from "./(formsComponents)/UpdateIngredient";
 
 import { ingredientConstraints } from "@/lib/types/forms_constraints";
 import { IngredientType } from "@/lib/types/schemas_interfaces";
@@ -72,7 +72,7 @@ const IngredientCard = <T extends IngredientType>({
                     isDeleting={false}
                 />
             ) : (
-                <IngredientEditForm
+                <UpdateIngredient
                     initialName={ingredient.name}
                     initialCategory={ingredient.categoryIngredient?.name}
                     initialSeason={ingredient.season || ""}

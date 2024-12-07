@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { CategoryIngredientType } from "@/lib/types/schemas_interfaces";
-import CategoryForm from "../../_components/(formsComponents)/CategoryForm";
+import CategoryForm from "../../_components/(formsComponents)/CreateCategory";
 import CategoryCard from "../../_components/CategoryCard";
 import { toast } from "sonner";
 

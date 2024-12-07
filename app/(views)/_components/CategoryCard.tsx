@@ -1,6 +1,6 @@
 import { useState } from "react";
 import ItemView from "@/app/(views)/_components/ItemView";
-import CategoryEditForm from "./(formsComponents)/CategoryEditForm";
+import UpdateCategory from "./(formsComponents)/UpdateCategory";
 
 import { CategoryType } from "@/lib/types/schemas_interfaces";
 import { categoriesConstraints } from "@/lib/types/forms_constraints";
@@ -65,7 +65,7 @@ const CategoryCard = <T extends CategoryType>({
                     isDeleting={false}
                 />
             ) : (
-                <CategoryEditForm
+                <UpdateCategory
                     initialName={category.name}
                     onSubmit={handleEdit}
                     onCancel={() => setIsEditing(false)}

@@ -19,7 +19,7 @@ export interface CategoryFormErrorType {
     name: string;
 }
 
-export interface CategoryEditFormProps {
+export interface UpdateCategoryProps {
     initialName: string;
     onSubmit: (newName: string) => Promise<void>;
     onCancel: () => void;
@@ -27,7 +27,7 @@ export interface CategoryEditFormProps {
     error: string | null;
 }
 
-export interface IngredientEditFormProps {
+export interface UpdateIngredientProps {
     initialName: string;
     initialCategory: string;
     initialSeason: string;
