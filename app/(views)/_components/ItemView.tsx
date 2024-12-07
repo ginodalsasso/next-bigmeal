@@ -25,60 +25,60 @@ const ItemView = <T extends object>({
 
     return (
         <div>
-            <h2 className="text-xl font-bold">{ucFirst(title)}</h2>
-            <div>
-                {Object.entries(details).map(([key, value]) => (
-                    <p key={key}>
-                        {ucFirst(key)}: {value}
-                    </p>
-                ))}
-            </div>
-            <div className="flex gap-2">
-                {/* Popover pour l'édition */}
-                <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
-                    <PopoverTrigger asChild>
-                        <Button variant="edit">
-                            Modifier
-                        </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-80 p-4">
-                        {renderEditForm(() => setIsPopoverOpen(false))}
-                    </PopoverContent>
-                </Popover>
+            <div className="card">
+                <h2 className="text-xl font-bold">{ucFirst(title)}</h2>
+                    {Object.entries(details).map(([key, value]) => (
+                        <p key={key}>
+                            {ucFirst(value)}
+                        </p>
+                    ))}
+                <div className="flex gap-2 mt-4">
+                    {/* Popover pour l'édition */}
+                    <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
+                        <PopoverTrigger asChild>
+                            <Button variant="edit">
+                                Modifier
+                            </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-80 p-4">
+                            {renderEditForm(() => setIsPopoverOpen(false))}
+                        </PopoverContent>
+                    </Popover>
 
-                {/* AlertDialog pour la suppression */}
-                <AlertDialog>
-                    <AlertDialogTrigger asChild>
-                        <Button
-                            variant="delete"
-                            disabled={isDeleting}
-                        >
-                            {isDeleting ? "Suppression..." : "Supprimer"}
-                        </Button>
-                    </AlertDialogTrigger>
-                    <AlertDialogContent>
-                        <AlertDialogHeader>
-                            <AlertDialogTitle>Confirmation de Suppression</AlertDialogTitle>
-                            <AlertDialogDescription>
-                                Êtes-vous sûr de vouloir supprimer cet élément ? Cette action est irréversible.
-                            </AlertDialogDescription>
-                        </AlertDialogHeader>
-                        <AlertDialogFooter>
+                    {/* AlertDialog pour la suppression */}
+                    <AlertDialog>
+                        <AlertDialogTrigger asChild>
                             <Button
-                                onClick={onDelete}
                                 variant="delete"
                                 disabled={isDeleting}
-                            >
-                                {isDeleting ? "Suppression..." : "Oui, supprimer"}
+                                >
+                                {isDeleting ? "Suppression..." : "Supprimer"}
                             </Button>
-                            <AlertDialogTrigger asChild>
-                                <button className="bg-gray-500 text-white px-4 py-2 rounded-lg font-bold">
-                                    Annuler
-                                </button>
-                            </AlertDialogTrigger>
-                        </AlertDialogFooter>
-                    </AlertDialogContent>
-                </AlertDialog>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                            <AlertDialogHeader>
+                                <AlertDialogTitle>Confirmation de Suppression</AlertDialogTitle>
+                                <AlertDialogDescription>
+                                    Êtes-vous sûr de vouloir supprimer cet élément ? Cette action est irréversible.
+                                </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                                <Button
+                                    onClick={onDelete}
+                                    variant="delete"
+                                    disabled={isDeleting}
+                                    >
+                                    {isDeleting ? "Suppression..." : "Oui, supprimer"}
+                                </Button>
+                                <AlertDialogTrigger asChild>
+                                    <button className="bg-gray-500 text-white px-4 py-2 rounded-lg font-bold">
+                                        Annuler
+                                    </button>
+                                </AlertDialogTrigger>
+                            </AlertDialogFooter>
+                        </AlertDialogContent>
+                    </AlertDialog>
+                </div>
             </div>
         </div>
     );

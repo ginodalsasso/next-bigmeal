@@ -1,13 +1,13 @@
 'use client';
 
 import React, { useEffect, useState } from "react";
+import Image from "next/image";
+import add from "@/public/img/add.svg";
 import { IngredientType } from "@/lib/types/schemas_interfaces";
-import { toast } from "sonner";
-import { Button } from "@/components/ui/button";
 
+import ItemView from "@/app/(views)/_components/ItemView";
 import CreateIngredient from "../_components/(formsComponents)/CreateIngredient";
 import UpdateIngredient from "../_components/(formsComponents)/UpdateIngredient";
-import ItemView from "@/app/(views)/_components/ItemView";
 
 import {
     Dialog,
@@ -16,6 +16,10 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog";
+import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
+import { translatedSeason } from "@/lib/utils";
+
 
 // _________________________ COMPOSANT _________________________
 const IngredientPage = () => {
@@ -104,8 +108,8 @@ const IngredientPage = () => {
             setError("Erreur lors de la suppression.");
         }
     };
-
     
+
     // _________________________ RENDU _________________________
     if (loading) return <div>Loading...</div>;
     if (error) return <div>{error}</div>;
@@ -113,10 +117,16 @@ const IngredientPage = () => {
 
     return (
         <>
+            {/* Dialogue pour ajouter un ingrédient */}
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                 <DialogTrigger asChild>
                     <Button variant="success" onClick={() => setIsDialogOpen(true)}>
-                        Ajouter un ingrédient
+                        <Image
+                            src={add}
+                            alt="Ajouter un ingrédient"
+                            className="w-4"
+                        />
+                        Ajouter un ingrédient 
                     </Button>
                 </DialogTrigger>
                 <DialogContent>
@@ -130,6 +140,8 @@ const IngredientPage = () => {
                     </DialogHeader>
                 </DialogContent>
             </Dialog>
+                
+            {/* Liste des ingrédients */}
             <div className="cards-wrapper">
                 <div className="cards-list">
                     {ingredients.map((ingredient) => (
@@ -138,9 +150,10 @@ const IngredientPage = () => {
                             title={ingredient.name}
                             details={{
                                 category: ingredient.categoryIngredient?.name || "Non spécifié",
-                                season: ingredient.season || "Non spécifiée",
+                                season: translatedSeason(ingredient.season),
                             }}
-                            renderEditForm={(onClose) => (
+                            // Formulaire de mise à jour
+                            renderEditForm={(onClose) => ( // 
                                 <UpdateIngredient
                                     initialName={ingredient.name}
                                     initialCategory={ingredient.categoryIngredient?.id || ""}

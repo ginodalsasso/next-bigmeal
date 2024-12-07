@@ -12,8 +12,7 @@ const Navbar = () => {
     const [toggle, setToggle] = useState(false);
 
     const links = [
-        { title: "ingredients", url: "/ingredients" },
-        { title: "Ajouter un ingrédient", url: "/ingredients/create" },
+        { title: "ingrédients", url: "/ingredients" },
         { title: "catégorie ingrédient", url: "/categories-ingredient" },
         { title: "catégorie repas", url: "/categories-meal" },
     ];

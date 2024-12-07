@@ -11,3 +11,18 @@ export function ucFirst(string: string): string {
   }
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
+
+export const translatedSeason = (season: string | undefined): string => {
+  switch (season) {
+      case "SPRING":
+          return "Printemps";
+      case "SUMMER":
+          return "Été";
+      case "AUTUMN":
+          return "Automne";
+      case "WINTER":
+          return "Hiver";
+      default:
+          return "Inconnue";
+  }
+};

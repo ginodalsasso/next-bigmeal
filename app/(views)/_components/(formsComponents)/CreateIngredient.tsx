@@ -152,13 +152,21 @@ const CreateIngredient = ({ onIngredientCreated, onClose }: { onIngredientCreate
             )}
 
             {/* Bouton de soumission */}
-            <Button
-                type="submit"
-                variant="success"
-                disabled={isLoading}
-            >
-                {isLoading ? "Ajout en cours..." : "Ajouter"}
-            </Button>
+            <div className="flex flex-col-reverse gap-2 lg:justify-end">
+                <Button
+                    variant="cancel"
+                    onClick={onClose}
+                >
+                    Annuler
+                </Button>
+                <Button
+                    type="submit"
+                    variant="success"
+                    disabled={isLoading}
+                >
+                    {isLoading ? "Ajout en cours..." : "Ajouter"}
+                </Button>
+            </div>
         </form>
     );
 };
