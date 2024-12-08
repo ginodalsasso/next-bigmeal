@@ -153,7 +153,7 @@ const IngredientPage = () => {
                                 season: translatedSeason(ingredient.season),
                             }}
                             // Formulaire de mise à jour
-                            renderEditForm={(onClose) => ( // 
+                            renderEditForm={(onClose) => ( 
                                 <UpdateIngredient
                                     initialName={ingredient.name}
                                     initialCategory={ingredient.categoryIngredient?.id || ""}
