@@ -23,18 +23,20 @@ const ItemView = <T extends object>({
     isDeleting,
 }: GenericViewProps<T>) => {
     const [isPopoverOpen, setIsPopoverOpen] = useState(false);
+    const badgeKeys = ["description"]; // Clés pour lesquelles on affiche un badge sinon affiche un paragraphe
 
     return (
         <div>
             <div className="card">
                 <h2 className="text-xl font-bold">{ucFirst(title)}</h2>
                     {Object.entries(details).map(([key, value]) => (
-                        <Badge 
-                            key={key}
-                            // variant="outline"
-                        >
-                            {ucFirst(value)}
-                        </Badge>
+                        badgeKeys.includes(key) ? (
+                            <p key={key}>{ucFirst(value as string)}</p>
+                        ) : ( 
+                            <Badge key={key} className="mr-2">
+                                {ucFirst(value as string)}
+                            </Badge>
+                        )
                     ))}
                 <div className="flex gap-2 mt-4">
                     {/* Popover pour l'édition */}

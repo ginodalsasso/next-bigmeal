@@ -125,7 +125,7 @@ const MealsPage = () => {
                             alt="Ajouter un repas"
                             className="w-4"
                         />
-                        Ajouter un ingrédient 
+                        Ajouter un repas 
                     </Button>
                 </DialogTrigger>
                 <DialogContent>
