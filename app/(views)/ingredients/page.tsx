@@ -66,7 +66,12 @@ const IngredientPage = () => {
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ id, name: newName, categoryIngredientId: newCategory, season: newSeason }),
+                body: JSON.stringify({ 
+                    id, 
+                    name: newName, 
+                    categoryIngredientId: newCategory, 
+                    season: newSeason 
+                }),
             });
 
             if (!response.ok) {
@@ -159,7 +164,12 @@ const IngredientPage = () => {
                                     initialCategory={ingredient.categoryIngredient?.id || ""}
                                     initialSeason={ingredient.season || ""}
                                     onSubmit={async (newName, newCategory, newSeason) => {
-                                        await updateIngredient(ingredient.id, newName, newCategory, newSeason);
+                                        await updateIngredient(
+                                            ingredient.id, 
+                                            newName, 
+                                            newCategory, 
+                                            newSeason
+                                        );
                                         onClose();
                                     }}
                                     onCancel={onClose}

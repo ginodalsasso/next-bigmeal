@@ -58,14 +58,19 @@ const MealsPage = () => {
     };
 
     // Appel API pour mettre à jour un ingrédient
-    const updateMeal = async (id: string, newName: string, newCategory: string, newDescription: string) => {
+    const updateMeal = async (id:string, newName: string, newCategoryId: string, newDescription: string|null) => {
         try {
             const response = await fetch("/api/meals", {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ id, name: newName, categoryMealId: newCategory, description: newDescription }),
+                body: JSON.stringify({ 
+                    id, 
+                    name: newName, 
+                    categoryMealId: newCategoryId, 
+                    description: newDescription 
+                }),
             });
 
             if (!response.ok) {
@@ -75,7 +80,7 @@ const MealsPage = () => {
             const updatedMeal: MealType = await response.json();
             setMeals((prev) => // Remplacer l'ancien repas par le nouveau
                 prev.map((meal) =>
-                    meal.id === id ? updatedMeal : meal
+                    meal.id === updatedMeal.id ? updatedMeal : meal
                 )
             );
             toast("Repas modifié avec succès");
@@ -158,7 +163,12 @@ const MealsPage = () => {
                                     initialCategory={meal.categoryMeal?.id || ""}
                                     initialDescription={meal.description || ""}
                                     onSubmit={async (newName, newCategory, newDescription) => {
-                                        await updateMeal(meal.id, newName, newCategory, newDescription);
+                                        await updateMeal( 
+                                            meal.id, 
+                                            newName, 
+                                            newCategory, 
+                                            newDescription || null
+                                        );
                                         onClose();
                                     }}
                                     onCancel={onClose}

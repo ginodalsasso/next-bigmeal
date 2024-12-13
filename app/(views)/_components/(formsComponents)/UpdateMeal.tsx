@@ -18,7 +18,7 @@ const UpdateMeal: React.FC<UpdateMealProps> = ({
     // _________________________ ETATS _________________________
     const [name, setName] = useState(initialName);
     const [category, setCategory] = useState(initialCategory);
-    const [description, setDescription] = useState(initialDescription);
+    const [description, setDescription] = useState(initialDescription || "");
     const [categories, setCategories] = useState<CategoryMealType[]>([]);
 
     
@@ -45,7 +45,7 @@ const UpdateMeal: React.FC<UpdateMealProps> = ({
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        await onSubmit(name, category, description);
+        await onSubmit(name, category, description || "");
     };
 
 
@@ -84,7 +84,7 @@ const UpdateMeal: React.FC<UpdateMealProps> = ({
             {/* Text area pour la description */}
             <textarea
                 placeholder="Description du repas"
-                value={description}
+                value={description || ""}
                 onChange={(e) => setDescription(e.target.value)} 
                 className="border border-gray-300 p-2 rounded text-black"
             />

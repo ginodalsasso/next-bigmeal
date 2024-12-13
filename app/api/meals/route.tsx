@@ -58,14 +58,14 @@ export async function PUT(req: NextRequest) {
             );
         }
 
-        const { id, name, description, categoryMealId } = body; 
+        const { id, name, description, categoryMealId } = body;
 
         const updatedMeal = await db.meal.update({
             where: { id },
             data: { 
                 name,
                 categoryMealId,
-                description,
+                description: description === "" ? null : description,
             },
             include: { categoryMeal: true }
         });

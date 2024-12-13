@@ -25,6 +25,7 @@ export interface UpdateIngredientProps {
     error: string | null;
 }
 
+
 // MEALS
 export interface MealFormType {
     name: string;
@@ -46,6 +47,13 @@ export interface UpdateMealProps {
     isLoading: boolean;
     error: string | null;
 }
+// export interface UpdateMealFormType {
+//     id: string;
+//     newName: string;
+//     newDescription?: string | null;
+//     newCategoryMealId: string;
+// }
+
 
 // CATEGORIES
 export interface CategoryFormErrorType {
