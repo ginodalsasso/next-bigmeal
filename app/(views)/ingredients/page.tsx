@@ -59,7 +59,7 @@ const IngredientPage = () => {
     };
 
     // Appel API pour mettre à jour un ingrédient
-    const updateIngredient = async (id: string, newName: string, newCategory: string, newSeason: string) => {
+    const updateIngredient = async (id: string, newName: string, newCategory: string, newSeason: string|null) => {
         try {
             const response = await fetch("/api/ingredients", {
                 method: "PUT",
@@ -155,7 +155,7 @@ const IngredientPage = () => {
                             title={ingredient.name}
                             details={{
                                 category: ingredient.categoryIngredient?.name || "Non spécifié",
-                                season: translatedSeason(ingredient.season),
+                                season: translatedSeason(ingredient.season) || "Non spécifié",
                             }}
                             // Formulaire de mise à jour
                             renderEditForm={(onClose) => ( 
@@ -168,7 +168,7 @@ const IngredientPage = () => {
                                             ingredient.id, 
                                             newName, 
                                             newCategory, 
-                                            newSeason
+                                            newSeason || null
                                         );
                                         onClose();
                                     }}

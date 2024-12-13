@@ -19,7 +19,7 @@ const UpdateIngredient: React.FC<UpdateIngredientProps> = ({
     // _________________________ ETATS _________________________
     const [name, setName] = useState(initialName);
     const [category, setCategory] = useState(initialCategory);
-    const [season, setSeason] = useState(initialSeason);
+    const [season, setSeason] = useState(initialSeason || "");
     const [categories, setCategories] = useState<CategoryIngredientType[]>([]);
 
     
@@ -89,7 +89,7 @@ const UpdateIngredient: React.FC<UpdateIngredientProps> = ({
                 className="border p-2 rounded w-full text-black"
                 disabled={isLoading}
             >
-                <option value="">{season}</option>
+                <option value="">Non spécifié</option>
                 {Object.values(Season).map((season) => (
                     <option key={season} value={season}>
                         {season}

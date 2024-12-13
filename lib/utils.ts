@@ -18,7 +18,7 @@ export function ucFirst(string: string): string {
 
 
 // Traduction des saisons
-export const translatedSeason = (season: string | undefined): string => {
+export const translatedSeason = (season: string | undefined): string | void => {
   switch (season) {
       case "SPRING":
           return "Printemps";
@@ -28,7 +28,5 @@ export const translatedSeason = (season: string | undefined): string => {
           return "Automne";
       case "WINTER":
           return "Hiver";
-      default:
-          return "Inconnue";
   }
 };
