@@ -32,3 +32,23 @@ export const translatedSeason = (season: string | undefined): string => {
           return "Non spécifié";
   }
 };
+
+// Traduction des unités de mesures
+export const translatedUnit = (unit: string | undefined): string => {
+  switch (unit) {
+      case "GRAM":
+          return "g";
+      case "KILOGRAM":
+          return "kg";
+      case "LITER":
+          return "L";
+      case "MILLILITER":
+          return "mL";
+      case "CENTILITER":
+          return "cL";
+      case "PIECE":
+          return "pce";
+      default:
+          return "Non spécifié";
+  }
+};

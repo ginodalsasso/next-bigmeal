@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState, use } from "react";
 import { MealType } from "@/lib/types/schemas_interfaces";
-import { Description } from "@radix-ui/react-dialog";
+import { translatedUnit } from "@/lib/utils";
 
 const MealDetailPage = ({ params }: { params: Promise<{ mealName: string }> }) => {
 
@@ -43,22 +43,20 @@ const MealDetailPage = ({ params }: { params: Promise<{ mealName: string }> }) =
             <h1 className="text-4xl font-semibold text-emerald-500 text-center mb-2">
                 {meal.name}
             </h1>
-            <p className="mx-auto text-center w-[90%] p-4 bg-slate-700 rounded-md">
-                {meal.description}
-            </p>
-            {/* <p className="text-center mt-4">
-                {ingredient.categoryIngredient?.name || "Catégorie non disponible"}
-            </p> */}
-            {/* {ingredient.season && <p>Saison: {ingredient.season}</p>}
-            {ingredient.compositions.length > 0 ? (
-                ingredient.compositions.map((composition) => (
-                    <div key={composition.id}>
-                        <p>{composition.meal.name}</p>
-                    </div>
-                ))
-            ) : (
-                <p>Aucun repas disponible pour cet ingrédient.</p>
-            )} */}
+            {meal.description || "Aucune description disponible pour ce repas."}
+                {meal.compositions.length > 0 ? (
+                    meal.compositions.map((composition) => (
+                        <div key={composition.id} className="flex gap-2">
+                            <p>{composition.ingredient.name}</p>
+                            <div className="flex">
+                                <p>{composition.quantity}</p>
+                                <p>{translatedUnit(composition.unit)}</p>
+                            </div>
+                        </div>
+                    ))
+                ) : (
+                    <p>Aucun ingrédients disponible pour ce repas.</p>
+                )}
         </div>
     );
 };
