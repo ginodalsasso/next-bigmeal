@@ -57,7 +57,7 @@ export interface UpdateMealProps {
 
 // CATEGORIES
 export interface CategoryFormErrorType {
-    name: string;
+    name?: string;
 }
 export interface UpdateCategoryProps {
     initialName: string;

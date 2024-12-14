@@ -44,8 +44,8 @@ export const mealConstraints = z.object({
         trim(),
     description: 
         z.string().
-        min(3, "La description doit comporter au moins 10 caractères").
-        max(1000, "La description doit comporter au maximum 1000 caractères").
+        min(10, "La description doit comporter au moins 10 caractères").
+        max(2000, "La description doit comporter au maximum 2000 caractères").
         nullable(). 
         optional(). 
         default(null),

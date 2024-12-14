@@ -3,6 +3,9 @@ import { useEffect, useState } from "react";
 import { CategoryMealType } from "@/lib/types/schemas_interfaces";
 import {Button} from "@/components/ui/button";
 import { UpdateMealProps } from "@/lib/types/forms_interfaces";
+import { MealFormErrorType } from "@/lib/types/forms_interfaces";
+import { mealConstraints } from "@/lib/constraints/forms_constraints";
+
 
 // _________________________ COMPOSANT _________________________
 const UpdateMeal: React.FC<UpdateMealProps> = ({
@@ -12,7 +15,6 @@ const UpdateMeal: React.FC<UpdateMealProps> = ({
     onSubmit,
     onCancel,
     isLoading,
-    error,
 }) => {
 
     // _________________________ ETATS _________________________
@@ -20,6 +22,7 @@ const UpdateMeal: React.FC<UpdateMealProps> = ({
     const [category, setCategory] = useState(initialCategory);
     const [description, setDescription] = useState(initialDescription || "");
     const [categories, setCategories] = useState<CategoryMealType[]>([]);
+    const [error, setError] = useState<MealFormErrorType>({});
 
     
     // _________________________ LOGIQUE _________________________
@@ -44,7 +47,24 @@ const UpdateMeal: React.FC<UpdateMealProps> = ({
     // Gestion de la soumission du formulaire d'édition de repas
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        setError({});
 
+        const formData = {
+            name,
+            categoryMealId: category,
+            description: description || null,
+        };
+
+        const validationResult = mealConstraints.safeParse(formData);
+        if (!validationResult.success) {
+            const formattedErrors = validationResult.error.flatten().fieldErrors;
+            setError({
+                name: formattedErrors.name?.[0],
+                description: formattedErrors.description?.[0], 
+                categoryMealId: formattedErrors.categoryMealId?.[0],
+            });
+            return;
+        }
         await onSubmit(name, category, description || "");
     };
 
@@ -61,7 +81,7 @@ const UpdateMeal: React.FC<UpdateMealProps> = ({
                 className="border p-2 rounded w-full text-black"
                 disabled={isLoading}
             />
-            {error && <p className="text-red-500 text-sm">{error}</p>}
+            {error.name && <p className="text-red-500 text-sm">{error.name}</p>}
 
             {/* Sélection pour la catégorie */}
             <select
@@ -80,6 +100,10 @@ const UpdateMeal: React.FC<UpdateMealProps> = ({
                     </option>
                 ))}
             </select>
+            {error.categoryMealId && (
+                <p className="text-red-500 text-sm">{error.categoryMealId}</p>
+            )}
+
 
             {/* Text area pour la description */}
             <textarea
@@ -88,6 +112,7 @@ const UpdateMeal: React.FC<UpdateMealProps> = ({
                 onChange={(e) => setDescription(e.target.value)} 
                 className="border border-gray-300 p-2 rounded text-black"
             />
+            {error.description && <p className="text-red-500 text-sm">{error.description}</p>}
                 
             
             <div className="flex gap-2">
