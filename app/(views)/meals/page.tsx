@@ -178,6 +178,7 @@ const MealsPage = () => {
                             )}
                             onDelete={() => deleteMeal(meal.id)}
                             isDeleting={false}
+                            linkToDetails={`/meals/${meal.name}`}
                         />
                     ))}
                 </div>
