@@ -5,7 +5,7 @@ import Image from "next/image";
 import add from "@/public/img/add.svg";
 import { MealType } from "@/lib/types/schemas_interfaces";
 
-import ItemView from "@/app/(views)/_components/ItemView";
+import ItemView from "@/components/layout/ItemView";
 
 import {
     Dialog,
@@ -16,8 +16,8 @@ import {
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import CreateMeal from "../_components/(formsComponents)/CreateMeal";
-import UpdateMeal from "../_components/(formsComponents)/UpdateMeal";
+import CreateMeal from "./_components/CreateMeal";
+import UpdateMeal from "./_components/UpdateMeal";
 
 
 // _________________________ COMPOSANT _________________________

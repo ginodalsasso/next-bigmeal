@@ -5,9 +5,9 @@ import Image from "next/image";
 import add from "@/public/img/add.svg";
 import { IngredientType } from "@/lib/types/schemas_interfaces";
 
-import ItemView from "@/app/(views)/_components/ItemView";
-import CreateIngredient from "../_components/(formsComponents)/CreateIngredient";
-import UpdateIngredient from "../_components/(formsComponents)/UpdateIngredient";
+import ItemView from "@/components/layout/ItemView";
+import CreateIngredient from "./_components/CreateIngredient";
+import UpdateIngredient from "./_components/UpdateIngredient";
 
 import {
     Dialog,
