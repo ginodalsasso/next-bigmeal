@@ -16,7 +16,6 @@ export function ucFirst(string: string): string {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
-
 // Traduction des saisons
 export const translatedSeason = (season: string | undefined): string => {
   switch (season) {

@@ -53,7 +53,12 @@ export interface UpdateMealProps {
 //     newDescription?: string | null;
 //     newCategoryMealId: string;
 // }
-
+export interface CompositionFormType {
+    ingredientId: string;
+    mealId: string;
+    quantity: number;
+    unit: string;
+}
 
 // CATEGORIES
 export interface CategoryFormErrorType {

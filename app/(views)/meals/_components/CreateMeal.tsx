@@ -83,7 +83,7 @@ const CreateMeal = ({ onMealCreated, onClose }: { onMealCreated: (meal: MealType
             const createdIngredient = await createMeal(form);
             onMealCreated(createdIngredient); // Ajout à la liste parent
             toast("Repas créé avec succès");
-            onClose(); // Fermer le dialogue
+            // onClose(); // Fermer le dialogue
         } catch (error) {
             console.error("[CREATE_MEAL]", error);
         } finally {

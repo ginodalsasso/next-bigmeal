@@ -18,6 +18,7 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import CreateMeal from "./_components/CreateMeal";
 import UpdateMeal from "./_components/UpdateMeal";
+import CreateComposition from "./_components/CreateComposition";
 
 
 // _________________________ COMPOSANT _________________________
@@ -25,6 +26,9 @@ const MealsPage = () => {
 
     // _________________________ ETATS _________________________
     const [meals, setMeals] = useState<MealType[]>([]);
+    const [currentStep, setCurrentStep] = useState<"createMeal" | "createComposition">("createMeal");
+    const [createdMealId, setCreatedMealId] = useState<string | null>(null);
+
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -52,12 +56,21 @@ const MealsPage = () => {
     }, []);
 
 
-    // Fonction pour ajouter un ingrédient à la liste
     const addMeal = (meal: MealType) => {
         setMeals((prevMeals) => [...prevMeals, meal]);
+        setCreatedMealId(meal.id); // Enregistrer l'ID du repas créé
+        console.log("Meal created:", meal);
+        setCurrentStep("createComposition"); // Passer à l'étape suivante
     };
 
-    // Appel API pour mettre à jour un ingrédient
+    const addComposition = () => {
+        toast("Composition ajoutée avec succès");
+        setIsDialogOpen(false);
+        setCurrentStep("createMeal"); // Revenir à l'étape de création de repas
+        setCreatedMealId(null); // Réinitialiser l'ID du repas créé
+    };
+
+    
     const updateMeal = async (id:string, newName: string, newCategoryId: string, newDescription: string|null) => {
         try {
             const response = await fetch("/api/meals", {
@@ -135,12 +148,26 @@ const MealsPage = () => {
                 </DialogTrigger>
                 <DialogContent>
                     <DialogHeader>
-                        <DialogTitle className="mb-5 text-center">Ajouter un repas</DialogTitle>
-                        {/* Formulaire de création de repas */}
-                        <CreateMeal
-                            onMealCreated={addMeal}
-                            onClose={() => setIsDialogOpen(false)}
-                        />
+                        <DialogTitle>
+                            {/* Formulaire de création de repas ou de composition */}
+                            {currentStep === "createMeal" ? "Ajouter un repas" : "Ajouter une composition"}
+                        </DialogTitle>
+                        {currentStep === "createMeal" && (
+                            <CreateMeal
+                                onMealCreated={addMeal}
+                                onClose={() => setIsDialogOpen(false)}
+                            />
+                        )}
+                        {currentStep === "createComposition" && createdMealId && (
+                            <CreateComposition
+                                mealId={createdMealId}
+                                onCompositionCreated={addComposition}
+                                onClose={() => {
+                                    setIsDialogOpen(false);
+                                    setCurrentStep("createMeal");
+                                }}
+                            />
+                        )}
                     </DialogHeader>
                 </DialogContent>
             </Dialog> 
