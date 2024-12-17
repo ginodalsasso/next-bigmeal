@@ -55,7 +55,7 @@ const MealsPage = () => {
         fetchMeals();
     }, []);
 
-
+    // Ajouter un repas
     const addMeal = (meal: MealType) => {
         setMeals((prevMeals) => [...prevMeals, meal]);
         setCreatedMealId(meal.id); // Enregistrer l'ID du repas créé
@@ -63,6 +63,7 @@ const MealsPage = () => {
         setCurrentStep("createComposition"); // Passer à l'étape suivante
     };
 
+    // Ajouter une composition
     const addComposition = () => {
         toast("Composition ajoutée avec succès");
         setIsDialogOpen(false);
@@ -70,7 +71,7 @@ const MealsPage = () => {
         setCreatedMealId(null); // Réinitialiser l'ID du repas créé
     };
 
-    
+    // Appel API pour modifier un repas
     const updateMeal = async (id:string, newName: string, newCategoryId: string, newDescription: string|null) => {
         try {
             const response = await fetch("/api/meals", {
@@ -103,7 +104,7 @@ const MealsPage = () => {
         }
     };
 
-    // Appel API pour supprimer un ingrédient
+    // Appel API pour supprimer un repas
     const deleteMeal = async (id: string) => {
         try {
             const response = await fetch("/api/meals", {
@@ -134,7 +135,7 @@ const MealsPage = () => {
 
     return (
         <>
-            {/* Dialogue pour ajouter un repas */}
+            {/* Dialogue pour ajouter un repas ou une composition*/}
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                 <DialogTrigger asChild>
                     <Button variant="success" onClick={() => setIsDialogOpen(true)}>
