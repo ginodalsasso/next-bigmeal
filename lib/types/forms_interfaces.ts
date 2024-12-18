@@ -1,4 +1,4 @@
-import { Season } from './enums';
+import { IngredientUnit, Season } from './enums';
 
 
 // TYPES FORMULAIRES
@@ -57,7 +57,7 @@ export interface CompositionFormType {
     ingredientId: string;
     mealId: string;
     quantity: number;
-    unit: string;
+    unit: IngredientUnit;
 }
 
 // CATEGORIES

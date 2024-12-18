@@ -2,27 +2,34 @@
 
 import React, { useEffect, useState } from "react";
 
-import { CompositionType, IngredientType, MealType } from "@/lib/types/schemas_interfaces";
 import { CompositionFormType } from "@/lib/types/forms_interfaces";
-// import { compositionConstraints } from "@/lib/constraints/forms_constraints";
+import { CompositionType, IngredientType } from "@/lib/types/schemas_interfaces";
 
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { IngredientUnit } from "@/lib/types/enums";
+import { translatedUnit } from "@/lib/utils";
 
-const CreateComposition = ({ mealId, onCompositionCreated, onClose }: { mealId: string; onCompositionCreated: (composition: CompositionType) => void, onClose: () => void }) => {
-    
-    // _________________________ HOOKS _________________________
-    const [ingredients, setIngredients] = useState<IngredientType[]>([]);
-    const [meals, setMeals] = useState<MealType[]>([]);
-    const [isLoading, setIsLoading] = useState(false);
-    // const [error, setError] = useState<CompositionFormErrorType>({});
-    const [form, setForm] = useState<CompositionFormType>({
-        ingredientId: "",
-        mealId,
-        quantity: 0,
-        unit: "GRAM",
-    });
+const CreateComposition = ({
+    mealId,
+    onCompositionCreated,
+    onClose,
+}: {
+    mealId: string;
+    onCompositionCreated: (compositions: CompositionType[]) => void;
+    onClose: () => void;
+}) => {
+    // _________________________ ETATS _________________________
+    const [ingredients, setIngredients] = useState<IngredientType[]>([]); // Liste des ingrédients disponibles
+    const [isLoading, setIsLoading] = useState(false); // Indique si l'action est en cours
+    const [form, setForm] = useState<CompositionFormType[]>([
+        {
+            ingredientId: "",
+            mealId,
+            quantity: 0,
+            unit: IngredientUnit.GRAM,
+        },
+    ]);
 
     // _________________________ LOGIQUE _________________________
     // Appel API pour récupérer les ingrédients
@@ -33,75 +40,52 @@ const CreateComposition = ({ mealId, onCompositionCreated, onClose }: { mealId: 
                 if (!response.ok) {
                     throw new Error("Erreur lors de la récupération des ingrédients");
                 }
-                const data = await response.json();
+                const data: IngredientType[] = await response.json();
                 setIngredients(data);
             } catch (error) {
                 console.error("[FETCH_INGREDIENTS_ERROR]", error);
             }
         };
 
-        const fetchMeals = async () => {
-            try {
-                const response = await fetch("/api/meals");
-                if (!response.ok) {
-                    throw new Error("Erreur lors de la récupération des repas");
-                }
-                const data = await response.json();
-                setMeals(data);
-            } catch (error) {
-                console.error("[FETCH_MEALS_ERROR]", error);
-            }
-        };
-
         fetchIngredients();
-        fetchMeals();
     }, []);
 
-    // Appel API pour créer une composition
-    const createComposition = async (data: CompositionFormType) => {
-        try {
-            const response = await fetch("/api/compositions", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(data),
-            });
-            if (!response.ok) {
-                throw new Error("Erreur lors de la création de la composition");
-            }
-            return JSON.parse(await response.text());
-        } catch (error) {
-            console.error("[CREATE_COMPOSITION_API_ERROR]", error);
-            throw error;
-        }
+    // Ajouter une nouvelle ligne de composition
+    const addNewLine = () => {
+        setForm((prev) => [
+            ...prev,
+            { ingredientId: "", mealId, quantity: 0, unit: IngredientUnit.GRAM },
+        ]);
+    };
+
+    // Supprimer une ligne de composition par son index
+    const removeLine = (index: number) => {
+        setForm((prev) => prev.filter((_, i) => i !== index));
     };
 
     // Gestion de la soumission du formulaire
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsLoading(true);
-        // setError({});
-
-        // Valider les données du formulaire
-        // const validationResult = compositionConstraints.safeParse(form);
-        // if (!validationResult.success) {
-        //     const formattedErrors = validationResult.error.flatten();
-        //     setError({
-        //         ingredientId: formattedErrors.fieldErrors.ingredientId?.[0],
-        //         mealId: formattedErrors.fieldErrors.mealId?.[0],
-        //         quantity: formattedErrors.fieldErrors.quantity?.[0],
-        //         unit: formattedErrors.fieldErrors.unit?.[0],
-        //     });
-        //     setIsLoading(false);
-        //     return;
-        // }
-
-        // Créer la composition avec les données du formulaire
+    
         try {
-            const createdComposition = await createComposition(form);
-            onCompositionCreated(createdComposition); // Ajout à la liste parent
-            toast("Composition créée avec succès");
+            const response = await fetch("/api/compositions", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(form),
+            });
+    
+            if (!response.ok) {
+                throw new Error("Erreur lors de la création des compositions");
+            }
+    
+            const createdCompositions: CompositionType[] = await response.json(); // Récupérer les compositions insérées
+            onCompositionCreated(createdCompositions); // Ajout à la liste parent
+            toast("Compositions créées avec succès");
+            onClose(); // Fermer le dialogue
         } catch (error) {
-            console.error("[CREATE_COMPOSITION]", error);
+            console.error("[CREATE_COMPOSITION_ERROR]", error);
+            toast.error("Erreur lors de l'ajout des compositions");
         } finally {
             setIsLoading(false);
         }
@@ -110,82 +94,93 @@ const CreateComposition = ({ mealId, onCompositionCreated, onClose }: { mealId: 
     // _________________________ RENDU _________________________
     return (
         <form className="flex flex-col gap-5 p-5" onSubmit={handleSubmit}>
-            {/* Sélection de l'ingrédient */}
-            <select
-                value={form.ingredientId}
-                onChange={(e) => setForm({ ...form, ingredientId: e.target.value })}
-                className="border border-gray-300 p-2 rounded text-black"
-                required
-            >
-                <option value="">-- Choisir un ingrédient --</option>
-                {ingredients.map((ingredient) => (
-                    <option key={ingredient.id} value={ingredient.id}>
-                        {ingredient.name}
-                    </option>
-                ))}
-            </select>
-            {/* {error.ingredientId && (
-                <p className="text-red-500 text-sm mb-4 mx-auto">{error.ingredientId}</p>
-            )} */}
+            {form.map((composition, index) => (
+                <div key={index} className="flex flex-col gap-3 border-b pb-4">
+                    {/* Sélection de l'ingrédient */}
+                    <select
+                        value={composition.ingredientId}
+                        onChange={(e) =>
+                            setForm((prev) =>
+                                prev.map((comp, i) =>
+                                    i === index
+                                        ? { ...comp, ingredientId: e.target.value }
+                                        : comp
+                                )
+                            )
+                        }
+                        className="border border-gray-300 p-2 rounded text-black"
+                        required
+                    >
+                        <option value="">-- Choisir un ingrédient --</option>
+                        {ingredients.map((ingredient) => (
+                            <option key={ingredient.id} value={ingredient.id}>
+                                {ingredient.name}
+                            </option>
+                        ))}
+                    </select>
 
-            {/* Sélection du repas */}
-            <select
-                value={form.mealId}
-                onChange={(e) => setForm({ ...form, mealId: e.target.value })}
-                className="border border-gray-300 p-2 rounded text-black"
-                required
-            >
-                <option value="">-- Choisir un repas --</option>
-                {meals.map((meal) => (
-                    <option key={meal.id} value={meal.id}>
-                        {meal.name}
-                    </option>
-                ))}
-            </select>
-            {/* {error.mealId && (
-                <p className="text-red-500 text-sm mb-4 mx-auto">{error.mealId}</p>
-            )} */}
+                    {/* Champ pour la quantité */}
+                    <input
+                        type="number"
+                        step="0.1"
+                        placeholder="Quantité"
+                        value={composition.quantity}
+                        onChange={(e) =>
+                            setForm((prev) =>
+                                prev.map((comp, i) =>
+                                    i === index
+                                        ? { ...comp, quantity: parseFloat(e.target.value) }
+                                        : comp
+                                )
+                            )
+                        }
+                        className="border border-gray-300 p-2 rounded text-black"
+                        required
+                    />
 
-            {/* Champ pour la quantité */}
-            <input
-                type="number"
-                step="0.1"
-                placeholder="Quantité"
-                value={form.quantity}
-                onChange={(e) => setForm({ ...form, quantity: parseFloat(e.target.value) || 0 })}
-                className="border border-gray-300 p-2 rounded text-black"
-                required
-            />
-            {/* {error.quantity && (
-                <p className="text-red-500 text-sm mb-4 mx-auto">{error.quantity}</p>
-            )} */}
+                    {/* Sélection de l'unité */}
+                    <select
+                        value={composition.unit}
+                        onChange={(e) =>
+                            setForm((prev) =>
+                                prev.map((comp, i) =>
+                                    i === index
+                                        ? { ...comp, unit: e.target.value as IngredientUnit }
+                                        : comp
+                                )
+                            )
+                        }
+                        className="border border-gray-300 p-2 rounded text-black"
+                        required
+                    >
+                        <option value="">-- Choisir une unité --</option>
+                        {Object.values(IngredientUnit).map((unit) => (
+                            <option key={unit} value={unit}>
+                                {translatedUnit(unit)}
+                            </option>
+                        ))}
+                    </select>
 
-            {/* Sélection de l'unité */}
-            <select
-                value={form.unit}
-                onChange={(e) => setForm({ ...form, unit: e.target.value as IngredientUnit })}
-                className="border border-gray-300 p-2 rounded text-black"
-                required
-            >
-                {Object.values(IngredientUnit).map((unit) => (
-                    <option key={unit} value={unit}>
-                        {unit}
-                    </option>
-                ))}
-            </select>
-            {/* {error.unit && (
-                <p className="text-red-500 text-sm mb-4 mx-auto">{error.unit}</p>
-            )} */}
+                    {/* Bouton pour supprimer une ligne */}
+                    <Button
+                        variant="destructive"
+                        onClick={() => removeLine(index)}
+                        disabled={form.length === 1}
+                    >
+                        Supprimer
+                    </Button>
+                </div>
+            ))}
+
+            {/* Bouton pour ajouter une nouvelle ligne */}
+            <Button variant="secondary" type="button" onClick={addNewLine}>
+                Ajouter un ingrédient
+            </Button>
 
             {/* Bouton de soumission */}
-            <div className="flex flex-col-reverse gap-2 lg:justify-end">
-                <Button variant="cancel" onClick={onClose}>
-                    Annuler
-                </Button>
-                <Button type="submit" variant="success" disabled={isLoading}>
-                    {isLoading ? "Ajout en cours..." : "Ajouter"}
-                </Button>
-            </div>
+            <Button type="submit" variant="success" disabled={isLoading || form.length === 0}>
+                {isLoading ? "Ajout en cours..." : "Ajouter"}
+            </Button>
         </form>
     );
 };
