@@ -1,0 +1,75 @@
+[33m683981d4[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmaster[m[33m)[m HEAD@{0}: reset: moving to HEAD~14
+[33m7d76e5bf[m HEAD@{1}: reset: moving to HEAD~1
+[33m409e2aac[m HEAD@{2}: commit: Track large files with Git LFS
+[33m7d76e5bf[m HEAD@{3}: commit: Track large file with Git LFS
+[33m2d89169a[m HEAD@{4}: commit: 📦 AJOUT: ajout du fichier .gitignore et suppression de fichiers webpack hot-update.json
+[33me91e2ca8[m HEAD@{5}: commit: Exclude node_modules from the repository
+[33mceae1725[m HEAD@{6}: commit: 🤖 TEST: ginitgnore
+[33m1609a495[m HEAD@{7}: commit: 🐛 FIX: Vercel error for composition route
+[33ma28a038d[m HEAD@{8}: commit: 📖 DOC: comment on views
+[33m33c15541[m HEAD@{9}: commit: 👌 IMPROVE: Re-indentation + comments
+[33m58ff792c[m[33m ([m[1;31morigin/master[m[33m)[m HEAD@{10}: commit: 📦 NEW: possibilitie to create multiple composition
+[33m31863cd2[m HEAD@{11}: commit: 📖 DOC: comment page meals
+[33m9344e8cf[m HEAD@{12}: commit: 📦 NEW: add composition component, possibilitie to add an composition and multi step form for creating à meal
+[33m34d5c9a2[m HEAD@{13}: commit: 📦 NEW: translatedUnit method in utils folder and meal detail init with few composition
+[33m8001604a[m HEAD@{14}: commit: 📦 NEW: create meal Page and adding optionnal Link to ItemView
+[33m90253809[m HEAD@{15}: commit: 👌 IMPROVE: reorgazine folder component
+[33m3c7047d8[m HEAD@{16}: commit: 👌 IMPROVE: UI constraints white zod on update
+[33m683981d4[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmaster[m[33m)[m HEAD@{17}: commit: 🤖 TEST: trying to fix vercel error with void
+[33mb865b7ab[m HEAD@{18}: commit: 👌 IMPROVE: update method for an ingredient, possibility to set season to null
+[33m3cc6a0aa[m HEAD@{19}: commit: 👌 IMPROVE: possibility to set description to null
+[33mcd8ad2b3[m HEAD@{20}: commit: 👌 IMPROVE: Badge for categories and P for description method
+[33m43c41e62[m HEAD@{21}: commit: 📦 NEW: crud for Meal schema
+[33m60488c55[m HEAD@{22}: commit: 📦 NEW: badge component
+[33m459888e9[m HEAD@{23}: commit: 👌 IMPROVE: a bit of ux
+[33m2279550a[m HEAD@{24}: commit: 📦 NEW: Add Popover component and integrate it into ItemView for editing functionality
+[33mae266497[m HEAD@{25}: commit: 📦 NEW: Add dialog for creating an ingredient.
+[33mea5cfb8f[m HEAD@{26}: commit: 👌 IMPROVE: add folder (formsComponent) for organisation
+[33ma174c3b3[m HEAD@{27}: commit: 👌 IMPROVE: button component
+[33m61beaac2[m HEAD@{28}: commit: 👌 IMPROVE: Cascade en schema and a bit of css
+[33m2ad412d2[m HEAD@{29}: commit: 🤖 TEST: removing link unused
+[33m21a6c7bf[m HEAD@{30}: commit: 📦 NEW: trying new route for ingredient
+[33m6d5074f4[m HEAD@{31}: commit: 👌 IMPROVE: factoring ingredientCard component
+[33mc08a9f79[m HEAD@{32}: commit: 📦 NEW: alert dialog on delete an item
+[33m356f85ad[m HEAD@{33}: commit: 📦 NEW: add toast to every crud functionnalities
+[33mf0c4cb1d[m HEAD@{34}: commit: 👌 IMPROVE: shadcn init
+[33m367a9a51[m HEAD@{35}: commit: 📦 NEW: Navbar component and css
+[33m87a9707c[m HEAD@{36}: commit: 👌 IMPROVE: common class for cards css
+[33m21d8189a[m HEAD@{37}: commit: 👌 IMPROVE: merge to _component folder, a bit of front
+[33m3dbf01ec[m HEAD@{38}: commit: 📦 NEW: create a generic component for ItemView.
+[33m17120707[m HEAD@{39}: commit: 📦 NEW: Refactor CategoryEditForm and IngredientEditForm to use shared props interface and improve form validation
+[33m33b9f585[m HEAD@{40}: commit: 📦 NEW: update an ingredient
+[33med7e84d0[m HEAD@{41}: commit: 📦 NEW: Refactor ingredient API to use ingredient name instead of ID and create delete and update ingredient components and functionnality
+[33m05d78427[m HEAD@{42}: commit: 🤖 TEST
+[33m4a618bbf[m HEAD@{43}: commit: 🤖 TEST:
+[33m5e243a46[m HEAD@{44}: commit: 🤖 TEST:
+[33m05c7232a[m HEAD@{45}: commit: 🤖 TEST:
+[33m4994f584[m HEAD@{46}: commit: 🤖 TEST:
+[33mab116518[m HEAD@{47}: commit: 👌 IMPROVE: Refactor ingredient detail page to resolve Promise for ingredientId and enhance GET function error handling
+[33m0cccfef6[m HEAD@{48}: commit: 👌 UPDATE: Upgrade Prisma and related packages to version 6.0.0
+[33m16ee4bfb[m HEAD@{49}: commit: 👌 IMPROVE: Refactor GET function to use Context type for parameters
+[33mef878685[m HEAD@{50}: commit: 🤖 TEST:
+[33m004c6c41[m HEAD@{51}: commit: 🤖 TEST:
+[33mcc8caa62[m HEAD@{52}: commit: 🤖 TEST:
+[33mdc5dda0c[m HEAD@{53}: commit: 🤖 TEST: trying
+[33mc70dbdf5[m HEAD@{54}: commit: 🤖 TEST: still trying
+[33m000116ff[m HEAD@{55}: commit: 🤖 TEST: trying to fix ingredientId fetching
+[33m4e842704[m HEAD@{56}: commit: 🤖 TEST: trying to fix params id ingredient
+[33mfe6ebfe6[m HEAD@{57}: commit: 🐛 FIX: trying get route api ingredient
+[33m92179ca2[m HEAD@{58}: commit: 📖 DOC: comment code
+[33m65e7b63c[m HEAD@{59}: commit: 👌 IMPROVE: backend constraints
+[33m20bd91b4[m HEAD@{60}: commit: 📦 NEW: crud for categories-meal and organisation file and folder api
+[33m448e9303[m HEAD@{61}: commit: 📦 NEW: update and delete ingredient category
+[33m80b975c3[m HEAD@{62}: commit: 👌 IMPROVE: replace categories display by cards and components.
+[33m60fda012[m HEAD@{63}: commit: 📦 NEW: create category form
+[33m4ad6d7b7[m HEAD@{64}: commit: 📦 NEW: api routes for adding
+[33md2e6b249[m HEAD@{65}: commit: 👌 IMPROVE: zod constraints and provisory links in homepage
+[33m10a75481[m HEAD@{66}: commit: 👌 AMÉLIORER: corriger la structure des paramètres dans la fonction GET de l'API des ingrédients
+[33m361d4f39[m HEAD@{67}: commit: 👌 IMPROVE: storing types, enums in the right files
+[33m22994fa5[m HEAD@{68}: commit: 📦 NEW: init zod, Create an ingredient page and api
+[33m2b98a8a6[m HEAD@{69}: commit: 📦 NEW: adding ingredient fetching and page
+[33m5df16e5c[m HEAD@{70}: commit: 📦 NEW: findMany for ingredients and create a component IngredientCard
+[33mb671a7f6[m HEAD@{71}: commit: 📦 NEW: file types.ts: typing every schema and add enums for unit and season
+[33mf0cf2f5a[m HEAD@{72}: commit: 📦 NEW: prisma Models
+[33m8df55f69[m HEAD@{73}: commit: 🚀 RELEASE: initial commit
+[33m9cbea3f6[m HEAD@{74}: commit (initial): Initial commit from Create Next App
