@@ -2,9 +2,9 @@
 
 import React, { useEffect, useState } from "react";
 import { CategoryMealType } from "@/lib/types/schemas_interfaces";
-import CategoryForm from "../../_components/(formsComponents)/CreateCategory";
-import UpdateCategory from "../../_components/(formsComponents)/UpdateCategory";
-import ItemView from "@/app/(views)/_components/ItemView";
+import CategoryForm from "../_components/CreateCategory";
+import UpdateCategory from "../_components/UpdateCategory";
+import ItemView from "@/components/layout/ItemView";
 import { toast } from "sonner";
 
 // _________________________ COMPOSANT _________________________

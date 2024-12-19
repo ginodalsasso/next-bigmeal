@@ -4,6 +4,7 @@ import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover
 import { Button } from "@/components/ui/button";
 import { ucFirst } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
+import Link from "next/link";
 
 // _________________________ TYPES _________________________
 interface GenericViewProps<T extends object> {
@@ -12,6 +13,7 @@ interface GenericViewProps<T extends object> {
     renderEditForm: (onClose: () => void) => React.ReactNode; // Fonction pour afficher le formulaire d'édition
     onDelete: () => Promise<void>;
     isDeleting: boolean;
+    linkToDetails?: string; // Lien optionnel vers une page de détails
 }
 
 // _________________________ COMPOSANT _________________________
@@ -21,6 +23,7 @@ const ItemView = <T extends object>({
     renderEditForm,
     onDelete,
     isDeleting,
+    linkToDetails,
 }: GenericViewProps<T>) => {
     const [isPopoverOpen, setIsPopoverOpen] = useState(false);
     const badgeKeys = ["description"]; // Clés pour lesquelles on affiche un badge sinon affiche un paragraphe
@@ -28,16 +31,25 @@ const ItemView = <T extends object>({
     return (
         <div>
             <div className="card">
-                <h2 className="text-xl font-bold">{ucFirst(title)}</h2>
-                    {Object.entries(details).map(([key, value]) => (
-                        badgeKeys.includes(key) ? (
-                            <p key={key}>{ucFirst(value as string)}</p>
-                        ) : ( 
-                            <Badge key={key} className="mr-2">
-                                {ucFirst(value as string)}
-                            </Badge>
-                        )
-                    ))}
+                
+                {/* Lien vers la page de détails */}
+                {linkToDetails ? (
+                    <Link href={linkToDetails} passHref>
+                        <h2 className="text-xl font-bold hover:underline">{ucFirst(title)}</h2>
+                    </Link>
+                ):(
+                    <h2 className="text-xl font-bold">{ucFirst(title)}</h2>
+                )}
+
+                {Object.entries(details).map(([key, value]) => (
+                    badgeKeys.includes(key) ? (
+                        <p key={key}>{ucFirst(value as string)}</p>
+                    ) : ( 
+                        <Badge key={key} className="mr-2">
+                            {ucFirst(value as string)}
+                        </Badge>
+                    )
+                ))}
                 <div className="flex gap-2 mt-4">
                     {/* Popover pour l'édition */}
                     <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
@@ -86,6 +98,7 @@ const ItemView = <T extends object>({
                     </AlertDialog>
                 </div>
             </div>
+
         </div>
     );
 };

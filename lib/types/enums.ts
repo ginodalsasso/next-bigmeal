@@ -1,11 +1,11 @@
 // ENUMS
 export enum IngredientUnit {
-    GRAM = "gramme",
-    KILOGRAM = "kilogramme",
-    LITER = "litre",
-    CENTILITER = "centilitre",
-    MILLILITER = "millilitre",
-    PIECE = "pièce",
+    GRAM = "GRAM",
+    KILOGRAM = "KILOGRAM",
+    LITER = "LITER",
+    CENTILITER = "CENTILITER",
+    MILLILITER = "MILLILITER",
+    PIECE = "PIECE",
 }
 
 export enum Season {
