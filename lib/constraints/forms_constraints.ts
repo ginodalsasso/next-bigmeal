@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { Season } from "../types/enums";
+import { Season, IngredientUnit } from "../types/enums";
 
 // _________________________ CONTRAINTES DE VALIDATION _________________________
 
@@ -53,3 +53,14 @@ export const mealConstraints = z.object({
         z.string().
         min(1, "Une catégorie est obligatoire"),
 });
+
+
+export const compositionConstraints = z.array(
+    z.object({
+        ingredientId: z.string().min(1, "Veuillez sélectionner un ingrédient"),
+        quantity: z.number()
+            .min(0.1, "La quantité doit être supérieure à 0")
+            .max(1000, "La quantité doit être inférieure à 1000"),
+        unit: z.nativeEnum(IngredientUnit, { message: "Veuillez sélectionner une unité" }),
+    })
+);

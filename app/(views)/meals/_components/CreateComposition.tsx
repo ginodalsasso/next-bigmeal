@@ -2,8 +2,10 @@
 
 import React, { useEffect, useState } from "react";
 
-import { CompositionFormType } from "@/lib/types/forms_interfaces";
+import { CompositionFormErrorType, CompositionFormType } from "@/lib/types/forms_interfaces";
 import { CompositionType, IngredientType } from "@/lib/types/schemas_interfaces";
+import { compositionConstraints } from "@/lib/constraints/forms_constraints";
+
 
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -23,6 +25,7 @@ const CreateComposition = ({
     const [ingredients, setIngredients] = useState<IngredientType[]>([]); // Liste des ingrédients disponibles
 
     const [isLoading, setIsLoading] = useState(false); // Indique si l'action est en cours
+    const [error, setError] = useState<Record<number, CompositionFormErrorType>>({});
     const [form, setForm] = useState<CompositionFormType[]>([
         {
             ingredientId: "",
@@ -70,6 +73,33 @@ const CreateComposition = ({
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsLoading(true);
+        setError({});
+        
+        // Valider les données du formulaire
+        const validationResult = compositionConstraints.safeParse(form); // Déclarez ici
+
+        if (!validationResult.success) {
+            const formattedErrors: Record<number, CompositionFormErrorType> = {};
+        
+            validationResult.error.errors.forEach((err) => {
+                const [index, key] = err.path; // `path` contient l'index et le champ (ex. [0, "ingredientId"])
+                if (typeof index === "number" && typeof key === "string") {
+                    // si l'index n'existe pas, on crée un objet vide
+                    if (!formattedErrors[index]) {
+                        // et on ajoute le message d'erreur
+                        formattedErrors[index] = {}; 
+                    }
+                    // On ajoute le message d'erreur pour le champ ex: formattedErrors[0].ingredientId = "Veuillez sélectionner un ingrédient"
+                    (formattedErrors[index][key as keyof CompositionFormErrorType] as unknown as string) = err.message;
+                }
+            });
+        
+            setError(formattedErrors); // Met à jour les erreurs pour chaque index
+            setIsLoading(false);
+            return;
+        }
+        
+        
     
         try {
             const response = await fetch("/api/compositions", {
@@ -121,6 +151,9 @@ const CreateComposition = ({
                             </option>
                         ))}
                     </select>
+                    {error[index]?.ingredientId && (
+                        <p className="text-red-500 text-sm">{error[index].ingredientId}</p>
+                    )}
 
                     {/* Champ pour la quantité */}
                     <input
@@ -140,6 +173,9 @@ const CreateComposition = ({
                         className="border border-gray-300 p-2 rounded text-black"
                         required
                     />
+                    {error[index]?.quantity && (
+                        <p className="text-red-500 text-sm">{error[index].quantity}</p>
+                    )}
 
                     {/* Sélection de l'unité */}
                     <select
@@ -163,6 +199,9 @@ const CreateComposition = ({
                             </option>
                         ))}
                     </select>
+                    {error[index]?.unit && (
+                        <p className="text-red-500 text-sm">{error[index].unit}</p>
+                    )}
 
                     {/* Bouton pour supprimer une ligne */}
                     <Button

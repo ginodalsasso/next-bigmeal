@@ -70,6 +70,15 @@ export interface CompositionFormType {
     unit: IngredientUnit;
 }
 
+// FORMULAIRE D'ERREUR COMPOSITION
+export interface CompositionFormErrorType {
+    ingredientId?: string;
+    quantity?: string;
+    unit?: IngredientUnit | null;
+}
+
+
+// ____________ CATEGORIES
 // FORMULAIRE D'ERREUR CATEGORY
 export interface CategoryFormErrorType {
     name?: string;
