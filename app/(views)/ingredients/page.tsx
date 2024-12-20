@@ -26,6 +26,7 @@ const IngredientPage = () => {
 
     // _________________________ ETATS _________________________
     const [ingredients, setIngredients] = useState<IngredientType[]>([]);
+
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -55,6 +56,7 @@ const IngredientPage = () => {
 
     // Fonction pour ajouter un ingrédient à la liste
     const addIngredient = (ingredient: IngredientType) => {
+        // Ajouter l'ingrédient à la liste en conservant les anciens ingrédients
         setIngredients((prevIngredients) => [...prevIngredients, ingredient]);
     };
 

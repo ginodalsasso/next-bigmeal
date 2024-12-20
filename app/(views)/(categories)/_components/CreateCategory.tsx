@@ -9,7 +9,10 @@ type CreateCategoryProps = {
 };
 
 // _________________________ COMPOSANT _________________________
-const CreateCategory: React.FC<CreateCategoryProps> = ({ onAddCategory }) => {
+const CreateCategory: React.FC<CreateCategoryProps> = 
+    ({ 
+        onAddCategory 
+    }) => {
 
     // _________________________ ETATS __________________
     const [newCategoryName, setNewCategoryName] = useState('');

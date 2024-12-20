@@ -15,7 +15,13 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import add from "@/public/img/add.svg";
 
-const MealDetailPage = ({ params }: { params: Promise<{ mealName: string }> }) => {
+const MealDetailPage = 
+    ({ 
+        params 
+    }: { 
+        params: Promise<{ mealName: string }> 
+    }) => {
+
     const { mealName } = use(params);
 
     // _________________________ ETATS _________________________
@@ -70,13 +76,14 @@ const MealDetailPage = ({ params }: { params: Promise<{ mealName: string }> }) =
                         <DialogTitle>Ajouter une composition</DialogTitle>
                         <CreateComposition
                             mealId={meal.id}
-                            onCompositionCreated={(compositions) => {
-                                setMeal((prev) => {
+                            onCompositionCreated={(compositions) => { // Ajouter les compositions au repas
+                                setMeal((prev) => { 
+                                    // Si aucune composition n'existe, retourner l'état précédent
                                     if (!prev) return prev;
                                     return {
                                         ...prev,
                                         // Ajouter les nouvelles compositions sans écraser les anciennes
-                                        compositions: [...(prev.compositions), ...compositions],
+                                        compositions: [...(prev.compositions || []), ...compositions],
                                     };
                                 });
                                 setIsDialogOpen(false); // Fermer le dialogue après ajout
@@ -92,6 +99,7 @@ const MealDetailPage = ({ params }: { params: Promise<{ mealName: string }> }) =
                 {/* tableau des compositions */}
                 {Array.isArray(meal.compositions) && meal.compositions.length > 0 ? ( // Vérifier si des compositions sont disponibles
                     meal.compositions.map((composition, index) => (
+                        // Afficher les détails de la composition avec l'index comme clé
                         <div key={`${composition.id}-${index}`} className="flex justify-between items-center border-b py-2">
                             <p className="font-medium">{composition.ingredient.name}</p>
                             <div className="flex items-center gap-1">

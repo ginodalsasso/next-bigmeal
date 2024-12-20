@@ -3,18 +3,22 @@ import { IngredientUnit, Season } from './enums';
 
 // TYPES FORMULAIRES
 
-// INGREDIENTS
+// ____________ INGREDIENTS
 export interface IngredientFormType {
     name: string;
     season: Season | null;
     categoryIngredientId: string;
 }
+
+// FORMULAIRE D'ERREUR INGREDIENT
 export interface IngredientFormErrorType {
     id?: string;
     name?: string;
     season?: string | null;
     categoryIngredientId?: string;
 }
+
+// FORMULAIRE DE MISE A JOUR D'INGREDIENT
 export interface UpdateIngredientProps {
     initialName: string;
     initialCategory: string;
@@ -26,18 +30,22 @@ export interface UpdateIngredientProps {
 }
 
 
-// MEALS
+// ____________ MEALS
 export interface MealFormType {
     name: string;
     description?: string | null;
     categoryMealId: string;
 }
+
+// FORMULAIRE D'ERREUR MEAL
 export interface MealFormErrorType {
     id?: string;
     name?: string;
     description?: string | null;
     categoryMealId?: string;
 }
+
+// FORMULAIRE DE MISE A JOUR DE MEAL
 export interface UpdateMealProps {
     initialName: string;
     initialCategory: string;
@@ -53,6 +61,8 @@ export interface UpdateMealProps {
 //     newDescription?: string | null;
 //     newCategoryMealId: string;
 // }
+
+// ____________ COMPOSITION
 export interface CompositionFormType {
     ingredientId: string;
     mealId: string;
@@ -60,10 +70,12 @@ export interface CompositionFormType {
     unit: IngredientUnit;
 }
 
-// CATEGORIES
+// FORMULAIRE D'ERREUR CATEGORY
 export interface CategoryFormErrorType {
     name?: string;
 }
+
+// FORMULAIRE DE MISE A JOUR DE CATEGORIES
 export interface UpdateCategoryProps {
     initialName: string;
     onSubmit: (newName: string) => Promise<void>;

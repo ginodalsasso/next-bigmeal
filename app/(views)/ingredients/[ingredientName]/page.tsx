@@ -3,12 +3,18 @@
 import React, { useEffect, useState, use } from "react";
 import { IngredientType } from "@/lib/types/schemas_interfaces";
 
-const IngredientDetailPage = ({ params }: { params: Promise<{ ingredientName: string }> }) => {
+const IngredientDetailPage = 
+    ({ 
+        params 
+    }: { 
+        params: Promise<{ ingredientName: string }> 
+    }) => {
 
     const { ingredientName } = use(params);
 
     // _________________________ ETATS _________________________
     const [ingredient, setIngredient] = useState<IngredientType | null>(null);
+    
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 

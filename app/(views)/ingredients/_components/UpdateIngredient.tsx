@@ -9,14 +9,15 @@ import { ingredientConstraints } from "@/lib/constraints/forms_constraints";
 import {Button} from "@/components/ui/button";
 
 // _________________________ COMPOSANT _________________________
-const UpdateIngredient: React.FC<UpdateIngredientProps> = ({
-    initialName,
-    initialCategory,
-    initialSeason,
-    onSubmit,
-    onCancel,
-    isLoading,
-}) => {
+const UpdateIngredient: React.FC<UpdateIngredientProps> = 
+    ({
+        initialName,
+        initialCategory,
+        initialSeason,
+        onSubmit,
+        onCancel,
+        isLoading,
+    }) => {
 
     // _________________________ ETATS _________________________
     const [name, setName] = useState(initialName);

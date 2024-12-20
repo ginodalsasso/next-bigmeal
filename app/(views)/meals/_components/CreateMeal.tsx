@@ -11,10 +11,18 @@ import { Button } from "@/components/ui/button";
 
 
 // _________________________ COMPOSANT _________________________
-const CreateMeal = ({ onMealCreated, onClose }: { onMealCreated: (meal: MealType) => void, onClose: () => void }) => {
+const CreateMeal = 
+    ({ 
+        onMealCreated, 
+        onClose 
+    }: { 
+        onMealCreated: (meal: MealType) => void, // Fonction pour ajouter le repas à la liste parent
+        onClose: () => void // Fonction pour fermer le dialogue
+    }) => {
     
     // _________________________ HOOKS _________________________
     const [categories, setCategories] = useState<CategoryMealType[]>([]);
+
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<MealFormErrorType>({});
     const [form, setForm] = useState<MealFormType>({

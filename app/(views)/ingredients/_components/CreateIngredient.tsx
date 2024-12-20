@@ -13,10 +13,18 @@ import { translatedSeason } from "@/lib/utils";
 
 
 // _________________________ COMPOSANT _________________________
-const CreateIngredient = ({ onIngredientCreated, onClose }: { onIngredientCreated: (ingredient: IngredientType) => void, onClose: () => void }) => {
+const CreateIngredient = 
+    ({ 
+        onIngredientCreated, 
+        onClose 
+    }: { 
+        onIngredientCreated: (ingredient: IngredientType) => void, 
+        onClose: () => void 
+    }) => {
     
     // _________________________ HOOKS _________________________
     const [categories, setCategories] = useState<CategoryIngredientType[]>([]);
+    
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<IngredientFormErrorType>({});
     const [form, setForm] = useState<IngredientFormType>({

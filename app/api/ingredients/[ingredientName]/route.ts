@@ -5,9 +5,7 @@ type Props = {
     params: Promise<{ ingredientName: string }>;
 }
 
-export async function GET(
-    req: NextRequest,
-    { params }: Props)   {
+export async function GET( req: NextRequest, { params }: Props){
         
     const { ingredientName } = await params;
 

@@ -1,36 +1,8 @@
-// import { db } from "@/lib/db";
-// import { NextRequest, NextResponse } from "next/server";
-
-
-// export async function POST(req: NextRequest) {
-//     try {
-//         const body = await req.json();
-//         console.log("[CREATE_COMPOSITION_BODY]", body);
-//         const { ingredientId, mealId, quantity, unit } = body;
-
-//         const newComposition = await db.composition.create({
-//             data: {
-//                 ingredientId,
-//                 mealId,
-//                 quantity,
-//                 unit,
-//             },
-//         });
-
-//         return NextResponse.json(newComposition, {status: 201});
-
-//     } catch (error) {
-//         console.error("[CREATE_COMPOSITION_ERROR]", error);
-//         return new NextResponse("Internal Error", {status: 500 });
-//     }
-// }
-
-
 import { db } from "@/lib/db";
 import { NextRequest, NextResponse } from "next/server";
 import { CompositionFormType } from "@/lib/types/forms_interfaces";
 
-export async function POST(req: NextRequest) {
+export async function POST(req: NextRequest){
     try {
         const body: CompositionFormType[] = await req.json();
 
@@ -38,7 +10,7 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ error: "Les données doivent être un tableau." }, { status: 400 });
         }
 
-        // Créer les compositions
+        // Créer les compositions en base de données
         const createdCompositions = await db.composition.createMany({
             data: body.map((comp) => ({
                 ingredientId: comp.ingredientId,
@@ -48,7 +20,7 @@ export async function POST(req: NextRequest) {
             })),
         });
 
-        // Récupérer les compositions insérées
+        // Récupérer les compositions insérées pour les afficher
         const insertedCompositions = await db.composition.findMany({
             where: {
                 mealId: body[0].mealId, // Filtrer sur le mealId

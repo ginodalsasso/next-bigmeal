@@ -15,12 +15,13 @@ const CreateComposition = ({
     onCompositionCreated,
     onClose,
 }: {
-    mealId: string;
-    onCompositionCreated: (compositions: CompositionType[]) => void;
-    onClose: () => void;
+    mealId: string; // ID du repas parent de la composition
+    onCompositionCreated: (compositions: CompositionType[]) => void; // Callback pour ajouter les compositions
+    onClose: () => void; // Callback pour fermer le dialogue
 }) => {
     // _________________________ ETATS _________________________
     const [ingredients, setIngredients] = useState<IngredientType[]>([]); // Liste des ingrédients disponibles
+
     const [isLoading, setIsLoading] = useState(false); // Indique si l'action est en cours
     const [form, setForm] = useState<CompositionFormType[]>([
         {
@@ -53,13 +54,15 @@ const CreateComposition = ({
     // Ajouter une nouvelle ligne de composition
     const addNewLine = () => {
         setForm((prev) => [
+            // Ajouter une  nouvelle ligne avec les valeurs par défaut ...prev = copie des lignes existantes
             ...prev,
             { ingredientId: "", mealId, quantity: 0, unit: IngredientUnit.GRAM },
         ]);
     };
 
-    // Supprimer une ligne de composition par son index
+    // Supprimer une ligne de composition par son index (position dans le tableau)
     const removeLine = (index: number) => {
+        // Filtrer les lignes pour ne pas inclure celle à supprimer
         setForm((prev) => prev.filter((_, i) => i !== index));
     };
 
@@ -101,10 +104,10 @@ const CreateComposition = ({
                         value={composition.ingredientId}
                         onChange={(e) =>
                             setForm((prev) =>
-                                prev.map((comp, i) =>
-                                    i === index
-                                        ? { ...comp, ingredientId: e.target.value }
-                                        : comp
+                                prev.map((comp, i) => 
+                                    i === index // Si c'est la ligne en cours, mettre à jour l'ingrédient   
+                                        ? { ...comp, ingredientId: e.target.value } // ...comp = copie de la ligne
+                                        : comp // Sinon, ne rien changer
                                 )
                             )
                         }
@@ -128,9 +131,9 @@ const CreateComposition = ({
                         onChange={(e) =>
                             setForm((prev) =>
                                 prev.map((comp, i) =>
-                                    i === index
-                                        ? { ...comp, quantity: parseFloat(e.target.value) }
-                                        : comp
+                                    i === index // Si c'est la ligne en cours, mettre à jour la quantité
+                                        ? { ...comp, quantity: parseFloat(e.target.value) } // ...comp = copie de la ligne
+                                        : comp // Sinon, ne rien changer
                                 )
                             )
                         }
@@ -144,9 +147,9 @@ const CreateComposition = ({
                         onChange={(e) =>
                             setForm((prev) =>
                                 prev.map((comp, i) =>
-                                    i === index
-                                        ? { ...comp, unit: e.target.value as IngredientUnit }
-                                        : comp
+                                    i === index // Si c'est la ligne en cours, mettre à jour l'unité
+                                        ? { ...comp, unit: e.target.value as IngredientUnit } // ...comp = copie de la ligne
+                                        : comp // Sinon, ne rien changer
                                 )
                             )
                         }

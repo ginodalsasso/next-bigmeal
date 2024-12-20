@@ -4,15 +4,17 @@ import { categoriesConstraints } from "@/lib/constraints/forms_constraints";
 import { Button } from "@/components/ui/button";
 
 // _________________________ COMPOSANT _________________________
-const UpdateCategory: React.FC<UpdateCategoryProps> = ({
-    initialName,
-    onSubmit,
-    onCancel,
-    isLoading,
-}) => {
+const UpdateCategory: React.FC<UpdateCategoryProps> = 
+    ({
+        initialName,
+        onSubmit,
+        onCancel,
+        isLoading,
+    }) => {
 
     // _________________________ ETATS _________________________
     const [name, setName] = useState(initialName);
+    
     const [error, setError] = useState<CategoryFormErrorType>({});
     
 

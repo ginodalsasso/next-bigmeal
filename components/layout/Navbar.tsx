@@ -8,9 +8,11 @@ import openMenu from "@/public/img/openMenu.svg";
 import closeMenu from "@/public/img/closeMenu.svg"; 
 
 const Navbar = () => {
-    const [active, setActive] = useState("");
-    const [toggle, setToggle] = useState(false);
+    
+    const [active, setActive] = useState(""); // État de la navigation active
+    const [toggle, setToggle] = useState(false); // État du menu mobile
 
+    // Liens de navigation
     const links = [
         { title: "ingrédients", url: "/ingredients" },
         { title: "repas", url: "/meals" },
@@ -42,7 +44,9 @@ const Navbar = () => {
                             <Link
                                 href={link.url}
                                 className={`cursor-pointer hover:underline ${
-                                    active === link.title ? "text-white font-bold" : "text-gray-400"
+                                    active === link.title 
+                                    ? "text-white font-bold" 
+                                    : "text-gray-400"
                                 }`}
                                 onClick={() => setActive(link.title)}
                             >
@@ -51,6 +55,7 @@ const Navbar = () => {
                         </li>
                     ))}
                 </ul>
+
                 {/* Mobile Navigation */}
                 <div className="lg:hidden">
                     <Image
@@ -70,6 +75,7 @@ const Navbar = () => {
                             className="top-6 right-5 absolute"
                             onClick={() => setToggle(!toggle)}
                         />
+                        {/* Liste des liens */}
                         <ul className="list-none flex justify-center items-end flex-col gap-5">
                             {links.map((link) => (
                                 <li key={link.title}>

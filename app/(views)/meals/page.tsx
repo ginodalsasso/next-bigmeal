@@ -26,7 +26,7 @@ const MealsPage = () => {
 
     // _________________________ ETATS _________________________
     const [meals, setMeals] = useState<MealType[]>([]);
-    const [currentStep, setCurrentStep] = useState<"createMeal" | "createComposition">("createMeal");
+    const [currentStep, setCurrentStep] = useState<"createMeal" | "createComposition">("createMeal"); // étape pour la création de repas ou de composition
     const [createdMealId, setCreatedMealId] = useState<string | null>(null);
 
     const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -59,8 +59,7 @@ const MealsPage = () => {
     const addMeal = (meal: MealType) => {
         setMeals((prevMeals) => [...prevMeals, meal]);
         setCreatedMealId(meal.id); // Enregistrer l'ID du repas créé
-        console.log("Meal created:", meal);
-        setCurrentStep("createComposition"); // Passer à l'étape suivante
+        setCurrentStep("createComposition"); // Passer à l'étape de création de composition
     };
 
     // Ajouter une composition
@@ -94,6 +93,7 @@ const MealsPage = () => {
             const updatedMeal: MealType = await response.json();
             setMeals((prev) => // Remplacer l'ancien repas par le nouveau
                 prev.map((meal) =>
+                    // si l'ID du repas correspond à l'ID du repas modifié, on le remplace
                     meal.id === updatedMeal.id ? updatedMeal : meal
                 )
             );
@@ -118,7 +118,7 @@ const MealsPage = () => {
             if (!response.ok) {
                 throw new Error("Failed to delete meal");
             }
-
+            // Si l'ID du repas correspond à l'ID du repas supprimé, on le filtre pour le retirer
             setMeals((prev) => prev.filter((meal) => meal.id !== id));
             toast("Repas supprimé avec succès");
         } catch (error) {
@@ -155,17 +155,17 @@ const MealsPage = () => {
                         </DialogTitle>
                         {currentStep === "createMeal" && (
                             <CreateMeal
-                                onMealCreated={addMeal}
-                                onClose={() => setIsDialogOpen(false)}
+                                onMealCreated={addMeal} // Appelé lors de la création d'un repas
+                                onClose={() => setIsDialogOpen(false)} // Appelé lors de la fermeture du dialogue
                             />
                         )}
                         {currentStep === "createComposition" && createdMealId && (
                             <CreateComposition
-                                mealId={createdMealId}
-                                onCompositionCreated={addComposition}
-                                onClose={() => {
-                                    setIsDialogOpen(false);
-                                    setCurrentStep("createMeal");
+                                mealId={createdMealId} // ID du repas pour lequel on ajoute une composition
+                                onCompositionCreated={addComposition} // Appelé lors de la création d'une composition
+                                onClose={() => { // Appelé lors de la fermeture du dialogue
+                                    setIsDialogOpen(false); // Fermer le dialogue
+                                    setCurrentStep("createMeal"); // Revenir à l'étape initiale
                                 }}
                             />
                         )}

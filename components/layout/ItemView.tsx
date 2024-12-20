@@ -8,43 +8,48 @@ import Link from "next/link";
 
 // _________________________ TYPES _________________________
 interface GenericViewProps<T extends object> {
-    title: string;
-    details: T;
+    title: string; // Titre de l'élément
+    details: T; // Détails de l'élément
     renderEditForm: (onClose: () => void) => React.ReactNode; // Fonction pour afficher le formulaire d'édition
-    onDelete: () => Promise<void>;
-    isDeleting: boolean;
+    onDelete: () => Promise<void>; // Fonction pour supprimer l'élément
+    isDeleting: boolean; // État de la suppression
     linkToDetails?: string; // Lien optionnel vers une page de détails
 }
 
 // _________________________ COMPOSANT _________________________
-const ItemView = <T extends object>({
-    title,
-    details,
-    renderEditForm,
-    onDelete,
-    isDeleting,
-    linkToDetails,
-}: GenericViewProps<T>) => {
-    const [isPopoverOpen, setIsPopoverOpen] = useState(false);
+const ItemView = <T extends object> 
+    ({
+        title,
+        details,
+        renderEditForm,
+        onDelete,
+        isDeleting,
+        linkToDetails,
+    }: GenericViewProps<T>) => {
+
+    const [isPopoverOpen, setIsPopoverOpen] = useState(false); // État du Popover pour l'édition
     const badgeKeys = ["description"]; // Clés pour lesquelles on affiche un badge sinon affiche un paragraphe
 
     return (
         <div>
             <div className="card">
                 
-                {/* Lien vers la page de détails */}
+                {/* Si un lien est fourni, on l'affiche */}
                 {linkToDetails ? (
                     <Link href={linkToDetails} passHref>
                         <h2 className="text-xl font-bold hover:underline">{ucFirst(title)}</h2>
                     </Link>
+                // Sinon on affiche le titre
                 ):(
                     <h2 className="text-xl font-bold">{ucFirst(title)}</h2>
                 )}
-
+                
+                {/* affiche les détails */}
                 {Object.entries(details).map(([key, value]) => (
                     badgeKeys.includes(key) ? (
                         <p key={key}>{ucFirst(value as string)}</p>
                     ) : ( 
+                        // Affiche un badge pour les clés spécifiées
                         <Badge key={key} className="mr-2">
                             {ucFirst(value as string)}
                         </Badge>

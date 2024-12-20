@@ -13,6 +13,7 @@ const CategoryMealPage = () => {
 
     // _________________________ ETATS _________________________
     const [categoryMeal, setCategoryMeal] = useState<CategoryMealType[]>([]);
+    
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
