@@ -1,4 +1,6 @@
 {
+  "/api/meals/route": "app/api/meals/route.js",
+  "/api/(categories)/categories-meal/route": "app/api/(categories)/categories-meal/route.js",
   "/(views)/meals/page": "app/(views)/meals/page.js",
   "/(views)/meals/[mealName]/page": "app/(views)/meals/[mealName]/page.js"
 }

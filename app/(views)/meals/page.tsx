@@ -26,7 +26,7 @@ const MealsPage = () => {
 
     // _________________________ ETATS _________________________
     const [meals, setMeals] = useState<MealType[]>([]);
-    const [currentStep, setCurrentStep] = useState<"createMeal" | "createComposition">("createMeal"); // étape pour la création de repas ou de composition
+    const [currentStep, setCurrentStep] = useState<"createMeal" | "createComposition" | "chooseStep">("createMeal"); // étape pour la création de repas ou de composition
     const [createdMealId, setCreatedMealId] = useState<string | null>(null);
 
     const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -55,11 +55,19 @@ const MealsPage = () => {
         fetchMeals();
     }, []);
 
+    // Réinitialiser l'étape à createMeal lorsque le dialogue est fermé
+    useEffect(() => {
+        if (!isDialogOpen) {
+            setCurrentStep("createMeal");
+            setCreatedMealId(null);
+        }
+    }, [isDialogOpen]);
+
     // Ajouter un repas
     const addMeal = (meal: MealType) => {
         setMeals((prevMeals) => [...prevMeals, meal]);
         setCreatedMealId(meal.id); // Enregistrer l'ID du repas créé
-        setCurrentStep("createComposition"); // Passer à l'étape de création de composition
+        setCurrentStep("chooseStep"); // Passer à l'étape de choix
     };
 
     // Ajouter une composition
@@ -151,7 +159,7 @@ const MealsPage = () => {
                     <DialogHeader>
                         <DialogTitle>
                             {/* Formulaire de création de repas ou de composition */}
-                            {currentStep === "createMeal" ? "Ajouter un repas" : "Ajouter une composition"}
+                            {currentStep === "createMeal" ? "Ajouter un repas" : currentStep === "createComposition" ? "Ajouter une composition" : "Choisir une étape"}
                         </DialogTitle>
                         {currentStep === "createMeal" && (
                             <CreateMeal
@@ -168,6 +176,13 @@ const MealsPage = () => {
                                     setCurrentStep("createMeal"); // Revenir à l'étape initiale
                                 }}
                             />
+                        )}
+                        {/* Choisir entre ajouter une composition ou un repas */}
+                        {currentStep === "chooseStep" && (
+                            <div>
+                                <Button onClick={() => setCurrentStep("createComposition")}>Ajouter une composition</Button>
+                                <Button onClick={() => setCurrentStep("createMeal")}>Ajouter un autre repas</Button>
+                            </div>
                         )}
                     </DialogHeader>
                 </DialogContent>

@@ -35,6 +35,16 @@
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/chunks/app/api/ingredients/route.js"
+    ],
+    "/api/(categories)/categories-meal/route": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/api/(categories)/categories-meal/route.js"
+    ],
+    "/api/compositions/route": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/api/compositions/route.js"
     ]
   }
 }
