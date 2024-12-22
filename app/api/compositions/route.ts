@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { CompositionFormType } from "@/lib/types/forms_interfaces";
 import { idConstraints } from "@/lib/constraints/forms_constraints";
 
-export async function POST(req: NextRequest){
+export async function POST(req: NextRequest) {
     try {
         const body: CompositionFormType[] = await req.json();
 
@@ -12,7 +12,7 @@ export async function POST(req: NextRequest){
         }
 
         // Créer les compositions en base de données
-        await db.composition.createMany({ // const createdCompositions = 
+        await db.composition.createMany({
             data: body.map((comp) => ({
                 ingredientId: comp.ingredientId,
                 mealId: comp.mealId,
@@ -38,8 +38,7 @@ export async function POST(req: NextRequest){
     }
 }
 
-
-export async function DELETE (req: NextRequest) {
+export async function DELETE(req: NextRequest) {
     try {
         const body = await req.json();
 
@@ -55,9 +54,9 @@ export async function DELETE (req: NextRequest) {
         const { id } = validationResult.data;
         await db.composition.delete({ where: { id } });
 
-        return NextResponse.json({ message: "Composition supprimée" }, {status: 200});
+        return NextResponse.json({ message: "Composition supprimée" }, { status: 200 });
     } catch (error) {
         console.error("[DELETE_COMPOSITION_ERROR]", error);
-        return new NextResponse("Internal Error", {status: 500 });
+        return new NextResponse("Internal Error", { status: 500 });
     }
 }

@@ -54,6 +54,7 @@ const CreateComposition = ({
         fetchIngredients();
     }, []);
 
+
     // Ajouter une nouvelle ligne de composition
     const addNewLine = () => {
         setForm((prev) => [
@@ -63,6 +64,7 @@ const CreateComposition = ({
         ]);
     };
 
+    
     // Supprimer une ligne de composition par son index (position dans le tableau)
     const removeLine = (index: number) => {
         // Filtrer les lignes pour ne pas inclure celle à supprimer
