@@ -1,1 +1,7 @@
-{}
+{
+  "/api/meals/route": "app/api/meals/route.js",
+  "/api/meals/[mealName]/route": "app/api/meals/[mealName]/route.js",
+  "/api/compositions/route": "app/api/compositions/route.js",
+  "/(views)/meals/page": "app/(views)/meals/page.js",
+  "/(views)/meals/[mealName]/page": "app/(views)/meals/[mealName]/page.js"
+}

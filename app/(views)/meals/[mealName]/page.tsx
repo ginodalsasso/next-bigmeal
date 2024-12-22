@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/dialog";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 import add from "@/public/img/add.svg";
 
 const MealDetailPage = 
@@ -26,6 +27,7 @@ const MealDetailPage =
 
     // _________________________ ETATS _________________________
     const [meal, setMeal] = useState<MealType | null>(null); // Détails du repas
+
     const [loading, setLoading] = useState(true); // Indique si les données sont en cours de chargement
     const [error, setError] = useState<string | null>(null); // Erreur éventuelle
     const [isDialogOpen, setIsDialogOpen] = useState(false); // État pour le dialogue
@@ -49,6 +51,36 @@ const MealDetailPage =
         };
         fetchMeal();
     }, [mealName]);
+
+    // Appel API pour supprimer un repas
+    const deleteComposition = async (id: string) => {
+        try {
+            const response = await fetch("/api/compositions", {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ id }),
+            });
+
+            if (!response.ok) {
+                throw new Error("Failed to delete meal");
+            }
+            // Si l'ID de la composition est trouvé, la supprimer
+            setMeal((prevMeal) => {
+                if (!prevMeal) return prevMeal;
+                return {
+                    ...prevMeal,
+                    compositions: prevMeal.compositions.filter((composition) => composition.id !== id),
+                };
+            });
+            toast("Composition supprimée avec succès");
+        } catch (error) {
+            console.error("Erreur lors de la suppression:", error);
+            setError("Erreur lors de la suppression.");
+        }
+    };
+        
 
     // _________________________ RENDU _________________________
     if (loading) return <div>Loading...</div>;
@@ -103,6 +135,10 @@ const MealDetailPage =
                             <div className="flex items-center gap-1">
                                 <p>{composition.quantity}</p>
                                 <p>{translatedUnit(composition.unit)}</p>
+                                <Button
+                                    variant="delete"
+                                    onClick={() => deleteComposition(composition.id)}
+                                />
                             </div>
                         </div>
                     ))

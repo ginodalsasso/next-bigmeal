@@ -1,6 +1,7 @@
 import { db } from "@/lib/db";
 import { NextRequest, NextResponse } from "next/server";
 import { CompositionFormType } from "@/lib/types/forms_interfaces";
+import { idConstraints } from "@/lib/constraints/forms_constraints";
 
 export async function POST(req: NextRequest){
     try {
@@ -34,5 +35,29 @@ export async function POST(req: NextRequest){
     } catch (error) {
         console.error("[CREATE_COMPOSITIONS_ERROR]", error);
         return NextResponse.json({ error: "Erreur interne" }, { status: 500 });
+    }
+}
+
+
+export async function DELETE (req: NextRequest) {
+    try {
+        const body = await req.json();
+
+        const validationResult = idConstraints.safeParse(body);
+
+        if (!validationResult.success) {
+            return NextResponse.json(
+                { error: validationResult.error.format() },
+                { status: 400 }
+            );
+        }
+
+        const { id } = validationResult.data;
+        await db.composition.delete({ where: { id } });
+
+        return NextResponse.json({ message: "Composition supprimée" }, {status: 200});
+    } catch (error) {
+        console.error("[DELETE_COMPOSITION_ERROR]", error);
+        return new NextResponse("Internal Error", {status: 500 });
     }
 }
