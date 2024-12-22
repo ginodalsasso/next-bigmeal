@@ -11,7 +11,7 @@ export async function POST(req: NextRequest){
         }
 
         // Créer les compositions en base de données
-        const createdCompositions = await db.composition.createMany({
+        await db.composition.createMany({ // const createdCompositions = 
             data: body.map((comp) => ({
                 ingredientId: comp.ingredientId,
                 mealId: comp.mealId,

@@ -77,14 +77,12 @@ const MealDetailPage =
                         <CreateComposition
                             mealId={meal.id}
                             onCompositionCreated={(compositions) => { // Ajouter les compositions au repas
-                                setMeal((prev) => { 
-                                    // Si aucune composition n'existe, retourner l'état précédent
-                                    if (!prev) return prev;
-                                    return {
-                                        ...prev,
-                                        // Ajouter les nouvelles compositions sans écraser les anciennes
-                                        compositions: [...(prev.compositions || []), ...compositions],
-                                    };
+                                console.log("Compositions créées :", compositions); // Debugging
+
+                                setMeal((prevMeal) => {
+                                    if (!prevMeal) return prevMeal;
+                                    // Ajouter les nouvelles compositions à la liste
+                                    return { ...prevMeal, compositions: [...compositions] };
                                 });
                                 setIsDialogOpen(false); // Fermer le dialogue après ajout
                             }}
