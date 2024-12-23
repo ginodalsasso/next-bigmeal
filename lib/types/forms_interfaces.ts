@@ -74,7 +74,7 @@ export interface CompositionFormType {
 export interface CompositionFormErrorType {
     ingredientId?: string;
     quantity?: string;
-    unit?: IngredientUnit | null;
+    unit?: string;
 }
 
 

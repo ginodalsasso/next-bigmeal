@@ -57,15 +57,18 @@ const MealDetailPage =
 
     const handleUpdateComposition = (updatedComposition: CompositionType) => {
         setMeal((prevMeal) => {
+            // Vérifie si `prevMeal` est nul ou non défini.
             if (!prevMeal) return prevMeal;
     
-            // Mise à jour des compositions tout en conservant les propriétés existantes
+            // Mise à jour des compositions en parcourant le tableau `prevMeal.compositions`
             const updatedCompositions = prevMeal.compositions.map((composition) =>
+                // Si l'ID de la composition correspond à celui de `updatedComposition`
                 composition.id === updatedComposition.id
-                    ? { ...composition, ...updatedComposition } // Merge les données mises à jour avec les existantes
-                    : composition // Garde les autres compositions inchangées
+                    ? { ...composition, ...updatedComposition } // On fusionne les propriétés existantes et mises à jour
+                    : composition // Sinon, on garde la composition inchangée
             );
     
+            // Retourne un nouvel objet pour `meal` avec la liste mise à jour des compositions
             return { ...prevMeal, compositions: updatedCompositions };
         });
     };

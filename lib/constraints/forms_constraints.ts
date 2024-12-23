@@ -55,12 +55,13 @@ export const mealConstraints = z.object({
 });
 
 
-export const compositionConstraints = z.array(
-    z.object({
-        ingredientId: z.string().min(1, "Veuillez sélectionner un ingrédient"),
-        quantity: z.number()
+export const compositionConstraints = z.object({
+        id: z.string(),
+        quantity: z.number( { message: "La quantité doit être un nombre" } )
             .min(0.1, "La quantité doit être supérieure à 0")
-            .max(1000, "La quantité doit être inférieure à 1000"),
-        unit: z.nativeEnum(IngredientUnit, { message: "Veuillez sélectionner une unité" }),
-    })
-);
+            .max(1000, "La quantité doit être inférieure à 1000")
+            .positive("La quantité doit être un nombre positif."),
+        unit: z.nativeEnum(IngredientUnit, 
+            { message: "Veuillez sélectionner une unité" }),
+    });
+
