@@ -38,7 +38,7 @@ const UpdateComposition = ({
 
             // Mettre à jour l'état parent via le callback
             onCompositionUpdated(updatedComposition);
-            
+            toast.success("Composition mise à jour avec succès !");
             onClose(); // Fermer le Popover après la mise à jour
         } catch (error) {
             console.error("[UPDATE_COMPOSITION_ERROR]", error);

@@ -28,11 +28,10 @@ const MealDetailPage =
 
     // _________________________ ETATS _________________________
     const [meal, setMeal] = useState<MealType | null>(null);
-
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
-    const [isPopoverOpen, setIsPopoverOpen] = useState(false);
+    const [isPopoverOpen, setIsPopoverOpen] = useState<string | null>(null);
 
     // _________________________ LOGIQUE _________________________
     useEffect(() => {
@@ -43,8 +42,7 @@ const MealDetailPage =
                     throw new Error("Failed to fetch meal");
                 }
                 const data: MealType = await response.json();
-                // Mettre à jour l'état du repas avec les données récupérées
-                setMeal({ ...data, compositions: data.compositions || [] });
+                setMeal(data);
             } catch (error) {
                 console.error("Erreur lors de la récupération du repas :", error);
                 setError("Erreur lors de la récupération du repas");
@@ -56,19 +54,22 @@ const MealDetailPage =
     }, [mealName]);
 
 
+
     const handleUpdateComposition = (updatedComposition: CompositionType) => {
         setMeal((prevMeal) => {
             if (!prevMeal) return prevMeal;
-            return {
-                // Mettre à jour la composition dans la liste
-                ...prevMeal,
-                // Si l'ID de la composition est trouvé, la mettre à jour
-                compositions: prevMeal.compositions.map((composition) =>
-                    composition.id === updatedComposition.id ? updatedComposition : composition
-                ),
-            };
+    
+            // Mise à jour des compositions tout en conservant les propriétés existantes
+            const updatedCompositions = prevMeal.compositions.map((composition) =>
+                composition.id === updatedComposition.id
+                    ? { ...composition, ...updatedComposition } // Merge les données mises à jour avec les existantes
+                    : composition // Garde les autres compositions inchangées
+            );
+    
+            return { ...prevMeal, compositions: updatedCompositions };
         });
     };
+    
     
 
     const deleteComposition = async (id: string) => {
@@ -84,7 +85,6 @@ const MealDetailPage =
             if (!response.ok) {
                 throw new Error("Failed to delete composition");
             }
-            // Si l'ID de la composition est trouvé, la supprimer
             setMeal((prevMeal) => {
                 if (!prevMeal) return prevMeal;
                 return {
@@ -108,12 +108,10 @@ const MealDetailPage =
 
     return (
         <div className="border rounded-lg p-6 xl:w-[70%] mx-auto">
-            {/* Titre du repas */}
             <h1 className="text-4xl font-semibold text-emerald-500 text-center mb-2">{meal.name}</h1>
             <p>{meal.description || "Aucune description disponible pour ce repas."}</p>
 
             <div className="mt-4">
-                {/* Dialogue pour ajouter une composition */}
                 <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                     <DialogTrigger asChild>
                         <Button variant="success" onClick={() => setIsDialogOpen(true)}>
@@ -126,46 +124,48 @@ const MealDetailPage =
                             <DialogTitle>Ajouter une composition</DialogTitle>
                             <CreateComposition
                                 mealId={meal.id}
-                                onCompositionCreated={(compositions) => { // Ajouter les compositions au repas
+                                onCompositionCreated={(compositions) => {
                                     setMeal((prevMeal) => {
                                         if (!prevMeal) return prevMeal;
-                                        // Ajouter les nouvelles compositions à la liste
                                         return { ...prevMeal, compositions: [...compositions] };
                                     });
-                                    setIsDialogOpen(false); // Fermer le dialogue après ajout
+                                    setIsDialogOpen(false);
                                 }}
-                                onClose={() => setIsDialogOpen(false)} // Fermer le dialogue
+                                onClose={() => setIsDialogOpen(false)}
                             />
                         </DialogHeader>
                     </DialogContent>
                 </Dialog>
             </div>
-            {/* Liste des compositions du repas */}
 
             <div className="mt-6">
-                {/* tableau des compositions */}
                 {Array.isArray(meal.compositions) && meal.compositions.length > 0 ? (
                     meal.compositions.map((composition) => (
                         <div
                             key={composition.id}
                             className="flex justify-between items-center border-b py-2"
                         >
-                            <p className="font-medium">{composition.ingredient.name}</p>
+                            <p className="font-medium">{composition.ingredient?.name || "Ingrédient inconnu"}</p>
                             <div className="flex items-center gap-1">
                                 <p>{composition.quantity}</p>
                                 <p>{translatedUnit(composition.unit)}</p>
-                                {/* Popover pour l'édition */} 
-                                <Popover>
+                                {/* Popover pour l'édition */}
+                                <Popover 
+                                    open={isPopoverOpen === composition.id}
+                                    onOpenChange={(open) => {
+                                        setIsPopoverOpen(open ? composition.id : null);
+                                    }}
+                                >
                                     <PopoverTrigger asChild>
                                         <Button variant="edit">Modifier</Button>
                                     </PopoverTrigger>
                                     <PopoverContent>
-                                    <UpdateComposition
-                                        initialComposition={composition}                                
-                                        onCompositionUpdated={handleUpdateComposition}
-                                        onClose={() => {setIsPopoverOpen(false)}}
-                                    />
-                                </PopoverContent>
+                                        <UpdateComposition
+                                            initialComposition={composition}                                
+                                            onCompositionUpdated={handleUpdateComposition}
+                                            onClose={() => setIsPopoverOpen(null)}
+                                        />
+                                    </PopoverContent>
                                 </Popover>
                                 <Button
                                     variant="delete"
