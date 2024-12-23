@@ -26,6 +26,15 @@ export async function GET() {
 export async function POST(req: NextRequest) {
     try {
         const body = await req.json();
+        
+        const validationResult = ingredientConstraints.safeParse(body);
+
+        if (!validationResult.success) {
+            return NextResponse.json(
+                { error: validationResult.error.format() },
+                { status: 400 }
+            );
+        }
         const { name, season, categoryIngredientId } = body;
 
         // Créer l'ingrédient

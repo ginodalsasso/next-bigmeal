@@ -1,14 +1,27 @@
 import { db } from "@/lib/db";
 import { NextRequest, NextResponse } from "next/server";
 import { CompositionFormType } from "@/lib/types/forms_interfaces";
-import { idConstraints } from "@/lib/constraints/forms_constraints";
+import { idConstraints, newCompositionConstraints } from "@/lib/constraints/forms_constraints";
+
 
 export async function POST(req: NextRequest) {
     try {
         const body: CompositionFormType[] = await req.json();
 
         if (!Array.isArray(body)) {
-            return NextResponse.json({ error: "Les données doivent être un tableau." }, { status: 400 });
+            return NextResponse.json(
+                { error: "Les données doivent être un tableau." }, 
+                { status: 400 }
+            );
+        }
+
+        const validationResult = newCompositionConstraints.safeParse(body);
+
+        if (!validationResult.success) {
+            return NextResponse.json(
+                { error: validationResult.error.format() },
+                { status: 400 }
+            );
         }
 
         // Créer les compositions en base de données
@@ -37,6 +50,29 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ error: "Erreur interne" }, { status: 500 });
     }
 }
+
+export async function PUT(req: NextRequest) {
+    try {
+        const body = await req.json();
+
+        const updatedComposition = await db.composition.update({
+            where: { id: body.id },
+            data: {
+                quantity: body.quantity,
+                unit: body.unit,
+            },
+        });
+
+        return NextResponse.json(updatedComposition, { status: 200 });
+    } catch (error) {
+        console.error("[UPDATE_COMPOSITION_ERROR]", error);
+        return NextResponse.json(
+            { error: "Internal Server Error" },
+            { status: 500 }
+        );
+    }
+}
+
 
 export async function DELETE(req: NextRequest) {
     try {

@@ -40,11 +40,6 @@
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/chunks/app/api/ingredients/route.js"
-    ],
-    "/api/compositions/[compositionID]/route": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/api/compositions/[compositionID]/route.js"
     ]
   }
 }

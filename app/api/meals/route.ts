@@ -27,6 +27,15 @@ export async function POST(req: NextRequest) {
         const body = await req.json();
         const { name, description, categoryMealId } = body;
 
+        const validationResult = mealConstraints.safeParse(body);
+
+        if (!validationResult.success) {
+            return NextResponse.json(
+                { error: validationResult.error.format() },
+                { status: 400 }
+            );
+        }
+
         // Créer le repas
         const newMeal = await db.meal.create({
             data: {

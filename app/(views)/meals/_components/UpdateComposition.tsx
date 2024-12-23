@@ -6,28 +6,34 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { IngredientUnit } from "@/lib/types/enums";
 import { translatedUnit } from "@/lib/utils";
-import { compositionConstraints } from "@/lib/constraints/forms_constraints";
+import { updateCompositionConstraints } from "@/lib/constraints/forms_constraints";
 import { CompositionFormErrorType } from "@/lib/types/forms_interfaces";
 
+
+// _________________________ COMPOSANT _________________________
 const UpdateComposition = ({
     initialComposition,
     onCompositionUpdated,
     onClose,
 }: {
     initialComposition: CompositionType;
-    onCompositionUpdated: (updatedComposition: CompositionType) => void;
-    onClose: () => void;
+    onCompositionUpdated: (updatedComposition: CompositionType) => void; // Fonction pour mettre à jour la composition dans l'état parent
+    onClose: () => void; // Fonction pour fermer le Popover
 }) => {
+
+    // _________________________ HOOKS _________________________
     const [composition, setComposition] = useState(initialComposition);
     const [error, setError] = useState<CompositionFormErrorType>({});
     const [isLoading, setIsLoading] = useState(false);
 
+
+    // _________________________ LOGIQUE _________________________
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setError({}); 
     
         // Validation des données avec Zod
-        const validationResult = compositionConstraints.safeParse(composition);
+        const validationResult = updateCompositionConstraints.safeParse(composition);
         if (!validationResult.success) {
             const formattedErrors = validationResult.error.flatten().fieldErrors;
             setError({
@@ -39,7 +45,7 @@ const UpdateComposition = ({
         setIsLoading(true);
     
         try {
-            const response = await fetch(`/api/compositions/${composition.id}`, {
+            const response = await fetch("/api/compositions", {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(composition),
@@ -64,6 +70,7 @@ const UpdateComposition = ({
     };
     
 
+    // _________________________ RENDU _________________________
     return (
         <form onSubmit={handleSubmit} className="flex flex-col gap-5 p-5">
             <div className="flex flex-col gap-3 border-b pb-4">
@@ -72,7 +79,7 @@ const UpdateComposition = ({
                     type="number"
                     step="0.1"
                     placeholder="Quantité"
-                    value={composition.quantity}
+                    value={composition.quantity || ""}
                     onChange={(e) =>
                         setComposition({ ...composition, quantity: parseFloat(e.target.value) })
                     }

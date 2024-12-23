@@ -54,7 +54,6 @@ const MealDetailPage =
     }, [mealName]);
 
 
-
     const handleUpdateComposition = (updatedComposition: CompositionType) => {
         setMeal((prevMeal) => {
             // Vérifie si `prevMeal` est nul ou non défini.
@@ -74,7 +73,6 @@ const MealDetailPage =
     };
     
     
-
     const deleteComposition = async (id: string) => {
         try {
             const response = await fetch("/api/compositions", {
@@ -104,6 +102,7 @@ const MealDetailPage =
         }
     };
 
+    
     // _________________________ RENDU _________________________
     if (loading) return <div>Loading...</div>;
     if (error) return <div>{error}</div>;

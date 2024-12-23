@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 
 import { CompositionFormErrorType, CompositionFormType } from "@/lib/types/forms_interfaces";
 import { CompositionType, IngredientType } from "@/lib/types/schemas_interfaces";
-import { compositionConstraints } from "@/lib/constraints/forms_constraints";
+import { newCompositionConstraints } from "@/lib/constraints/forms_constraints";
 
 
 import { toast } from "sonner";
@@ -21,7 +21,8 @@ const CreateComposition = ({
     onCompositionCreated: (compositions: CompositionType[]) => void; // Callback pour ajouter les compositions
     onClose: () => void; // Callback pour fermer le dialogue
 }) => {
-    // _________________________ ETATS _________________________
+
+    // _________________________ HOOKS _________________________
     const [ingredients, setIngredients] = useState<IngredientType[]>([]); // Liste des ingrédients disponibles
 
     const [isLoading, setIsLoading] = useState(false); // Indique si l'action est en cours
@@ -34,6 +35,7 @@ const CreateComposition = ({
             unit: IngredientUnit.GRAM,
         },
     ]);
+
 
     // _________________________ LOGIQUE _________________________
     // Appel API pour récupérer les ingrédients
@@ -78,7 +80,7 @@ const CreateComposition = ({
         setError({});
         
         // Valider les données du formulaire
-        const validationResult = compositionConstraints.safeParse(form); // Déclarez ici
+        const validationResult = newCompositionConstraints.safeParse(form); // Déclarez ici
 
         if (!validationResult.success) {
             const formattedErrors: Record<number, CompositionFormErrorType> = {};
@@ -101,8 +103,6 @@ const CreateComposition = ({
             return;
         }
         
-        
-    
         try {
             const response = await fetch("/api/compositions", {
                 method: "POST",
@@ -162,7 +162,7 @@ const CreateComposition = ({
                         type="number"
                         step="0.1"
                         placeholder="Quantité"
-                        value={composition.quantity}
+                        value={composition.quantity || ""}
                         onChange={(e) =>
                             setForm((prev) =>
                                 prev.map((comp, i) =>
