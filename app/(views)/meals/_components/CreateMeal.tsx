@@ -70,8 +70,7 @@ const CreateMeal: React.FC<CreateMealProps>=
     // Gestion de la soumission du formulaire
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        setIsLoading(true);
-        setError({});
+
         // Valider les données du formulaire
         const validationResult = mealConstraints.safeParse(form);
         if (!validationResult.success) {

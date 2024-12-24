@@ -8,6 +8,8 @@ const allowedRoutes = [
     "/meals",
     "/categories-ingredient",
     "/categories-meal",
+    "/register",
+    "/login",
 ];
 
 // Liste des modèles pour routes dynamiques autorisées

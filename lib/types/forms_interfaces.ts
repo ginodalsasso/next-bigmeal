@@ -63,4 +63,8 @@ export interface CategoryFormErrorType {
 }
 
 
-
+// ____________ USER    
+export interface UserFormErrorType {
+    username?: string;
+    password?: string;
+}

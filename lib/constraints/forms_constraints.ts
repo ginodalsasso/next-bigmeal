@@ -69,3 +69,8 @@ export const newCompositionConstraints = z.array(
         }),
     })
 );
+
+export const RegisterConstraints = z.object({
+    username: z.string().min(3, "Le nom d'utilisateur doit comporter au moins 3 caractères"),
+    password: z.string().min(8, "Le mot de passe doit comporter au moins 8 caractères"),
+});
