@@ -1,6 +1,12 @@
 {
-  "/(views)/meals/[mealName]/page": "app/(views)/meals/[mealName]/page.js",
-  "/(views)/(categories)/categories-ingredient/page": "app/(views)/(categories)/categories-ingredient/page.js",
+  "/api/meals/route": "app/api/meals/route.js",
+  "/api/ingredients/route": "app/api/ingredients/route.js",
+  "/api/meals/[mealName]/route": "app/api/meals/[mealName]/route.js",
+  "/api/ingredients/[ingredientName]/route": "app/api/ingredients/[ingredientName]/route.js",
+  "/page": "app/page.js",
   "/(views)/meals/page": "app/(views)/meals/page.js",
-  "/(views)/ingredients/page": "app/(views)/ingredients/page.js"
+  "/(views)/(categories)/categories-ingredient/page": "app/(views)/(categories)/categories-ingredient/page.js",
+  "/(views)/meals/[mealName]/page": "app/(views)/meals/[mealName]/page.js",
+  "/(views)/ingredients/page": "app/(views)/ingredients/page.js",
+  "/(views)/ingredients/[ingredientName]/page": "app/(views)/ingredients/[ingredientName]/page.js"
 }
