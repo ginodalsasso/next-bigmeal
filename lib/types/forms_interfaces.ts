@@ -18,18 +18,6 @@ export interface IngredientFormErrorType {
     categoryIngredientId?: string;
 }
 
-// FORMULAIRE DE MISE A JOUR D'INGREDIENT
-export interface UpdateIngredientProps {
-    initialName: string;
-    initialCategory: string;
-    initialSeason: string;
-    onSubmit: (newName: string, newCategory: string, newSeason: string) => Promise<void>;
-    onCancel: () => void;
-    isLoading: boolean;
-    error: string | null;
-}
-
-
 // ____________ MEALS
 export interface MealFormType {
     name: string;
@@ -45,16 +33,6 @@ export interface MealFormErrorType {
     categoryMealId?: string;
 }
 
-// FORMULAIRE DE MISE A JOUR DE MEAL
-export interface UpdateMealProps {
-    initialName: string;
-    initialCategory: string;
-    initialDescription: string;
-    onSubmit: (newName: string, newCategory: string, newDescription: string) => Promise<void>;
-    onCancel: () => void;
-    isLoading: boolean;
-    error: string | null;
-}
 // export interface UpdateMealFormType {
 //     id: string;
 //     newName: string;
@@ -82,15 +60,6 @@ export interface CompositionFormErrorType {
 // FORMULAIRE D'ERREUR CATEGORY
 export interface CategoryFormErrorType {
     name?: string;
-}
-
-// FORMULAIRE DE MISE A JOUR DE CATEGORIES
-export interface UpdateCategoryProps {
-    initialName: string;
-    onSubmit: (newName: string) => Promise<void>;
-    onCancel: () => void;
-    isLoading: boolean;
-    error: string | null;
 }
 
 

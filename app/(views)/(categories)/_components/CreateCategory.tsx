@@ -2,11 +2,8 @@ import React, { useState } from "react";
 import { CategoryFormErrorType } from "@/lib/types/forms_interfaces";
 import { categoriesConstraints } from "@/lib/constraints/forms_constraints";
 import { Button } from "@/components/ui/button";
+import { CreateCategoryProps } from "@/lib/types/props_interfaces";
 
-// _________________________ TYPES _________________________
-type CreateCategoryProps = { 
-    onAddCategory: (name: string) => Promise<void>; 
-};
 
 // _________________________ COMPOSANT _________________________
 const CreateCategory: React.FC<CreateCategoryProps> = 

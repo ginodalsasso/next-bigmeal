@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { CategoryFormErrorType, UpdateCategoryProps } from "@/lib/types/forms_interfaces";
+import { CategoryFormErrorType } from "@/lib/types/forms_interfaces";
+import { UpdateCategoryProps } from "@/lib/types/props_interfaces";
 import { categoriesConstraints } from "@/lib/constraints/forms_constraints";
 import { Button } from "@/components/ui/button";
 

@@ -11,15 +11,12 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { IngredientUnit } from "@/lib/types/enums";
 import { translatedUnit } from "@/lib/utils";
+import { CreateCompositionProps } from "@/lib/types/props_interfaces";
 
-const CreateComposition = ({
+const CreateComposition: React.FC<CreateCompositionProps>= ({
     mealId,
     onCompositionCreated,
     onClose,
-}: {
-    mealId: string; // ID du repas parent de la composition
-    onCompositionCreated: (compositions: CompositionType[]) => void; // Callback pour ajouter les compositions
-    onClose: () => void; // Callback pour fermer le dialogue
 }) => {
 
     // _________________________ HOOKS _________________________

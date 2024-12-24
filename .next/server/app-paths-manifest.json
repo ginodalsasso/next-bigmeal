@@ -1,4 +1,6 @@
 {
   "/(views)/meals/[mealName]/page": "app/(views)/meals/[mealName]/page.js",
-  "/(views)/meals/page": "app/(views)/meals/page.js"
+  "/(views)/(categories)/categories-ingredient/page": "app/(views)/(categories)/categories-ingredient/page.js",
+  "/(views)/meals/page": "app/(views)/meals/page.js",
+  "/(views)/ingredients/page": "app/(views)/ingredients/page.js"
 }

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 import { Season } from "@/lib/types/enums";
 import { CategoryIngredientType } from "@/lib/types/schemas_interfaces";
-import { UpdateIngredientProps } from "@/lib/types/forms_interfaces";
+import { UpdateIngredientProps } from "@/lib/types/props_interfaces";
 import { IngredientFormErrorType } from "@/lib/types/forms_interfaces";
 import { ingredientConstraints } from "@/lib/constraints/forms_constraints";
 

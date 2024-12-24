@@ -1,24 +1,22 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 import { CompositionType } from "@/lib/types/schemas_interfaces";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { IngredientUnit } from "@/lib/types/enums";
 import { translatedUnit } from "@/lib/utils";
+
 import { updateCompositionConstraints } from "@/lib/constraints/forms_constraints";
 import { CompositionFormErrorType } from "@/lib/types/forms_interfaces";
+import { UpdateCompositionProps } from "@/lib/types/props_interfaces";
 
 
 // _________________________ COMPOSANT _________________________
-const UpdateComposition = ({
+const UpdateComposition: React.FC<UpdateCompositionProps> = ({
     initialComposition,
     onCompositionUpdated,
     onClose,
-}: {
-    initialComposition: CompositionType;
-    onCompositionUpdated: (updatedComposition: CompositionType) => void; // Fonction pour mettre à jour la composition dans l'état parent
-    onClose: () => void; // Fonction pour fermer le Popover
 }) => {
 
     // _________________________ HOOKS _________________________

@@ -16,6 +16,11 @@
       "static/chunks/main-app.js",
       "static/chunks/app/api/meals/[mealName]/route.js"
     ],
+    "/api/ingredients/route": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/api/ingredients/route.js"
+    ],
     "/api/compositions/route": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
@@ -36,10 +41,25 @@
       "static/chunks/main-app.js",
       "static/chunks/app/api/(categories)/categories-meal/route.js"
     ],
-    "/api/ingredients/route": [
+    "/(views)/ingredients/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/api/ingredients/route.js"
+      "static/chunks/app/(views)/ingredients/page.js"
+    ],
+    "/api/(categories)/categories-ingredient/route": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/api/(categories)/categories-ingredient/route.js"
+    ],
+    "/(views)/(categories)/categories-ingredient/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/(views)/(categories)/categories-ingredient/page.js"
+    ],
+    "/(views)/(categories)/categories-meal/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/(views)/(categories)/categories-meal/page.js"
     ]
   }
 }

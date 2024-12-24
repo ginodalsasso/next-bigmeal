@@ -1,23 +1,21 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
-import { CategoryMealType, MealType } from "@/lib/types/schemas_interfaces";
+import { CategoryMealType } from "@/lib/types/schemas_interfaces";
 import { MealFormErrorType, MealFormType } from "@/lib/types/forms_interfaces";
 import { mealConstraints } from "@/lib/constraints/forms_constraints";
 
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import { CreateMealProps } from "@/lib/types/props_interfaces";
 
 
 // _________________________ COMPOSANT _________________________
-const CreateMeal = 
+const CreateMeal: React.FC<CreateMealProps>= 
     ({ 
         onMealCreated, 
         onClose 
-    }: { 
-        onMealCreated: (meal: MealType) => void, // Fonction pour ajouter le repas à la liste parent
-        onClose: () => void // Fonction pour fermer le dialogue
     }) => {
     
     // _________________________ HOOKS _________________________

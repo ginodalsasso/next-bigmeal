@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import {Button} from "@/components/ui/button";
 
 import { CategoryMealType } from "@/lib/types/schemas_interfaces";
-import { UpdateMealProps } from "@/lib/types/forms_interfaces";
+import { UpdateMealProps } from "@/lib/types/props_interfaces";
 import { MealFormErrorType } from "@/lib/types/forms_interfaces";
 import { mealConstraints } from "@/lib/constraints/forms_constraints";
 

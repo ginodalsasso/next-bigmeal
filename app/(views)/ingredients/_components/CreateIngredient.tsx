@@ -3,23 +3,21 @@
 import React, { useEffect, useState } from "react";
 
 import { Season } from "@/lib/types/enums";
-import { CategoryIngredientType, IngredientType } from "@/lib/types/schemas_interfaces";
+import { CategoryIngredientType } from "@/lib/types/schemas_interfaces";
 import { IngredientFormErrorType, IngredientFormType } from "@/lib/types/forms_interfaces";
 import { ingredientConstraints } from "@/lib/constraints/forms_constraints";
 
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { translatedSeason } from "@/lib/utils";
+import { CreateIngredientProps } from "@/lib/types/props_interfaces";
 
 
 // _________________________ COMPOSANT _________________________
-const CreateIngredient = 
+const CreateIngredient: React.FC<CreateIngredientProps> = 
     ({ 
         onIngredientCreated, 
         onClose 
-    }: { 
-        onIngredientCreated: (ingredient: IngredientType) => void, 
-        onClose: () => void 
     }) => {
     
     // _________________________ HOOKS _________________________
