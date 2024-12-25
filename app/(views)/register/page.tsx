@@ -31,6 +31,8 @@ export default function RegisterPage() {
             }
             toast.success("Inscription réussie");
             setIsLoading(false);
+            // redirect('/login')
+
         } catch(error) {
             console.error("Erreur lors de l'inscription", error);
         } finally {
@@ -42,7 +44,8 @@ export default function RegisterPage() {
         <form onSubmit={handleSubmit}>
             <input
                 type="text"
-                placeholder="Username"
+                className="border border-gray-300 p-2 rounded text-black "
+                placeholder="Pseudo"
                 value={formData.username}
                 onChange={(e) =>
                     setFormData({ ...formData, username: e.target.value })
@@ -55,7 +58,8 @@ export default function RegisterPage() {
             )}
             <input
                 type="password"
-                placeholder="Password"
+                className="border border-gray-300 p-2 rounded text-black "
+                placeholder="Mot de passe"
                 value={formData.password}
                 onChange={(e) =>
                     setFormData({ ...formData, password: e.target.value })
