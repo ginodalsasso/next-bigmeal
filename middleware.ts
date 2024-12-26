@@ -1,56 +1,46 @@
+import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
+import { decrypt } from "./lib/session";
 
-const allowedRoutes = [
-    "/",
-    "/not-found",
-    "/home",
+const protectedRoutes = [
     "/ingredients",
     "/meals",
     "/categories-ingredient",
     "/categories-meal",
-    "/register",
-    "/login",
 ];
 
-// Liste des modèles pour routes dynamiques autorisées
 const dynamicRoutePatterns = [
     /^\/ingredients\/[a-zA-Z0-9-]+$/, // Par exemple : /ingredients/nomdelingredient
-    /^\/meals\/[a-zA-Z0-9-]+$/,      // Par exemple : /meals/nomdurepas
+    /^\/meals\/[a-zA-Z0-9-]+$/, // Par exemple : /meals/nomdurepas
 ];
 
-// function isAuthenticated(req: NextRequest) {
-//     return !!req.cookies.get("auth-token");
-// }
+const publicRoutes = ["/login", "/register", "/"];
 
-export default function middleware(req: NextRequest) {
-    const { pathname } = req.nextUrl;
+export default async function middleware(req: NextRequest) {
+    const path = req.nextUrl.pathname;
 
-    if (
-        pathname.startsWith("/_next") || // Ressources statiques Next.js
-        pathname.startsWith("/api") ||  // Requêtes API
-        pathname.includes(".")          // Fichiers (CSS, JS, etc.)
-    ) {
-        return NextResponse.next();
+    // Vérifie si la route est une route protégée ou publique
+    const isProtectedRoute =
+        protectedRoutes.includes(path) || dynamicRoutePatterns.some((pattern) => pattern.test(path));
+    const isPublicRoute = publicRoutes.includes(path);
+
+    // Décrypte la session
+    const cookie = (await cookies()).get("session")?.value;
+    const session = await decrypt(cookie);
+
+    // Redirection si la route est protégée et que l'utilisateur n'est pas connecté
+    if (isProtectedRoute && !session?.userId) {
+        return NextResponse.redirect(new URL("/login", req.nextUrl));
     }
 
-    if (allowedRoutes.includes(pathname)) {
-        return NextResponse.next();
+    // Redirection si la route est publique et que l'utilisateur est connecté
+    if (isPublicRoute && session?.userId && path !== "/") {
+        return NextResponse.redirect(new URL("/", req.nextUrl));
     }
 
-    // Vérifier si la route correspond à un modèle dynamique autorisé
-    const isDynamicRouteAllowed = dynamicRoutePatterns.some((pattern) =>
-        pattern.test(pathname)
-    );
-
-    if (isDynamicRouteAllowed) {
-        return NextResponse.next();
-    }
-
-    // // Si la route est autorisée mais que l'utilisateur n'est pas authentifié
-    // if (allowedRoutes.includes(pathname) && !isAuthenticated(req)) {
-    //     return NextResponse.redirect(new URL("/", req.nextUrl.origin));
-    // }
-
-
-    return NextResponse.redirect(new URL("/not-found", req.nextUrl.origin));
+    return NextResponse.next();
 }
+
+export const config = {
+    matcher: ["/((?!api|_next/static|_next/image|.*\\.png$).*)"],
+};
