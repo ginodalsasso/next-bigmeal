@@ -16,9 +16,9 @@ export async function POST(req: NextRequest) {
             }
         });
         
-        if(!user) {
-            return new NextResponse("User not created", {status: 500});
-        }
+        // if(!user) {
+        //     return new NextResponse("User not created", {status: 500});
+        // }
         
         // await createSession(user.id);
         
