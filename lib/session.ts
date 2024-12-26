@@ -75,12 +75,3 @@ export async function deleteSession() {
     const cookieStore = await cookies()
     cookieStore.delete('session')
 }
-
-// LOGOUT FUNCTION A PLACER DANS LE BON REPERTOIRE
-// import { cookies } from 'next/headers'
-// import { deleteSession } from '@/app/lib/session'
- 
-// export async function logout() {
-//   deleteSession()
-//   redirect('/login')
-// }

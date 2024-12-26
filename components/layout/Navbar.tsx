@@ -18,7 +18,24 @@ const Navbar = () => {
         { title: "repas", url: "/meals" },
         { title: "catégorie ingrédient", url: "/categories-ingredient" },
         { title: "catégorie repas", url: "/categories-meal" },
+        { title: "S'inscrire", url: "/register" },
+        { title: "Se connecter", url: "/login" },
     ];
+
+    // Fonction de déconnexion
+    const handleLogout = async () => {
+        try {
+            const response = await fetch("/api/auth/logout", {
+                method: "POST",
+            });
+            if (response.ok) {
+                // Rediriger l'utilisateur vers la page de connexion ou la page d'accueil
+                window.location.href = "/login";
+            }
+        } catch (error) {
+            console.error("Erreur lors de la déconnexion:", error);
+        }
+    };
 
     return (
         <nav className="w-full flex py-6 z-20">
@@ -54,6 +71,14 @@ const Navbar = () => {
                             </Link>
                         </li>
                     ))}
+                        <li>
+                            <button
+                                className="cursor-pointer hover:underline text-gray-400"
+                                onClick={handleLogout}
+                            >
+                                Se déconnecter
+                            </button>
+                        </li>
                 </ul>
 
                 {/* Mobile Navigation */}
@@ -94,6 +119,14 @@ const Navbar = () => {
                                     </Link>
                                 </li>
                             ))}
+                            <li>
+                                <button
+                                    className="text-gray-400 font-medium cursor-pointer text-[22px]"
+                                    onClick={handleLogout}
+                                >
+                                    Se déconnecter
+                                </button>
+                            </li>
                         </ul>
                     </div>
                 </div>

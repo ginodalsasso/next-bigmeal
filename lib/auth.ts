@@ -2,8 +2,6 @@ import hash from "bcrypt";
 import { getUserByUsername } from "./utils";
 import { encrypt } from "./session";
 
-
-
 // Fonction pour connecter un utilisateur
 export async function signIn(username: string, password: string) {
     const user = await getUserByUsername(username);
