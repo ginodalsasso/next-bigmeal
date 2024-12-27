@@ -11,14 +11,20 @@ interface SessionPayload extends JWTPayload {
 
 const secretKey = process.env.SESSION_SECRET;
 const encodedKey = new TextEncoder().encode(secretKey); // Encodage de la clé secrète en UTF-8
+const expiresAt = new Date(Date.now() + 1000 * 60 * 60 * 24 * 7); // Date d'expiration du token JWT
 
 // encrypt() permet de créer un token JWT
 export async function encrypt(payload: SessionPayload) {
-    return new SignJWT(payload)
+    // console.log("Payload du JWT :", payload);
+
+    const token = await new SignJWT(payload)
         .setProtectedHeader({ alg: "HS256" })
         .setIssuedAt()
         .setExpirationTime("7d")
         .sign(encodedKey);
+
+    // console.log("JWT généré :", token);
+    return token;
 }
 
 // decrypt() permet de vérifier un token JWT
@@ -29,13 +35,13 @@ export async function decrypt(session: string | undefined = "") {
         });
         return payload;
     } catch (error) {
-        console.log("Failed to verify session", error);
+        console.error("Erreur lors de la vérification du JWT :", error);
+        // throw new Error("JWT invalide ou expiré.");
     }
 }
 
 // Création de la session utilisateur
 export async function createSession(userId: string) {
-    const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 jours
     const session = await encrypt({ userId, expiresAt }); // Création du token JWT
     const cookieStore = await cookies(); // Récupération du cookieStore
 
@@ -58,13 +64,11 @@ export async function updateSession() {
         return null;
     }
 
-    const expires = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
-
     const cookieStore = await cookies();
     cookieStore.set("session", session, {
         httpOnly: true,
         secure: true,
-        expires: expires,
+        expires: expiresAt,
         sameSite: "lax",
         path: "/",
     });
