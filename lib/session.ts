@@ -35,8 +35,8 @@ export async function decrypt(session: string | undefined = "") {
         });
         return payload;
     } catch (error) {
-        console.error("Erreur lors de la vérification du JWT :", error);
-        // throw new Error("JWT invalide ou expiré.");
+        console.error("Erreur lors de la vérification du JWT:", error);
+        throw error;
     }
 }
 

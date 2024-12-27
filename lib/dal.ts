@@ -8,11 +8,20 @@ import { cache } from "react";
 // Vérification de la session utilisateur
 export const verifySession = cache(async () => {
     const cookie = (await cookies()).get("session")?.value; // Récupération du cookie "session"
-    const session = await decrypt(cookie); // Décryptage du token JWT
-
-    if (!session?.userId) {
+    if (!cookie) {
         redirect("/login");
     }
 
-    return { isAuth: true, userId: session.userId };
+    try {
+        const session = await decrypt(cookie); // Décryptage du token JWT
+        if (!session?.userId) {
+            redirect("/login");
+        }
+        console.log("Session vérifiée :", session);
+        return { isAuth: true, userId: session.userId };
+    } catch (error) {
+        console.error("Erreur lors de la vérification de la session:", error);
+        redirect("/login");
+    }
 });
+

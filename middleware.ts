@@ -1,4 +1,3 @@
-import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 import { decrypt } from "./lib/session";
 
@@ -24,12 +23,22 @@ export default async function middleware(req: NextRequest) {
         protectedRoutes.includes(path) || dynamicRoutePatterns.some((pattern) => pattern.test(path));
     const isPublicRoute = publicRoutes.includes(path);
 
+    // Récupère le cookie de session
+    const cookie = req.cookies.get("session")?.value;
+
     // Décrypte la session
-    const cookie = (await cookies()).get("session")?.value;
-    const session = await decrypt(cookie);
+    let session;
+    if (cookie) {
+        try {
+            session = await decrypt(cookie);
+        } catch (error) {
+            console.error("Erreur lors de la vérification de la session:", error);
+            session = null;
+        }
+    }
 
     // Redirection si la route est protégée et que l'utilisateur n'est pas connecté
-    if (isProtectedRoute && !session?.userId) {
+    if (isProtectedRoute && (!session || !session?.userId)) {
         return NextResponse.redirect(new URL("/login", req.nextUrl));
     }
 

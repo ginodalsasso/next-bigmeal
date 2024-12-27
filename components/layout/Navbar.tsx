@@ -1,16 +1,43 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image"; // Utilisation de Next.js Image
 import { ucFirst } from "@/lib/utils";
 import openMenu from "@/public/img/openMenu.svg";
-import closeMenu from "@/public/img/closeMenu.svg"; 
+import closeMenu from "@/public/img/closeMenu.svg";
 
 const Navbar = () => {
-    
     const [active, setActive] = useState(""); // État de la navigation active
     const [toggle, setToggle] = useState(false); // État du menu mobile
+    const [isAuth, setIsAuth] = useState(false); // État de l'authentification
+
+    const handleSession = async () => {
+        try {
+            const response = await fetch("/api/auth/status", {
+                method: "GET",
+            });
+            if (response.ok) {
+                const contentType = response.headers.get("content-type");
+                if (contentType && contentType.includes("application/json")) {
+                    const data = await response.json();
+                    setIsAuth(data.isAuth); // Mettre à jour l'état de l'authentification
+                } else {
+                    console.error("Réponse non JSON reçue:", await response.text());
+                }
+            } else {
+                console.error("Erreur de réponse:", response.status, response.statusText);
+            }
+        } catch (error) {
+            console.error("Erreur lors de la vérification de la session:", error);
+        }
+    };
+    
+
+    // Vérifier la session utilisateur lors du chargement du composant
+    useEffect(() => {
+        handleSession();
+    }, []);
 
     // Liens de navigation
     const links = [
@@ -61,9 +88,9 @@ const Navbar = () => {
                             <Link
                                 href={link.url}
                                 className={`cursor-pointer hover:underline ${
-                                    active === link.title 
-                                    ? "text-white font-bold" 
-                                    : "text-gray-400"
+                                    active === link.title
+                                        ? "text-white font-bold"
+                                        : "text-gray-400"
                                 }`}
                                 onClick={() => setActive(link.title)}
                             >
@@ -71,6 +98,7 @@ const Navbar = () => {
                             </Link>
                         </li>
                     ))}
+                    {isAuth && (
                         <li>
                             <button
                                 className="cursor-pointer hover:underline text-gray-400"
@@ -79,6 +107,7 @@ const Navbar = () => {
                                 Se déconnecter
                             </button>
                         </li>
+                    )}
                 </ul>
 
                 {/* Mobile Navigation */}
@@ -104,29 +133,32 @@ const Navbar = () => {
                         <ul className="list-none flex justify-center items-end flex-col gap-5">
                             {links.map((link) => (
                                 <li key={link.title}>
-                                    <Link href={link.url}
-                                            className={`${
-                                                active === link.title
-                                                    ? "text-white"
-                                                    : "text-gray-400"
-                                            } font-medium cursor-pointer text-[22px]`}
-                                            onClick={() => {
-                                                setToggle(!toggle);
-                                                setActive(link.title);
-                                            }}
-                                        >
-                                            {ucFirst(link.title)}
+                                    <Link
+                                        href={link.url}
+                                        className={`${
+                                            active === link.title
+                                                ? "text-white"
+                                                : "text-gray-400"
+                                        } font-medium cursor-pointer text-[22px]`}
+                                        onClick={() => {
+                                            setToggle(!toggle);
+                                            setActive(link.title);
+                                        }}
+                                    >
+                                        {ucFirst(link.title)}
                                     </Link>
                                 </li>
                             ))}
-                            <li>
-                                <button
-                                    className="text-gray-400 font-medium cursor-pointer text-[22px]"
-                                    onClick={handleLogout}
-                                >
-                                    Se déconnecter
-                                </button>
-                            </li>
+                            {isAuth && (
+                                <li>
+                                    <button
+                                        className="text-gray-400 font-medium cursor-pointer text-[22px]"
+                                        onClick={handleLogout}
+                                    >
+                                        Se déconnecter
+                                    </button>
+                                </li>
+                            )}
                         </ul>
                     </div>
                 </div>
