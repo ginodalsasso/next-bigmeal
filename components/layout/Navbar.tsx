@@ -1,39 +1,33 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image"; // Utilisation de Next.js Image
 import { ucFirst } from "@/lib/utils";
 import openMenu from "@/public/img/openMenu.svg";
 import closeMenu from "@/public/img/closeMenu.svg";
+import { useAuth } from "@/app/context/AuthContext";
 
 const Navbar = () => {
     const [active, setActive] = useState(""); // État de la navigation active
     const [toggle, setToggle] = useState(false); // État du menu mobile
-    const [isAuth, setIsAuth] = useState(false); // État de l'authentification
+    const { isAuth, handleSession } = useAuth(); // Utilisation du contexte
 
-    const handleSession = async () => {
+    // Fonction de déconnexion
+    const handleLogout = async () => {
         try {
-            const response = await fetch("/api/auth/status", {
-                method: "GET",
+            const response = await fetch("/api/auth/logout", {
+                method: "POST",
+                credentials: "include", // Inclure les cookies pour la déconnexion
             });
             if (response.ok) {
-                const data = await response.json();
-                setIsAuth(data.isAuth); // Si isAuth est vrai, l'utilisateur est authentifié
-                console.log("Données de session:", data);
-            } else {
-                console.error("Erreur de réponse:", response.status, response.statusText);
+                await handleSession(); // Vérifie la session après déconnexion
+                window.location.href = "/login"; // Redirige l'utilisateur
             }
         } catch (error) {
-            console.error("Erreur lors de la vérification de la session:", error);
+            console.error("Erreur lors de la déconnexion :", error);
         }
     };
-    
-
-    // Vérifier la session utilisateur lors du chargement du composant
-    useEffect(() => {
-        handleSession();
-    }, []);
 
     // Liens de navigation
     const links = [
@@ -44,21 +38,6 @@ const Navbar = () => {
         { title: "S'inscrire", url: "/register" },
         { title: "Se connecter", url: "/login" },
     ];
-
-    // Fonction de déconnexion
-    const handleLogout = async () => {
-        try {
-            const response = await fetch("/api/auth/logout", {
-                method: "POST",
-            });
-            if (response.ok) {
-                // Rediriger l'utilisateur vers la page de connexion ou la page d'accueil
-                window.location.href = "/login";
-            }
-        } catch (error) {
-            console.error("Erreur lors de la déconnexion:", error);
-        }
-    };
 
     return (
         <nav className="w-full flex py-6 z-20">
