@@ -1,6 +1,5 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
-import { db } from "./db";
 
 // Fonction de concaténation de classes
 export function cn(...inputs: ClassValue[]) {
@@ -50,16 +49,3 @@ export const translatedUnit = (unit: string | undefined): string => {
             return "Non spécifié";
     }
 };
-
-
-
-export const getUserByUsername = (username: string) => {
-    try{
-        return db.user.findFirst({
-            where: { username },
-        });
-    } catch(error) {
-        console.log("[GET_USER_BY_EMAIL]", error);
-        return null;
-    }
-}   

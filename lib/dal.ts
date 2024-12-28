@@ -26,6 +26,18 @@ export const verifySession = cache(async () => {
 });
 
 
+export const getUserByUsername = (username: string) => {
+    try{
+        return db.user.findFirst({
+            where: { username },
+        });
+    } catch(error) {
+        console.error("Failed to fetch user", error);
+        return null;
+    }
+}   
+
+
 export const getUser = cache(async () => {
     const session = await verifySession();
     if (!session) return null;

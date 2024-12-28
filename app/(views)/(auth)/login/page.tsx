@@ -50,7 +50,7 @@ export default function LoginPage() {
             });
     
             if (response.ok) {
-                window.location.href = "/ingredients"; // Redirige vers une autre page
+                window.location.href = "/ingredients";
                 toast.success(`Bienvenue ${username} :)`);
             } else {
                 const errorData = await response.json();

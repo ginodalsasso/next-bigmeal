@@ -1,5 +1,5 @@
 import hash from "bcrypt";
-import { getUserByUsername } from "./utils";
+import { getUserByUsername } from "./dal";
 import { encrypt } from "./session";
 
 // Fonction pour connecter un utilisateur

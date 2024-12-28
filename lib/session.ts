@@ -14,6 +14,8 @@ if (!process.env.SESSION_SECRET) {
 }
 const secretKey = process.env.SESSION_SECRET;
 const encodedKey = new TextEncoder().encode(secretKey); // Encodage de la clé secrète en UTF-8
+
+// C'est ici que je pourrais proposer à l'utilisateur de se souvenir de son compte et dans le cas contraire suprrimer la date d'expiration
 const expiresAt = new Date(Date.now() + 1000 * 60 * 60 * 24 * 7); // Date d'expiration du token JWT
 
 // encrypt() permet de créer un token JWT
