@@ -9,13 +9,15 @@ interface SessionPayload extends JWTPayload {
     // role?: string;
 }  
 
+if (!process.env.SESSION_SECRET) {
+    throw new Error("SESSION_SECRET is not defined in environment variables");
+}
 const secretKey = process.env.SESSION_SECRET;
 const encodedKey = new TextEncoder().encode(secretKey); // Encodage de la clé secrète en UTF-8
 const expiresAt = new Date(Date.now() + 1000 * 60 * 60 * 24 * 7); // Date d'expiration du token JWT
 
 // encrypt() permet de créer un token JWT
 export async function encrypt(payload: SessionPayload) {
-    // console.log("Payload du JWT :", payload);
 
     const token = await new SignJWT(payload)
         .setProtectedHeader({ alg: "HS256" })
@@ -23,16 +25,17 @@ export async function encrypt(payload: SessionPayload) {
         .setExpirationTime("7d")
         .sign(encodedKey);
 
-    // console.log("JWT généré :", token);
     return token;
 }
 
 // decrypt() permet de vérifier un token JWT
 export async function decrypt(session: string | undefined = "") {
     try {
+        const encodedKey = new TextEncoder().encode(secretKey);
         const { payload } = await jwtVerify(session, encodedKey, {
             algorithms: ["HS256"],
         });
+        
         return payload;
     } catch (error) {
         console.error("Erreur lors de la vérification du JWT:", error);

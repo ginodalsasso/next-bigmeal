@@ -18,13 +18,9 @@ const Navbar = () => {
                 method: "GET",
             });
             if (response.ok) {
-                const contentType = response.headers.get("content-type");
-                if (contentType && contentType.includes("application/json")) {
-                    const data = await response.json();
-                    setIsAuth(data.isAuth); // Mettre à jour l'état de l'authentification
-                } else {
-                    console.error("Réponse non JSON reçue:", await response.text());
-                }
+                const data = await response.json();
+                setIsAuth(data.isAuth); // Si isAuth est vrai, l'utilisateur est authentifié
+                console.log("Données de session:", data);
             } else {
                 console.error("Erreur de réponse:", response.status, response.statusText);
             }
