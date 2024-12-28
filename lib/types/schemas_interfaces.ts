@@ -101,3 +101,9 @@ export interface UserType {
     // Relation One-to-Many 
     shoppingListItems: ShoppingListType[];
 }
+
+export interface UserContextType {
+    id: string;
+    username: string;
+    isAdmin: boolean;
+}

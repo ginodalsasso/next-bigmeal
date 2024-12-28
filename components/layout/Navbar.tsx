@@ -11,7 +11,7 @@ import { useAuth } from "@/app/context/AuthContext";
 const Navbar = () => {
     const [active, setActive] = useState(""); // État de la navigation active
     const [toggle, setToggle] = useState(false); // État du menu mobile
-    const { isAuth, handleSession } = useAuth(); // Utilisation du contexte
+    const { isAuth, user, handleSession } = useAuth(); // Utilisation du contexte d'authentification
 
     // Fonction de déconnexion
     const handleLogout = async () => {
@@ -74,14 +74,21 @@ const Navbar = () => {
                         </li>
                     ))}
                     {isAuth && (
-                        <li>
-                            <button
-                                className="cursor-pointer hover:underline text-gray-400"
-                                onClick={handleLogout}
-                            >
-                                Se déconnecter
-                            </button>
-                        </li>
+                        <>
+                            <li>
+                                <span className="text-gray-400 font-medium">
+                                    Bonjour, {user?.username}
+                                </span>
+                            </li>
+                            <li>
+                                <button
+                                    className="cursor-pointer hover:underline text-gray-400"
+                                    onClick={handleLogout}
+                                >
+                                    Se déconnecter
+                                </button>
+                            </li>
+                        </>
                     )}
                 </ul>
 

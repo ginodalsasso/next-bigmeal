@@ -38,6 +38,7 @@ export const getUser = cache(async () => {
             select: {
                 id: true, // Retourner seulement les colonnes nécessaires
                 username: true,
+                isAdmin: true,
             },
         });
 
