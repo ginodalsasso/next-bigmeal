@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import Image from "next/image"; // Utilisation de Next.js Image
+import Image from "next/image";
 import { ucFirst } from "@/lib/utils";
 import openMenu from "@/public/img/openMenu.svg";
 import closeMenu from "@/public/img/closeMenu.svg";
@@ -11,7 +11,7 @@ import { useAuth } from "@/app/context/AuthContext";
 const Navbar = () => {
     const [active, setActive] = useState(""); // État de la navigation active
     const [toggle, setToggle] = useState(false); // État du menu mobile
-    const { isAuth, user, handleSession } = useAuth(); // Utilisation du contexte d'authentification
+    const { isAuth, user } = useAuth(); // Utilisation du contexte d'authentification
 
     // Fonction de déconnexion
     const handleLogout = async () => {
@@ -21,7 +21,6 @@ const Navbar = () => {
                 credentials: "include", // Inclure les cookies pour la déconnexion
             });
             if (response.ok) {
-                await handleSession(); // Vérifie la session après déconnexion
                 window.location.href = "/login"; // Redirige l'utilisateur
             }
         } catch (error) {
@@ -35,8 +34,6 @@ const Navbar = () => {
         { title: "repas", url: "/meals" },
         { title: "catégorie ingrédient", url: "/categories-ingredient" },
         { title: "catégorie repas", url: "/categories-meal" },
-        { title: "S'inscrire", url: "/register" },
-        { title: "Se connecter", url: "/login" },
     ];
 
     return (
@@ -73,7 +70,8 @@ const Navbar = () => {
                             </Link>
                         </li>
                     ))}
-                    {isAuth && (
+
+                    {isAuth ? (
                         <>
                             <li>
                                 <span className="text-gray-400 font-medium">
@@ -87,6 +85,25 @@ const Navbar = () => {
                                 >
                                     Se déconnecter
                                 </button>
+                            </li>
+                        </>
+                    ) : (
+                        <>
+                            <li>
+                                <Link
+                                    href="/login"
+                                    className="text-gray-400 font-medium cursor-pointer"
+                                >
+                                    Se connecter
+                                </Link>
+                            </li>
+                            <li>
+                                <Link
+                                    href="/register"
+                                    className="text-gray-400 font-medium cursor-pointer"
+                                >
+                                    S&apos;inscrire
+                                </Link>
                             </li>
                         </>
                     )}
@@ -131,7 +148,8 @@ const Navbar = () => {
                                     </Link>
                                 </li>
                             ))}
-                            {isAuth && (
+
+                            {isAuth ? (
                                 <li>
                                     <button
                                         className="text-gray-400 font-medium cursor-pointer text-[22px]"
@@ -140,6 +158,27 @@ const Navbar = () => {
                                         Se déconnecter
                                     </button>
                                 </li>
+                            ) : (
+                                <>
+                                    <li>
+                                        <Link
+                                            href="/login"
+                                            className="text-gray-400 font-medium cursor-pointer text-[22px]"
+                                            onClick={() => setToggle(!toggle)}
+                                        >
+                                            Se connecter
+                                        </Link>
+                                    </li>
+                                    <li>
+                                        <Link
+                                            href="/register"
+                                            className="text-gray-400 font-medium cursor-pointer text-[22px]"
+                                            onClick={() => setToggle(!toggle)}
+                                        >
+                                            S&apos;inscrire
+                                        </Link>
+                                    </li>
+                                </>
                             )}
                         </ul>
                     </div>

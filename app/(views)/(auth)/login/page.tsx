@@ -2,14 +2,13 @@
 
 import { RegisterConstraints } from "@/lib/constraints/forms_constraints";
 import { UserFormErrorType } from "@/lib/types/forms_interfaces";
-import { useRouter } from "next/navigation";
+// import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 import { toast } from "sonner";
 
 export default function LoginPage() {
 
     // __________________ HOOKS __________________
-    const router = useRouter();
     const [error, setError] = useState<UserFormErrorType>({});
     const [isLoading, setIsLoading] = useState(false);
 
@@ -51,7 +50,7 @@ export default function LoginPage() {
             });
     
             if (response.ok) {
-                router.push("/ingredients");
+                window.location.href = "/ingredients"; // Redirige vers une autre page
                 toast.success(`Bienvenue ${username} :)`);
             } else {
                 const errorData = await response.json();

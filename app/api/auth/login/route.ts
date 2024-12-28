@@ -23,7 +23,7 @@ export async function POST(req: NextRequest) {
 
         // Créer une session utilisateur
         await createSession(user.id);
-
+        
         return NextResponse.json({ success: true, user, token });
     } catch (error) {
         console.error("Error during login:", error);

@@ -7,7 +7,6 @@ interface AuthContextType {
     isAuth: boolean; // Indique si l'utilisateur est authentifié
     user: UserContextType | null; // Informations de l'utilisateur
     setIsAuth: React.Dispatch<React.SetStateAction<boolean>>; // Permet de mettre à jour l'état
-    handleSession: () => Promise<void>; // Fonction pour vérifier la session
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -27,7 +26,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             if (response.ok) {
                 const data = await response.json();
                 setIsAuth(data.isAuth);
-                setUser(data.user || null); // Récupère les informations utilisateur si elles existent
+                setUser(data.user); // Récupère les informations utilisateur
             } else {
                 setIsAuth(false);
                 setUser(null); // Efface les informations utilisateur si non authentifié
@@ -44,7 +43,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }, []);
 
     return (
-        <AuthContext.Provider value={{ isAuth, user, setIsAuth, handleSession }}>
+        <AuthContext.Provider value={{ isAuth, user, setIsAuth }}>
             {children}
         </AuthContext.Provider>
     );
