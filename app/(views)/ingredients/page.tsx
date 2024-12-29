@@ -115,6 +115,31 @@ const IngredientPage = () => {
             setError("Erreur lors de la suppression.");
         }
     };
+
+    // Fonction pour ajouter un ingrédient à la shopping-list
+    const addToShoppingList = async (ingredientId: string) => {
+        try {
+            const response = await fetch('/api/shopping-list', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ 
+                    ingredientId 
+                    
+                }),
+            });
+
+            if (!response.ok) {
+                throw new Error('Erreur lors de l\'ajout à la shopping-list');
+            }
+
+            toast('Ingrédient ajouté à la shopping-list avec succès');
+        } catch (error) {
+            console.error('Erreur:', error);
+            toast.error('Impossible d\'ajouter l\'ingrédient à la shopping-list.');
+        }
+    };
     
 
     // _________________________ RENDU _________________________
@@ -152,36 +177,41 @@ const IngredientPage = () => {
             <div className="cards-wrapper">
                 <div className="cards-list">
                     {ingredients.map((ingredient) => (
-                        <ItemView
+                        <div
                             key={ingredient.id}
-                            title={ingredient.name}
-                            details={{
-                                category: ingredient.categoryIngredient?.name || "Non spécifié",
-                                season: translatedSeason(ingredient.season) || "Non spécifié",
-                            }}
-                            // Formulaire de mise à jour
-                            renderEditForm={(onClose) => ( 
-                                <UpdateIngredient
-                                    initialName={ingredient.name}
-                                    initialCategory={ingredient.categoryIngredient?.id || ""}
-                                    initialSeason={ingredient.season || ""}
-                                    onSubmit={async (newName, newCategory, newSeason) => {
-                                        await updateIngredient(
-                                            ingredient.id, 
-                                            newName, 
-                                            newCategory, 
-                                            newSeason || null
-                                        );
-                                        onClose();
-                                    }}
-                                    onCancel={onClose}
-                                    isLoading={false}
-                                    error={null}
-                                />
-                            )}
-                            onDelete={() => deleteIngredient(ingredient.id)}
-                            isDeleting={false}
-                        />
+                            onClick={() => addToShoppingList(ingredient.id)} // Gestionnaire de clic
+                        >
+                            <ItemView
+                                key={ingredient.id}
+                                title={ingredient.name}
+                                details={{
+                                    category: ingredient.categoryIngredient?.name || "Non spécifié",
+                                    season: translatedSeason(ingredient.season) || "Non spécifié",
+                                }}
+                                // Formulaire de mise à jour
+                                renderEditForm={(onClose) => ( 
+                                    <UpdateIngredient
+                                        initialName={ingredient.name}
+                                        initialCategory={ingredient.categoryIngredient?.id || ""}
+                                        initialSeason={ingredient.season || ""}
+                                        onSubmit={async (newName, newCategory, newSeason) => {
+                                            await updateIngredient(
+                                                ingredient.id, 
+                                                newName, 
+                                                newCategory, 
+                                                newSeason || null
+                                            );
+                                            onClose();
+                                        }}
+                                        onCancel={onClose}
+                                        isLoading={false}
+                                        error={null}
+                                    />
+                                )}
+                                onDelete={() => deleteIngredient(ingredient.id)}
+                                isDeleting={false}
+                            />
+                        </div>
                     ))}
                 </div>
             </div>
