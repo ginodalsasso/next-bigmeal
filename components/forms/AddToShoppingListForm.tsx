@@ -15,7 +15,6 @@ interface AddToShoppingListFormProps {
 
 const AddToShoppingListForm: React.FC<AddToShoppingListFormProps> = ({ type, id }) => {
     const [quantity, setQuantity] = useState<AddIngredientToShoppingListFormType>({ quantity: 1 });
-    
     const [error, setError] = useState<AddIngredientToShoppingListFormErrorType>({});
     const [isLoading, setIsLoading] = useState(false);
 
@@ -24,60 +23,67 @@ const AddToShoppingListForm: React.FC<AddToShoppingListFormProps> = ({ type, id 
         setIsLoading(true);
         setError({});
 
-        // Validation pour les quantités (uniquement pour les ingrédients individuels)
-        if (type === 'ingredient') {
-            const validationResult = ShoppingListConstraints.safeParse({ quantity: quantity.quantity });
-            if (!validationResult.success) {
-                const formattedErrors = validationResult.error.flatten();
-                setError({ quantity: formattedErrors.fieldErrors.quantity?.[0] });
-                setIsLoading(false);
-                return;
-            }
-        }
-
         try {
-            if (type === 'meal') {
-                // Récupérer les ingrédients d'un repas
-                const response = await fetch(`/api/meals/${id}`);
-                if (!response.ok) {
-                    throw new Error('Erreur lors de la récupération des ingrédients du repas');
+            switch (type) {
+                case 'meal': {
+                    // Récupérer les ingrédients du repas
+                    const response = await fetch(`/api/meals/${id}`);
+                    if (!response.ok) {
+                        throw new Error('Erreur lors de la récupération des ingrédients du repas');
+                    }
+
+                    const meal = await response.json();
+
+                    // Ajouter chaque ingrédient du repas à la liste de courses
+                    for (const ingredient of meal.compositions) {
+                        await fetch('/api/shopping-list', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                                ingredientId: ingredient.id,
+                                quantity: ingredient.quantity,
+                            }),
+                        });
+                    }
+
+                    toast('Les ingrédients du repas ont été ajoutés à la liste de courses');
+                    break;
                 }
 
-                const meal = await response.json();
+                case 'ingredient': {
+                    // Validation des quantités
+                    const validationResult = ShoppingListConstraints.safeParse({ quantity: quantity.quantity });
+                    if (!validationResult.success) {
+                        const formattedErrors = validationResult.error.flatten();
+                        setError({ quantity: formattedErrors.fieldErrors.quantity?.[0] });
+                        setIsLoading(false);
+                        return;
+                    }
 
-                // Ajouter chaque ingrédient du repas à la liste de courses
-                for (const ingredient of meal.compositions) {
-                    await fetch('/api/shopping-list', {
+                    // Ajouter un ingrédient individuel
+                    const response = await fetch('/api/shopping-list', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
                         },
                         body: JSON.stringify({
-                            ingredientId: ingredient.id,
-                            quantity: ingredient.quantity,
+                            ingredientId: id,
+                            quantity: quantity.quantity,
                         }),
                     });
+
+                    if (!response.ok) {
+                        throw new Error('Erreur lors de l\'ajout de l\'ingrédient à la liste de courses');
+                    }
+
+                    toast('Ingrédient ajouté à la liste de courses avec succès');
+                    break;
                 }
 
-                toast('Les ingrédients du repas ont été ajoutés à la liste de courses');
-            } else if (type === 'ingredient') {
-                // Ajouter un ingrédient individuel
-                const response = await fetch('/api/shopping-list', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        ingredientId: id,
-                        quantity: quantity.quantity,
-                    }),
-                });
-
-                if (!response.ok) {
-                    throw new Error('Erreur lors de l\'ajout de l\'ingrédient à la liste de courses');
-                }
-
-                toast('Ingrédient ajouté à la liste de courses avec succès');
+                default:
+                    throw new Error('Type d\'ajout non supporté');
             }
         } catch (error) {
             console.error('Erreur:', error);
