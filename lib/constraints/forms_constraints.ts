@@ -84,3 +84,12 @@ export const RegisterConstraints = z.object({
         // .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>~`'[\]\\/_+\-=])[A-Za-z\d!@#$%^&*(),.?":{}|<>~`'[\]\\/_+\-=]{12,}$/, "Le mot de passe doit comporter au moins 12 caractères, une lettre majuscule, une lettre minuscule, un chiffre et un caractère spécial"),
         .trim(),
 });
+
+
+export const ShoppingListConstraints = z.object({
+    quantity: z
+        .number({ message: "La quantité doit être un nombre" })
+        .min(0.1, "La quantité doit être supérieure à 0")
+        .max(10000, "La quantité doit être inférieure à 10000")
+        .positive("La quantité doit être un nombre positif."),
+});

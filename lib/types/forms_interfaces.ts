@@ -69,3 +69,12 @@ export interface UserFormErrorType {
     username?: string;
     password?: string;
 }
+
+// FORMULAIRE DE CONNEXION
+export interface AddToShoppingListFormType {
+    quantity: number;
+}
+
+export interface AddToShoppingListFormErrorType {
+    quantity?: string;
+}

@@ -1,5 +1,7 @@
 'use client';
 
+import { ShoppingListConstraints } from '@/lib/constraints/forms_constraints';
+import { AddToShoppingListFormErrorType, AddToShoppingListFormType } from '@/lib/types/forms_interfaces';
 import React, { useState } from 'react';
 import { toast } from 'sonner';
 
@@ -8,12 +10,27 @@ interface AddToShoppingListFormProps {
 }
 
 const AddToShoppingListForm: React.FC<AddToShoppingListFormProps> = ({ ingredientId }) => {
-    const [quantity, setQuantity] = useState<number>(0);
+    const [quantity, setQuantity] = useState<AddToShoppingListFormType>({ quantity: 1 });
     
-    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<AddToShoppingListFormErrorType>({});
+    const [isLoading, setIsLoading] = useState(false);
 
-    const addToShoppingList = async () => {
-        setLoading(true);
+    const addToShoppingList = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setIsLoading(true);
+        setError({});
+
+        // Valider les données du formulaire
+        const validationResult = ShoppingListConstraints.safeParse({ quantity: quantity.quantity });
+        if (!validationResult.success) {
+            const formattedErrors = validationResult.error.flatten();
+            setError({
+                quantity: formattedErrors.fieldErrors.quantity?.[0],
+            });
+            setIsLoading(false);
+            return;
+        }
+
         try {
             const response = await fetch('/api/shopping-list', {
                 method: 'POST',
@@ -22,7 +39,7 @@ const AddToShoppingListForm: React.FC<AddToShoppingListFormProps> = ({ ingredien
                 },
                 body: JSON.stringify({ 
                     ingredientId,
-                    quantity,
+                    quantity: quantity.quantity,
                 }),
             });
 
@@ -35,31 +52,33 @@ const AddToShoppingListForm: React.FC<AddToShoppingListFormProps> = ({ ingredien
             console.error('Erreur:', error);
             toast.error('Impossible d\'ajouter l\'ingrédient à la shopping-list.');
         } finally {
-            setLoading(false);
+            setIsLoading(false);
         }
     };
 
     return (
         <form
-            onSubmit={(e) => {
-                e.preventDefault();
-                addToShoppingList();
-            }}
+            onSubmit={addToShoppingList}
             className="flex items-center gap-2"
         >
             <input
                 type="number"
                 className="text-black w-16 p-1 rounded"
-                value={quantity}
+                value={quantity.quantity}
                 min={1}
-                onChange={(e) => setQuantity(parseInt(e.target.value, 10))} 
+                onChange={(e) => setQuantity({ quantity: parseInt(e.target.value) })} 
             />
+            {error.quantity && (
+                <p className="text-red-500 text-sm mb-4 mx-auto">
+                    {error.quantity}
+                </p>
+            )}
             <button 
                 type="submit" 
-                className={`btn btn-primary ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
-                disabled={loading}
+                className={`btn btn-primary ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                disabled={isLoading}
             >
-                {loading ? 'Ajout...' : 'Ajouter à la liste de courses'}
+                {isLoading ? 'Ajout...' : 'Ajouter à la liste de courses'}
             </button>
         </form>
     );
