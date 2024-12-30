@@ -19,7 +19,7 @@ import { Button } from "@/components/ui/button";
 import CreateMeal from "./_components/CreateMeal";
 import UpdateMeal from "./_components/UpdateMeal";
 import CreateComposition from "./_components/CreateComposition";
-import AddMealToShoppingListForm from "@/components/forms/AddMealToShoppingListForm";
+import AddToShoppingListForm from "@/components/forms/AddToShoppingListForm";
 
 
 // _________________________ COMPOSANT _________________________
@@ -194,7 +194,7 @@ const MealsPage = () => {
                 <div className="cards-list">
                     {meals.map((meal) => (
                         <div key={meal.id}>
-                            <AddMealToShoppingListForm mealId={meal.name} />
+                            <AddToShoppingListForm type={'meal'} id={meal.name} />
                             <ItemView
                                 key={meal.id}
                                 title={meal.name}
