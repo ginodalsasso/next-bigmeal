@@ -19,6 +19,7 @@ import {
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { translatedSeason } from "@/lib/utils";
+import AddToShoppingListForm from "@/components/forms/AddToShoppingListForm";
 
 
 // _________________________ COMPOSANT _________________________
@@ -116,32 +117,6 @@ const IngredientPage = () => {
         }
     };
 
-    // Fonction pour ajouter un ingrédient à la shopping-list
-    const addToShoppingList = async (ingredientId: string) => {
-        try {
-            const response = await fetch('/api/shopping-list', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ 
-                    ingredientId 
-                    
-                }),
-            });
-
-            if (!response.ok) {
-                throw new Error('Erreur lors de l\'ajout à la shopping-list');
-            }
-
-            toast('Ingrédient ajouté à la shopping-list avec succès');
-        } catch (error) {
-            console.error('Erreur:', error);
-            toast.error('Impossible d\'ajouter l\'ingrédient à la shopping-list.');
-        }
-    };
-    
-
     // _________________________ RENDU _________________________
     if (loading) return <div>Loading...</div>;
     if (error) return <div>{error}</div>;
@@ -177,10 +152,8 @@ const IngredientPage = () => {
             <div className="cards-wrapper">
                 <div className="cards-list">
                     {ingredients.map((ingredient) => (
-                        <div
-                            key={ingredient.id}
-                            onClick={() => addToShoppingList(ingredient.id)} // Gestionnaire de clic
-                        >
+                        <div key={ingredient.id}>
+                            <AddToShoppingListForm ingredientId={ingredient.id} />
                             <ItemView
                                 key={ingredient.id}
                                 title={ingredient.name}
