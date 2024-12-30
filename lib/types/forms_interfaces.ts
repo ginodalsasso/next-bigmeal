@@ -71,10 +71,10 @@ export interface UserFormErrorType {
 }
 
 // FORMULAIRE DE CONNEXION
-export interface AddToShoppingListFormType {
+export interface AddIngredientToShoppingListFormType {
     quantity: number;
 }
 
-export interface AddToShoppingListFormErrorType {
+export interface AddIngredientToShoppingListFormErrorType {
     quantity?: string;
 }

@@ -19,6 +19,7 @@ import { Button } from "@/components/ui/button";
 import CreateMeal from "./_components/CreateMeal";
 import UpdateMeal from "./_components/UpdateMeal";
 import CreateComposition from "./_components/CreateComposition";
+import AddMealToShoppingListForm from "@/components/forms/AddMealToShoppingListForm";
 
 
 // _________________________ COMPOSANT _________________________
@@ -192,37 +193,40 @@ const MealsPage = () => {
             <div className="cards-wrapper">
                 <div className="cards-list">
                     {meals.map((meal) => (
-                        <ItemView
-                            key={meal.id}
-                            title={meal.name}
-                            details={{
-                                category: meal.categoryMeal?.name || "Non spécifié",
-                                description: meal.description,
-                            }}
-                            // Formulaire de mise à jour
-                            renderEditForm={(onClose) => ( // 
-                                <UpdateMeal
-                                    initialName={meal.name}
-                                    initialCategory={meal.categoryMeal?.id || ""}
-                                    initialDescription={meal.description || ""}
-                                    onSubmit={async (newName, newCategory, newDescription) => {
-                                        await updateMeal( 
-                                            meal.id, 
-                                            newName, 
-                                            newCategory, 
-                                            newDescription || null
-                                        );
-                                        onClose();
-                                    }}
-                                    onCancel={onClose}
-                                    isLoading={false}
-                                    error={null}
-                                />
-                            )}
-                            onDelete={() => deleteMeal(meal.id)}
-                            isDeleting={false}
-                            linkToDetails={`/meals/${meal.name}`}
-                        />
+                        <div key={meal.id}>
+                            <AddMealToShoppingListForm mealId={meal.name} />
+                            <ItemView
+                                key={meal.id}
+                                title={meal.name}
+                                details={{
+                                    category: meal.categoryMeal?.name || "Non spécifié",
+                                    description: meal.description,
+                                }}
+                                // Formulaire de mise à jour
+                                renderEditForm={(onClose) => ( // 
+                                    <UpdateMeal
+                                        initialName={meal.name}
+                                        initialCategory={meal.categoryMeal?.id || ""}
+                                        initialDescription={meal.description || ""}
+                                        onSubmit={async (newName, newCategory, newDescription) => {
+                                            await updateMeal( 
+                                                meal.id, 
+                                                newName, 
+                                                newCategory, 
+                                                newDescription || null
+                                            );
+                                            onClose();
+                                        }}
+                                        onCancel={onClose}
+                                        isLoading={false}
+                                        error={null}
+                                    />
+                                )}
+                                onDelete={() => deleteMeal(meal.id)}
+                                isDeleting={false}
+                                linkToDetails={`/meals/${meal.name}`}
+                            />
+                        </div>
                     ))}
                 </div>
             </div>

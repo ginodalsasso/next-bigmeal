@@ -1,18 +1,18 @@
 'use client';
 
 import { ShoppingListConstraints } from '@/lib/constraints/forms_constraints';
-import { AddToShoppingListFormErrorType, AddToShoppingListFormType } from '@/lib/types/forms_interfaces';
+import { AddIngredientToShoppingListFormErrorType, AddIngredientToShoppingListFormType } from '@/lib/types/forms_interfaces';
 import React, { useState } from 'react';
 import { toast } from 'sonner';
 
-interface AddToShoppingListFormProps {
+interface AddIngredientToShoppingListFormProps {
     ingredientId: string;
 }
 
-const AddToShoppingListForm: React.FC<AddToShoppingListFormProps> = ({ ingredientId }) => {
-    const [quantity, setQuantity] = useState<AddToShoppingListFormType>({ quantity: 1 });
+const AddIngredientToShoppingListForm: React.FC<AddIngredientToShoppingListFormProps> = ({ ingredientId }) => {
+    const [quantity, setQuantity] = useState<AddIngredientToShoppingListFormType>({ quantity: 1 });
     
-    const [error, setError] = useState<AddToShoppingListFormErrorType>({});
+    const [error, setError] = useState<AddIngredientToShoppingListFormErrorType>({});
     const [isLoading, setIsLoading] = useState(false);
 
     const addToShoppingList = async (e: React.FormEvent) => {
@@ -84,4 +84,4 @@ const AddToShoppingListForm: React.FC<AddToShoppingListFormProps> = ({ ingredien
     );
 };
 
-export default AddToShoppingListForm;
+export default AddIngredientToShoppingListForm;

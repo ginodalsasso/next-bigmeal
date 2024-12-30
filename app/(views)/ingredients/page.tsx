@@ -19,7 +19,7 @@ import {
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { translatedSeason } from "@/lib/utils";
-import AddToShoppingListForm from "@/components/forms/AddToShoppingListForm";
+import AddIngredientToShoppingListForm from "@/components/forms/AddIngredientToShoppingListForm";
 
 
 // _________________________ COMPOSANT _________________________
@@ -153,7 +153,7 @@ const IngredientPage = () => {
                 <div className="cards-list">
                     {ingredients.map((ingredient) => (
                         <div key={ingredient.id}>
-                            <AddToShoppingListForm ingredientId={ingredient.id} />
+                            <AddIngredientToShoppingListForm ingredientId={ingredient.id} />
                             <ItemView
                                 key={ingredient.id}
                                 title={ingredient.name}
