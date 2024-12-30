@@ -1,7 +1,9 @@
+'use client';
+
 import { ShoppingListType } from "@/lib/types/schemas_interfaces";
 import { useState, useEffect } from "react";
 
-const ShoppingList = () => {
+const ShoppingListPage = () => {
     const [shoppingList, setshoppingList] = useState<ShoppingListType[]>([]);
 
     const [loading, setLoading] = useState(true);
@@ -35,8 +37,14 @@ const ShoppingList = () => {
             <ul>
                 {shoppingList.map((list) => (
                     <li key={list.id}>
-                        <p>{list.meal?.name}</p>
-                        <p>{list.ingredient?.name}</p>
+                        <ul>
+                            {/* <li>{list}</li> */}
+                            {/* {list.items.map((item) => (
+                                <li key={item.id}>
+                                    {item.ingredient.name} - {item.quantity}
+                                </li>
+                            ))} */}
+                        </ul>
                     </li>
                 ))}
             </ul>
@@ -44,4 +52,4 @@ const ShoppingList = () => {
     );
 };
 
-export default ShoppingList;
+export default ShoppingListPage;

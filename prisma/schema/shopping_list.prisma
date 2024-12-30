@@ -1,17 +1,14 @@
 model ShoppingList {
-    id           String      @id @default(auto()) @map("_id") @db.ObjectId
-    userId       String      @db.ObjectId
-    ingredientId String?     @db.ObjectId
-    mealId       String?     @db.ObjectId
+    id         String         @id @default(auto()) @map("_id") @db.ObjectId
+    userId     String         @db.ObjectId
+    comment    String?
 
-    quantity     Float       @default(0.0)
-    comment      String?
-    isPurchased  Boolean     @default(false)
-    createdAt    DateTime    @default(now())
+    isExpired  Boolean        @default(false)
+    createdAt  DateTime       @default(now())
 
-    user         User        @relation(fields: [userId], references: [id], onDelete: Cascade)
-    ingredient   Ingredient? @relation(fields: [ingredientId], references: [id])
-    meal         Meal?       @relation(fields: [mealId], references: [id])
+    user       User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+    items      ShoppingListItem[] // Relation avec ShoppingListItem
+
 
     @@index([userId])
 }

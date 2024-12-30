@@ -51,6 +51,11 @@ export const getUser = cache(async () => {
                 id: true, // Retourner seulement les colonnes nécessaires
                 username: true,
                 isAdmin: true,
+                shoppingList: {
+                    where: {
+                        isExpired: false, // Filtrer les listes de courses non expirées
+                    },
+                },
             },
         });
 

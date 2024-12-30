@@ -6,5 +6,5 @@ model User {
     createdAt         DateTime       @default(now())
     isAdmin           Boolean        @default(false)
 
-    shoppingListItems ShoppingList[]
+    shoppingList ShoppingList[]
 }

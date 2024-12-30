@@ -76,18 +76,29 @@ export interface CompositionType {
 export interface ShoppingListType {
     id: string; 
     userId: string; // Clé étrangère
-    ingredientId?: string; // Clé étrangère optionnelle
-    mealId?: string; // Clé étrangère optionnelle
-
-    quantity: number; 
-    comment?: string; 
-    isPurchased: boolean; 
+    comment?: string;
+    
+    isExpired: boolean;
     createdAt: Date;
 
-    // Relations
-    user: UserType; // Référence à l'utilisateur associé
-    ingredient?: IngredientType; // Référence optionnelle à l'ingrédient associé
-    meal?: MealType; // Référence optionnelle au repas associé
+    // Relation Many-to-One
+    user: UserType;
+    items : ShoppingListItemType[];
+}
+
+export interface ShoppingListItemType {
+    id: string;
+    shoppingListId: string; // Clé étrangère
+    ingredientId: string; // Clé étrangère
+    mealId: string; // Clé étrangère   
+
+    quantity: number;
+    comment?: string;
+
+    // Relation Many-to-One
+    shoppingList: ShoppingListType;
+    ingredient: IngredientType;
+    meal: MealType;
 }
 
 
@@ -99,11 +110,12 @@ export interface UserType {
     isAdmin: boolean;
 
     // Relation One-to-Many 
-    shoppingListItems: ShoppingListType[];
+    shoppingList: ShoppingListType[];
 }
 
 export interface UserContextType {
     id: string;
     username: string;
     isAdmin: boolean;
+    shoppingList: ShoppingListType[];
 }
