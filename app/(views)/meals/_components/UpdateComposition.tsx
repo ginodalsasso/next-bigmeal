@@ -8,9 +8,8 @@ import { IngredientUnit } from "@/lib/types/enums";
 import { translatedUnit } from "@/lib/utils";
 
 import { updateCompositionConstraints } from "@/lib/constraints/forms_constraints";
-import { CompositionFormErrorType } from "@/lib/types/forms_interfaces";
+import { useFormValidation } from "@/app/hooks/useFormValidation";
 import { UpdateCompositionProps } from "@/lib/types/props_interfaces";
-
 
 // _________________________ COMPOSANT _________________________
 const UpdateComposition: React.FC<UpdateCompositionProps> = ({
@@ -18,43 +17,36 @@ const UpdateComposition: React.FC<UpdateCompositionProps> = ({
     onCompositionUpdated,
     onClose,
 }) => {
-
     // _________________________ HOOKS _________________________
     const [composition, setComposition] = useState(initialComposition);
-    const [error, setError] = useState<CompositionFormErrorType>({});
-    const [isLoading, setIsLoading] = useState(false);
-
+    const { error, validate, setIsLoading, isLoading } = useFormValidation(
+        updateCompositionConstraints,
+        ["quantity", "unit"]
+    );
 
     // _________________________ LOGIQUE _________________________
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        setError({}); 
-    
-        // Validation des données avec Zod
-        const validationResult = updateCompositionConstraints.safeParse(composition);
-        if (!validationResult.success) {
-            const formattedErrors = validationResult.error.flatten().fieldErrors;
-            setError({
-                quantity: formattedErrors.quantity?.[0], 
-                unit: formattedErrors.unit?.[0], 
-            });
+
+        // Validation des données avec le hook
+        if (!validate(composition)) {
             return;
         }
+
         setIsLoading(true);
-    
         try {
             const response = await fetch("/api/compositions", {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(composition),
             });
-    
+
             if (!response.ok) {
                 throw new Error("Erreur lors de la mise à jour de la composition");
             }
-    
+
             const updatedComposition: CompositionType = await response.json();
-    
+
             // Mettre à jour l'état parent via le callback
             onCompositionUpdated(updatedComposition);
             toast.success("Composition mise à jour avec succès !");
@@ -66,7 +58,6 @@ const UpdateComposition: React.FC<UpdateCompositionProps> = ({
             setIsLoading(false);
         }
     };
-    
 
     // _________________________ RENDU _________________________
     return (
@@ -83,8 +74,9 @@ const UpdateComposition: React.FC<UpdateCompositionProps> = ({
                     }
                     className="border border-gray-300 p-2 rounded text-black"
                     required
+                    disabled={isLoading}
                 />
-                {error.quantity && <p className="text-red-500 text-sm">{error.quantity}</p>}
+                {error?.quantity && <p className="text-red-500 text-sm">{error.quantity}</p>}
 
                 {/* Sélecteur pour l'unité */}
                 <select
@@ -94,6 +86,7 @@ const UpdateComposition: React.FC<UpdateCompositionProps> = ({
                     }
                     className="border border-gray-300 p-2 rounded text-black"
                     required
+                    disabled={isLoading}
                 >
                     <option value="">-- Choisir une unité --</option>
                     {Object.values(IngredientUnit).map((unit) => (
@@ -102,7 +95,7 @@ const UpdateComposition: React.FC<UpdateCompositionProps> = ({
                         </option>
                     ))}
                 </select>
-                {error.unit && <p className="text-red-500 text-sm">{error.unit}</p>}
+                {error?.unit && <p className="text-red-500 text-sm">{error.unit}</p>}
             </div>
 
             <Button type="submit" variant="success" disabled={isLoading}>
