@@ -1,41 +1,34 @@
 import React, { useState } from "react";
-import { CategoryFormErrorType } from "@/lib/types/forms_interfaces";
+import { useFormValidation } from "@/app/hooks/useFormValidation";
 import { categoriesConstraints } from "@/lib/constraints/forms_constraints";
 import { Button } from "@/components/ui/button";
 import { CreateCategoryProps } from "@/lib/types/props_interfaces";
 
+type CategoryFormType = { name: string }; // Définir le type pour le formulaire
 
-// _________________________ COMPOSANT _________________________
-const CreateCategory: React.FC<CreateCategoryProps> = 
-    ({ 
-        onAddCategory 
-    }) => {
-
+const CreateCategory: React.FC<CreateCategoryProps> = ({ onAddCategory }) => {
     // _________________________ ETATS __________________
-    const [newCategoryName, setNewCategoryName] = useState('');
+    const [newCategoryName, setNewCategoryName] = useState(''); // Gestion du champ de formulaire
 
-    const [isLoading, setIsLoading] = useState(false); // Indicateur de chargement
-    const [error, setError] = useState<CategoryFormErrorType>({ name: '' }); // Gestion des erreurs
-
+    // Hook de validation
+    const { error, isLoading, setIsLoading, validate } = useFormValidation<CategoryFormType>(
+        categoriesConstraints,
+        ["name"] // Champs à valider
+    );
 
     // _________________________ LOGIQUE _________________________
-    // Gestion de la soumission du formulaire de creation de catégorie
+    // Gestion de la soumission du formulaire de création de catégorie
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsLoading(true);
-        setError({ name: '' });
 
-        // Valider les données du formulaire
-        const validationResult = categoriesConstraints.safeParse({ name: newCategoryName });
-        if (!validationResult.success) {
-            const formattedErrors = validationResult.error.format();
-            setError({
-                name: formattedErrors.name?._errors[0] || 'Erreur inconnue', // Récupère le premier message d'erreur
-            });
+        // Valider les données du formulaire avec le hook
+        if (!validate({ name: newCategoryName })) {
             setIsLoading(false);
             return;
         }
 
+        // Si la validation réussit, effectuer l'ajout
         try {
             await onAddCategory(newCategoryName);
             setNewCategoryName(''); // Réinitialiser le champ après ajout
@@ -46,7 +39,6 @@ const CreateCategory: React.FC<CreateCategoryProps> =
         }
     };
 
-    
     // _________________________ RENDU _________________________
     return (
         <>
@@ -60,7 +52,7 @@ const CreateCategory: React.FC<CreateCategoryProps> =
                     className="border p-2 rounded-lg text-black"
                     required
                 />
-                {error.name && (
+                {error?.name && (
                     <p className="text-red-500 text-sm mb-4">{error.name}</p>
                 )}
                 <Button

@@ -1,47 +1,46 @@
 import { useState } from "react";
-import { CategoryFormErrorType } from "@/lib/types/forms_interfaces";
-import { UpdateCategoryProps } from "@/lib/types/props_interfaces";
+import { useFormValidation } from "@/app/hooks/useFormValidation";
 import { categoriesConstraints } from "@/lib/constraints/forms_constraints";
 import { Button } from "@/components/ui/button";
+import { UpdateCategoryProps } from "@/lib/types/props_interfaces";
+
+type CategoryFormType = { name: string }; // Définir le type du formulaire
 
 // _________________________ COMPOSANT _________________________
-const UpdateCategory: React.FC<UpdateCategoryProps> = 
-    ({
-        initialName,
-        onSubmit,
-        onCancel,
-        isLoading,
-    }) => {
-
+const UpdateCategory: React.FC<UpdateCategoryProps> = ({
+    initialName,
+    onSubmit,
+    onCancel,
+    isLoading: parentLoading,
+}) => {
     // _________________________ ETATS _________________________
     const [name, setName] = useState(initialName);
-    
-    const [error, setError] = useState<CategoryFormErrorType>({});
-    
 
-    
+    // Hook de validation
+    const { error, validate, isLoading, setIsLoading } = useFormValidation<CategoryFormType>(
+        categoriesConstraints,
+        ["name"] // Champs à valider
+    );
+
     // _________________________ LOGIQUE _________________________
     // Gestion de la soumission du formulaire d'édition de catégorie
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        setError({});
-        
-        const formData = {
-            name,
-        };
+        setIsLoading(true);
 
-        const validationResult = categoriesConstraints.safeParse(formData);
-        if (!validationResult.success) {
-            const formattedErrors = validationResult.error.flatten().fieldErrors;
-            setError({
-                name: formattedErrors.name?.[0],
-            });
+        if (!validate({ name })) {
+            setIsLoading(false);
             return;
         }
 
-        await onSubmit(name);
+        try {
+            await onSubmit(name);
+        } catch (error) {
+            console.error("[UPDATE_CATEGORY_ERROR]", error);
+        } finally {
+            setIsLoading(false);
+        }
     };
-
 
     // _________________________ RENDU _________________________
     return (
@@ -52,24 +51,24 @@ const UpdateCategory: React.FC<UpdateCategoryProps> =
                 onChange={(e) => setName(e.target.value)}
                 placeholder="Nouveau nom"
                 className="border p-2 rounded-lg w-full text-black"
-                disabled={isLoading}
+                disabled={isLoading || parentLoading}
             />
-            {error.name && <p className="text-red-500 text-sm">{error.name}</p>}
+            {error?.name && <p className="text-red-500 text-sm">{error.name}</p>}
             <div className="flex gap-2">
                 <Button
                     type="button"
                     onClick={onCancel}
                     variant="cancel"
-                    disabled={isLoading}
+                    disabled={isLoading || parentLoading}
                 >
                     Annuler
                 </Button>
                 <Button
                     type="submit"
                     variant="success"
-                    disabled={isLoading}
+                    disabled={isLoading || parentLoading}
                 >
-                    {isLoading ? "En cours..." : "Valider"}
+                    {isLoading || parentLoading ? "En cours..." : "Valider"}
                 </Button>
             </div>
         </form>

@@ -6,36 +6,33 @@ import { UpdateIngredientProps } from "@/lib/types/props_interfaces";
 import { IngredientFormType } from "@/lib/types/forms_interfaces";
 import { ingredientConstraints } from "@/lib/constraints/forms_constraints";
 
-import {Button} from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import { useFormValidation } from "@/app/hooks/useFormValidation";
 
 // _________________________ COMPOSANT _________________________
-const UpdateIngredient: React.FC<UpdateIngredientProps> = 
-    ({
-        initialName,
-        initialCategory,
-        initialSeason,
-        onSubmit,
-        onCancel,
-        isLoading,
-    }) => {
-
+const UpdateIngredient: React.FC<UpdateIngredientProps> = ({
+    initialName,
+    initialCategory,
+    initialSeason,
+    onSubmit,
+    onCancel,
+    isLoading : parentLoading, // Renommer la prop isLoading en parentLoading
+}) => {
     // _________________________ ETATS _________________________
     const [form, setForm] = useState<IngredientFormType>({
         name: initialName,
-        season: initialSeason || null || undefined,
+        season: initialSeason || null,
         categoryIngredientId: initialCategory,
     });
 
     const [categories, setCategories] = useState<CategoryIngredientType[]>([]);
 
     // Hook de validation
-    const { error, validate } = useFormValidation<IngredientFormType>(
+    const { error, isLoading, setIsLoading, validate } = useFormValidation<IngredientFormType>(
         ingredientConstraints,
-        ["name", "season", "categoryIngredientId"]
-    );  
+        ["name", "season", "categoryIngredientId"] // Champs à valider
+    );
 
-    
     // _________________________ LOGIQUE _________________________
     // Appel API pour récupérer les catégories d'ingrédients
     useEffect(() => {
@@ -54,19 +51,25 @@ const UpdateIngredient: React.FC<UpdateIngredientProps> =
         fetchCategories();
     }, []);
 
-
     // Gestion de la soumission du formulaire d'édition de catégorie
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        setIsLoading(true);
 
-        if(!validate(form)) {
+        if (!validate(form)) {
+            setIsLoading(false);
             return;
         }
-        const { name, season, categoryIngredientId } = form;
 
-        await onSubmit(name, categoryIngredientId, season);
+        try {
+            const { name, season, categoryIngredientId } = form;
+            await onSubmit(name, categoryIngredientId, season);
+        } catch (error) {
+            console.error("[UPDATE_INGREDIENT_ERROR]", error);
+        } finally {
+            setIsLoading(false);
+        }
     };
-
 
     // _________________________ RENDU _________________________
     return (
@@ -78,7 +81,7 @@ const UpdateIngredient: React.FC<UpdateIngredientProps> =
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
                 placeholder="Nouveau nom"
                 className="border p-2 rounded w-full text-black"
-                disabled={isLoading}
+                disabled={isLoading || parentLoading}
             />
             {error?.name && <p className="text-red-500 text-sm">{error.name}</p>}
 
@@ -86,8 +89,8 @@ const UpdateIngredient: React.FC<UpdateIngredientProps> =
             <select
                 value={form.categoryIngredientId}
                 onChange={(e) => setForm({ ...form, categoryIngredientId: e.target.value })}
-                className="border p-2 rounded w-full text-black "
-                disabled={isLoading}
+                className="border p-2 rounded w-full text-black"
+                disabled={isLoading || parentLoading}
                 required
             >
                 <option value="">-- Choisir une catégorie --</option>
@@ -111,8 +114,9 @@ const UpdateIngredient: React.FC<UpdateIngredientProps> =
                         ...form,
                         season: e.target.value ? (e.target.value as Season) : null,
                     })
-                }                className="border p-2 rounded w-full text-black"
-                disabled={isLoading}
+                }
+                className="border p-2 rounded w-full text-black"
+                disabled={isLoading || parentLoading}
             >
                 <option value="">Non spécifié</option>
                 {Object.values(Season).map((season) => (
@@ -121,25 +125,19 @@ const UpdateIngredient: React.FC<UpdateIngredientProps> =
                     </option>
                 ))}
             </select>
-            {error?.season && 
-                <p className="text-red-500 text-sm">{error.season}</p>
-            }
-                
+            {error?.season && <p className="text-red-500 text-sm">{error.season}</p>}
+
             <div className="flex gap-2">
                 <Button
                     type="button"
                     onClick={onCancel}
                     variant="cancel"
-                    disabled={isLoading}
+                    disabled={isLoading || parentLoading}
                 >
                     Annuler
                 </Button>
-                <Button
-                    type="submit"
-                    variant="success"
-                    disabled={isLoading}
-                >
-                    {isLoading ? "En cours..." : "Valider"}
+                <Button type="submit" variant="success" disabled={isLoading || parentLoading}>
+                    {isLoading || parentLoading ? "En cours..." : "Valider"}
                 </Button>
             </div>
         </form>

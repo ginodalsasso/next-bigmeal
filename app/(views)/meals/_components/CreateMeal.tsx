@@ -2,33 +2,30 @@
 
 import { useEffect, useState } from "react";
 
+import { useFormValidation } from "@/app/hooks/useFormValidation";
 import { CategoryMealType } from "@/lib/types/schemas_interfaces";
-import { MealFormErrorType, MealFormType } from "@/lib/types/forms_interfaces";
+import { MealFormType } from "@/lib/types/forms_interfaces";
 import { mealConstraints } from "@/lib/constraints/forms_constraints";
 
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { CreateMealProps } from "@/lib/types/props_interfaces";
 
-
-// _________________________ COMPOSANT _________________________
-const CreateMeal: React.FC<CreateMealProps>= 
-    ({ 
-        onMealCreated, 
-        onClose 
-    }) => {
-    
+const CreateMeal: React.FC<CreateMealProps> = ({ onMealCreated, onClose }) => {
     // _________________________ HOOKS _________________________
     const [categories, setCategories] = useState<CategoryMealType[]>([]);
 
-    const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState<MealFormErrorType>({});
     const [form, setForm] = useState<MealFormType>({
         name: "",
         description: null,
         categoryMealId: "",
     });
 
+    // Hook de validation
+    const { error, validate, isLoading, setIsLoading } = useFormValidation<MealFormType>(
+        mealConstraints,
+        ["name", "description", "categoryMealId"]
+    );
 
     // _________________________ LOGIQUE _________________________
     // Appel API pour récupérer les catégories de repas
@@ -48,7 +45,7 @@ const CreateMeal: React.FC<CreateMealProps>=
         fetchCategories();
     }, []);
 
-    // Appel API pour créer un ingrédient
+    // Appel API pour créer un repas
     const createMeal = async (data: MealFormType) => {
         try {
             const response = await fetch("/api/meals", {
@@ -59,43 +56,36 @@ const CreateMeal: React.FC<CreateMealProps>=
             if (!response.ok) {
                 throw new Error("Erreur lors de la création du repas");
             }
-            return JSON.parse(await response.text());
-
+            return await response.json();
         } catch (error) {
             console.error("[CREATE_MEAL_API_ERROR]", error);
             throw error;
         }
     };
-    
+
     // Gestion de la soumission du formulaire
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        setIsLoading(true);
 
-        // Valider les données du formulaire
-        const validationResult = mealConstraints.safeParse(form);
-        if (!validationResult.success) {
-            const formattedErrors = validationResult.error.flatten();
-            setError({
-                name: formattedErrors.fieldErrors.name?.[0],
-                description: formattedErrors.fieldErrors.description?.[0],
-                categoryMealId: formattedErrors.fieldErrors.categoryMealId?.[0],
-            });
+        // Valider les données du formulaire avec le hook
+        if (!validate(form)) {
             setIsLoading(false);
             return;
         }
-        // Créer le repas avec les données du formulaire
+
+        // Créer le repas avec les données validées
         try {
-            const createdIngredient = await createMeal(form);
-            onMealCreated(createdIngredient); // Ajout à la liste parent
+            const createdMeal = await createMeal(form);
+            onMealCreated(createdMeal); // Ajout à la liste parent
             toast("Repas créé avec succès");
-            // onClose(); // Fermer le dialogue
+            onClose(); // Fermer le dialogue
         } catch (error) {
             console.error("[CREATE_MEAL]", error);
         } finally {
             setIsLoading(false);
         }
     };
-
 
     // _________________________ RENDU _________________________
     return (
@@ -104,12 +94,12 @@ const CreateMeal: React.FC<CreateMealProps>=
             <input
                 type="text"
                 placeholder="Nom du repas"
-                value={form.name} 
-                onChange={(e) => setForm({ ...form, name: e.target.value })} 
-                className="border border-gray-300 p-2 rounded text-black "
+                value={form.name}
+                onChange={(e) => setForm({ ...form, name: e.target.value })}
+                className="border border-gray-300 p-2 rounded text-black"
                 required
             />
-            {error.name && (
+            {error?.name && (
                 <p className="text-red-500 text-sm mb-4 mx-auto">{error.name}</p>
             )}
 
@@ -117,17 +107,17 @@ const CreateMeal: React.FC<CreateMealProps>=
             <textarea
                 placeholder="Description du repas"
                 value={form.description ?? ""}
-                onChange={(e) => setForm({ ...form, description: e.target.value })} 
+                onChange={(e) => setForm({ ...form, description: e.target.value })}
                 className="border border-gray-300 p-2 rounded text-black"
             />
-            {error.description && (
+            {error?.description && (
                 <p className="text-red-500 text-sm mb-4 mx-auto">{error.description}</p>
             )}
 
             {/* Sélection pour la catégorie */}
             <select
                 value={form.categoryMealId}
-                onChange={(e) => setForm({ ...form, categoryMealId: e.target.value })} 
+                onChange={(e) => setForm({ ...form, categoryMealId: e.target.value })}
                 className="border border-gray-300 p-2 rounded text-black"
                 required
             >
@@ -138,25 +128,16 @@ const CreateMeal: React.FC<CreateMealProps>=
                     </option>
                 ))}
             </select>
-            {error.categoryMealId && (
-                <p className="text-red-500 text-sm mb-4 mx-auto">
-                    {error.categoryMealId}
-                </p>
+            {error?.categoryMealId && (
+                <p className="text-red-500 text-sm mb-4 mx-auto">{error.categoryMealId}</p>
             )}
 
             {/* Bouton de soumission */}
             <div className="flex flex-col-reverse gap-2 lg:justify-end">
-                <Button
-                    variant="cancel"
-                    onClick={onClose}
-                >
+                <Button variant="cancel" onClick={onClose}>
                     Annuler
                 </Button>
-                <Button
-                    type="submit"
-                    variant="success"
-                    disabled={isLoading}
-                >
+                <Button type="submit" variant="success" disabled={isLoading}>
                     {isLoading ? "Ajout en cours..." : "Ajouter"}
                 </Button>
             </div>
