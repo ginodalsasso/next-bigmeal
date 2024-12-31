@@ -22,7 +22,7 @@ export const ingredientConstraints = z.object({
         .max(100, "Le nom doit comporter au maximum 100 caractères")
         .toLowerCase()
         .trim(),
-    season: z.nativeEnum(Season).nullable().optional().default(null),
+    season: z.nativeEnum(Season).nullable(),
     categoryIngredientId: z.string().min(1, "Une catégorie est obligatoire"),
 });
 

@@ -1,36 +1,35 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-
 import { Season } from "@/lib/types/enums";
 import { CategoryIngredientType } from "@/lib/types/schemas_interfaces";
-import { IngredientFormErrorType, IngredientFormType } from "@/lib/types/forms_interfaces";
+import { IngredientFormType } from "@/lib/types/forms_interfaces";
 import { ingredientConstraints } from "@/lib/constraints/forms_constraints";
+import { useFormValidation } from "@/app/hooks/useFormValidation";
 
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { translatedSeason } from "@/lib/utils";
 import { CreateIngredientProps } from "@/lib/types/props_interfaces";
 
-
 // _________________________ COMPOSANT _________________________
-const CreateIngredient: React.FC<CreateIngredientProps> = 
-    ({ 
-        onIngredientCreated, 
-        onClose 
-    }) => {
-    
+const CreateIngredient: React.FC<CreateIngredientProps> = ({
+    onIngredientCreated,
+    onClose,
+}) => {
     // _________________________ HOOKS _________________________
     const [categories, setCategories] = useState<CategoryIngredientType[]>([]);
-    
-    const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState<IngredientFormErrorType>({});
     const [form, setForm] = useState<IngredientFormType>({
         name: "",
         season: null,
         categoryIngredientId: "",
     });
 
+    // Hook de validation
+    const { error, isLoading, setIsLoading, validate } = useFormValidation<IngredientFormType>(
+        ingredientConstraints,
+        ["name", "season", "categoryIngredientId"]
+    );
 
     // _________________________ LOGIQUE _________________________
     // Appel API pour récupérer les catégories d'ingrédients
@@ -62,30 +61,23 @@ const CreateIngredient: React.FC<CreateIngredientProps> =
                 throw new Error("Erreur lors de la création de l'ingrédient");
             }
             return JSON.parse(await response.text());
-
         } catch (error) {
             console.error("[CREATE_INGREDIENT_API_ERROR]", error);
             throw error;
         }
     };
-    
+
     // Gestion de la soumission du formulaire
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsLoading(true);
-        setError({});
+
         // Valider les données du formulaire
-        const validationResult = ingredientConstraints.safeParse(form);
-        if (!validationResult.success) {
-            const formattedErrors = validationResult.error.flatten();
-            setError({
-                name: formattedErrors.fieldErrors.name?.[0],
-                season: formattedErrors.fieldErrors.season?.[0],
-                categoryIngredientId: formattedErrors.fieldErrors.categoryIngredientId?.[0],
-            });
+        if (!validate(form)) {
             setIsLoading(false);
             return;
         }
+
         // Créer l'ingrédient avec les données du formulaire
         try {
             const createdIngredient = await createIngredient(form);
@@ -99,7 +91,6 @@ const CreateIngredient: React.FC<CreateIngredientProps> =
         }
     };
 
-
     // _________________________ RENDU _________________________
     return (
         <form className="flex flex-col gap-5 p-5" onSubmit={handleSubmit}>
@@ -107,14 +98,12 @@ const CreateIngredient: React.FC<CreateIngredientProps> =
             <input
                 type="text"
                 placeholder="Nom de l'ingrédient"
-                value={form.name} 
-                onChange={(e) => setForm({ ...form, name: e.target.value })} 
-                className="border border-gray-300 p-2 rounded text-black "
+                value={form.name}
+                onChange={(e) => setForm({ ...form, name: e.target.value })}
+                className="border border-gray-300 p-2 rounded text-black"
                 required
             />
-            {error.name && (
-                <p className="text-red-500 text-sm mb-4 mx-auto">{error.name}</p>
-            )}
+            {error?.name && <p className="text-red-500 text-sm mb-4 mx-auto">{error.name}</p>}
 
             {/* Sélection pour la saison */}
             <select
@@ -134,14 +123,12 @@ const CreateIngredient: React.FC<CreateIngredientProps> =
                     </option>
                 ))}
             </select>
-            {error.season && (
-                <p className="text-red-500 text-sm mb-4 mx-auto">{error.season}</p>
-            )}
+            {error?.season && <p className="text-red-500 text-sm mb-4 mx-auto">{error.season}</p>}
 
             {/* Sélection pour la catégorie */}
             <select
                 value={form.categoryIngredientId}
-                onChange={(e) => setForm({ ...form, categoryIngredientId: e.target.value })} 
+                onChange={(e) => setForm({ ...form, categoryIngredientId: e.target.value })}
                 className="border border-gray-300 p-2 rounded text-black"
                 required
             >
@@ -152,25 +139,16 @@ const CreateIngredient: React.FC<CreateIngredientProps> =
                     </option>
                 ))}
             </select>
-            {error.categoryIngredientId && (
-                <p className="text-red-500 text-sm mb-4 mx-auto">
-                    {error.categoryIngredientId}
-                </p>
+            {error?.categoryIngredientId && (
+                <p className="text-red-500 text-sm mb-4 mx-auto">{error.categoryIngredientId}</p>
             )}
 
             {/* Bouton de soumission */}
             <div className="flex flex-col-reverse gap-2 lg:justify-end">
-                <Button
-                    variant="cancel"
-                    onClick={onClose}
-                >
+                <Button variant="cancel" onClick={onClose}>
                     Annuler
                 </Button>
-                <Button
-                    type="submit"
-                    variant="success"
-                    disabled={isLoading}
-                >
+                <Button type="submit" variant="success" disabled={isLoading}>
                     {isLoading ? "Ajout en cours..." : "Ajouter"}
                 </Button>
             </div>
