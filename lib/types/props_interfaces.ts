@@ -1,3 +1,4 @@
+import { Season } from "./enums";
 import { CompositionType, IngredientType, MealType } from "./schemas_interfaces";
 
 
@@ -10,8 +11,8 @@ export interface CreateIngredientProps {
 export interface UpdateIngredientProps {
     initialName: string;
     initialCategory: string;
-    initialSeason: string;
-    onSubmit: (newName: string, newCategory: string, newSeason: string) => Promise<void>;
+    initialSeason: Season | null | undefined;
+    onSubmit: (newName: string, newCategory: string, newSeason: Season | null | undefined) => Promise<void>;
     onCancel: () => void;
     isLoading: boolean;
     error: string | null;
