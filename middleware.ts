@@ -6,6 +6,7 @@ const protectedRoutes = [
     "/meals",
     "/categories-ingredient",
     "/categories-meal",
+    "/shopping-list",
 ];
 
 const dynamicRoutePatterns = [

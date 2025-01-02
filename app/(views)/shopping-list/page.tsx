@@ -1,7 +1,7 @@
 'use client';
 
 import { ShoppingListType } from "@/lib/types/schemas_interfaces";
-import { dateToString } from "@/lib/utils";
+import { countTotalQuantities, dateToString } from "@/lib/utils";
 import { useState, useEffect } from "react";
 
 const ShoppingListPage = () => {
@@ -42,7 +42,6 @@ const ShoppingListPage = () => {
                         <ul>
                             <li>{dateToString(list.createdAt)}</li>
                             <li>{list.items.length} ingrédients</li>
-
                             {list.items.map((item) => (
                                 <li key={item.id}>
                                     {item.quantity} {item.ingredient ? item.ingredient.name : "Ingrédient non défini"}
@@ -53,6 +52,7 @@ const ShoppingListPage = () => {
                     </li>
                 ))}
             </ul>
+            {countTotalQuantities(shoppingList)} ingrédients au total
         </div>
     );
 };

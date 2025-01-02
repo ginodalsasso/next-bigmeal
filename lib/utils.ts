@@ -1,5 +1,6 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { ShoppingListType } from "./types/schemas_interfaces";
 
 // Fonction de concaténation de classes
 export function cn(...inputs: ClassValue[]) {
@@ -59,3 +60,19 @@ export const translatedUnit = (unit: string | undefined): string => {
             return "Non spécifié";
     }
 };
+
+// Compter le nombre d'ingrédients dans une liste de courses
+export const countTotalQuantities = (shoppingList: ShoppingListType[]): number => {
+    let total = 0;
+
+    // Parcourir chaque liste de courses
+    for (const list of shoppingList) {
+        // Parcourir chaque ingrédients de la liste
+        for (const item of list.items) {
+            total += item.quantity;
+        }
+    }
+
+    return total;
+};
+
