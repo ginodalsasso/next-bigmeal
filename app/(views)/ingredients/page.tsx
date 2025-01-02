@@ -166,7 +166,7 @@ const IngredientPage = () => {
                                     <UpdateIngredient
                                         initialName={ingredient.name}
                                         initialCategory={ingredient.categoryIngredient?.id || ""}
-                                        initialSeason={ingredient.season || ""}
+                                        initialSeason={ingredient.season}
                                         onSubmit={async (newName, newCategory, newSeason) => {
                                             await updateIngredient(
                                                 ingredient.id, 
