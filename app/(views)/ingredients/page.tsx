@@ -20,6 +20,8 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { translatedSeason } from "@/lib/utils";
 import AddToShoppingListForm from "@/components/forms/AddToShoppingListForm";
+import EditItem from "@/components/layout/EditItem";
+import DeleteItem from "@/components/layout/DeleteItem";
 
 
 // _________________________ COMPOSANT _________________________
@@ -153,37 +155,33 @@ const IngredientPage = () => {
                 <div className="cards-list">
                     {ingredients.map((ingredient) => (
                         <div key={ingredient.id}>
-                            <AddToShoppingListForm type={'ingredient'} id={ingredient.id} />
+                            <AddToShoppingListForm type="ingredient" id={ingredient.id} />
                             <ItemView
-                                key={ingredient.id}
                                 title={ingredient.name}
                                 details={{
                                     category: ingredient.categoryIngredient?.name || "Non spécifié",
                                     season: translatedSeason(ingredient.season) || "Non spécifié",
                                 }}
-                                // Formulaire de mise à jour
-                                renderEditForm={(onClose) => ( 
-                                    <UpdateIngredient
-                                        initialName={ingredient.name}
-                                        initialCategory={ingredient.categoryIngredient?.id || ""}
-                                        initialSeason={ingredient.season}
-                                        onSubmit={async (newName, newCategory, newSeason) => {
-                                            await updateIngredient(
-                                                ingredient.id, 
-                                                newName, 
-                                                newCategory, 
-                                                newSeason || null
-                                            );
-                                            onClose();
-                                        }}
-                                        onCancel={onClose}
-                                        isLoading={false}
-                                        error={null}
-                                    />
-                                )}
-                                onDelete={() => deleteIngredient(ingredient.id)}
-                                isDeleting={false}
                             />
+                            <div className="flex gap-2 mt-2">
+                                <EditItem
+                                    renderEditForm={(onClose) => (
+                                        <UpdateIngredient
+                                            initialName={ingredient.name}
+                                            initialCategory={ingredient.categoryIngredient?.id || ""}
+                                            initialSeason={ingredient.season}
+                                            onSubmit={async (newName, newCategory, newSeason) => {
+                                                await updateIngredient(ingredient.id, newName, newCategory, newSeason || null);
+                                                onClose();
+                                            }}
+                                            onCancel={onClose}
+                                            isLoading={false}
+                                            error={null}
+                                        />
+                                    )}
+                                />
+                                <DeleteItem onDelete={() => deleteIngredient(ingredient.id)} isDeleting={false} />
+                            </div>
                         </div>
                     ))}
                 </div>

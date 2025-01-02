@@ -5,16 +5,16 @@ import { CategoryIngredientType } from "@/lib/types/schemas_interfaces";
 import CategoryForm from "../_components/CreateCategory";
 import UpdateCategory from "../_components/UpdateCategory";
 import ItemView from "@/components/layout/ItemView";
+import EditItem from "@/components/layout/EditItem";
+import DeleteItem from "@/components/layout/DeleteItem";
 import { toast } from "sonner";
 
 // _________________________ COMPOSANT _________________________
 const CategoryIngredientPage = () => {
-
-    // _________________________ ETATS _________________________
-    const [categoryIngredient, setCategoryIngredient] = useState<CategoryIngredientType[]>([]);
+// _________________________ ETATS _________________________
+const [categoryIngredient, setCategoryIngredient] = useState<CategoryIngredientType[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-
 
     // _________________________ LOGIQUE _________________________
     // Récupérer les catégories d'ingrédients
@@ -22,9 +22,7 @@ const CategoryIngredientPage = () => {
         const fetchCategoryIngredient = async () => {
             try {
                 const response = await fetch("/api/categories-ingredient");
-                if (!response.ok) {
-                    throw new Error("Failed to fetch categories-ingredient");
-                }
+                if (!response.ok) throw new Error("Failed to fetch categories-ingredient");
                 const data: CategoryIngredientType[] = await response.json();
                 setCategoryIngredient(data);
             } catch (error) {
@@ -42,16 +40,10 @@ const CategoryIngredientPage = () => {
         try {
             const response = await fetch("/api/categories-ingredient", {
                 method: "POST",
-                headers: { 
-                    "Content-Type": "application/json"
-                },
+                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ name }),
             });
-
-            if (!response.ok) {
-                throw new Error("Failed to add category");
-            }
-
+            if (!response.ok) throw new Error("Failed to add category");
             const newCategory: CategoryIngredientType = await response.json();
             setCategoryIngredient((prev) => [...prev, newCategory]);
             toast("Catégorie créée avec succès");
@@ -69,16 +61,10 @@ const CategoryIngredientPage = () => {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ id, name: newName }),
             });
-
-            if (!response.ok) {
-                throw new Error("Failed to update category");
-            }
-            // Mettre à jour la catégorie dans le state
+            if (!response.ok) throw new Error("Failed to update category");
             const updatedCategory: CategoryIngredientType = await response.json();
-            setCategoryIngredient((prev) => // Remplacer l'ancienne catégorie par la nouvelle
-                prev.map((category) => 
-                    (category.id === id ? updatedCategory : category) // Si l'id correspond, on remplace
-            ) 
+            setCategoryIngredient((prev) =>
+                prev.map((category) => (category.id === id ? updatedCategory : category))
             );
             toast("Catégorie modifiée avec succès");
         } catch (error) {
@@ -92,16 +78,10 @@ const CategoryIngredientPage = () => {
         try {
             const response = await fetch("/api/categories-ingredient", {
                 method: "DELETE",
-                headers: { 
-                    "Content-Type": "application/json"
-                },
+                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ id }),
             });
-
-            if (!response.ok) {
-                throw new Error("Failed to delete category");
-            }
-            // Supprimer la catégorie du state 
+            if (!response.ok) throw new Error("Failed to delete category");
             setCategoryIngredient((prev) => prev.filter((category) => category.id !== id));
             toast("Catégorie supprimée avec succès");
         } catch (error) {
@@ -110,41 +90,43 @@ const CategoryIngredientPage = () => {
         }
     };
 
-    
-    // _________________________ RENDU _________________________
+    //  _________________________ RENDU _________________________
     if (loading) return <div>Loading...</div>;
     if (error) return <div>{error}</div>;
-    if (!categoryIngredient) return <div>Catégories introuvables.</div>;
 
     return (
         <div className="cards-wrapper">
-            {/* Composant de création */}
+            {/* Formulaire de création */}
             <div className="card mb-6 md:w-fit">
                 <CategoryForm onAddCategory={createCategoryIngredient} />
             </div>
 
-            {/* Afficher les catégories existantes */}
+            {/* Liste des catégories */}
             <div className="cards-list">
                 {categoryIngredient.map((category) => (
-                    <ItemView
-                        key={category.id}
-                        title={category.name}
-                        details={{}}
-                        renderEditForm={(onClose) => (
-                            <UpdateCategory
-                                initialName={category.name}
-                                onSubmit={async (newName) => {
-                                    await updateCategoryIngredient(category.id, newName);
-                                    onClose();
-                                }}
-                                onCancel={onClose}
-                                isLoading={false}
-                                error={null}
+                    <div key={category.id}>
+                        <ItemView title={category.name} details={{}} />
+                        <div className="flex gap-2 mt-2">
+                            <EditItem
+                                renderEditForm={(onClose) => (
+                                    <UpdateCategory
+                                        initialName={category.name}
+                                        onSubmit={async (newName) => {
+                                            await updateCategoryIngredient(category.id, newName);
+                                            onClose();
+                                        }}
+                                        onCancel={onClose}
+                                        isLoading={false}
+                                        error={null}
+                                    />
+                                )}
                             />
-                        )}
-                        onDelete={() => deleteCategoryIngredient(category.id)}
-                        isDeleting={false}
-                    />
+                            <DeleteItem
+                                onDelete={() => deleteCategoryIngredient(category.id)}
+                                isDeleting={false}
+                            />
+                        </div>
+                    </div>
                 ))}
             </div>
         </div>
