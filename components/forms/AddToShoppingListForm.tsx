@@ -35,15 +35,20 @@ const AddToShoppingListForm: React.FC<AddToShoppingListFormProps> = ({ type, id 
                     const meal = await response.json();
 
                     // Ajouter chaque ingrédient du repas à la liste de courses
-                    for (const ingredient of meal.compositions) {
+                    for (const composition of meal.compositions) {
+                        if (!composition.ingredient?.id) {
+                            console.error("Invalid ingredient in composition:", composition);
+                            continue;
+                        }
+                
                         await fetch('/api/shopping-list', {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
                             },
                             body: JSON.stringify({
-                                ingredientId: ingredient.id,
-                                quantity: ingredient.quantity,
+                                ingredientId: composition.ingredient.id,
+                                quantity: composition.quantity,
                             }),
                         });
                     }

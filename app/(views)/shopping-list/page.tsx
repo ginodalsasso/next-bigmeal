@@ -1,6 +1,7 @@
 'use client';
 
 import { ShoppingListType } from "@/lib/types/schemas_interfaces";
+import { dateToString } from "@/lib/utils";
 import { useState, useEffect } from "react";
 
 const ShoppingListPage = () => {
@@ -12,6 +13,7 @@ const ShoppingListPage = () => {
         const fetchShoppingList = async () => {
             try {
                 const response = await fetch("/api/shopping-list");
+
                 if (!response.ok) {
                     throw new Error("Failed to fetch shoppingList");
                 }
@@ -38,12 +40,15 @@ const ShoppingListPage = () => {
                 {shoppingList.map((list) => (
                     <li key={list.id}>
                         <ul>
-                            {/* <li>{list}</li> */}
-                            {/* {list.items.map((item) => (
+                            <li>{dateToString(list.createdAt)}</li>
+                            <li>{list.items.length} ingrédients</li>
+
+                            {list.items.map((item) => (
                                 <li key={item.id}>
-                                    {item.ingredient.name} - {item.quantity}
+                                    {item.quantity} {item.ingredient ? item.ingredient.name : "Ingrédient non défini"}
                                 </li>
-                            ))} */}
+                            ))}
+
                         </ul>
                     </li>
                 ))}

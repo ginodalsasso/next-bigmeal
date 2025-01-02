@@ -14,6 +14,16 @@ export function ucFirst(string: string): string {
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
+// Conversion de la date en chaine de caractères
+export function dateToString(date: Date): string {
+    date = new Date(date);
+    return date.toLocaleDateString("fr-CA", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+    });
+}
+
 // Traduction des saisons
 export const translatedSeason = (season: string | undefined): string => {
     switch (season) {
