@@ -79,7 +79,6 @@ const CreateMeal: React.FC<CreateMealProps> = ({ onMealCreated, onClose }) => {
             const createdMeal = await createMeal(form);
             onMealCreated(createdMeal); // Ajout à la liste parent
             toast("Repas créé avec succès");
-            onClose(); // Fermer le dialogue
         } catch (error) {
             console.error("[CREATE_MEAL]", error);
         } finally {
