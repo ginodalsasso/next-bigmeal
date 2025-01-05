@@ -17,7 +17,7 @@ const ItemView = <T extends object>({
     const badgeKeys = ["description"]; // Clés à afficher sous forme de badge
 
     return (
-        <div className="card">
+        <>
             {linkToDetails ? (
                 <Link href={linkToDetails} passHref>
                     <h2 className="text-xl font-bold hover:underline">{ucFirst(title)}</h2>
@@ -35,7 +35,7 @@ const ItemView = <T extends object>({
                     </Badge>
                 )
             )}
-        </div>
+        </>
     );
 };
 

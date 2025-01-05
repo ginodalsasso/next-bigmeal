@@ -183,7 +183,7 @@ const MealsPage = () => {
             <div className="cards-wrapper">
                 <div className="cards-list">
                     {meals.map((meal) => (
-                        <div key={meal.id}>
+                        <div key={meal.id} className="card">
                             <AddToShoppingListForm type="meal" id={meal.name} />
                             <ItemView
                                 title={meal.name}
