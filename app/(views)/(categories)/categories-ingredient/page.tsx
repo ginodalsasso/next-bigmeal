@@ -117,11 +117,11 @@ const [categoryIngredient, setCategoryIngredient] = useState<CategoryIngredientT
                                 <ItemView title={category.name} details={{}} />
                             </TableCell>
                             <TableCell>
-                            <div className="flex gap-2 mt-2">
+                            <div className="flex gap-2">
                                 <EditItem
                                     renderEditForm={(onClose) => (
                                         <UpdateCategory
-                                        initialName={category.name}
+                                            initialName={category.name}
                                             onSubmit={async (newName) => {
                                                 await updateCategoryIngredient(category.id, newName);
                                                 onClose();
@@ -130,12 +130,12 @@ const [categoryIngredient, setCategoryIngredient] = useState<CategoryIngredientT
                                             isLoading={false}
                                             error={null}
                                             />
-                                        )}
-                                        />
+                                    )}
+                                />  
                                 <DeleteItem
                                     onDelete={() => deleteCategoryIngredient(category.id)}
                                     isDeleting={false}
-                                    />
+                                />
                             </div>
                             </TableCell>
                         </TableRow>

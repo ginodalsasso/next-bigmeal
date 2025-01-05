@@ -19,22 +19,24 @@ const ItemView = <T extends object>({
     return (
         <>
             {linkToDetails ? (
-                <Link href={linkToDetails} passHref>
+                <Link href={linkToDetails} passHref> 
                     <h2 className="text-xl font-bold hover:underline">{ucFirst(title)}</h2>
                 </Link>
             ) : (
                 <h2 className="text-xl font-bold">{ucFirst(title)}</h2>
             )}
 
-            {Object.entries(details).map(([key, value]) =>
-                badgeKeys.includes(key) ? (
-                    <p key={key}>{ucFirst(value as string)}</p>
-                ) : (
-                    <Badge key={key} className="mr-2">
-                        {ucFirst(value as string)}
-                    </Badge>
-                )
-            )}
+            <div className="flex">
+                {Object.entries(details).map(([key, value]) =>
+                    badgeKeys.includes(key) ? (
+                        <p key={key}>{ucFirst(value as string)}</p>
+                    ) : (
+                        <Badge key={key}>
+                            {ucFirst(value as string)}
+                        </Badge>
+                    )
+                )}
+            </div>
         </>
     );
 };

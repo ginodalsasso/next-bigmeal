@@ -154,8 +154,7 @@ const IngredientPage = () => {
             <div className="cards-wrapper">
                 <div className="cards-list">
                     {ingredients.map((ingredient) => (
-                        <div key={ingredient.id}>
-                            <AddToShoppingListForm type="ingredient" id={ingredient.id} />
+                        <div key={ingredient.id} className="card">
                             <ItemView
                                 title={ingredient.name}
                                 details={{
@@ -163,20 +162,21 @@ const IngredientPage = () => {
                                     season: translatedSeason(ingredient.season) || "Non spécifié",
                                 }}
                             />
+                            <AddToShoppingListForm type="ingredient" id={ingredient.id} />
                             <div className="flex gap-2 mt-2">
                                 <EditItem
                                     renderEditForm={(onClose) => (
                                         <UpdateIngredient
-                                            initialName={ingredient.name}
-                                            initialCategory={ingredient.categoryIngredient?.id || ""}
-                                            initialSeason={ingredient.season}
-                                            onSubmit={async (newName, newCategory, newSeason) => {
-                                                await updateIngredient(ingredient.id, newName, newCategory, newSeason || null);
-                                                onClose();
-                                            }}
-                                            onCancel={onClose}
-                                            isLoading={false}
-                                            error={null}
+                                        initialName={ingredient.name}
+                                        initialCategory={ingredient.categoryIngredient?.id || ""}
+                                        initialSeason={ingredient.season}
+                                        onSubmit={async (newName, newCategory, newSeason) => {
+                                            await updateIngredient(ingredient.id, newName, newCategory, newSeason || null);
+                                            onClose();
+                                        }}
+                                        onCancel={onClose}
+                                        isLoading={false}
+                                        error={null}
                                         />
                                     )}
                                 />

@@ -118,7 +118,7 @@ const CategoryMealPage = () => {
                             <ItemView title={category.name} details={{}} />
                         </TableCell>
                         <TableCell>
-                        <div className="flex gap-2 mt-2">
+                        <div className="flex gap-2">
                             <EditItem
                                 renderEditForm={(onClose) => (
                                     <UpdateCategory
