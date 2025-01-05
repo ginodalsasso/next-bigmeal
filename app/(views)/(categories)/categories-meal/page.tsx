@@ -8,6 +8,8 @@ import ItemView from "@/components/layout/ItemView";
 import EditItem from "@/components/layout/EditItem";
 import DeleteItem from "@/components/layout/DeleteItem";
 import { toast } from "sonner";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+
 
 // _________________________ COMPOSANT _________________________
 const CategoryMealPage = () => {
@@ -95,17 +97,27 @@ const CategoryMealPage = () => {
     if (error) return <div>{error}</div>;
 
     return (
-        <div className="cards-wrapper">
+        <div>
             {/* Formulaire de création */}
             <div className="card mb-6 md:w-fit">
                 <CategoryForm onAddCategory={createCategoryMeal} />
             </div>
 
             {/* Liste des catégories */}
-            <div className="cards-list">
+            <Table>
+                <TableHeader>
+                    <TableRow>
+                        <TableHead><span className="text-lg font-bold">Nom</span></TableHead>
+                        <TableHead><span className="text-lg font-bold">Actions</span></TableHead>
+                    </TableRow>
+                </TableHeader>
+                <TableBody>
                 {categoryMeal.map((category) => (
-                    <div key={category.id}>
-                        <ItemView title={category.name} details={{}} />
+                    <TableRow key={category.id}>
+                        <TableCell>
+                            <ItemView title={category.name} details={{}} />
+                        </TableCell>
+                        <TableCell>
                         <div className="flex gap-2 mt-2">
                             <EditItem
                                 renderEditForm={(onClose) => (
@@ -118,7 +130,7 @@ const CategoryMealPage = () => {
                                         onCancel={onClose}
                                         isLoading={false}
                                         error={null}
-                                    />
+                                    /> 
                                 )}
                             />
                             <DeleteItem
@@ -126,9 +138,11 @@ const CategoryMealPage = () => {
                                 isDeleting={false}
                             />
                         </div>
-                    </div>
+                        </TableCell>
+                    </TableRow>
                 ))}
-            </div>
+                </TableBody>
+            </Table>
         </div>
     );
 };

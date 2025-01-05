@@ -8,6 +8,7 @@ import ItemView from "@/components/layout/ItemView";
 import EditItem from "@/components/layout/EditItem";
 import DeleteItem from "@/components/layout/DeleteItem";
 import { toast } from "sonner";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
 // _________________________ COMPOSANT _________________________
 const CategoryIngredientPage = () => {
@@ -95,40 +96,52 @@ const [categoryIngredient, setCategoryIngredient] = useState<CategoryIngredientT
     if (error) return <div>{error}</div>;
 
     return (
-        <div className="cards-wrapper">
+        <div>
             {/* Formulaire de création */}
             <div className="card mb-6 md:w-fit">
                 <CategoryForm onAddCategory={createCategoryIngredient} />
             </div>
 
             {/* Liste des catégories */}
-            <div className="cards-list">
-                {categoryIngredient.map((category) => (
-                    <div key={category.id}>
-                        <ItemView title={category.name} details={{}} />
-                        <div className="flex gap-2 mt-2">
-                            <EditItem
-                                renderEditForm={(onClose) => (
-                                    <UpdateCategory
+            <Table>
+                <TableHeader>
+                    <TableRow>
+                        <TableHead><span className="text-lg font-bold">Nom</span></TableHead>
+                        <TableHead><span className="text-lg font-bold">Actions</span></TableHead>
+                    </TableRow>
+                </TableHeader>
+                <TableBody>
+                    {categoryIngredient.map((category) => (
+                        <TableRow key={category.id}>
+                            <TableCell>
+                                <ItemView title={category.name} details={{}} />
+                            </TableCell>
+                            <TableCell>
+                            <div className="flex gap-2 mt-2">
+                                <EditItem
+                                    renderEditForm={(onClose) => (
+                                        <UpdateCategory
                                         initialName={category.name}
-                                        onSubmit={async (newName) => {
-                                            await updateCategoryIngredient(category.id, newName);
-                                            onClose();
-                                        }}
-                                        onCancel={onClose}
-                                        isLoading={false}
-                                        error={null}
+                                            onSubmit={async (newName) => {
+                                                await updateCategoryIngredient(category.id, newName);
+                                                onClose();
+                                            }}
+                                            onCancel={onClose}
+                                            isLoading={false}
+                                            error={null}
+                                            />
+                                        )}
+                                        />
+                                <DeleteItem
+                                    onDelete={() => deleteCategoryIngredient(category.id)}
+                                    isDeleting={false}
                                     />
-                                )}
-                            />
-                            <DeleteItem
-                                onDelete={() => deleteCategoryIngredient(category.id)}
-                                isDeleting={false}
-                            />
-                        </div>
-                    </div>
-                ))}
-            </div>
+                            </div>
+                            </TableCell>
+                        </TableRow>
+                    ))}
+                </TableBody>
+            </Table>
         </div>
     );
 };
