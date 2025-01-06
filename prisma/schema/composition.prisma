@@ -15,7 +15,7 @@ model Composition {
     quantity     Float  @default(0.0)
     unit         Unit
 
-    ingredient Ingredient @relation(fields: [ingredientId], references: [id])
+    ingredient Ingredient @relation(fields: [ingredientId], references: [id], onDelete: Cascade)
     meal       Meal       @relation(fields: [mealId], references: [id], onDelete: Cascade)
 
     @@index([ingredientId])
