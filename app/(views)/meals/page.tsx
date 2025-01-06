@@ -189,7 +189,7 @@ const MealsPage = () => {
                                 title={meal.name}
                                 details={{
                                     category: meal.categoryMeal?.name || "Non spécifié",
-                                    description: meal.description,
+                                    // description: meal.description,
                                 }}
                                 linkToDetails={`/meals/${meal.name}`}
                             />

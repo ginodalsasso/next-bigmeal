@@ -3,10 +3,13 @@
 import React, { useState } from 'react';
 import { toast } from 'sonner';
 import { ShoppingListConstraints } from '@/lib/constraints/forms_constraints';
+import Image from "next/image";
+import add from "@/public/img/add.svg";
 import {
     AddIngredientToShoppingListFormErrorType,
     AddIngredientToShoppingListFormType,
 } from '@/lib/types/forms_interfaces';
+import { Button } from '../ui/button';
 
 interface AddToShoppingListFormProps {
     type: 'meal' | 'ingredient'; // Détermine le type d'ajout
@@ -118,13 +121,21 @@ const AddToShoppingListForm: React.FC<AddToShoppingListFormProps> = ({ type, id 
                     {error.quantity}
                 </p>
             )}
-            <button
+            <Button variant="ghost" className={isLoading ? 'opacity-50 cursor-not-allowed' : ''} disabled={isLoading}>
+                <Image
+                    src={add}
+                    alt="Ajouter un ingrédient"
+                    className="w-4"
+                />
+                {isLoading ? 'Ajout...' : type === 'meal' ? 'Ajouter le repas' : 'Ajouter l\'ingrédient'}
+            </Button>
+            {/* <button
                 type="submit"
                 className={`btn btn-primary ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
                 disabled={isLoading}
             >
                 {isLoading ? 'Ajout...' : type === 'meal' ? 'Ajouter le repas' : 'Ajouter l\'ingrédient'}
-            </button>
+            </button> */}
         </form>
     );
 };
