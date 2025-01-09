@@ -17,23 +17,12 @@ export default function RootLayout({
 }) {
     return (
         <html lang="en">
-            {/* AuthProvider pour gérer l'authentification */}
-            {/* <AuthProvider> 
-                <body>
-                    <header className="px-4 md:px-6 mx-auto max-w-7xl">
-                        <Navbar />
-                    </header>
-                    <Sidebar />
-                    <main className="p-4 md:p-6 mx-auto max-w-7xl">{children}</main>
-                    <Toaster />
-                </body>
-            </AuthProvider> */}
             <AuthProvider>
                 <body className="flex flex-col min-h-screen">
-                    <header className="px-4 md:px-6 mx-auto max-w-7xl">
+                    <header className="px-4 md:px-6 flex justify-center">
                         <Navbar />
                     </header>
-                    <div className="flex flex-1">
+                    <div className="flex">
                         {/* Sidebar */}
                         <aside>
                             <Sidebar  />

@@ -184,7 +184,6 @@ const MealsPage = () => {
                 <div className="cards-list">
                     {meals.map((meal) => (
                         <div key={meal.id} className="card">
-                            <AddToShoppingListForm type="meal" id={meal.name} />
                             <ItemView
                                 title={meal.name}
                                 details={{
@@ -193,6 +192,7 @@ const MealsPage = () => {
                                 }}
                                 linkToDetails={`/meals/${meal.name}`}
                             />
+                            <AddToShoppingListForm type="meal" id={meal.name} />
                             <div className="flex gap-2 mt-2">
                                 {/* Édition du repas */}
                                 <EditItem

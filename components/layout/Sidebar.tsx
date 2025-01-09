@@ -16,13 +16,13 @@ const Sidebar = () => {
             { title: "liste de courses", url: "/shopping-list" },
         ];
     return (
-        <div className="w-64 h-screen sticky top-0 flex flex-col p-4">
+        <div className="h-screen sticky flex flex-col p-4">
             <ul className="space-y-4">
                 {links.map((link) => (
                     <li key={link.title}>
                         <Link
                             href={link.url}
-                            className={`block px-4 py-2 rounded-md ${
+                            className={`block px-4 py-2 ${
                                 active === link.title
                                     ? "bg-gray-600 text-white font-bold"
                                     : "text-gray-300 hover:bg-gray-700 hover:text-white"
