@@ -29,7 +29,7 @@ export default function RootLayout({
                         <aside className="hidden lg:block border-r">
                             <Sidebar  />
                         </aside>
-                        <main className="flex-1 p-4 md:p-6">{children}</main>
+                        <main className="flex-1 px-4 pt-4 pb-20 md:p-6">{children}</main>
                     </div>
                     <div className="lg:hidden fixed w-full bottom-0 bg-black border-t">
                         <Bottombar />

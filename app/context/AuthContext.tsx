@@ -23,6 +23,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 credentials: "include", // Assure que les cookies sont inclus
             });
 
+            
             if (response.ok) {
                 const data = await response.json();
                 setIsAuth(data.isAuth);

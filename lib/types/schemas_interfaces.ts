@@ -107,7 +107,7 @@ export interface UserType {
     username: string; 
     password: string;
     createdAt: Date;
-    isAdmin: boolean;
+    role: string;
 
     // Relation One-to-Many 
     shoppingList: ShoppingListType[];
@@ -116,6 +116,6 @@ export interface UserType {
 export interface UserContextType {
     id: string;
     username: string;
-    isAdmin: boolean;
+    role: string;
     shoppingList: ShoppingListType[];
 }

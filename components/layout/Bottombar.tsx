@@ -33,8 +33,8 @@ const Bottombar = () => {
                                 >
                                     <Image
                                         src={link.icon}
-                                        width={30}
-                                        height={30}
+                                        width={28}
+                                        height={28}
                                         alt={link.alt}
                                     />
                                 </Link>

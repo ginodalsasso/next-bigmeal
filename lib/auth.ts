@@ -27,7 +27,7 @@ export async function signIn(username: string, password: string) {
 // Fonction pour vérifier si l'utilisateur connecté est admin
 export const verifyAdmin = async () => {
     const user = await getUser();
-    if (!user || !user.isAdmin) {
+    if (!user || user.role !== "ADMIN") {
         throw new Error("Unauthorized: Admin access required");
     }
     return user;

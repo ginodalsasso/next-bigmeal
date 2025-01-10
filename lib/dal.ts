@@ -50,7 +50,32 @@ export const getUser = cache(async () => {
             select: {
                 id: true, // Retourner seulement les colonnes nécessaires
                 username: true,
-                isAdmin: true,
+                role: true,
+            },
+        });
+
+        if (!user) {
+            throw new Error("User not found");
+        }
+
+        return user;
+    } catch (error) {
+        console.error("Failed to fetch user", error);
+        return null;
+    }
+});
+
+
+export const getCart = cache(async () => {
+    const session = await verifySession();
+    if (!session) return null;
+
+    try {
+        const cart = await db.user.findUnique({
+            where: {
+                id: session.userId, // Filtrer par l'ID utilisateur
+            },
+            select: {
                 shoppingList: {
                     where: {
                         isExpired: false, // Filtrer les listes de courses non expirées
@@ -59,11 +84,11 @@ export const getUser = cache(async () => {
             },
         });
 
-        if (!user) {
-            throw new Error("User not found");
+        if (!cart) {
+            throw new Error("Cart not found");
         }
         
-        return user;
+        return cart;
     } catch (error) {
         console.error("Failed to fetch user", error);
         return null;
