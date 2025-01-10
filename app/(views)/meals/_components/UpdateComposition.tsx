@@ -101,6 +101,9 @@ const UpdateComposition: React.FC<UpdateCompositionProps> = ({
             <Button type="submit" variant="success" disabled={isLoading}>
                 {isLoading ? "Mise à jour en cours..." : "Mettre à jour"}
             </Button>
+            <Button variant="secondary" onClick={onClose} disabled={isLoading}>
+                Annuler
+            </Button>
         </form>
     );
 };

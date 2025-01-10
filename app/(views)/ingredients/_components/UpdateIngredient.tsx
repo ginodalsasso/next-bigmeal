@@ -131,7 +131,7 @@ const UpdateIngredient: React.FC<UpdateIngredientProps> = ({
                 <Button
                     type="button"
                     onClick={onCancel}
-                    variant="cancel"
+                    variant="secondary"
                     disabled={isLoading || parentLoading}
                 >
                     Annuler

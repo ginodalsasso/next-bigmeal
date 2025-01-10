@@ -1,6 +1,7 @@
 "use client";
 
 import { useAuth } from "@/app/context/AuthContext";
+import { links } from "@/lib/constants/constants";
 import { ucFirst } from "@/lib/utils";
 import Link from "next/link";
 import React, { useState } from "react";
@@ -10,27 +11,19 @@ const Sidebar = () => {
         const { isAuth } = useAuth(); // Utilisation du contexte d'authentification
         
 
-        // Liens de navigation
-        const links = [
-            { title: "ingrédients", url: "/ingredients" },
-            { title: "repas", url: "/meals" },
-            { title: "catégorie ingrédient", url: "/categories-ingredient" },
-            { title: "catégorie repas", url: "/categories-meal" },
-            { title: "liste de courses", url: "/shopping-list" },
-        ];
     return (
         <>
             {isAuth ? (
-                <div className="h-screen sticky flex flex-col p-4">
-                    <ul className="space-y-4">
+                <div className="h-screen sticky py-2">
+                    <ul>
                         {links.map((link) => (
                             <li key={link.title}>
                                 <Link
                                     href={link.url}
                                     className={`block px-4 py-2 ${
                                         active === link.title
-                                            ? "bg-gray-600 text-white font-bold"
-                                            : "text-gray-300 hover:bg-gray-700 hover:text-white"
+                                            ? "bg-gray-200 text-black"
+                                            : "text-gray-200 hover:bg-gray-200 hover:text-black"
                                     }`}
                                     onClick={() => setActive(link.title)}
                                 >

@@ -27,9 +27,9 @@ const DeleteItem: React.FC<DeleteItemProps> = ({ onDelete, isDeleting }) => {
                         {isDeleting ? "Suppression..." : "Oui, supprimer"}
                     </Button>
                     <AlertDialogTrigger asChild>
-                        <button className="bg-gray-500 text-white px-4 py-2 rounded-lg font-bold">
+                        <Button variant="secondary">
                             Annuler
-                        </button>
+                        </Button>
                     </AlertDialogTrigger>
                 </AlertDialogFooter>
             </AlertDialogContent>

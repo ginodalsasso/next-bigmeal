@@ -6,6 +6,8 @@ import Image from "next/image";
 import openMenu from "@/public/img/openMenu.svg";
 import closeMenu from "@/public/img/closeMenu.svg";
 import { useAuth } from "@/app/context/AuthContext";
+import { links } from "@/lib/constants/constants";
+import { ucFirst } from "@/lib/utils";
 
 const Navbar = () => {
     const [toggle, setToggle] = useState(false); // État du menu mobile
@@ -27,14 +29,12 @@ const Navbar = () => {
     };
 
     return (
-        <nav className="w-full max-w-7xl py-6 z-20 border-b border-gray-200">
-            <div className="flex justify-between items-center mx-auto">
+        <nav className="w-full max-w-7xl p-6">
+            <div className="flex justify-between">
                 {/* Logo */}
-                <div className="flex">
-                    <Link href="/" className="flex items-center text-lg font-bold">
-                        Big-Meal
-                    </Link>
-                </div>
+                <Link href="/" className="flex items-center text-lg font-bold">
+                    Big-Meal
+                </Link>
 
                 {/* Desktop Navigation */}
                 <ul className="list-none hidden lg:flex flex-row items-center gap-6">
@@ -42,13 +42,13 @@ const Navbar = () => {
                     {isAuth ? (
                         <>
                             <li>
-                                <span className="text-gray-400 font-medium">
+                                <span className="text-gray-200 cursor-default">
                                     Bonjour, {user?.username}
                                 </span>
                             </li>
                             <li>
                                 <button
-                                    className="cursor-pointer hover:underline text-gray-400"
+                                    className="nav-links-desktop"
                                     onClick={handleLogout}
                                 >
                                     Se déconnecter
@@ -60,7 +60,7 @@ const Navbar = () => {
                             <li>
                                 <Link
                                     href="/login"
-                                    className="text-gray-400 font-medium cursor-pointer"
+                                    className="nav-links-desktop"
                                 >
                                     Se connecter
                                 </Link>
@@ -68,7 +68,7 @@ const Navbar = () => {
                             <li>
                                 <Link
                                     href="/register"
-                                    className="text-gray-400 font-medium cursor-pointer"
+                                    className="nav-links-desktop"
                                 >
                                     S&apos;inscrire
                                 </Link>
@@ -97,21 +97,34 @@ const Navbar = () => {
                             onClick={() => setToggle(!toggle)}
                         />
                         <ul className="list-none flex justify-center items-end flex-col gap-5">
-                            {isAuth ? (
-                                <li>
-                                    <button
-                                        className="text-gray-400 font-medium cursor-pointer text-[22px]"
-                                        onClick={handleLogout}
-                                    >
-                                        Se déconnecter
-                                    </button>
-                                </li>
+                            {isAuth ? ( 
+                                <>
+                                    {links.map((link) => (
+                                        <li key={link.title}>
+                                        <Link
+                                            href={link.url}
+                                            className="nav-links-mobile"
+                                            onClick={() => setToggle(false)}
+                                            >
+                                            {ucFirst(link.title)}
+                                        </Link>
+                                        </li>
+                                    ))}
+                                    <li>
+                                        <button
+                                            className="nav-links-mobile"
+                                            onClick={handleLogout}
+                                            >
+                                            Se déconnecter
+                                        </button>
+                                    </li>
+                                </>
                             ) : (
                                 <>
                                     <li>
                                         <Link
                                             href="/login"
-                                            className="text-gray-400 font-medium cursor-pointer text-[22px]"
+                                            className="nav-links-mobile"
                                             onClick={() => setToggle(!toggle)}
                                         >
                                             Se connecter
@@ -120,7 +133,7 @@ const Navbar = () => {
                                     <li>
                                         <Link
                                             href="/register"
-                                            className="text-gray-400 font-medium cursor-pointer text-[22px]"
+                                            className="nav-links-mobile"
                                             onClick={() => setToggle(!toggle)}
                                         >
                                             S&apos;inscrire
