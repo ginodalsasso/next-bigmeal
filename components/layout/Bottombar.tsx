@@ -2,42 +2,47 @@
 
 import { useAuth } from "@/app/context/AuthContext";
 import Link from "next/link";
+import Image from "next/image";
 import React, { useState } from "react";
 
-const Bottombar = () => {
-        const [active, setActive] = useState(""); // État de la navigation active
-        const { isAuth } = useAuth(); // Utilisation du contexte d'authentification
-        
-        // Liens de navigation
-        const links = [
-            { icon: "home", url: "/" },
-            { icon: "liste de courses", url: "/shopping-list" },
+// Définition des liens avec chemins des SVG
+const links = [
+    { icon: "/img/home.svg", url: "/", alt: "Accueil"},
+    { icon: "/img/cart.svg", url: "/shopping-list", alt: "Liste de courses" },
+];
 
-        ];
+const Bottombar = () => {
+    const [active, setActive] = useState(""); // État de la navigation active
+    const { isAuth } = useAuth(); // Utilisation du contexte d'authentification
 
     return (
         <>
             {isAuth ? (
                 <div className="p-4">
                     <ul className="flex justify-around">
-                        {links.map((link) => (
-                            <li key={link.icon}>
+                        {links.map((link, index) => (
+                            <li key={index}>
                                 <Link
                                     href={link.url}
-                                    className={`block px-4 py-2 ${
-                                        active === link.icon
-                                            ? "bg-gray-200 text-black"
-                                            : "text-gray-200 hover:bg-gray-200 hover:text-black"
+                                    className={`${
+                                        active === link.url
+                                            ? ""
+                                            : ""
                                     }`}
-                                    onClick={() => setActive(link.icon)}
+                                    onClick={() => setActive(link.url)}
                                 >
-                                    {link.icon}
+                                    <Image
+                                        src={link.icon}
+                                        width={30}
+                                        height={30}
+                                        alt={link.alt}
+                                    />
                                 </Link>
                             </li>
                         ))}
                     </ul>
                 </div>
-            ): null}
+            ) : null}
         </>
     );
 };
