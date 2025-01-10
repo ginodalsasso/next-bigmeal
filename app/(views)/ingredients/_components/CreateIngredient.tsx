@@ -100,10 +100,10 @@ const CreateIngredient: React.FC<CreateIngredientProps> = ({
                 placeholder="Nom de l'ingrédient"
                 value={form.name}
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
-                className="border border-gray-300 p-2 rounded text-black"
+                className="input-text-select"
                 required
             />
-            {error?.name && <p className="text-red-500 text-sm mb-4 mx-auto">{error.name}</p>}
+            {error?.name && <p className="error-form">{error.name}</p>}
 
             {/* Sélection pour la saison */}
             <select
@@ -114,7 +114,7 @@ const CreateIngredient: React.FC<CreateIngredientProps> = ({
                         season: e.target.value ? (e.target.value as Season) : null,
                     })
                 }
-                className="border border-gray-300 p-2 rounded text-black"
+                className="input-text-select"
             >
                 <option value="">-- Choisir une saison --</option>
                 {Object.values(Season).map((season) => (
@@ -123,24 +123,24 @@ const CreateIngredient: React.FC<CreateIngredientProps> = ({
                     </option>
                 ))}
             </select>
-            {error?.season && <p className="text-red-500 text-sm mb-4 mx-auto">{error.season}</p>}
+            {error?.season && <p className="error-form">{error.season}</p>}
 
             {/* Sélection pour la catégorie */}
             <select
                 value={form.categoryIngredientId}
                 onChange={(e) => setForm({ ...form, categoryIngredientId: e.target.value })}
-                className="border border-gray-300 p-2 rounded text-black"
+                className="input-text-select"
                 required
             >
                 <option value="">-- Choisir une catégorie --</option>
                 {categories.map((category) => (
-                    <option key={category.id} value={category.id}>
+                    <option key={category.id} value={category.id}> 
                         {category.name}
                     </option>
                 ))}
             </select>
             {error?.categoryIngredientId && (
-                <p className="text-red-500 text-sm mb-4 mx-auto">{error.categoryIngredientId}</p>
+                <p className="error-form">{error.categoryIngredientId}</p>
             )}
 
             {/* Bouton de soumission */}

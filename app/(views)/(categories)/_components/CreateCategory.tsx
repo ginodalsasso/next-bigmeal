@@ -49,11 +49,11 @@ const CreateCategory: React.FC<CreateCategoryProps> = ({ onAddCategory }) => {
                     value={newCategoryName}
                     onChange={(e) => setNewCategoryName(e.target.value)}
                     placeholder="Nom de la catégorie"
-                    className="border p-2 rounded-lg text-black"
+                    className="input-text-select"
                     required
                 />
                 {error?.name && (
-                    <p className="text-red-500 text-sm mb-4">{error.name}</p>
+                    <p className="error-form">{error.name}</p>
                 )}
                 <Button
                     onClick={handleSubmit}

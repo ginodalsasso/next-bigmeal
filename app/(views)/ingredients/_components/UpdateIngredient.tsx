@@ -80,16 +80,16 @@ const UpdateIngredient: React.FC<UpdateIngredientProps> = ({
                 value={form.name}
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
                 placeholder="Nouveau nom"
-                className="border p-2 rounded w-full text-black"
+                className="input-text-select"
                 disabled={isLoading || parentLoading}
             />
-            {error?.name && <p className="text-red-500 text-sm">{error.name}</p>}
+            {error?.name && <p className="error-form">{error.name}</p>}
 
             {/* Sélection pour la catégorie */}
             <select
                 value={form.categoryIngredientId}
                 onChange={(e) => setForm({ ...form, categoryIngredientId: e.target.value })}
-                className="border p-2 rounded w-full text-black"
+                className="input-text-select"
                 disabled={isLoading || parentLoading}
                 required
             >
@@ -103,7 +103,7 @@ const UpdateIngredient: React.FC<UpdateIngredientProps> = ({
                 ))}
             </select>
             {error?.categoryIngredientId && (
-                <p className="text-red-500 text-sm">{error.categoryIngredientId}</p>
+                <p className="error-form">{error.categoryIngredientId}</p>
             )}
 
             {/* Sélection pour la saison */}
@@ -115,7 +115,7 @@ const UpdateIngredient: React.FC<UpdateIngredientProps> = ({
                         season: e.target.value ? (e.target.value as Season) : null,
                     })
                 }
-                className="border p-2 rounded w-full text-black"
+                className="input-text-select"
                 disabled={isLoading || parentLoading}
             >
                 <option value="">Non spécifié</option>
@@ -125,7 +125,7 @@ const UpdateIngredient: React.FC<UpdateIngredientProps> = ({
                     </option>
                 ))}
             </select>
-            {error?.season && <p className="text-red-500 text-sm">{error.season}</p>}
+            {error?.season && <p className="error-form">{error.season}</p>}
 
             <div className="flex gap-2">
                 <Button

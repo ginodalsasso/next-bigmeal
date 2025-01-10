@@ -140,7 +140,7 @@ const IngredientPage = () => {
                 </DialogTrigger>
                 <DialogContent>
                     <DialogHeader>
-                        <DialogTitle className="mb-5 text-center">Ajouter un ingrédient</DialogTitle>
+                        <DialogTitle className="text-center">Ajouter un ingrédient</DialogTitle>
                         {/* Formulaire de création d'ingrédient */}
                         <CreateIngredient
                             onIngredientCreated={addIngredient}

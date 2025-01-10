@@ -14,7 +14,7 @@ const EditItem: React.FC<EditItemProps> = ({ renderEditForm }) => {
             <PopoverTrigger asChild>
                 <Button variant="edit">Modifier</Button>
             </PopoverTrigger>
-            <PopoverContent className="w-80 p-4">
+            <PopoverContent>
                 {renderEditForm(() => setIsPopoverOpen(false))}
             </PopoverContent>
         </Popover>

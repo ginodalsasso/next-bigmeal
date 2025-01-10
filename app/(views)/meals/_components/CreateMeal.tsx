@@ -95,11 +95,11 @@ const CreateMeal: React.FC<CreateMealProps> = ({ onMealCreated, onClose }) => {
                 placeholder="Nom du repas"
                 value={form.name}
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
-                className="border border-gray-300 p-2 rounded text-black"
+                className="input-text-select"
                 required
             />
             {error?.name && (
-                <p className="text-red-500 text-sm mb-4 mx-auto">{error.name}</p>
+                <p className="error-form">{error.name}</p>
             )}
 
             {/* Text area pour la description */}
@@ -107,17 +107,17 @@ const CreateMeal: React.FC<CreateMealProps> = ({ onMealCreated, onClose }) => {
                 placeholder="Description du repas"
                 value={form.description ?? ""}
                 onChange={(e) => setForm({ ...form, description: e.target.value })}
-                className="border border-gray-300 p-2 rounded text-black"
+                className="input-text-select"
             />
             {error?.description && (
-                <p className="text-red-500 text-sm mb-4 mx-auto">{error.description}</p>
+                <p className="error-form">{error.description}</p>
             )}
 
             {/* Sélection pour la catégorie */}
             <select
                 value={form.categoryMealId}
                 onChange={(e) => setForm({ ...form, categoryMealId: e.target.value })}
-                className="border border-gray-300 p-2 rounded text-black"
+                className="input-text-select"
                 required
             >
                 <option value="">-- Choisir une catégorie --</option>
@@ -128,7 +128,7 @@ const CreateMeal: React.FC<CreateMealProps> = ({ onMealCreated, onClose }) => {
                 ))}
             </select>
             {error?.categoryMealId && (
-                <p className="text-red-500 text-sm mb-4 mx-auto">{error.categoryMealId}</p>
+                <p className="error-form">{error.categoryMealId}</p>
             )}
 
             {/* Bouton de soumission */}

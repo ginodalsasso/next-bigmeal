@@ -140,7 +140,7 @@ const CreateComposition: React.FC<CreateCompositionProps>= ({
                                 )
                             )
                         }
-                        className="border border-gray-300 p-2 rounded text-black"
+                        className="input-text-select"
                         required
                     >
                         <option value="">-- Choisir un ingrédient --</option>
@@ -151,7 +151,7 @@ const CreateComposition: React.FC<CreateCompositionProps>= ({
                         ))}
                     </select>
                     {error[index]?.ingredientId && (
-                        <p className="text-red-500 text-sm">{error[index].ingredientId}</p>
+                        <p className="error-form">{error[index].ingredientId}</p>
                     )}
 
                     {/* Champ pour la quantité */}
@@ -169,11 +169,11 @@ const CreateComposition: React.FC<CreateCompositionProps>= ({
                                 )
                             )
                         }
-                        className="border border-gray-300 p-2 rounded text-black"
+                        className="input-text-select"
                         required
                     />
                     {error[index]?.quantity && (
-                        <p className="text-red-500 text-sm">{error[index].quantity}</p>
+                        <p className="error-form">{error[index].quantity}</p>
                     )}
 
                     {/* Sélection de l'unité */}
@@ -188,7 +188,7 @@ const CreateComposition: React.FC<CreateCompositionProps>= ({
                                 )
                             )
                         }
-                        className="border border-gray-300 p-2 rounded text-black"
+                        className="input-text-select"
                         required
                     >
                         <option value="">-- Choisir une unité --</option>
@@ -199,7 +199,7 @@ const CreateComposition: React.FC<CreateCompositionProps>= ({
                         ))}
                     </select>
                     {error[index]?.unit && (
-                        <p className="text-red-500 text-sm">{error[index].unit}</p>
+                        <p className="error-form">{error[index].unit}</p>
                     )}
 
                     {/* Bouton pour supprimer une ligne */}

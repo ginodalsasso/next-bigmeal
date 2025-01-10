@@ -33,6 +33,15 @@ body {
   @apply text-gray-200 text-[22px] ;
 };
 
+/* style des input type: text / select / textarea */
+.input-text-select {
+  @apply w-full p-2 text-black focus:bg-black focus:text-white;
+}
+
+.error-form {
+  @apply text-red-500 text-sm mb-4 mx-auto;
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;

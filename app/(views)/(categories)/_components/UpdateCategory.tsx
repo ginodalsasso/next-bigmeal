@@ -50,10 +50,10 @@ const UpdateCategory: React.FC<UpdateCategoryProps> = ({
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="Nouveau nom"
-                className="border p-2 rounded-lg w-full text-black"
+                className="input-text-select"
                 disabled={isLoading || parentLoading}
             />
-            {error?.name && <p className="text-red-500 text-sm">{error.name}</p>}
+            {error?.name && <p className="error-form">{error.name}</p>}
             <div className="flex gap-2">
                 <Button
                     type="button"

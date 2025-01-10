@@ -72,11 +72,11 @@ const UpdateComposition: React.FC<UpdateCompositionProps> = ({
                     onChange={(e) =>
                         setComposition({ ...composition, quantity: parseFloat(e.target.value) })
                     }
-                    className="border border-gray-300 p-2 rounded text-black"
+                    className="input-text-select"
                     required
                     disabled={isLoading}
                 />
-                {error?.quantity && <p className="text-red-500 text-sm">{error.quantity}</p>}
+                {error?.quantity && <p className="error-form">{error.quantity}</p>}
 
                 {/* Sélecteur pour l'unité */}
                 <select
@@ -84,7 +84,7 @@ const UpdateComposition: React.FC<UpdateCompositionProps> = ({
                     onChange={(e) =>
                         setComposition({ ...composition, unit: e.target.value as IngredientUnit })
                     }
-                    className="border border-gray-300 p-2 rounded text-black"
+                    className="input-text-select"
                     required
                     disabled={isLoading}
                 >
@@ -95,7 +95,7 @@ const UpdateComposition: React.FC<UpdateCompositionProps> = ({
                         </option>
                     ))}
                 </select>
-                {error?.unit && <p className="text-red-500 text-sm">{error.unit}</p>}
+                {error?.unit && <p className="error-form">{error.unit}</p>}
             </div>
 
             <Button type="submit" variant="success" disabled={isLoading}>

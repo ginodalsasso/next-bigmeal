@@ -69,15 +69,15 @@ const UpdateMeal: React.FC<UpdateMealProps> = ({
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="Nouveau nom"
-                className="border p-2 rounded w-full text-black"
+                className="input-text-select"
                 disabled={isLoading || externalLoading}
             />
-            {error?.name && <p className="text-red-500 text-sm">{error.name}</p>}
+            {error?.name && <p className="error-form">{error.name}</p>}
 
             <select
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
-                className="border p-2 rounded w-full text-black"
+                className="input-text-select"
                 disabled={isLoading || externalLoading}
                 required
             >
@@ -88,16 +88,16 @@ const UpdateMeal: React.FC<UpdateMealProps> = ({
                     </option>
                 ))}
             </select>
-            {error?.categoryMealId && <p className="text-red-500 text-sm">{error.categoryMealId}</p>}
+            {error?.categoryMealId && <p className="error-form">{error.categoryMealId}</p>}
 
             <textarea
                 placeholder="Description du repas"
                 value={description || ""}
                 onChange={(e) => setDescription(e.target.value)}
-                className="border border-gray-300 p-2 rounded text-black"
+                className="input-text-select"
                 disabled={isLoading || externalLoading}
             />
-            {error?.description && <p className="text-red-500 text-sm">{error.description}</p>}
+            {error?.description && <p className="error-form">{error.description}</p>}
 
             <div className="flex gap-2">
                 <Button
