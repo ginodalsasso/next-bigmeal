@@ -4,6 +4,7 @@ import Navbar from "@/components/layout/Navbar";
 import { Toaster } from "sonner";
 import { AuthProvider } from "@/app/context/AuthContext";
 import Sidebar from "@/components/layout/Sidebar";
+import Bottombar from "@/components/layout/Bottombar";
 
 export const metadata: Metadata = {
     title: "Big Meal App",
@@ -30,7 +31,10 @@ export default function RootLayout({
                         </aside>
                         <main className="flex-1 p-4 md:p-6">{children}</main>
                     </div>
-                    <Toaster />
+                    <div className="lg:hidden fixed w-full bottom-0 bg-black border-t">
+                        <Bottombar />
+                    </div>
+                        <Toaster />
                 </body>
             </AuthProvider>
         </html>

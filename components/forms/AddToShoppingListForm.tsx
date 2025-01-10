@@ -117,7 +117,7 @@ const AddToShoppingListForm: React.FC<AddToShoppingListFormProps> = ({ type, id 
                 />
             )}
             {error.quantity && (
-                <p className="text-red-500 text-sm mb-4 mx-auto">
+                <p className="error-form">
                     {error.quantity}
                 </p>
             )}
