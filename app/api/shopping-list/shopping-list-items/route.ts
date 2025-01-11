@@ -7,7 +7,6 @@ export async function GET() {
         const shoppingList = shoppingListData?.shoppingList || [];
 
         if (shoppingList.length === 0) {
-            console.log("Aucune liste de courses trouvée.");
             return new Response(
                 JSON.stringify({ message: "Aucune liste de courses", count: 0 }),
                 { status: 200 }
@@ -20,8 +19,6 @@ export async function GET() {
             return total + listQuantity; // Ajouter la quantité de chaque liste
         }, 0); // Initialiser le total à 0
 
-
-        console.log(`Nombre total d'ingrédients : ${ingredientCount}`);
         return new Response(
             JSON.stringify({ count: ingredientCount }),
             { status: 200 }

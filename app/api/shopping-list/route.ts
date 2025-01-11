@@ -1,3 +1,4 @@
+import { idConstraints } from "@/lib/constraints/forms_constraints";
 import { getUser } from "@/lib/dal";
 import { db } from "@/lib/db";
 import { NextRequest, NextResponse } from "next/server";
@@ -81,5 +82,28 @@ export async function POST(req: NextRequest) {
     } catch (error) {
         console.error("[CREATE_SHOPPING_LIST_ERROR]", error);
         return new NextResponse("Internal Server Error", { status: 500 });
+    }
+}
+
+export async function DELETE (req: NextRequest) {
+    try {
+        const body = await req.json();
+
+        const validationResult = idConstraints.safeParse(body);
+
+        if (!validationResult.success) {
+            return NextResponse.json(
+                { error: validationResult.error.format() },
+                { status: 400 }
+            );
+        }
+
+        const { id } = validationResult.data;
+        await db.shoppingListItem.delete({ where: { id } });
+
+        return NextResponse.json({ message: "Article supprimé" }, {status: 200});
+    } catch (error) {
+        console.error("[DELETE_ITEM_ERROR]", error);
+        return new NextResponse("Internal Error", {status: 500 });
     }
 }
