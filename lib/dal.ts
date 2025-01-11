@@ -51,6 +51,11 @@ export const getUser = cache(async () => {
                 id: true, // Retourner seulement les colonnes nécessaires
                 username: true,
                 role: true,
+                shoppingList: {
+                    where: {
+                        isExpired: false, // Filtrer les listes de courses non expirées
+                    },
+                },
             },
         });
 
@@ -65,20 +70,27 @@ export const getUser = cache(async () => {
     }
 });
 
-
+// Récupérer le panier de l'utilisateur
 export const getCart = cache(async () => {
     const session = await verifySession();
     if (!session) return null;
 
     try {
         const cart = await db.user.findUnique({
-            where: {
-                id: session.userId, // Filtrer par l'ID utilisateur
+            where: { 
+                id: session.userId 
             },
             select: {
                 shoppingList: {
+                    include: {
+                        items: {
+                            include: {
+                                ingredient: true,
+                            },
+                        },                
+                    },
                     where: {
-                        isExpired: false, // Filtrer les listes de courses non expirées
+                        isExpired: false,
                     },
                 },
             },
@@ -87,10 +99,11 @@ export const getCart = cache(async () => {
         if (!cart) {
             throw new Error("Cart not found");
         }
-        
+
         return cart;
     } catch (error) {
-        console.error("Failed to fetch user", error);
+        console.error("Failed to fetch cart", error);
         return null;
     }
 });
+
