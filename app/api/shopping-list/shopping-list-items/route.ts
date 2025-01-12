@@ -1,26 +1,18 @@
-import { getCart } from "@/lib/dal";
+import { getUserCart } from "@/lib/dal";
 
 export async function GET() {
     try {
-        const shoppingListData = await getCart();
-        // Récupérer la liste de courses 
-        const shoppingList = shoppingListData?.shoppingList || [];
+        const data = await getUserCart();
 
-        if (shoppingList.length === 0) {
+        if (!data) {
             return new Response(
-                JSON.stringify({ message: "Aucune liste de courses", count: 0 }),
-                { status: 200 }
+                JSON.stringify({ error: "Unauthorized" }),
+                { status: 401 }
             );
         }
-
-        // Calculer le nombre total d'ingrédients
-        const ingredientCount = shoppingList.reduce((total, list) => {
-            const listQuantity = list.items.reduce((sum, item) => sum + item.quantity, 0);
-            return total + listQuantity; // Ajouter la quantité de chaque liste
-        }, 0); // Initialiser le total à 0
-
+        
         return new Response(
-            JSON.stringify({ count: ingredientCount }),
+            JSON.stringify({ totalCartQuantity: data }),
             { status: 200 }
         );
     } catch (error) {

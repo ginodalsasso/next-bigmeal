@@ -1,7 +1,7 @@
 'use client';
 
 import DeleteItem from "@/components/layout/DeleteItem";
-import { ShoppingListItemType, ShoppingListType } from "@/lib/types/schemas_interfaces";
+import { ShoppingListType } from "@/lib/types/schemas_interfaces";
 import { countTotalQuantities, dateToString } from "@/lib/utils";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";

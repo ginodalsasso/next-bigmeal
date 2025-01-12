@@ -20,8 +20,8 @@ const Bottombar = () => {
         const fetchCart = async () => {
             const response = await fetch("/api/shopping-list/shopping-list-items");
             const data = await response.json();
-            if (data.count) {
-                setCartItems(data.count);
+            if (data.totalCartQuantity) {
+                setCartItems(data.totalCartQuantity);
             } else {
                 setCartItems(0);
             }
