@@ -9,8 +9,6 @@ import { toast } from "sonner";
 const ShoppingListPage = () => {
 
     const [shoppingList, setShoppingList] = useState<ShoppingListType[]>([]);
-    
-
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -25,6 +23,7 @@ const ShoppingListPage = () => {
                 setShoppingList(data);
             } catch (error) {
                 console.error("Error fetching shoppingList:", error);
+                toast.error("Impossible de charger les listes de courses.");
             } finally {
                 setLoading(false);
             }
@@ -82,17 +81,18 @@ const ShoppingListPage = () => {
             if (!response.ok) {
                 throw new Error("Failed to delete item from shoppingList");
             }
+
             // Supprimer le repas du state
             setShoppingList((prev) =>
                 prev.map((list) => ({
                     ...list, // Garder les autres propriétés inchangées
                     items: list.items.filter((item) => item.id !== id), // Supprimer l'item
                 }))
-            );            
+            );  
             toast("Article supprimé avec succès");
         } catch (error) {
             console.error("Erreur lors de la suppression:", error);
-            // setError("Erreur lors de la suppression.");
+            toast.error("Impossible de supprimer l'élément.");
         }
     };
 
@@ -112,7 +112,9 @@ const ShoppingListPage = () => {
                             <li>{list.items.length} ingrédients</li>
                             {list.items.map((item) => (
                                 <li key={item.id}>
-                                    {item.quantity} {item.ingredient ? item.ingredient.name : "Ingrédient non défini"}
+                                    <span className={item.isChecked ? "line-through" : ""}>
+                                        {item.quantity} {item.ingredient ? item.ingredient.name : "Ingrédient non défini"}
+                                    </span>
                                     <DeleteItem onDelete={() => deleteItem(item.id)} isDeleting={false} />
                                     <input
                                         type="checkbox"

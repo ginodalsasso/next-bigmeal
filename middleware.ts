@@ -16,6 +16,19 @@ const dynamicRoutePatterns = [
 
 const publicRoutes = ["/login", "/register", "/"];
 
+const nonce = Buffer.from(crypto.randomUUID()).toString('base64')
+
+const csp = `
+    default-src 'self'; 
+    script-src 'self' 'nonce-${nonce}' 'unsafe-eval' 'strict-dynamic'; 
+    style-src 'self' 'unsafe-inline'; 
+    img-src 'self' data:; 
+    font-src 'self'; 
+    connect-src 'self'; 
+    frame-src 'none'; 
+`.replace(/\s{2,}/g, ' ').trim(); // Remplace les espaces multiples par un seul espace
+
+
 export default async function middleware(req: NextRequest) {
     const path = req.nextUrl.pathname;
 
@@ -48,7 +61,14 @@ export default async function middleware(req: NextRequest) {
         return NextResponse.redirect(new URL("/", req.nextUrl));
     }
 
-    return NextResponse.next();
+    const response = NextResponse.next();
+    response.headers.set("Content-Security-Policy", csp);
+    response.headers.set("X-Content-Type-Options", "nosniff");
+    response.headers.set("X-Frame-Options", "DENY");
+    response.headers.set("Strict-Transport-Security", "max-age=63072000; includeSubDomains; preload");
+    response.headers.set("X-XSS-Protection", "1; mode=block");
+    
+    return response;
 }
 
 export const config = {
