@@ -41,12 +41,12 @@ export async function PUT(req: NextRequest) {
         //     );
         // }
 
-        const { id } = body;
+        const { id, isChecked } = body;
 
         const updatedItem = await db.shoppingListItem.update({
             where: { id },
             data: { 
-                isChecked: true
+                isChecked
             },
         });
 

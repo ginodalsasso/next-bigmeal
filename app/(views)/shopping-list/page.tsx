@@ -34,33 +34,40 @@ const ShoppingListPage = () => {
 
     
     // Transformer un item en coché ou non
-    const toggleItemChecked = async (id: string) => {
-        try {
-            const response = await fetch("/api/shopping-list/shopping-list-items", {
-                method: "PUT",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ id }),
-            });
+    const toggleItemChecked = async (id: string, currentChecked: boolean) => {
+    try {
+        // Calcul de l'état cible (inversion de l'état actuel)
+        const newCheckedState = !currentChecked;
 
-            if (!response.ok) {
-                throw new Error("Failed to update item");
-            }
-            // Mettre à jour le repas dans le state
-            const isChecked = await response.json();
-            setShoppingList((prev) =>
-                prev.map((list) => ({
-                    ...list, // Garder les autres propriétés inchangées
-                    items: list.items.map((item) =>
-                        item.id === id ? { ...item, isChecked } : item
-                    ),
-                }))
-            );
+        // Mise à jour optimiste (local)
+        setShoppingList((prev) =>
+            prev.map((list) => ({
+                ...list,
+                items: list.items.map((item) =>
+                    item.id === id ? { ...item, isChecked: newCheckedState } : item
+                ),
+            }))
+        );
 
-        } catch (error) {
-            console.error("Erreur lors de la modification:", error);
-            // setError("Erreur lors de la modification.");
+        // Appel API pour sauvegarder l'état
+        const response = await fetch("/api/shopping-list/shopping-list-items", {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ id, isChecked: newCheckedState }),
+        });
+
+        if (!response.ok) {
+            throw new Error("Failed to update item");
         }
+
+        toast(`L'article a été ${newCheckedState ? "coché" : "décoché"} !`);
+    } catch (error) {
+        console.error("Erreur lors de la modification:", error);
+        toast.error("Impossible de mettre à jour l'élément.");
     }
+};
+
+
 
 
     // Appel API pour supprimer un item du panier
@@ -110,8 +117,8 @@ const ShoppingListPage = () => {
                                     <input
                                         type="checkbox"
                                         checked={item.isChecked}
-                                        onChange={() => toggleItemChecked(item.id)}
-                                    />
+                                        onChange={() => toggleItemChecked(item.id, item.isChecked ?? false)}
+                                        />
                                 </li>                               
                             ))}
 
