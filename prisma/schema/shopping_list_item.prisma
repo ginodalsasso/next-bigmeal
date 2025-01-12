@@ -6,6 +6,7 @@ model ShoppingListItem {
 
     quantity     Float       @default(0.0)
     comment      String?
+    isChecked    Boolean     @default(false)
 
     shoppingList ShoppingList @relation(fields: [shoppingListId], references: [id], onDelete: Cascade)
     ingredient   Ingredient? @relation(fields: [ingredientId], references: [id])

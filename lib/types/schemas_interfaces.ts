@@ -94,6 +94,7 @@ export interface ShoppingListItemType {
 
     quantity: number;
     comment?: string;
+    isChecked?: boolean;
 
     // Relation Many-to-One
     shoppingList: ShoppingListType;

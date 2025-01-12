@@ -32,6 +32,36 @@ const ShoppingListPage = () => {
         fetchShoppingList();
     }, []);
 
+    
+    // Transformer un item en coché ou non
+    const toggleItemChecked = async (id: string) => {
+        try {
+            const response = await fetch("/api/shopping-list/shopping-list-items", {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ id }),
+            });
+
+            if (!response.ok) {
+                throw new Error("Failed to update item");
+            }
+            // Mettre à jour le repas dans le state
+            const isChecked = await response.json();
+            setShoppingList((prev) =>
+                prev.map((list) => ({
+                    ...list, // Garder les autres propriétés inchangées
+                    items: list.items.map((item) =>
+                        item.id === id ? { ...item, isChecked } : item
+                    ),
+                }))
+            );
+
+        } catch (error) {
+            console.error("Erreur lors de la modification:", error);
+            // setError("Erreur lors de la modification.");
+        }
+    }
+
 
     // Appel API pour supprimer un item du panier
     const deleteItem = async (id: string) => {
@@ -77,7 +107,12 @@ const ShoppingListPage = () => {
                                 <li key={item.id}>
                                     {item.quantity} {item.ingredient ? item.ingredient.name : "Ingrédient non défini"}
                                     <DeleteItem onDelete={() => deleteItem(item.id)} isDeleting={false} />
-                                </li>
+                                    <input
+                                        type="checkbox"
+                                        checked={item.isChecked}
+                                        onChange={() => toggleItemChecked(item.id)}
+                                    />
+                                </li>                               
                             ))}
 
                         </ul>
