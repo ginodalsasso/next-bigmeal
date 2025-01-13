@@ -1,7 +1,7 @@
 import { db } from "@/lib/db";
 import { NextRequest, NextResponse } from "next/server";
 import { CompositionFormType } from "@/lib/types/forms_interfaces";
-import { idConstraints, newCompositionConstraints } from "@/lib/constraints/forms_constraints";
+import { idConstraints, newCompositionConstraints, updateCompositionConstraints } from "@/lib/constraints/forms_constraints";
 
 
 export async function POST(req: NextRequest) {
@@ -54,6 +54,15 @@ export async function POST(req: NextRequest) {
 export async function PUT(req: NextRequest) {
     try {
         const body = await req.json();
+
+        const validationResult = updateCompositionConstraints.safeParse(body);
+
+        if (!validationResult.success) {
+            return NextResponse.json(
+                { error: validationResult.error.format() },
+                { status: 400 }
+            );
+        }
 
         const updatedComposition = await db.composition.update({
             where: { id: body.id },

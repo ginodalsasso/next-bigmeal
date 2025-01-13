@@ -15,7 +15,6 @@ export async function GET() {
                 },
             }
         });
-        console.log("[SHOPPING_LIST]", shoppingList[0].items);
         return NextResponse.json(shoppingList, { status: 200 });
     } catch (error) {
         console.log("[SHOPPING_LIST]", error);
