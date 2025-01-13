@@ -87,9 +87,15 @@ export const RegisterConstraints = z.object({
 
 
 export const ShoppingListConstraints = z.object({
+    ingredientId: z.string(),
     quantity: z
         .number({ message: "La quantité doit être un nombre" })
         .min(0.1, "La quantité doit être supérieure à 0")
         .max(10000, "La quantité doit être inférieure à 10000")
         .positive("La quantité doit être un nombre positif."),
+});
+
+export const isCheckedShoppingListConstraints = z.object({
+    id: z.string(),
+    isChecked: z.boolean(),
 });

@@ -1,3 +1,4 @@
+import { isCheckedShoppingListConstraints } from "@/lib/constraints/forms_constraints";
 import { getUserCart } from "@/lib/dal";
 import { db } from "@/lib/db";
 import { NextRequest, NextResponse } from "next/server";
@@ -31,15 +32,15 @@ export async function PUT(req: NextRequest) {
     try {
         const body = await req.json();
 
-        // // Valider et nettoyer les données
-        // const validationResult = mealConstraints.safeParse(body);
+        // Valider et nettoyer les données
+        const validationResult = isCheckedShoppingListConstraints.safeParse(body);
 
-        // if (!validationResult.success) {
-        //     return NextResponse.json(
-        //         { error: validationResult.error.format() },
-        //         { status: 400 }
-        //     );
-        // }
+        if (!validationResult.success) {
+            return NextResponse.json(
+                { error: validationResult.error.format() },
+                { status: 400 }
+            );
+        }
 
         const { id, isChecked } = body;
 

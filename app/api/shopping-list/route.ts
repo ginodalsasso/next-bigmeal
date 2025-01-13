@@ -1,4 +1,4 @@
-import { idConstraints } from "@/lib/constraints/forms_constraints";
+import { idConstraints, ShoppingListConstraints } from "@/lib/constraints/forms_constraints";
 import { getUser } from "@/lib/dal";
 import { db } from "@/lib/db";
 import { NextRequest, NextResponse } from "next/server";
@@ -35,6 +35,17 @@ export async function POST(req: NextRequest) {
 
     try {
         const body = await req.json();
+
+        // Valider et nettoyer les données
+        const validationResult = ShoppingListConstraints.safeParse(body);
+
+        if (!validationResult.success) {
+            return NextResponse.json(
+                { error: validationResult.error.format() },
+                { status: 400 }
+            );
+        }
+
         const { ingredientId, quantity } = body;
 
         // Vérifier si une liste de courses existe
@@ -84,6 +95,7 @@ export async function POST(req: NextRequest) {
         return new NextResponse("Internal Server Error", { status: 500 });
     }
 }
+
 
 export async function DELETE (req: NextRequest) {
     try {
