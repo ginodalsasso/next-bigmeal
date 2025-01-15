@@ -73,6 +73,9 @@ export const countTotalQuantities = (shoppingList: ShoppingListType[]): number =
         }
     }
 
-    return total;
+    total = Math.round(total * 100) / 100;
+
+    return total
+    ;
 };
 

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { decrypt } from "./lib/session";
+import { verifyCSRFToken } from "./lib/csrf";
 
 const protectedRoutes = [
     "/ingredients",
@@ -16,7 +17,7 @@ const dynamicRoutePatterns = [
 
 const publicRoutes = ["/login", "/register", "/"];
 
-const nonce = Buffer.from(crypto.randomUUID()).toString('base64')
+const nonce = Buffer.from(crypto.randomUUID()).toString("base64");
 
 const csp = `
     default-src 'self'; 
@@ -51,6 +52,18 @@ export default async function middleware(req: NextRequest) {
         }
     }
 
+    // Vérification CSRF pour les requêtes (POST, PUT, DELETE)
+    if (["POST", "PUT", "DELETE"].includes(req.method)) {
+        const csrfToken = req.headers.get("x-csrf-token");
+
+        try {
+            verifyCSRFToken(csrfToken);
+        } catch (error) {
+            console.error("Invalid CSRF token:", error);
+            return NextResponse.redirect(new URL("/error", req.nextUrl));
+        }
+    }
+
     // Redirection si la route est protégée et que l'utilisateur n'est pas connecté
     if (isProtectedRoute && (!session || !session?.userId)) {
         return NextResponse.redirect(new URL("/login", req.nextUrl));
@@ -67,7 +80,8 @@ export default async function middleware(req: NextRequest) {
     response.headers.set("X-Frame-Options", "DENY");
     response.headers.set("Strict-Transport-Security", "max-age=63072000; includeSubDomains; preload");
     response.headers.set("X-XSS-Protection", "1; mode=block");
-    
+
+
     return response;
 }
 
