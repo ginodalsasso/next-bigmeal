@@ -1,4 +1,4 @@
-import { idConstraints, ShoppingListConstraints } from "@/lib/constraints/forms_constraints";
+import { idConstraints, isCheckedShoppingListConstraints, ShoppingListConstraints } from "@/lib/constraints/forms_constraints";
 import { getUser } from "@/lib/dal";
 import { db } from "@/lib/db";
 import { NextRequest, NextResponse } from "next/server";
@@ -96,6 +96,37 @@ export async function POST(req: NextRequest) {
 }
 
 
+export async function PUT(req: NextRequest) {
+    try {
+        const body = await req.json();
+
+        // Valider et nettoyer les données
+        const validationResult = isCheckedShoppingListConstraints.safeParse(body);
+
+        if (!validationResult.success) {
+            return NextResponse.json(
+                { error: validationResult.error.format() },
+                { status: 400 }
+            );
+        }
+
+        const { id, isChecked } = body;
+
+        const updatedItem = await db.shoppingListItem.update({
+            where: { id },
+            data: { 
+                isChecked
+            },
+        });
+
+        return NextResponse.json(updatedItem, { status: 200 });
+    } catch (error) {
+        console.error("[UPDATE_MEAL_ERROR]", error);
+        return new NextResponse("Internal Error", {status: 500 });
+    }
+}
+
+
 export async function DELETE (req: NextRequest) {
     try {
         const body = await req.json();
@@ -118,3 +149,5 @@ export async function DELETE (req: NextRequest) {
         return new NextResponse("Internal Error", {status: 500 });
     }
 }
+
+

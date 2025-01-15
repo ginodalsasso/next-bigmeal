@@ -49,7 +49,7 @@ const ShoppingListPage = () => {
         );
 
         // Appel API pour sauvegarder l'état
-        const response = await fetch("/api/shopping-list/shopping-list-items", {
+        const response = await fetch("/api/shopping-list", {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ id, isChecked: newCheckedState }),
