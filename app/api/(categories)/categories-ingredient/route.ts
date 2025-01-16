@@ -2,7 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { categoriesConstraints, idConstraints } from "@/lib/constraints/forms_constraints";
 import { z } from "zod";
-import { verifyAdmin } from "@/lib/auth";
+// import { verifyAdmin } from "@/lib/auth";
+import { verifyCSRFToken } from "@/lib/csrf";
 
 
 
@@ -19,12 +20,15 @@ export async function GET() {
 
 
 export async function POST(req: NextRequest) {
+    const csrfToken = req.headers.get("x-csrf-token");
     try {
-
-        const isAdmin = await verifyAdmin();
-        if (!isAdmin) {
-            return new NextResponse("Unauthorized", {status: 401});
-        }
+        
+        verifyCSRFToken(csrfToken);
+        
+        // const isAdmin = await verifyAdmin();
+        // if (!isAdmin) {
+        //     return new NextResponse("Unauthorized", {status: 401});
+        // }
 
         const body = await req.json();
 

@@ -9,10 +9,12 @@ import EditItem from "@/components/layout/EditItem";
 import DeleteItem from "@/components/layout/DeleteItem";
 import { toast } from "sonner";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { useCsrfToken } from "@/app/context/CsrfContext";
 
 // _________________________ COMPOSANT _________________________
 const CategoryIngredientPage = () => {
 // _________________________ ETATS _________________________
+const csrfToken = useCsrfToken();
 const [categoryIngredient, setCategoryIngredient] = useState<CategoryIngredientType[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -41,7 +43,10 @@ const [categoryIngredient, setCategoryIngredient] = useState<CategoryIngredientT
         try {
             const response = await fetch("/api/categories-ingredient", {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: { 
+                    "Content-Type": "application/json",
+                    "X-CSRF-Token": csrfToken,
+                },
                 body: JSON.stringify({ name }),
             });
             if (!response.ok) throw new Error("Failed to add category");
@@ -59,7 +64,10 @@ const [categoryIngredient, setCategoryIngredient] = useState<CategoryIngredientT
         try {
             const response = await fetch("/api/categories-ingredient", {
                 method: "PUT",
-                headers: { "Content-Type": "application/json" },
+                headers: { 
+                    "Content-Type": "application/json",
+                    "X-CSRF-Token": csrfToken,
+                },
                 body: JSON.stringify({ id, name: newName }),
             });
             if (!response.ok) throw new Error("Failed to update category");
@@ -79,7 +87,10 @@ const [categoryIngredient, setCategoryIngredient] = useState<CategoryIngredientT
         try {
             const response = await fetch("/api/categories-ingredient", {
                 method: "DELETE",
-                headers: { "Content-Type": "application/json" },
+                headers: { 
+                    "Content-Type": "application/json",
+                    "X-CSRF-Token": csrfToken, 
+                },
                 body: JSON.stringify({ id }),
             });
             if (!response.ok) throw new Error("Failed to delete category");
