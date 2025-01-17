@@ -23,7 +23,6 @@ export default function RootLayout({
             </head>
             <AuthProvider>
                 <CsrfProvider>
-
                     <body className="flex flex-col min-h-screen">
                         <header className="flex justify-center border-b border-gray-200">
                             <Navbar />

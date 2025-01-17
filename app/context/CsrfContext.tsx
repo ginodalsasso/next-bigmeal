@@ -2,7 +2,7 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 
 const CsrfContext = createContext("");
 
-export const CsrfProvider = ({ children }) => {
+export const CsrfProvider = ({ children }: { children: React.ReactNode }) => {
     const [csrfToken, setCsrfToken] = useState("");
 
     useEffect(() => {

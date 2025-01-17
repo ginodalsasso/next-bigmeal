@@ -21,6 +21,6 @@ export async function verifyCSRFToken(csrfToken: string | null) {
     const cookieStore = await cookies();
     const storedToken = cookieStore.get("csrfToken")?.value;
     if (!storedToken || storedToken !== csrfToken) {
-        throw new Error("Invalid CSRF token.");
+        return false;
     }
 }

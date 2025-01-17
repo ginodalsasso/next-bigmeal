@@ -55,7 +55,7 @@ const CreateCategory: React.FC<CreateCategoryProps> = ({ onAddCategory }) => {
                 {error?.name && (
                     <p className="error-form">{error.name}</p>
                 )}
-                <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+                {/* <input type="hidden" name="_csrf" value="<%= csrfToken %>" /> */}
                 <Button
                     onClick={handleSubmit}
                     variant="success"

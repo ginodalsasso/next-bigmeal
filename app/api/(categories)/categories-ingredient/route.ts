@@ -6,7 +6,6 @@ import { z } from "zod";
 import { verifyCSRFToken } from "@/lib/csrf";
 
 
-
 export async function GET() {
     try {
         const categoryIngredient = await db.categoryIngredient.findMany(); 
@@ -21,10 +20,12 @@ export async function GET() {
 
 export async function POST(req: NextRequest) {
     const csrfToken = req.headers.get("x-csrf-token");
+    
     try {
-        
-        verifyCSRFToken(csrfToken);
-        
+        const csrfTokenVerified = await verifyCSRFToken(csrfToken);
+        if (csrfTokenVerified === false) {
+            return new NextResponse("CSRF Token is missing or invalid", {status: 403});
+        }       
         // const isAdmin = await verifyAdmin();
         // if (!isAdmin) {
         //     return new NextResponse("Unauthorized", {status: 401});
@@ -80,8 +81,9 @@ export async function PUT(req: NextRequest) {
                 where: { id },
                 data: { name },
             });
-    
+            
             return NextResponse.json(updatedCategory, { status: 200 });
+
     } catch (error) {
         console.error("[UPDATE_CATEGORY_INGREDIENT_ERROR]", error);
         return new NextResponse("Internal Error", {status: 500 });
