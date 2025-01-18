@@ -23,7 +23,7 @@ const ProfilePage =
     useEffect(() => {
         const fetchUser = async () => {
             try {
-                const response = await fetch(`/api/profile/${username}`);
+                const response = await fetch(`/api/${username}`);
                 if (!response.ok) {
                     throw new Error("Failed to fetch user");
                 }
@@ -51,22 +51,26 @@ const ProfilePage =
             <p>Compte créé le: {dateToString(user.createdAt)}</p>
 
             <h2 className="text-xl font-semibold mt-6">Liste de courses</h2>
-            <ul>
                 {user.shoppingList && user.shoppingList.map((list) => (
-                    <li key={list.id}>
-                        <h3>Liste de courses du {dateToString(list.createdAt)}</h3>
-                        {list.comment && <p>Commentaire: {list.comment}</p> }
-                        {list.items.length === 0 && <p>Aucun élément dans la liste</p>}
-                        <ul>
-                            {list.items.map((item) => (
-                                <li key={item.id}>
-                                    <span>{item.quantity} {item.ingredient?.name || "Ingrédient inconnu"}</span>
-                                </li>
-                            ))}
-                        </ul>
-                    </li>
+                    
+                    <div key={list.id}>
+                        <details>
+                            <summary className="flex cursor-pointer"> 
+                                <h3>Liste de courses du {dateToString(list.createdAt)}</h3>
+                            </summary>
+                            <div>
+                                {list.comment && <p>Commentaire: {list.comment}</p> }
+                                <ul>
+                                    {list.items.map((item) => (
+                                        <li key={item.id}>
+                                            <span>{item.quantity} {item.ingredient?.name || "Ingrédient inconnu"}</span>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                        </details>
+                    </div>
                 ))}
-            </ul>
 
         </div>
     );

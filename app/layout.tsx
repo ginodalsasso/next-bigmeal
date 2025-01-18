@@ -19,7 +19,6 @@ export default function RootLayout({
             <head>
                 <title>Big Meal App</title>
                 <meta name="description" content="A simple meal app" />
-                {/* <meta name="csrf-token" content={csrfToken} /> */}
             </head>
             <AuthProvider>
                 <CsrfProvider>

@@ -4,10 +4,10 @@ export async function GET() {
     try {
         const data = await getUserCart();
 
-        if (!data) {
+        if(!data) {
             return new Response(
-                JSON.stringify({ error: "Unauthorized" }),
-                { status: 401 }
+                JSON.stringify({ totalCartQuantity: 0 }),
+                { status: 200 }
             );
         }
         

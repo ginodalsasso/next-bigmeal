@@ -7,13 +7,12 @@ const protectedRoutes = [
     "/categories-ingredient",
     "/categories-meal",
     "/shopping-list",
-    "/profile",
 ];
 
 const dynamicRoutePatterns = [
     /^\/ingredients\/[a-zA-Z0-9-]+$/, // Par exemple : /ingredients/nomdelingredient
     /^\/meals\/[a-zA-Z0-9-]+$/, // Par exemple : /meals/nomdurepas
-    /^\/profile\/[a-zA-Z0-9-]+$/, // Par exemple : /profile/nomutilisateur
+    /^\/=[a-zA-Z0-9-]+$/, // Par exemple : /=nomdeliste
     
 ];
 

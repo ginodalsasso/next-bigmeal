@@ -43,7 +43,10 @@ const Navbar = () => {
                         <>
                             <li>
                                 <span className="text-gray-200 cursor-default">
-                                    Bonjour, {user?.username}
+                                    Bonjour, 
+                                    <Link href={`/${user?.username}`}>
+                                        {user?.username}
+                                    </Link>
                                 </span>
                             </li>
                             <li>
