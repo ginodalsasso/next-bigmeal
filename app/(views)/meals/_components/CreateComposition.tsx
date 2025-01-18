@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { IngredientUnit } from "@/lib/types/enums";
 import { translatedUnit } from "@/lib/utils";
 import { CreateCompositionProps } from "@/lib/types/props_interfaces";
+import { useCsrfToken } from "@/app/context/CsrfContext";
 
 const CreateComposition: React.FC<CreateCompositionProps>= ({
     mealId,
@@ -20,6 +21,7 @@ const CreateComposition: React.FC<CreateCompositionProps>= ({
 }) => {
 
     // _________________________ HOOKS _________________________
+    const csrfToken = useCsrfToken();
     const [ingredients, setIngredients] = useState<IngredientType[]>([]); // Liste des ingrédients disponibles
 
     const [isLoading, setIsLoading] = useState(false); // Indique si l'action est en cours
@@ -103,7 +105,10 @@ const CreateComposition: React.FC<CreateCompositionProps>= ({
         try {
             const response = await fetch("/api/compositions", {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRF-Token": csrfToken,
+                },
                 body: JSON.stringify(form),
             });
     

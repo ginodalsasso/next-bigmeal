@@ -22,10 +22,12 @@ import CreateMeal from "./_components/CreateMeal";
 import UpdateMeal from "./_components/UpdateMeal";
 import CreateComposition from "./_components/CreateComposition";
 import AddToShoppingListForm from "@/components/forms/AddToShoppingListForm";
+import { useCsrfToken } from "@/app/context/CsrfContext";
 
 // _________________________ COMPOSANT _________________________
 const MealsPage = () => {
     // _________________________ ETATS _________________________
+    const csrfToken = useCsrfToken(); 
     const [meals, setMeals] = useState<MealType[]>([]);
     const [currentStep, setCurrentStep] = useState<"createMeal" | "createComposition" | "chooseStep">("createMeal"); // étape pour la création de repas ou de composition
     const [createdMealId, setCreatedMealId] = useState<string | null>(null);
@@ -83,7 +85,10 @@ const MealsPage = () => {
         try {
             const response = await fetch("/api/meals", {
                 method: "PUT",
-                headers: { "Content-Type": "application/json" },
+                headers: { 
+                    "Content-Type": "application/json",
+                    "X-CSRF-Token": csrfToken,
+                },
                 body: JSON.stringify({ id, name: newName, categoryMealId: newCategoryId, description: newDescription }),
             });
 
@@ -109,7 +114,10 @@ const MealsPage = () => {
         try {
             const response = await fetch("/api/meals", {
                 method: "DELETE",
-                headers: { "Content-Type": "application/json" },
+                headers: { 
+                    "Content-Type": "application/json",
+                    "X-CSRF-Token": csrfToken, 
+                },
                 body: JSON.stringify({ id }),
             });
 

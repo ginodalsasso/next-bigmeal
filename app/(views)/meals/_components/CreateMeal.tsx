@@ -10,9 +10,11 @@ import { mealConstraints } from "@/lib/constraints/forms_constraints";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { CreateMealProps } from "@/lib/types/props_interfaces";
+import { useCsrfToken } from "@/app/context/CsrfContext";
 
 const CreateMeal: React.FC<CreateMealProps> = ({ onMealCreated, onClose }) => {
     // _________________________ HOOKS _________________________
+    const csrfToken = useCsrfToken();
     const [categories, setCategories] = useState<CategoryMealType[]>([]);
 
     const [form, setForm] = useState<MealFormType>({
@@ -50,7 +52,10 @@ const CreateMeal: React.FC<CreateMealProps> = ({ onMealCreated, onClose }) => {
         try {
             const response = await fetch("/api/meals", {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: { 
+                    "Content-Type": "application/json",
+                    "X-CSRF-Token": csrfToken,
+                },
                 body: JSON.stringify(data),
             });
             if (!response.ok) {

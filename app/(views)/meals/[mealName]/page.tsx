@@ -17,6 +17,7 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import add from "@/public/img/add.svg";
+import { useCsrfToken } from "@/app/context/CsrfContext";
 
 const MealDetailPage = 
     ({ 
@@ -27,6 +28,7 @@ const MealDetailPage =
     const { mealName } = use(params);
 
     // _________________________ ETATS _________________________
+    const csrfToken = useCsrfToken();
     const [meal, setMeal] = useState<MealType | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -79,6 +81,7 @@ const MealDetailPage =
                 method: "DELETE",
                 headers: {
                     "Content-Type": "application/json",
+                    "X-CSRF-Token": csrfToken,
                 },
                 body: JSON.stringify({ id }),
             });

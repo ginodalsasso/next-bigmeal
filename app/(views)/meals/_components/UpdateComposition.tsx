@@ -10,6 +10,7 @@ import { translatedUnit } from "@/lib/utils";
 import { updateCompositionConstraints } from "@/lib/constraints/forms_constraints";
 import { useFormValidation } from "@/app/hooks/useFormValidation";
 import { UpdateCompositionProps } from "@/lib/types/props_interfaces";
+import { useCsrfToken } from "@/app/context/CsrfContext";
 
 // _________________________ COMPOSANT _________________________
 const UpdateComposition: React.FC<UpdateCompositionProps> = ({
@@ -18,6 +19,7 @@ const UpdateComposition: React.FC<UpdateCompositionProps> = ({
     onClose,
 }) => {
     // _________________________ HOOKS _________________________
+    const csrfToken = useCsrfToken();
     const [composition, setComposition] = useState(initialComposition);
     const { error, validate, setIsLoading, isLoading } = useFormValidation(
         updateCompositionConstraints,
@@ -37,7 +39,10 @@ const UpdateComposition: React.FC<UpdateCompositionProps> = ({
         try {
             const response = await fetch("/api/compositions", {
                 method: "PUT",
-                headers: { "Content-Type": "application/json" },
+                headers: { 
+                    "Content-Type": "application/json",
+                    "X-CSRF-Token": csrfToken,
+                },
                 body: JSON.stringify(composition),
             });
 

@@ -2,10 +2,17 @@ import { db } from "@/lib/db";
 import { NextRequest, NextResponse } from "next/server";
 import { CompositionFormType } from "@/lib/types/forms_interfaces";
 import { idConstraints, newCompositionConstraints, updateCompositionConstraints } from "@/lib/constraints/forms_constraints";
+import { verifyCSRFToken } from "@/lib/csrf";
 
 
 export async function POST(req: NextRequest) {
     try {
+        const csrfToken = req.headers.get("x-csrf-token");
+        const csrfTokenVerified = await verifyCSRFToken(csrfToken);
+        if (csrfTokenVerified === false) {
+            return new NextResponse("CSRF Token is missing or invalid", {status: 403});
+        }
+            
         const body: CompositionFormType[] = await req.json();
 
         if (!Array.isArray(body)) {
@@ -53,6 +60,12 @@ export async function POST(req: NextRequest) {
 
 export async function PUT(req: NextRequest) {
     try {
+        const csrfToken = req.headers.get("x-csrf-token");
+        const csrfTokenVerified = await verifyCSRFToken(csrfToken);
+        if (csrfTokenVerified === false) {
+            return new NextResponse("CSRF Token is missing or invalid", {status: 403});
+        }
+        
         const body = await req.json();
 
         const validationResult = updateCompositionConstraints.safeParse(body);
@@ -85,6 +98,12 @@ export async function PUT(req: NextRequest) {
 
 export async function DELETE(req: NextRequest) {
     try {
+        const csrfToken = req.headers.get("x-csrf-token");
+        const csrfTokenVerified = await verifyCSRFToken(csrfToken);
+        if (csrfTokenVerified === false) {
+            return new NextResponse("CSRF Token is missing or invalid", {status: 403});
+        }
+        
         const body = await req.json();
 
         const validationResult = idConstraints.safeParse(body);
