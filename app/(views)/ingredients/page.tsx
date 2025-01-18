@@ -22,12 +22,14 @@ import { translatedSeason } from "@/lib/utils";
 import AddToShoppingListForm from "@/components/forms/AddToShoppingListForm";
 import EditItem from "@/components/layout/EditItem";
 import DeleteItem from "@/components/layout/DeleteItem";
+import { useCsrfToken } from "@/app/context/CsrfContext";
 
 
 // _________________________ COMPOSANT _________________________
 const IngredientPage = () => {
 
     // _________________________ ETATS _________________________
+    const csrfToken = useCsrfToken();
     const [ingredients, setIngredients] = useState<IngredientType[]>([]);
 
     const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -70,6 +72,7 @@ const IngredientPage = () => {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
+                    "X-CSRF-Token": csrfToken,
                 },
                 body: JSON.stringify({ 
                     id, 
@@ -103,6 +106,7 @@ const IngredientPage = () => {
                 method: "DELETE",
                 headers: {
                     "Content-Type": "application/json",
+                    "X-CSRF-Token": csrfToken,
                 },
                 body: JSON.stringify({ id }),
             });

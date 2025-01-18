@@ -11,6 +11,7 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { translatedSeason } from "@/lib/utils";
 import { CreateIngredientProps } from "@/lib/types/props_interfaces";
+import { useCsrfToken } from "@/app/context/CsrfContext";
 
 // _________________________ COMPOSANT _________________________
 const CreateIngredient: React.FC<CreateIngredientProps> = ({
@@ -18,6 +19,7 @@ const CreateIngredient: React.FC<CreateIngredientProps> = ({
     onClose,
 }) => {
     // _________________________ HOOKS _________________________
+    const csrfToken = useCsrfToken();
     const [categories, setCategories] = useState<CategoryIngredientType[]>([]);
     const [form, setForm] = useState<IngredientFormType>({
         name: "",
@@ -54,7 +56,10 @@ const CreateIngredient: React.FC<CreateIngredientProps> = ({
         try {
             const response = await fetch("/api/ingredients", {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: { 
+                    "Content-Type": "application/json",
+                    "X-CSRF-Token": csrfToken,
+                },
                 body: JSON.stringify(data),
             });
             if (!response.ok) {
