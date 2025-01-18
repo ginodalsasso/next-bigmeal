@@ -1,5 +1,6 @@
 'use client';
 
+import { useCsrfToken } from "@/app/context/CsrfContext";
 import DeleteItem from "@/components/layout/DeleteItem";
 import { ShoppingListType } from "@/lib/types/schemas_interfaces";
 import { countTotalQuantities, dateToString } from "@/lib/utils";
@@ -7,7 +8,7 @@ import { useState, useEffect } from "react";
 import { toast } from "sonner";
 
 const ShoppingListPage = () => {
-
+    const csrfToken = useCsrfToken();
     const [shoppingList, setShoppingList] = useState<ShoppingListType[]>([]);
     const [loading, setLoading] = useState(true);
 
@@ -51,7 +52,10 @@ const ShoppingListPage = () => {
         // Appel API pour sauvegarder l'état
         const response = await fetch("/api/shopping-list", {
             method: "PUT",
-            headers: { "Content-Type": "application/json" },
+            headers: { 
+                "Content-Type": "application/json",
+                "X-CSRF-Token": csrfToken,
+            },
             body: JSON.stringify({ id, isChecked: newCheckedState }),
         });
 
@@ -74,7 +78,10 @@ const ShoppingListPage = () => {
         try {
             const response = await fetch("/api/shopping-list", {
                 method: "DELETE",
-                headers: { "Content-Type": "application/json" },
+                headers: { 
+                    "Content-Type": "application/json",
+                    "X-CSRF-Token": csrfToken, 
+                },
                 body: JSON.stringify({ id }),
             });
 
