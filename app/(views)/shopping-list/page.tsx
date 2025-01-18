@@ -64,11 +64,35 @@ const ShoppingListPage = () => {
         }
 
         toast(`L'article a été ${newCheckedState ? "coché" : "décoché"} !`);
+
     } catch (error) {
         console.error("Erreur lors de la modification:", error);
         toast.error("Impossible de mettre à jour l'élément.");
     }
 };
+
+const setShoppingListExpired = async (id: string) => {
+    if (shoppingList) {
+        // Rechercher la liste de courses correspondante
+        const list = shoppingList.find((list) => list.id === id);
+        if (list) {
+            const items = list.items;
+            // Vérifier si tous les items sont cochés
+            const allChecked = items.every((item) => item.isChecked);
+            if (allChecked) {
+                toast.success("Tous les items de cette liste sont cochés !");
+                return true;
+            } else {
+                toast.error("Tous les items ne sont pas cochés.");
+                return false;
+            }
+        }
+    }
+    toast.error("Liste introuvable.");
+    return false;
+};
+
+
 
 
 
@@ -132,12 +156,16 @@ const ShoppingListPage = () => {
                             ))}
 
                         </ul>
+                        <button onClick={() => setShoppingListExpired(list.id)}>
+                            Vérifier si tous les items sont cochés
+                        </button>
                     </li>
 
                 ))}
             </ul>
             <hr />
             {countTotalQuantities(shoppingList)} ingrédients au total
+
         </div>
     );
 };

@@ -17,7 +17,6 @@ export const CsrfProvider = ({ children }: { children: React.ReactNode }) => {
                     throw new Error("Invalid CSRF token response.");
                 }
                 setCsrfToken(data.csrfToken);
-                console.log("CSRF token set:", data.csrfToken);
             } catch (error) {
                 console.error("Error fetching CSRF token:", error);
             }
