@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import { decrypt } from "./lib/session";
-import { verifyCSRFToken } from "./lib/csrf";
 
 const protectedRoutes = [
     "/ingredients",
@@ -49,18 +48,6 @@ export default async function middleware(req: NextRequest) {
         } catch (error) {
             console.error("Erreur lors de la vérification de la session:", error);
             session = null;
-        }
-    }
-
-    // Vérification CSRF pour les requêtes (POST, PUT, DELETE)
-    if (["POST", "PUT", "DELETE"].includes(req.method)) {
-        const csrfToken = req.headers.get("x-csrf-token");
-
-        try {
-            verifyCSRFToken(csrfToken);
-        } catch (error) {
-            console.error("Invalid CSRF token:", error);
-            return NextResponse.redirect(new URL("/error", req.nextUrl));
         }
     }
 

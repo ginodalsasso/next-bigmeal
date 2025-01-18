@@ -10,6 +10,7 @@ import {
     AddIngredientToShoppingListFormType,
 } from '@/lib/types/forms_interfaces';
 import { Button } from '../ui/button';
+import { useCsrfToken } from '@/app/context/CsrfContext';
 
 interface AddToShoppingListFormProps {
     type: 'meal' | 'ingredient'; // Détermine le type d'ajout
@@ -17,6 +18,7 @@ interface AddToShoppingListFormProps {
 }
 
 const AddToShoppingListForm: React.FC<AddToShoppingListFormProps> = ({ type, id }) => {
+    const csrfToken = useCsrfToken();
     const [quantity, setQuantity] = useState<AddIngredientToShoppingListFormType>({ quantity: 1 });
     const [error, setError] = useState<AddIngredientToShoppingListFormErrorType>({});
     const [isLoading, setIsLoading] = useState(false);
@@ -48,6 +50,7 @@ const AddToShoppingListForm: React.FC<AddToShoppingListFormProps> = ({ type, id 
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
+                                "X-CSRF-Token": csrfToken,
                             },
                             body: JSON.stringify({
                                 ingredientId: composition.ingredient.id,
@@ -75,6 +78,7 @@ const AddToShoppingListForm: React.FC<AddToShoppingListFormProps> = ({ type, id 
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
+                            "X-CSRF-Token": csrfToken,
                         },
                         body: JSON.stringify({
                             ingredientId: id,

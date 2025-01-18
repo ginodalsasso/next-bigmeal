@@ -25,7 +25,7 @@ export async function POST(req: NextRequest) {
         if (csrfTokenVerified === false) {
             return new NextResponse("CSRF Token is missing or invalid", {status: 403});
         }
-        
+
         const body = await req.json();
 
         // Valider les données avec Zod
