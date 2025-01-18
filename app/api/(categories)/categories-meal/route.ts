@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { categoriesConstraints, idConstraints } from "@/lib/constraints/forms_constraints";
 import { z } from "zod";
+import { verifyCSRFToken } from "@/lib/csrf";
 
 
 
@@ -19,6 +20,12 @@ export async function GET() {
 
 export async function POST(req: NextRequest) {
     try {
+        const csrfToken = req.headers.get("x-csrf-token");
+        const csrfTokenVerified = await verifyCSRFToken(csrfToken);
+        if (csrfTokenVerified === false) {
+            return new NextResponse("CSRF Token is missing or invalid", {status: 403});
+        }
+        
         const body = await req.json();
 
         // Valider les données avec Zod
@@ -49,6 +56,12 @@ export async function POST(req: NextRequest) {
 export async function PUT(req: NextRequest) {
 
         try {
+            const csrfToken = req.headers.get("x-csrf-token");
+            const csrfTokenVerified = await verifyCSRFToken(csrfToken);
+            if (csrfTokenVerified === false) {
+                return new NextResponse("CSRF Token is missing or invalid", {status: 403});
+            }
+
             const body = await req.json();
     
             // Valider et nettoyer les données
@@ -80,6 +93,11 @@ export async function PUT(req: NextRequest) {
 
 export async function DELETE (req: NextRequest) {
     try {
+        const csrfToken = req.headers.get("x-csrf-token");
+        const csrfTokenVerified = await verifyCSRFToken(csrfToken);
+        if (csrfTokenVerified === false) {
+            return new NextResponse("CSRF Token is missing or invalid", {status: 403});
+        }     
         const body = await req.json();
 
         const validationResult = idConstraints.safeParse(body);
