@@ -123,36 +123,57 @@ export async function PUT(req: NextRequest) {
         const csrfToken = req.headers.get("x-csrf-token");
         const csrfTokenVerified = await verifyCSRFToken(csrfToken);
         if (csrfTokenVerified === false) {
-            return new NextResponse("CSRF Token is missing or invalid", {status: 403});
+            return new NextResponse("CSRF Token is missing or invalid", { status: 403 });
         }
-        
+
         const body = await req.json();
+        // Si la propriété isChecked est présente dans le corps de la requête
+        if ('isChecked' in body) {
+            const validationResult = isCheckedShoppingListConstraints.safeParse(body);
 
-        // Valider et nettoyer les données
-        const validationResult = isCheckedShoppingListConstraints.safeParse(body);
+            if (!validationResult.success) {
+                return NextResponse.json(
+                    { error: validationResult.error.format() },
+                    { status: 400 }
+                );
+            }
 
-        if (!validationResult.success) {
-            return NextResponse.json(
-                { error: validationResult.error.format() },
-                { status: 400 }
-            );
+            const { id, isChecked } = body;
+
+            const updatedItem = await db.shoppingListItem.update({
+                where: { id },
+                data: { isChecked },
+            });
+
+            return NextResponse.json(updatedItem, { status: 200 });
+            
+        // Si la propriété isExpired est présente dans le corps de la requête
+        } else if ('isExpired' in body) {
+            // Mise à jour de la propriété isExpired d'une liste
+            const { id, isExpired } = body;
+
+            if (typeof isExpired !== 'boolean') {
+                return NextResponse.json(
+                    { error: "Invalid data: isExpired must be a boolean" },
+                    { status: 400 }
+                );
+            }
+
+            const updatedList = await db.shoppingList.update({
+                where: { id },
+                data: { isExpired },
+            });
+
+            return NextResponse.json(updatedList, { status: 200 });
+        } else {
+            return NextResponse.json({ error: "Invalid request body" }, { status: 400 });
         }
-
-        const { id, isChecked } = body;
-
-        const updatedItem = await db.shoppingListItem.update({
-            where: { id },
-            data: { 
-                isChecked
-            },
-        });
-
-        return NextResponse.json(updatedItem, { status: 200 });
     } catch (error) {
-        console.error("[UPDATE_MEAL_ERROR]", error);
-        return new NextResponse("Internal Error", {status: 500 });
+        console.error("[UPDATE_ERROR]", error);
+        return new NextResponse("Internal Error", { status: 500 });
     }
 }
+
 
 
 export async function DELETE (req: NextRequest) {

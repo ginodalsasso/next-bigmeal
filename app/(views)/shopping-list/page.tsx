@@ -5,11 +5,13 @@ import DeleteItem from "@/components/layout/DeleteItem";
 import { Button } from "@/components/ui/button";
 import { ShoppingListType } from "@/lib/types/schemas_interfaces";
 import { countTotalQuantities, dateToString } from "@/lib/utils";
+import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
 
 const ShoppingListPage = () => {
     const csrfToken = useCsrfToken();
+    const router = useRouter(); 
     const [shoppingList, setShoppingList] = useState<ShoppingListType | null>(null);
     const [loading, setLoading] = useState(true);
 
@@ -73,6 +75,31 @@ const ShoppingListPage = () => {
     }
 };
 
+const markShoppingListAsExpired = async () => {
+    if (shoppingList) {
+        try {
+            const response = await fetch(`/api/shopping-list`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRF-Token": csrfToken,
+                },
+                body: JSON.stringify({ id: shoppingList.id, isExpired: true }),
+            });
+
+            if (!response.ok) {
+                throw new Error("Failed to mark shopping list as expired");
+            }
+
+            toast.success("La liste de courses a été marquée comme terminée !");
+            router.push('/'); // Redirection vers la page d'accueil
+        } catch (error) {
+            console.error("Erreur lors de la mise à jour :", error);
+            toast.error("Impossible de marquer la liste comme terminée.");
+        }
+    }
+};
+
 const setShoppingListExpired = async () => {
     if (shoppingList) {
         // Vérifier si la liste de courses correspond à l'ID
@@ -82,10 +109,9 @@ const setShoppingListExpired = async () => {
             // Vérifier si tous les items sont cochés
             const allChecked = items.every((item) => item.isChecked);
             if (allChecked) {
-                toast.success("Tous les items de cette liste sont cochés !");
-                return true;
+                await markShoppingListAsExpired();
             } else {
-                toast.error("Tous les items ne sont pas cochés.");
+                toast.error("Tous les ingrédients ne sont pas cochés !");
                 return false;
             }
         }
@@ -125,7 +151,7 @@ const setShoppingListExpired = async () => {
 
     if (loading) return <div>Loading...</div>;
     // if (error) return <div>{error}</div>;
-    if (!shoppingList) return <div>Listes de courses introuvables.</div>;
+    if (!shoppingList) return <div>Aucune liste de courses.</div>;
 
     return (
         <div>
