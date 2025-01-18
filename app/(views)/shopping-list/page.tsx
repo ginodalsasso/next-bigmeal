@@ -2,6 +2,7 @@
 
 import { useCsrfToken } from "@/app/context/CsrfContext";
 import DeleteItem from "@/components/layout/DeleteItem";
+import { Button } from "@/components/ui/button";
 import { ShoppingListType } from "@/lib/types/schemas_interfaces";
 import { countTotalQuantities, dateToString } from "@/lib/utils";
 import { useState, useEffect } from "react";
@@ -9,7 +10,7 @@ import { toast } from "sonner";
 
 const ShoppingListPage = () => {
     const csrfToken = useCsrfToken();
-    const [shoppingList, setShoppingList] = useState<ShoppingListType[]>([]);
+    const [shoppingList, setShoppingList] = useState<ShoppingListType | null>(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -20,7 +21,7 @@ const ShoppingListPage = () => {
                 if (!response.ok) {
                     throw new Error("Failed to fetch shoppingList");
                 }
-                const data: ShoppingListType[] = await response.json();
+                const data: ShoppingListType = await response.json();
                 setShoppingList(data);
             } catch (error) {
                 console.error("Error fetching shoppingList:", error);
@@ -40,14 +41,15 @@ const ShoppingListPage = () => {
         const newCheckedState = !currentChecked;
 
         // Mise à jour optimiste (local)
-        setShoppingList((prev) =>
-            prev.map((list) => ({
-                ...list,
-                items: list.items.map((item) =>
-                    item.id === id ? { ...item, isChecked: newCheckedState } : item
-                ),
-            }))
-        );
+        setShoppingList((prev) => prev && {
+            ...prev,
+            items: prev.items.map((item) => {
+                if (item.id === id) {
+                    return { ...item, isChecked: newCheckedState };
+                }
+                return item;
+            })
+        });
 
         // Appel API pour sauvegarder l'état
         const response = await fetch("/api/shopping-list", {
@@ -71,10 +73,10 @@ const ShoppingListPage = () => {
     }
 };
 
-const setShoppingListExpired = async (id: string) => {
+const setShoppingListExpired = async () => {
     if (shoppingList) {
-        // Rechercher la liste de courses correspondante
-        const list = shoppingList.find((list) => list.id === id);
+        // Vérifier si la liste de courses correspond à l'ID
+        const list = shoppingList;
         if (list) {
             const items = list.items;
             // Vérifier si tous les items sont cochés
@@ -91,10 +93,6 @@ const setShoppingListExpired = async (id: string) => {
     toast.error("Liste introuvable.");
     return false;
 };
-
-
-
-
 
 
     // Appel API pour supprimer un item du panier
@@ -114,12 +112,10 @@ const setShoppingListExpired = async (id: string) => {
             }
 
             // Supprimer le repas du state
-            setShoppingList((prev) =>
-                prev.map((list) => ({
-                    ...list, // Garder les autres propriétés inchangées
-                    items: list.items.filter((item) => item.id !== id), // Supprimer l'item
-                }))
-            );  
+            setShoppingList((prev) => prev && {
+                ...prev,
+                items: prev.items.filter((item) => item.id !== id)
+            });
             toast("Article supprimé avec succès");
         } catch (error) {
             console.error("Erreur lors de la suppression:", error);
@@ -133,39 +129,29 @@ const setShoppingListExpired = async (id: string) => {
 
     return (
         <div>
-            <h1>Listes de courses</h1>
+            <h1>Liste de courses</h1>
             <ul>
-                {shoppingList.map((list) => (
-                    <li key={list.id}>
-                        <ul>
-                            <li>{dateToString(list.createdAt)}</li>
-                            <br />
-                            <li>{list.items.length} ingrédients</li>
-                            {list.items.map((item) => (
-                                <li key={item.id}>
-                                    <span className={item.isChecked ? "line-through" : ""}>
-                                        {item.quantity} {item.ingredient ? item.ingredient.name : "Ingrédient non défini"}
-                                    </span>
-                                    <DeleteItem onDelete={() => deleteItem(item.id)} isDeleting={false} />
-                                    <input
-                                        type="checkbox"
-                                        checked={item.isChecked}
-                                        onChange={() => toggleItemChecked(item.id, item.isChecked ?? false)}
-                                        />
-                                </li>                               
-                            ))}
-
-                        </ul>
-                        <button onClick={() => setShoppingListExpired(list.id)}>
-                            Vérifier si tous les items sont cochés
-                        </button>
+                <li>Date de création : {dateToString(shoppingList.createdAt)}</li>
+                <li>Nombre d&apos;ingrédients : {shoppingList?.items?.length}</li>
+                {shoppingList.items.map((item) => (
+                    <li key={item.id}>
+                        <span className={item.isChecked ? "line-through" : ""}>
+                            {item.quantity} {item.ingredient?.name || "Ingrédient non défini"}
+                        </span>
+                        <DeleteItem onDelete={() => deleteItem(item.id)} isDeleting={false} />
+                        <input
+                            type="checkbox"
+                            checked={item.isChecked}
+                            onChange={() => toggleItemChecked(item.id, item.isChecked ?? false)}
+                        />
                     </li>
-
                 ))}
             </ul>
+            <Button variant="ghost" onClick={setShoppingListExpired}>
+                J&apos;ai fini mes courses
+            </Button>
             <hr />
-            {countTotalQuantities(shoppingList)} ingrédients au total
-
+            {countTotalQuantities([shoppingList])} ingrédients au total
         </div>
     );
 };

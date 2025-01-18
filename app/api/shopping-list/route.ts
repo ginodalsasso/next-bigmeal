@@ -1,19 +1,34 @@
 import { idConstraints, isCheckedShoppingListConstraints, ShoppingListConstraints } from "@/lib/constraints/forms_constraints";
 import { verifyCSRFToken } from "@/lib/csrf";
-import { getUser } from "@/lib/dal";
+import { getUser, verifySession } from "@/lib/dal";
 import { db } from "@/lib/db";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET() {
     try {
-        // Récupérer les listes de courses
-        const shoppingList = await db.shoppingList.findMany({
+        // Vérification de la session utilisateur
+        const session = await verifySession();
+        if (!session || !session.isAuth) {
+            return NextResponse.json(
+                { error: "Unauthorized: You must be logged in" },
+                { status: 401 }
+            );   
+        }
+
+         // Récupérer les listes de courses
+        const shoppingList = await db.shoppingList.findFirst({
+            where: { 
+                userId: session.userId,
+                isExpired: false
+            },
+
             include: {
                 items: {
                     include: {
                         ingredient: true,
                     },
                 },
+
             }
         });
         return NextResponse.json(shoppingList, { status: 200 });
