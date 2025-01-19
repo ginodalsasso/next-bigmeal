@@ -17,12 +17,12 @@ const buttonVariants = cva(
           "border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground",
         secondary:
           "bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80",
-        ghost: "hover:bg-gray-800",
-        link: "text-primary underline-offset-4 hover:underline",
-        success:  "bg-emerald-600 text-white text-md px-4 py-2 font-bold hover:bg-emerald-500 hover:transition hover:translate-y-0.5",
-        edit:     "bg-blue-600 text-white text-md px-4 py-2 font-bold hover:bg-blue-500 hover:transition hover:translate-y-0.5",
-        delete:   "bg-red-600 text-white text-md px-4 py-2 font-bold hover:bg-red-500 hover:transition hover:translate-y-0.5",
-        cancel:   "bg-gray-600 text-white text-md px-4 py-2 font-bold  hover:bg-gray-500 hover:transition hover:translate-y-0.5 ",
+        ghost:    "text-md px-4 py-2 hover:bg-gray-800",
+        link:     "text-white text-md px-4 py-2 underline-offset-4 hover:underline",
+        success:  "bg-emerald-700 text-white text-md px-4 py-2 hover:bg-emerald-600 hover:transition hover:translate-y-0.5",
+        edit:     "bg-blue-700 text-white text-md px-4 py-2 hover:bg-blue-600 hover:transition hover:translate-y-0.5",
+        delete:   "bg-red-700 text-white text-md px-4 py-2 hover:bg-red-600 hover:transition hover:translate-y-0.5",
+        cancel:   "bg-gray-700 text-white text-md px-4 py-2 hover:bg-gray-600 hover:transition hover:translate-y-0.5 ",
       },
       size: {
         default: "h-10 px-6 py-4",

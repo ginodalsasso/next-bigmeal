@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import { RegisterConstraints } from "@/lib/constraints/forms_constraints";
 import { UserFormErrorType } from "@/lib/types/forms_interfaces";
 import { useRouter } from "next/navigation";
@@ -60,13 +61,16 @@ export default function RegisterPage() {
 
 
     return (
-        <form onSubmit={handleSubmit}>
+        <form 
+            className="mx-auto mt-[10%] sm:w-[400px] flex flex-col gap-2"
+            onSubmit={handleSubmit}
+        >
             {error.general && (
-                <p className="text-red-500 text-sm mb-4">{error.general}</p>
+                <p className="error-form">{error.general}</p>
             )}
             <input
                 type="text"
-                className="border border-gray-300 p-2 rounded text-black "
+                className="input-text-select "
                 placeholder="Pseudo"
                 value={formData.username}
                 onChange={(e) =>
@@ -74,13 +78,13 @@ export default function RegisterPage() {
                 }
             />
             {error.username && (
-                <p className="text-red-500 text-sm mb-4 mx-auto">
+                <p className="error-form">
                     {error.username}
                 </p>
             )}
             <input
                 type="password"
-                className="border border-gray-300 p-2 rounded text-black "
+                className="input-text-select "
                 placeholder="Mot de passe"
                 value={formData.password}
                 onChange={(e) =>
@@ -88,13 +92,24 @@ export default function RegisterPage() {
                 }
             />
             {error.password && (
-                <p className="text-red-500 text-sm mb-4 mx-auto">
+                <p className="error-form">
                     {error.password}
                 </p>
             )}
-            <button type="submit">
+
+            <Button
+                type="submit"
+                disabled={isLoading}
+                variant={isLoading ? "ghost" : "success"}
+            >
                 {isLoading ? "Création en cours..." : "Créer un compte"}
-            </button>
+            </Button>
+            <Button
+                variant="link"
+                onClick={() => router.push("/login")}
+            >
+                Se connecter
+            </Button>
         </form>
     );
 }
