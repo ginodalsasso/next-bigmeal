@@ -131,11 +131,8 @@ const IngredientPage = () => {
 
     return (
         <>
-        <IsAdmin>
-            
-
-
             {/* Dialogue pour ajouter un ingrédient */}
+        <IsAdmin>
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                 <DialogTrigger asChild>
                     <Button variant="success" onClick={() => setIsDialogOpen(true)}>
@@ -158,6 +155,7 @@ const IngredientPage = () => {
                     </DialogHeader>
                 </DialogContent>
             </Dialog>
+        </IsAdmin>
                 
             {/* Liste des ingrédients */}
             <div className="cards-wrapper">
@@ -195,7 +193,6 @@ const IngredientPage = () => {
                     ))}
                 </div>
             </div>
-            </IsAdmin>
         </>
     );
 };

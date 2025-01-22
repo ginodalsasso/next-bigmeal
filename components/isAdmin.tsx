@@ -1,13 +1,34 @@
+// import { useAuth } from "@/app/context/AuthContext";
+
+// const IsAdmin = ({ children }: { children: React.ReactNode }) => {
+//     const { user, isAuth } = useAuth();
+
+//     if (!isAuth || user?.role !== "ADMIN") {
+//         return <div>Accès refusé. Vous devez être administrateur.</div>;
+//     }
+
+//     return <>{children}</>;
+// };
+
+// export default IsAdmin;
+
 import { useAuth } from "@/app/context/AuthContext";
 
-const IsAdmin = ({ children }: { children: React.ReactNode }) => {
+interface IsAdminProps {
+    children: React.ReactNode;
+}
+
+const IsAdmin = ({ children }: IsAdminProps) => {
     const { user, isAuth } = useAuth();
 
-    if (!isAuth || user?.role !== "ADMIN") {
-        return <div>Accès refusé. Vous devez être administrateur.</div>;
+    // Vérifie si l'utilisateur est authentifié et a le rôle 'ADMIN'
+    if (isAuth && user?.role === "ADMIN") {
+        // Rend les enfants si l'utilisateur est un administrateur
+        return <>{children}</>;
     }
 
-    return <>{children}</>;
+    // Ne rend rien si l'utilisateur n'est pas un administrateur
+    return null;
 };
 
 export default IsAdmin;
