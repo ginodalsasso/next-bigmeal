@@ -7,6 +7,7 @@ interface AuthContextType {
     isAuth: boolean; // Indique si l'utilisateur est authentifié
     user: UserContextType | null; // Informations de l'utilisateur
     setIsAuth: React.Dispatch<React.SetStateAction<boolean>>; // Permet de mettre à jour l'état
+    role: "ADMIN" | "USER"; // Rôle de l'utilisateur
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -44,7 +45,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }, []);
 
     return (
-        <AuthContext.Provider value={{ isAuth, user, setIsAuth }}>
+        <AuthContext.Provider value={{ isAuth, user, setIsAuth, role: (user?.role as "ADMIN" | "USER") || "USER" }}>
             {children}
         </AuthContext.Provider>
     );

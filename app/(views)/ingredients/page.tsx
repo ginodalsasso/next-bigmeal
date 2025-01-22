@@ -23,6 +23,7 @@ import AddToShoppingListForm from "@/components/forms/AddToShoppingListForm";
 import EditItem from "@/components/layout/EditItem";
 import DeleteItem from "@/components/layout/DeleteItem";
 import { useCsrfToken } from "@/app/context/CsrfContext";
+import IsAdmin from "@/components/isAdmin";
 
 
 // _________________________ COMPOSANT _________________________
@@ -130,6 +131,10 @@ const IngredientPage = () => {
 
     return (
         <>
+        <IsAdmin>
+            
+
+
             {/* Dialogue pour ajouter un ingrédient */}
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                 <DialogTrigger asChild>
@@ -190,6 +195,7 @@ const IngredientPage = () => {
                     ))}
                 </div>
             </div>
+            </IsAdmin>
         </>
     );
 };
