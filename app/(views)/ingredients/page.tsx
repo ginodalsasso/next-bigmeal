@@ -132,30 +132,30 @@ const IngredientPage = () => {
     return (
         <>
             {/* Dialogue pour ajouter un ingrédient */}
-        <IsAdmin>
-            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-                <DialogTrigger asChild>
-                    <Button variant="success" onClick={() => setIsDialogOpen(true)}>
-                        <Image
-                            src={add}
-                            alt="Ajouter un ingrédient"
-                            className="w-4"
-                        />
-                        Ajouter un ingrédient 
-                    </Button>
-                </DialogTrigger>
-                <DialogContent>
-                    <DialogHeader>
-                        <DialogTitle className="text-center">Ajouter un ingrédient</DialogTitle>
-                        {/* Formulaire de création d'ingrédient */}
-                        <CreateIngredient
-                            onIngredientCreated={addIngredient}
-                            onClose={() => setIsDialogOpen(false)}
-                        />
-                    </DialogHeader>
-                </DialogContent>
-            </Dialog>
-        </IsAdmin>
+            <IsAdmin>
+                <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                    <DialogTrigger asChild>
+                        <Button variant="success" onClick={() => setIsDialogOpen(true)}>
+                            <Image
+                                src={add}
+                                alt="Ajouter un ingrédient"
+                                className="w-4"
+                            />
+                            Ajouter un ingrédient 
+                        </Button>
+                    </DialogTrigger>
+                    <DialogContent>
+                        <DialogHeader>
+                            <DialogTitle className="text-center">Ajouter un ingrédient</DialogTitle>
+                            {/* Formulaire de création d'ingrédient */}
+                            <CreateIngredient
+                                onIngredientCreated={addIngredient}
+                                onClose={() => setIsDialogOpen(false)}
+                            />
+                        </DialogHeader>
+                    </DialogContent>
+                </Dialog>
+            </IsAdmin>
                 
             {/* Liste des ingrédients */}
             <div className="cards-wrapper">
@@ -170,25 +170,27 @@ const IngredientPage = () => {
                                 }}
                             />
                             <AddToShoppingListForm type="ingredient" id={ingredient.id} />
-                            <div className="flex gap-2 mt-2">
-                                <EditItem
-                                    renderEditForm={(onClose) => (
-                                        <UpdateIngredient
-                                        initialName={ingredient.name}
-                                        initialCategory={ingredient.categoryIngredient?.id || ""}
-                                        initialSeason={ingredient.season}
-                                        onSubmit={async (newName, newCategory, newSeason) => {
-                                            await updateIngredient(ingredient.id, newName, newCategory, newSeason || null);
-                                            onClose();
-                                        }}
-                                        onCancel={onClose}
-                                        isLoading={false}
-                                        error={null}
-                                        />
-                                    )}
-                                />
-                                <DeleteItem onDelete={() => deleteIngredient(ingredient.id)} isDeleting={false} />
-                            </div>
+                            <IsAdmin>
+                                <div className="flex gap-2 mt-2">
+                                    <EditItem
+                                        renderEditForm={(onClose) => (
+                                            <UpdateIngredient
+                                            initialName={ingredient.name}
+                                            initialCategory={ingredient.categoryIngredient?.id || ""}
+                                            initialSeason={ingredient.season}
+                                            onSubmit={async (newName, newCategory, newSeason) => {
+                                                await updateIngredient(ingredient.id, newName, newCategory, newSeason || null);
+                                                onClose();
+                                            }}
+                                            onCancel={onClose}
+                                            isLoading={false}
+                                            error={null}
+                                            />
+                                        )}
+                                    />
+                                    <DeleteItem onDelete={() => deleteIngredient(ingredient.id)} isDeleting={false} />
+                                </div>
+                            </IsAdmin>
                         </div>
                     ))}
                 </div>

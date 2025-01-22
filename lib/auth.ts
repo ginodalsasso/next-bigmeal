@@ -1,5 +1,5 @@
 import hash from "bcrypt";
-import { getUser, getUserByUsername } from "./dal";
+import { getUserByUsername, getUserRole } from "./dal";
 import { encrypt } from "./session";
 
 // Fonction pour connecter un utilisateur
@@ -26,7 +26,7 @@ export async function signIn(username: string, password: string) {
 
 // Fonction pour vérifier si l'utilisateur connecté est admin
 export const verifyAdmin = async () => {
-    const user = await getUser();
+    const user = await getUserRole();
     if (!user || user.role !== "ADMIN") {
         throw new Error("Unauthorized: Admin access required");
     }

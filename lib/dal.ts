@@ -70,6 +70,33 @@ export const getUser = cache(async () => {
     }
 });
 
+
+export const getUserRole = cache(async () => {
+    const session = await verifySession();
+    if (!session) return null;
+
+    try {
+        const userRole = await db.user.findUnique({
+            where: {
+                id: session.userId, // Filtrer par l'ID utilisateur
+            },
+            select: {
+                role: true,
+            },
+        });
+
+        if (!userRole) {
+            throw new Error("User not found");
+        }
+
+        return userRole;
+    } catch (error) {
+        console.error("Failed to fetch user role", error);
+        return null;
+    }
+});
+
+
 // Récupérer le panier de l'utilisateur
 export const getUserCart = cache(async () => {
 
