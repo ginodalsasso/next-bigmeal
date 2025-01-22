@@ -1,7 +1,9 @@
 'use client';
 
+import { Button } from "@/components/ui/button";
 import { RegisterConstraints } from "@/lib/constraints/forms_constraints";
 import { UserFormErrorType } from "@/lib/types/forms_interfaces";
+import { useRouter } from "next/navigation";
 // import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 import { toast } from "sonner";
@@ -9,6 +11,7 @@ import { toast } from "sonner";
 export default function LoginPage() {
 
     // __________________ HOOKS __________________
+    const router = useRouter();
     const [error, setError] = useState<UserFormErrorType>({});
     const [isLoading, setIsLoading] = useState(false);
 
@@ -68,38 +71,54 @@ export default function LoginPage() {
 
     // _________________________ RENDU _________________________
     return (
-        <form onSubmit={handleSubmit}>
+        <form 
+            className="border px-4 py-8 mx-auto mt-[10%] sm:w-[400px] flex flex-col gap-2" 
+            onSubmit={handleSubmit}
+        >
             {error.general && (
-                <p className="text-red-500 text-sm mb-4">
+                <p className="error-form">
                     {error.general}
                 </p>
             )}
-            <input type="text" name="username" placeholder="Pseudo" required />
+            <input 
+                className="input-text-select" 
+                type="text" 
+                name="username" 
+                placeholder="Pseudo" 
+                required 
+            />
             {error.username && (
-                <p className="text-red-500 text-sm mb-4 mx-auto">
+                <p className="error-form">
                     {error.username}
                 </p>
             )}
 
             <input
+                className="input-text-select"
                 type="password"
                 name="password"
-                placeholder="Password"
+                placeholder="Mot de passe"
                 required
             />
             {error.password && (
-                <p className="text-red-500 text-sm mb-4 mx-auto">
+                <p className="error-form">
                     {error.password}
                 </p>
             )}
 
-            <button
+            <Button
                 type="submit"
                 disabled={isLoading}
-                className="bg-blue-500 text-white p-2 rounded"
+                variant={isLoading ? "ghost" : "success"}
             >
                 {isLoading ? "Connexion..." : "Se connecter"}
-            </button>
+            </Button>
+            <Button
+                variant="link"
+                onClick={() => router.push("/register")}
+            >
+                S&apos;inscrire
+            </Button>
         </form>
     );
 }
