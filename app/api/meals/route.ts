@@ -2,7 +2,7 @@ import { db } from "@/lib/db";
 import { NextRequest, NextResponse } from "next/server";
 import { idConstraints, mealConstraints } from "@/lib/constraints/forms_constraints";
 import { verifyCSRFToken } from "@/lib/csrf";
-import { verifyAdmin } from "@/lib/auth";
+import { verifyAdmin, verifyUser } from "@/lib/auth";
 
 
 export async function GET() {
@@ -26,6 +26,10 @@ export async function GET() {
 
 export async function POST(req: NextRequest) {
     try {
+        const isUser = await verifyUser();
+        if (!isUser) {
+            return new NextResponse("Unauthorized", {status: 401});
+        }
         const csrfToken = req.headers.get("x-csrf-token");
         const csrfTokenVerified = await verifyCSRFToken(csrfToken);
         if (csrfTokenVerified === false) {

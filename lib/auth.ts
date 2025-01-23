@@ -32,3 +32,14 @@ export const verifyAdmin = async () => {
     }
     return user;
 };
+
+
+// Fonction pour vérifier si l'utilisateur connecté est un utilisateur ou un admin
+export const verifyUser = async () => {
+    const user = await getUserRole();
+    // 
+    if (!user || (user.role !== "USER" && user.role !== "ADMIN")) {
+        throw new Error("Unauthorized: User access required");
+    }
+    return user;
+}

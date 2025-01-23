@@ -1,3 +1,4 @@
+import { verifyUser } from "@/lib/auth";
 import { idConstraints, isCheckedShoppingListConstraints, ShoppingListConstraints } from "@/lib/constraints/forms_constraints";
 import { verifyCSRFToken } from "@/lib/csrf";
 import { getUser, verifySession } from "@/lib/dal";
@@ -49,6 +50,7 @@ export async function POST(req: NextRequest) {
     }
 
     try {
+        
         const csrfToken = req.headers.get("x-csrf-token");
         const csrfTokenVerified = await verifyCSRFToken(csrfToken);
         if (csrfTokenVerified === false) {
@@ -120,6 +122,10 @@ export async function POST(req: NextRequest) {
 
 export async function PUT(req: NextRequest) {
     try {
+        const isUser = await verifyUser();
+        if (!isUser) {
+            return new NextResponse("Unauthorized", {status: 401});
+        }
         const csrfToken = req.headers.get("x-csrf-token");
         const csrfTokenVerified = await verifyCSRFToken(csrfToken);
         if (csrfTokenVerified === false) {
@@ -178,6 +184,10 @@ export async function PUT(req: NextRequest) {
 
 export async function DELETE (req: NextRequest) {
     try {
+        const isUser = await verifyUser();
+        if (!isUser) {
+            return new NextResponse("Unauthorized", {status: 401});
+        }
         const csrfToken = req.headers.get("x-csrf-token");
         const csrfTokenVerified = await verifyCSRFToken(csrfToken);
         if (csrfTokenVerified === false) {
