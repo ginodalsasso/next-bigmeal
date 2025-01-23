@@ -158,7 +158,6 @@ const MealDetailPage =
                                 <p>{composition.quantity}</p>
                                 <p>{translatedUnit(composition.unit)}</p>
                                 <IsAdmin>
-                                
                                     {/* Popover pour l'édition */}
                                     <Popover 
                                         open={isPopoverOpen === composition.id}
