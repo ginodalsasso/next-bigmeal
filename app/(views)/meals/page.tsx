@@ -23,6 +23,7 @@ import UpdateMeal from "./_components/UpdateMeal";
 import CreateComposition from "./_components/CreateComposition";
 import AddToShoppingListForm from "@/components/forms/AddToShoppingListForm";
 import { useCsrfToken } from "@/app/context/CsrfContext";
+import IsAdmin from "@/components/isAdmin";
 
 // _________________________ COMPOSANT _________________________
 const MealsPage = () => {
@@ -201,30 +202,32 @@ const MealsPage = () => {
                                 linkToDetails={`/meals/${meal.name}`}
                             />
                             <AddToShoppingListForm type="meal" id={meal.name} />
-                            <div className="flex gap-2 mt-2">
-                                {/* Édition du repas */}
-                                <EditItem
-                                    renderEditForm={(onClose) => (
-                                        <UpdateMeal
-                                            initialName={meal.name}
-                                            initialCategory={meal.categoryMeal?.id || ""}
-                                            initialDescription={meal.description || ""}
-                                            onSubmit={async (newName, newCategory, newDescription) => {
-                                                await updateMeal(meal.id, newName, newCategory, newDescription || null);
-                                                onClose();
-                                            }}
-                                            onCancel={onClose}
-                                            isLoading={false}
-                                            error={null}
-                                        />
-                                    )}
-                                />
-                                {/* Suppression du repas */}
-                                <DeleteItem
-                                    onDelete={() => deleteMeal(meal.id)}
-                                    isDeleting={false}
-                                />
-                            </div>
+                            <IsAdmin>
+                                <div className="flex gap-2 mt-2">
+                                    {/* Édition du repas */}
+                                    <EditItem
+                                        renderEditForm={(onClose) => (
+                                            <UpdateMeal
+                                                initialName={meal.name}
+                                                initialCategory={meal.categoryMeal?.id || ""}
+                                                initialDescription={meal.description || ""}
+                                                onSubmit={async (newName, newCategory, newDescription) => {
+                                                    await updateMeal(meal.id, newName, newCategory, newDescription || null);
+                                                    onClose();
+                                                }}
+                                                onCancel={onClose}
+                                                isLoading={false}
+                                                error={null}
+                                            />
+                                        )}
+                                    />
+                                    {/* Suppression du repas */}
+                                    <DeleteItem
+                                        onDelete={() => deleteMeal(meal.id)}
+                                        isDeleting={false}
+                                    />
+                                </div>
+                            </IsAdmin>
                         </div>
                     ))}
                 </div>

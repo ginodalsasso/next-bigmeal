@@ -10,6 +10,7 @@ import DeleteItem from "@/components/layout/DeleteItem";
 import { toast } from "sonner";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useCsrfToken } from "@/app/context/CsrfContext";
+import IsAdmin from "@/components/isAdmin";
 
 
 // _________________________ COMPOSANT _________________________
@@ -110,16 +111,21 @@ const CategoryMealPage = () => {
     return (
         <div>
             {/* Formulaire de création */}
-            <div className="card mb-6 md:w-fit">
-                <CategoryForm onAddCategory={createCategoryMeal} />
-            </div>
+            <IsAdmin>
+                <div className="card mb-6 md:w-fit">
+                    <CategoryForm onAddCategory={createCategoryMeal} />
+                </div>
+            </IsAdmin>
+
 
             {/* Liste des catégories */}
             <Table>
                 <TableHeader>
                     <TableRow>
-                        <TableHead><span className="text-lg font-bold">Nom</span></TableHead>
-                        <TableHead><span className="text-lg font-bold">Actions</span></TableHead>
+                        <TableHead><span className="text-lg font-bold">Noms</span></TableHead>
+                        <IsAdmin>
+                            <TableHead><span className="text-lg font-bold">Actions</span></TableHead>
+                        </IsAdmin>
                     </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -128,28 +134,30 @@ const CategoryMealPage = () => {
                         <TableCell>
                             <ItemView title={category.name} details={{}} />
                         </TableCell>
-                        <TableCell>
-                        <div className="flex gap-2">
-                            <EditItem
-                                renderEditForm={(onClose) => (
-                                    <UpdateCategory
-                                        initialName={category.name}
-                                        onSubmit={async (newName) => {
-                                            await updateCategoryMeal(category.id, newName);
-                                            onClose();
-                                        }}
-                                        onCancel={onClose}
-                                        isLoading={false}
-                                        error={null}
-                                    /> 
-                                )}
-                            />
-                            <DeleteItem
-                                onDelete={() => deleteCategoryMeal(category.id)}
-                                isDeleting={false}
-                            />
-                        </div>
-                        </TableCell>
+                        <IsAdmin>
+                            <TableCell>
+                                <div className="flex gap-2">
+                                    <EditItem
+                                        renderEditForm={(onClose) => (
+                                            <UpdateCategory
+                                                initialName={category.name}
+                                                onSubmit={async (newName) => {
+                                                    await updateCategoryMeal(category.id, newName);
+                                                    onClose();
+                                                }}
+                                                onCancel={onClose}
+                                                isLoading={false}
+                                                error={null}
+                                            /> 
+                                        )}
+                                    />
+                                    <DeleteItem
+                                        onDelete={() => deleteCategoryMeal(category.id)}
+                                        isDeleting={false}
+                                    />
+                                </div>
+                            </TableCell>
+                        </IsAdmin>
                     </TableRow>
                 ))}
                 </TableBody>

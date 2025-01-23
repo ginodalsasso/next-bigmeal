@@ -132,30 +132,28 @@ const IngredientPage = () => {
     return (
         <>
             {/* Dialogue pour ajouter un ingrédient */}
-            <IsAdmin>
-                <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-                    <DialogTrigger asChild>
-                        <Button variant="success" onClick={() => setIsDialogOpen(true)}>
-                            <Image
-                                src={add}
-                                alt="Ajouter un ingrédient"
-                                className="w-4"
-                            />
-                            Ajouter un ingrédient 
-                        </Button>
-                    </DialogTrigger>
-                    <DialogContent>
-                        <DialogHeader>
-                            <DialogTitle className="text-center">Ajouter un ingrédient</DialogTitle>
-                            {/* Formulaire de création d'ingrédient */}
-                            <CreateIngredient
-                                onIngredientCreated={addIngredient}
-                                onClose={() => setIsDialogOpen(false)}
-                            />
-                        </DialogHeader>
-                    </DialogContent>
-                </Dialog>
-            </IsAdmin>
+            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                <DialogTrigger asChild>
+                    <Button variant="success" onClick={() => setIsDialogOpen(true)}>
+                        <Image
+                            src={add}
+                            alt="Ajouter un ingrédient"
+                            className="w-4"
+                        />
+                        Ajouter un ingrédient 
+                    </Button>
+                </DialogTrigger>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle className="text-center">Ajouter un ingrédient</DialogTitle>
+                        {/* Formulaire de création d'ingrédient */}
+                        <CreateIngredient
+                            onIngredientCreated={addIngredient}
+                            onClose={() => setIsDialogOpen(false)}
+                        />
+                    </DialogHeader>
+                </DialogContent>
+            </Dialog>
                 
             {/* Liste des ingrédients */}
             <div className="cards-wrapper">
