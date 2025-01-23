@@ -18,6 +18,7 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import add from "@/public/img/add.svg";
 import { useCsrfToken } from "@/app/context/CsrfContext";
+import IsAdmin from "@/components/isAdmin";
 
 const MealDetailPage = 
     ({ 
@@ -115,33 +116,35 @@ const MealDetailPage =
         <div className="border rounded-lg p-6 xl:w-[70%] mx-auto">
             <h1 className="text-4xl font-semibold text-emerald-500 text-center mb-2">{meal.name}</h1>
             <p>{meal.description || "Aucune description disponible pour ce repas."}</p>
-
-            <div className="mt-4">
-                <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-                    <DialogTrigger asChild>
-                        <Button variant="success" onClick={() => setIsDialogOpen(true)}>
-                            <Image src={add} alt="Ajouter une composition" className="w-4" />
-                            Ajouter une composition
-                        </Button>
-                    </DialogTrigger>
-                    <DialogContent>
-                        <DialogHeader>
-                            <DialogTitle>Ajouter une composition</DialogTitle>
-                            <CreateComposition
-                                mealId={meal.id}
-                                onCompositionCreated={(compositions) => {
-                                    setMeal((prevMeal) => {
-                                        if (!prevMeal) return prevMeal;
-                                        return { ...prevMeal, compositions: [...compositions] };
-                                    });
-                                    setIsDialogOpen(false);
-                                }}
-                                onClose={() => setIsDialogOpen(false)}
-                            />
-                        </DialogHeader>
-                    </DialogContent>
-                </Dialog>
-            </div>
+            <IsAdmin>
+                <div className="mt-4">
+                    {/* Dialog pour ajouter une composition */}
+                    <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                        <DialogTrigger asChild>
+                            <Button variant="success" onClick={() => setIsDialogOpen(true)}>
+                                <Image src={add} alt="Ajouter une composition" className="w-4" />
+                                Ajouter une composition
+                            </Button>
+                        </DialogTrigger>
+                        <DialogContent>
+                            <DialogHeader>
+                                <DialogTitle>Ajouter une composition</DialogTitle>
+                                <CreateComposition
+                                    mealId={meal.id}
+                                    onCompositionCreated={(compositions) => {
+                                        setMeal((prevMeal) => {
+                                            if (!prevMeal) return prevMeal;
+                                            return { ...prevMeal, compositions: [...compositions] };
+                                        });
+                                        setIsDialogOpen(false);
+                                    }}
+                                    onClose={() => setIsDialogOpen(false)}
+                                />
+                            </DialogHeader>
+                        </DialogContent>
+                    </Dialog>
+                </div>
+            </IsAdmin>
 
             <div className="mt-6">
                 {Array.isArray(meal.compositions) && meal.compositions.length > 0 ? (
@@ -154,30 +157,33 @@ const MealDetailPage =
                             <div className="flex items-center gap-1">
                                 <p>{composition.quantity}</p>
                                 <p>{translatedUnit(composition.unit)}</p>
-                                {/* Popover pour l'édition */}
-                                <Popover 
-                                    open={isPopoverOpen === composition.id}
-                                    onOpenChange={(open) => {
-                                        setIsPopoverOpen(open ? composition.id : null);
-                                    }}
-                                >
-                                    <PopoverTrigger asChild>
-                                        <Button variant="edit">Modifier</Button>
-                                    </PopoverTrigger>
-                                    <PopoverContent>
-                                        <UpdateComposition
-                                            initialComposition={composition}                                
-                                            onCompositionUpdated={handleUpdateComposition}
-                                            onClose={() => setIsPopoverOpen(null)}
-                                        />
-                                    </PopoverContent>
-                                </Popover>
-                                <Button
-                                    variant="delete"
-                                    onClick={() => deleteComposition(composition.id)}
-                                >
-                                    Supprimer
-                                </Button>
+                                <IsAdmin>
+                                
+                                    {/* Popover pour l'édition */}
+                                    <Popover 
+                                        open={isPopoverOpen === composition.id}
+                                        onOpenChange={(open) => {
+                                            setIsPopoverOpen(open ? composition.id : null);
+                                        }}
+                                    >
+                                        <PopoverTrigger asChild>
+                                            <Button variant="edit">Modifier</Button>
+                                        </PopoverTrigger>
+                                        <PopoverContent>
+                                            <UpdateComposition
+                                                initialComposition={composition}                                
+                                                onCompositionUpdated={handleUpdateComposition}
+                                                onClose={() => setIsPopoverOpen(null)}
+                                            />
+                                        </PopoverContent>
+                                    </Popover>
+                                    <Button
+                                        variant="delete"
+                                        onClick={() => deleteComposition(composition.id)}
+                                    >
+                                        Supprimer
+                                    </Button>
+                                </IsAdmin>
                             </div>
                         </div>
                     ))

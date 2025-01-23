@@ -3,6 +3,7 @@ import { db } from "@/lib/db";
 import { categoriesConstraints, idConstraints } from "@/lib/constraints/forms_constraints";
 import { z } from "zod";
 import { verifyCSRFToken } from "@/lib/csrf";
+import { verifyAdmin } from "@/lib/auth";
 
 
 
@@ -20,6 +21,10 @@ export async function GET() {
 
 export async function POST(req: NextRequest) {
     try {
+        const isAdmin = await verifyAdmin();
+        if (!isAdmin) {
+            return new NextResponse("Unauthorized", {status: 401});
+        }
         const csrfToken = req.headers.get("x-csrf-token");
         const csrfTokenVerified = await verifyCSRFToken(csrfToken);
         if (csrfTokenVerified === false) {
@@ -56,6 +61,10 @@ export async function POST(req: NextRequest) {
 export async function PUT(req: NextRequest) {
 
         try {
+            const isAdmin = await verifyAdmin();
+            if (!isAdmin) {
+                return new NextResponse("Unauthorized", {status: 401});
+            }
             const csrfToken = req.headers.get("x-csrf-token");
             const csrfTokenVerified = await verifyCSRFToken(csrfToken);
             if (csrfTokenVerified === false) {
@@ -93,6 +102,10 @@ export async function PUT(req: NextRequest) {
 
 export async function DELETE (req: NextRequest) {
     try {
+        const isAdmin = await verifyAdmin();
+        if (!isAdmin) {
+            return new NextResponse("Unauthorized", {status: 401});
+        }
         const csrfToken = req.headers.get("x-csrf-token");
         const csrfTokenVerified = await verifyCSRFToken(csrfToken);
         if (csrfTokenVerified === false) {
