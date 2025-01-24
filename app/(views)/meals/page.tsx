@@ -25,6 +25,7 @@ import AddToShoppingListForm from "@/components/forms/AddToShoppingListForm";
 import { useCsrfToken } from "@/app/context/CsrfContext";
 import IsAdmin from "@/components/isAdmin";
 import IsUser from "@/components/isUser";
+import SearchBar from "@/components/layout/Searchbar";
 
 // _________________________ COMPOSANT _________________________
 const MealsPage = () => {
@@ -33,6 +34,8 @@ const MealsPage = () => {
     const [meals, setMeals] = useState<MealType[]>([]);
     const [currentStep, setCurrentStep] = useState<"createMeal" | "createComposition" | "chooseStep">("createMeal"); // étape pour la création de repas ou de composition
     const [createdMealId, setCreatedMealId] = useState<string | null>(null);
+    const [searchQuery, setSearchQuery] = useState(""); 
+    
 
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [loading, setLoading] = useState(true);
@@ -82,6 +85,7 @@ const MealsPage = () => {
         setCreatedMealId(null); // Réinitialiser l'ID du repas créé
     };
 
+
     // Appel API pour modifier un repas
     const updateMeal = async (id: string, newName: string, newCategoryId: string, newDescription: string | null) => {
         try {
@@ -111,6 +115,7 @@ const MealsPage = () => {
         }
     };
 
+
     // Appel API pour supprimer un repas
     const deleteMeal = async (id: string) => {
         try {
@@ -135,6 +140,13 @@ const MealsPage = () => {
         }
     };
 
+
+    // Filtrer les ingrédients en fonction de la recherche
+    const filteredMeals = meals.filter((meal) =>
+        meal.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+        
+
     // _________________________ RENDU _________________________
     if (loading) return <div>Loading...</div>;
     if (error) return <div>{error}</div>;
@@ -143,58 +155,61 @@ const MealsPage = () => {
     return (
         <>
             {/* Dialogue pour ajouter un repas ou une composition */}
-            <IsUser>
-                <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-                    <DialogTrigger asChild>
-                        <Button variant="success" onClick={() => setIsDialogOpen(true)}>
-                            <Image src={add} alt="Ajouter un repas" className="w-4" />
-                            Ajouter un repas
-                        </Button>
-                    </DialogTrigger>
-                    <DialogContent>
-                        <DialogHeader>
-                            <DialogTitle>
-                                {currentStep === "createMeal"
-                                    ? "Ajouter un repas"
-                                    : currentStep === "createComposition"
-                                    ? "Ajouter une composition"
-                                    : "Choisir une étape"}
-                            </DialogTitle>
-                            {currentStep === "createMeal" && (
-                                <CreateMeal
-                                    onMealCreated={addMeal}
-                                    onClose={() => setIsDialogOpen(false)}
-                                />
-                            )}
-                            {currentStep === "createComposition" && createdMealId && (
-                                <CreateComposition
-                                    mealId={createdMealId}
-                                    onCompositionCreated={addComposition}
-                                    onClose={() => {
-                                        setIsDialogOpen(false);
-                                        setCurrentStep("createMeal");
-                                    }}
-                                />
-                            )}
-                            {currentStep === "chooseStep" && (
-                                <div>
-                                    <Button onClick={() => setCurrentStep("createComposition")}>
-                                        Ajouter une composition
-                                    </Button>
-                                    <Button onClick={() => setCurrentStep("createMeal")}>
-                                        Ajouter un autre repas
-                                    </Button>
-                                </div>
-                            )}
-                        </DialogHeader>
-                    </DialogContent>
-                </Dialog>
-            </IsUser>
-
+            <div className="md:flex md:flex-row md:justify-between items-center pb-2">
+                <IsUser>
+                    <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                        <DialogTrigger asChild>
+                            <Button variant="success" onClick={() => setIsDialogOpen(true)}>
+                                <Image src={add} alt="Ajouter un repas" className="w-4" />
+                                Ajouter un repas
+                            </Button>
+                        </DialogTrigger>
+                        <DialogContent>
+                            <DialogHeader>
+                                <DialogTitle>
+                                    {currentStep === "createMeal"
+                                        ? "Ajouter un repas"
+                                        : currentStep === "createComposition"
+                                        ? "Ajouter une composition"
+                                        : "Choisir une étape"}
+                                </DialogTitle>
+                                {currentStep === "createMeal" && (
+                                    <CreateMeal
+                                        onMealCreated={addMeal}
+                                        onClose={() => setIsDialogOpen(false)}
+                                    />
+                                )}
+                                {currentStep === "createComposition" && createdMealId && (
+                                    <CreateComposition
+                                        mealId={createdMealId}
+                                        onCompositionCreated={addComposition}
+                                        onClose={() => {
+                                            setIsDialogOpen(false);
+                                            setCurrentStep("createMeal");
+                                        }}
+                                    />
+                                )}
+                                {currentStep === "chooseStep" && (
+                                    <div>
+                                        <Button onClick={() => setCurrentStep("createComposition")}>
+                                            Ajouter une composition
+                                        </Button>
+                                        <Button onClick={() => setCurrentStep("createMeal")}>
+                                            Ajouter un autre repas
+                                        </Button>
+                                    </div>
+                                )}
+                            </DialogHeader>
+                        </DialogContent>
+                    </Dialog>
+                </IsUser>
+                {/* Barre de recherche */}
+                <SearchBar onSearch={(query) => setSearchQuery(query)} />
+            </div>
             {/* Liste des repas */}
             <div className="cards-wrapper">
                 <div className="cards-list">
-                    {meals.map((meal) => (
+                    {filteredMeals.map((meal) => (
                         <div key={meal.id} className="card">
                             <ItemView
                                 title={meal.name}

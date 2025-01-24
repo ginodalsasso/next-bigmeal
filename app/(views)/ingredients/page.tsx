@@ -25,6 +25,7 @@ import DeleteItem from "@/components/layout/DeleteItem";
 import { useCsrfToken } from "@/app/context/CsrfContext";
 import IsAdmin from "@/components/isAdmin";
 import IsUser from "@/components/isUser";
+import SearchBar from "@/components/layout/Searchbar";
 
 
 // _________________________ COMPOSANT _________________________
@@ -33,6 +34,8 @@ const IngredientPage = () => {
     // _________________________ ETATS _________________________
     const csrfToken = useCsrfToken();
     const [ingredients, setIngredients] = useState<IngredientType[]>([]);
+    const [searchQuery, setSearchQuery] = useState("");
+
 
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [loading, setLoading] = useState(true);
@@ -125,6 +128,12 @@ const IngredientPage = () => {
         }
     };
 
+    // Filtrer les ingrédients en fonction de la recherche
+    const filteredIngredients = ingredients.filter((ingredient) =>
+        ingredient.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+    
+
     // _________________________ RENDU _________________________
     if (loading) return <div>Loading...</div>;
     if (error) return <div>{error}</div>;
@@ -133,35 +142,38 @@ const IngredientPage = () => {
     return (
         <>
             {/* Dialogue pour ajouter un ingrédient */}
-            <IsUser>
-                <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-                    <DialogTrigger asChild>
-                        <Button variant="success" onClick={() => setIsDialogOpen(true)}>
-                            <Image
-                                src={add}
-                                alt="Ajouter un ingrédient"
-                                className="w-4"
-                            />
-                            Ajouter un ingrédient 
-                        </Button>
-                    </DialogTrigger>
-                    <DialogContent>
-                        <DialogHeader>
-                            <DialogTitle className="text-center">Ajouter un ingrédient</DialogTitle>
-                            {/* Formulaire de création d'ingrédient */}
-                            <CreateIngredient
-                                onIngredientCreated={addIngredient}
-                                onClose={() => setIsDialogOpen(false)}
-                            />
-                        </DialogHeader>
-                    </DialogContent>
-                </Dialog>
-            </IsUser>
-                
+            <div className="flex justify-between items-center pb-2">
+                <IsUser>
+                    <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                        <DialogTrigger asChild>
+                            <Button variant="success" onClick={() => setIsDialogOpen(true)}>
+                                <Image
+                                    src={add}
+                                    alt="Ajouter un ingrédient"
+                                    className="w-4"
+                                />
+                                Ajouter un ingrédient 
+                            </Button>
+                        </DialogTrigger>
+                        <DialogContent>
+                            <DialogHeader>
+                                <DialogTitle className="text-center">Ajouter un ingrédient</DialogTitle>
+                                {/* Formulaire de création d'ingrédient */}
+                                <CreateIngredient
+                                    onIngredientCreated={addIngredient}
+                                    onClose={() => setIsDialogOpen(false)}
+                                />
+                            </DialogHeader>
+                        </DialogContent>
+                    </Dialog>
+                </IsUser>
+                {/* Barre de recherche */}
+                <SearchBar onSearch={(query) => setSearchQuery(query)} />
+            </div>
             {/* Liste des ingrédients */}
             <div className="cards-wrapper">
                 <div className="cards-list">
-                    {ingredients.map((ingredient) => (
+                    {filteredIngredients.map((ingredient) => (
                         <div key={ingredient.id} className="card">
                             <ItemView
                                 title={ingredient.name}
@@ -170,6 +182,7 @@ const IngredientPage = () => {
                                     season: translatedSeason(ingredient.season) || "Non spécifié",
                                 }}
                             />
+                            {/* Ajouter l'ingrédient à la liste de courses */}
                             <AddToShoppingListForm type="ingredient" id={ingredient.id} />
                             <IsAdmin>
                                 <div className="flex gap-2 mt-2">
