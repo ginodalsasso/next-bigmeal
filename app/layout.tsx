@@ -23,11 +23,11 @@ export default function RootLayout({
             <AuthProvider>
                 <CsrfProvider>
                     <body className="flex flex-col min-h-screen">
-                        <header className="flex justify-center border-b border-gray-200">
+                        <header className="flex justify-center border-b bg-neutral-900 border-neutral-500">
                             <Navbar />
                         </header>
                         <div className="flex">
-                            <aside className="hidden lg:block border-r">
+                            <aside className="hidden lg:block border-r border-neutral-500">
                                 <Sidebar />
                             </aside>
                             <main className="flex-1 px-4 pt-4 pb-20 md:p-6">{children}</main>

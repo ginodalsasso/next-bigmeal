@@ -142,7 +142,7 @@ const IngredientPage = () => {
     return (
         <>
             {/* Dialogue pour ajouter un ingrédient */}
-            <div className="flex justify-between items-center pb-2">
+            <div className="flex justify-between flex-row-reverse items-center gap-2 pb-2">
                 <IsUser>
                     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                         <DialogTrigger asChild>
@@ -152,7 +152,7 @@ const IngredientPage = () => {
                                     alt="Ajouter un ingrédient"
                                     className="w-4"
                                 />
-                                Ajouter un ingrédient 
+                                    <span className="hidden sm:block">Ajouter un ingrédient</span>
                             </Button>
                         </DialogTrigger>
                         <DialogContent>
@@ -177,15 +177,13 @@ const IngredientPage = () => {
                         <div key={ingredient.id} className="card">
                             <ItemView
                                 title={ingredient.name}
-                                details={{
-                                    category: ingredient.categoryIngredient?.name || "Non spécifié",
-                                    season: translatedSeason(ingredient.season) || "Non spécifié",
-                                }}
+                                details={ingredient.categoryIngredient?.name && ingredient.season ? {
+                                    category: ingredient.categoryIngredient?.name,
+                                    season: translatedSeason(ingredient.season)
+                                } : {}}
                             />
-                            {/* Ajouter l'ingrédient à la liste de courses */}
-                            <AddToShoppingListForm type="ingredient" id={ingredient.id} />
                             <IsAdmin>
-                                <div className="flex gap-2 mt-2">
+                                <div className="flex gap-2 w-full">
                                     <EditItem
                                         renderEditForm={(onClose) => (
                                             <UpdateIngredient
@@ -205,6 +203,8 @@ const IngredientPage = () => {
                                     <DeleteItem onDelete={() => deleteIngredient(ingredient.id)} isDeleting={false} />
                                 </div>
                             </IsAdmin>
+                            {/* Ajouter l'ingrédient à la liste de courses */}
+                            <AddToShoppingListForm type="ingredient" id={ingredient.id} />
                         </div>
                     ))}
                 </div>

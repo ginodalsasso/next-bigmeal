@@ -113,12 +113,13 @@ export const getUserCart = cache(async () => {
                 },
             },
             by: ["shoppingListId"],
-            _sum: { quantity: true }, // Calculer la somme des quantités
+            _count : true,
+            // _sum: { id : true, quantity: true },
         });
 
         // Extraire la quantité totale si des articles existent
         const totalCartQuantity = groupedItems.length > 0 
-            ? groupedItems[0]._sum.quantity || null // groupedItems[0] contient la première liste de courses
+            ? groupedItems[0]._count || null // groupedItems[0] contient la première liste de courses
             : null;
 
         return totalCartQuantity; 

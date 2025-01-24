@@ -108,13 +108,13 @@ const AddToShoppingListForm: React.FC<AddToShoppingListFormProps> = ({ type, id 
     return (
         <form
             onSubmit={handleAddToShoppingList}
-            className="flex items-center gap-2"
+            className="flex items-center justify-end gap-2 "
         >
             {/* Si type = 'ingredient', on affiche le champ de quantité */}
             {type === 'ingredient' && (
                 <input
                     type="number"
-                    className="text-black w-16 p-1 rounded"
+                    className="input-text-select"
                     value={quantity.quantity}
                     min={1}
                     onChange={(e) => setQuantity({ quantity: parseInt(e.target.value) })}
@@ -125,21 +125,16 @@ const AddToShoppingListForm: React.FC<AddToShoppingListFormProps> = ({ type, id 
                     {error.quantity}
                 </p>
             )}
-            <Button variant="ghost" className={isLoading ? 'opacity-50 cursor-not-allowed' : ''} disabled={isLoading}>
+            <Button variant="default" className={isLoading ? 'opacity-50 cursor-not-allowed' : 'w-full'} disabled={isLoading}>
                 <Image
                     src={add}
                     alt="Ajouter un ingrédient"
                     className="w-4"
                 />
-                {isLoading ? 'Ajout...' : type === 'meal' ? 'Ajouter le repas' : 'Ajouter l\'ingrédient'}
+                <span className="hidden sm:block">
+                    {isLoading ? 'Ajout...' : type === 'meal' ? 'Ajouter le repas' : 'Ajouter l\'ingrédient'}
+                </span>
             </Button>
-            {/* <button
-                type="submit"
-                className={`btn btn-primary ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
-                disabled={isLoading}
-            >
-                {isLoading ? 'Ajout...' : type === 'meal' ? 'Ajouter le repas' : 'Ajouter l\'ingrédient'}
-            </button> */}
         </form>
     );
 };

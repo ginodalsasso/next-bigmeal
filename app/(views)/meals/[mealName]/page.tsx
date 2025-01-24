@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState, use } from "react";
 import { CompositionType, MealType } from "@/lib/types/schemas_interfaces";
-import { translatedUnit } from "@/lib/utils";
+import { translatedUnit, ucFirst } from "@/lib/utils";
 import CreateComposition from "../_components/CreateComposition";
 import UpdateComposition from "../_components/UpdateComposition";
 import {
@@ -113,15 +113,15 @@ const MealDetailPage =
     if (!meal) return <div>Repas introuvable.</div>;
 
     return (
-        <div className="border rounded-lg p-6 xl:w-[70%] mx-auto">
-            <h1 className="text-4xl font-semibold text-emerald-500 text-center mb-2">{meal.name}</h1>
+        <div className="border bg-neutral-900 p-6 xl:w-[70%] mx-auto">
+            <h1 className="text-4xl font-semibold text-emerald-500 text-center mb-2">{ucFirst(meal.name)}</h1>
             <p>{meal.description || "Aucune description disponible pour ce repas."}</p>
             <IsAdmin>
                 <div className="mt-4">
                     {/* Dialog pour ajouter une composition */}
                     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                         <DialogTrigger asChild>
-                            <Button variant="success" onClick={() => setIsDialogOpen(true)}>
+                            <Button variant="success" className="w-full" onClick={() => setIsDialogOpen(true)}>
                                 <Image src={add} alt="Ajouter une composition" className="w-4" />
                                 Ajouter une composition
                             </Button>
@@ -153,7 +153,7 @@ const MealDetailPage =
                             key={composition.id}
                             className="flex justify-between items-center border-b py-2"
                         >
-                            <p className="font-medium">{composition.ingredient?.name || "Ingrédient inconnu"}</p>
+                            <p className="font-medium">{ucFirst(composition.ingredient?.name || "Ingrédient inconnu")}</p>
                             <div className="flex items-center gap-1">
                                 <p>{composition.quantity}</p>
                                 <p>{translatedUnit(composition.unit)}</p>

@@ -4,10 +4,11 @@ import { useCsrfToken } from "@/app/context/CsrfContext";
 import DeleteItem from "@/components/layout/DeleteItem";
 import { Button } from "@/components/ui/button";
 import { ShoppingListType } from "@/lib/types/schemas_interfaces";
-import { countTotalQuantities, dateToString } from "@/lib/utils";
+import { dateToString } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
 const ShoppingListPage = () => {
     const csrfToken = useCsrfToken();
@@ -155,29 +156,51 @@ const setShoppingListExpired = async () => {
 
     return (
         <div>
-            <h1>Liste de courses</h1>
-            <ul>
-                <li>Date de création : {dateToString(shoppingList.createdAt)}</li>
-                <li>Nombre d&apos;ingrédients : {shoppingList?.items?.length}</li>
-                {shoppingList.items.map((item) => (
-                    <li key={item.id}>
-                        <span className={item.isChecked ? "line-through" : ""}>
-                            {item.quantity} {item.ingredient?.name || "Ingrédient non défini"}
-                        </span>
-                        <DeleteItem onDelete={() => deleteItem(item.id)} isDeleting={false} />
-                        <input
-                            type="checkbox"
-                            checked={item.isChecked}
-                            onChange={() => toggleItemChecked(item.id, item.isChecked ?? false)}
-                        />
-                    </li>
-                ))}
-            </ul>
-            <Button variant="ghost" onClick={setShoppingListExpired}>
-                J&apos;ai fini mes courses
-            </Button>
-            <hr />
-            {countTotalQuantities([shoppingList])} ingrédients au total
+            <div className="mb-4">
+                <p className="text-lg font-bold">Date de création : {dateToString(shoppingList.createdAt)}</p>
+                <p className="text-lg font-bold">{shoppingList?.items?.length} ingrédients à la liste.</p>
+            </div>
+
+            <Table>
+                <TableHeader>
+                    <TableRow>
+                        <TableHead><span className="text-lg font-bold">Noms</span></TableHead>
+                        <TableHead><span className="text-lg font-bold">Actions</span></TableHead>
+                    </TableRow>
+                </TableHeader>
+                <TableBody>
+                    {shoppingList.items.map((item) => (
+                        <TableRow key={item.id}>
+                            <TableCell>
+                                <input
+                                    type="checkbox"
+                                    className="mr-2 w-4 h-4"
+                                    checked={item.isChecked}
+                                    onChange={() => toggleItemChecked(item.id, item.isChecked ?? false)}
+                                />
+                                <span className={item.isChecked ? "line-through" : ""}>
+                                    {item.quantity} {item.ingredient?.name || "Ingrédient non défini"}
+                                </span>
+                            </TableCell>
+                            <TableCell>
+                                <DeleteItem onDelete={() => deleteItem(item.id)} isDeleting={false} />
+                            </TableCell>
+                        </TableRow>
+                    ))}
+                </TableBody>
+                {/* <TableFooter>
+                    <TableRow>
+                        <TableCell>
+                            Total: {countTotalQuantities([shoppingList])} ingrédients.
+                        </TableCell>
+                    </TableRow>
+                </TableFooter> */}
+            </Table>
+            <div className="flex justify-end mt-2">
+                <Button variant="default" className="w-full" onClick={setShoppingListExpired}>
+                    J&apos;ai fini mes courses
+                </Button>
+            </div>
         </div>
     );
 };

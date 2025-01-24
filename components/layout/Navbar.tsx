@@ -29,7 +29,7 @@ const Navbar = () => {
     };
 
     return (
-        <nav className="w-full max-w-7xl p-6">
+        <nav className="w-full max-w-7xl p-4">
             <div className="flex justify-between">
                 {/* Logo */}
                 <Link href="/" className="flex items-center text-lg font-bold">

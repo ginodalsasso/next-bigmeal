@@ -22,7 +22,7 @@ body {
 }
 
 .card {
-  @apply border border-gray-500 flex flex-col gap-2 p-6;
+  @apply border border-neutral-500 bg-neutral-900 flex flex-col gap-2 p-6;
 }
 
 .nav-links-desktop {
@@ -36,6 +36,10 @@ body {
 /* style des input type: text / select / textarea */
 .input-text-select {
   @apply w-full p-2 text-black focus:bg-black focus:text-white;
+}
+
+.input-search {
+  @apply w-full md:w-[50%] p-2 text-black focus:bg-black focus:text-white;
 }
 
 .error-form {

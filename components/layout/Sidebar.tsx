@@ -14,7 +14,7 @@ const Sidebar = () => {
     return (
         <>
             {isAuth ? (
-                <div className="h-screen sticky py">
+                <div className="h-screen sticky bg-neutral-900 py-4">
                     <ul>
                         {links.map((link) => (
                             <li key={link.title}>

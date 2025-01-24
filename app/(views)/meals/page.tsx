@@ -155,13 +155,13 @@ const MealsPage = () => {
     return (
         <>
             {/* Dialogue pour ajouter un repas ou une composition */}
-            <div className="md:flex md:flex-row md:justify-between items-center pb-2">
+            <div className="flex justify-between items-center flex-row-reverse gap-2 pb-2">
                 <IsUser>
                     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                         <DialogTrigger asChild>
-                            <Button variant="success" onClick={() => setIsDialogOpen(true)}>
+                            <Button variant="success" className="flex items-center gap-2" onClick={() => setIsDialogOpen(true)}>
                                 <Image src={add} alt="Ajouter un repas" className="w-4" />
-                                Ajouter un repas
+                                <span className="hidden sm:block">Ajouter un repas</span>
                             </Button>
                         </DialogTrigger>
                         <DialogContent>
@@ -219,23 +219,22 @@ const MealsPage = () => {
                                 }}
                                 linkToDetails={`/meals/${meal.name}`}
                             />
-                            <AddToShoppingListForm type="meal" id={meal.name} />
                             <IsAdmin>
-                                <div className="flex gap-2 mt-2">
+                                <div className="flex gap-2 w-full">
                                     {/* Édition du repas */}
                                     <EditItem
                                         renderEditForm={(onClose) => (
                                             <UpdateMeal
-                                                initialName={meal.name}
-                                                initialCategory={meal.categoryMeal?.id || ""}
-                                                initialDescription={meal.description || ""}
-                                                onSubmit={async (newName, newCategory, newDescription) => {
-                                                    await updateMeal(meal.id, newName, newCategory, newDescription || null);
-                                                    onClose();
-                                                }}
-                                                onCancel={onClose}
-                                                isLoading={false}
-                                                error={null}
+                                            initialName={meal.name}
+                                            initialCategory={meal.categoryMeal?.id || ""}
+                                            initialDescription={meal.description || ""}
+                                            onSubmit={async (newName, newCategory, newDescription) => {
+                                                await updateMeal(meal.id, newName, newCategory, newDescription || null);
+                                                onClose();
+                                            }}
+                                            onCancel={onClose}
+                                            isLoading={false}
+                                            error={null}
                                             />
                                         )}
                                     />
@@ -246,6 +245,7 @@ const MealsPage = () => {
                                     />
                                 </div>
                             </IsAdmin>
+                            <AddToShoppingListForm type="meal" id={meal.name} />
                         </div>
                     ))}
                 </div>

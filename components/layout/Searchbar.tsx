@@ -16,15 +16,15 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
     };
 
     return (
-        <div>
+        <>
             <input
                 type="text"
                 value={query}
                 onChange={handleSearchChange}
                 placeholder="Rechercher..."
-                // className="input-text-select"
+                className="input-search"
             />
-        </div>
+        </>
     );
 };
 
