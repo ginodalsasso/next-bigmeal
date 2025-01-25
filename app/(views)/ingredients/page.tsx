@@ -177,10 +177,11 @@ const IngredientPage = () => {
                         <div key={ingredient.id} className="card">
                             <ItemView
                                 title={ingredient.name}
-                                details={ingredient.categoryIngredient?.name && ingredient.season ? {
-                                    category: ingredient.categoryIngredient?.name,
-                                    season: translatedSeason(ingredient.season)
-                                } : {}}
+                                details={{
+                                    // Afficher la catégorie et la saison si elles existent
+                                    ...(ingredient.categoryIngredient?.name && { category: ingredient.categoryIngredient.name }),
+                                    ...(ingredient.season && { season: translatedSeason(ingredient.season) }),
+                                }}
                             />
                             <IsAdmin>
                                 <div className="flex gap-2 w-full">
