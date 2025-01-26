@@ -13,9 +13,6 @@ export const CsrfProvider = ({ children }: { children: React.ReactNode }) => {
                     throw new Error(`Failed to fetch CSRF token. Status: ${response.status}`);
                 }
                 const data = await response.json();
-                if (!data || !data.csrfToken) {
-                    throw new Error("Invalid CSRF token response.");
-                }
                 setCsrfToken(data.csrfToken);
             } catch (error) {
                 console.error("Error fetching CSRF token:", error);
