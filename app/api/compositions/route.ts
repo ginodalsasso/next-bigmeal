@@ -70,6 +70,7 @@ export async function PUT(req: NextRequest) {
             return new NextResponse("Unauthorized", {status: 401});
         }
         const csrfToken = req.headers.get("x-csrf-token");
+
         const csrfTokenVerified = await verifyCSRFToken(csrfToken);
         if (csrfTokenVerified === false) {
             return new NextResponse("CSRF Token is missing or invalid", {status: 403});

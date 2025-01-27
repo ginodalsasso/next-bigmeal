@@ -37,7 +37,7 @@ const UpdateComposition: React.FC<UpdateCompositionProps> = ({
 
         setIsLoading(true);
         try {
-            const response = await fetch("/api/compositions", {
+                const response = await fetch("/api/compositions", {
                 method: "PUT",
                 headers: { 
                     "Content-Type": "application/json",

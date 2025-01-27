@@ -95,7 +95,12 @@ const MealsPage = () => {
                     "Content-Type": "application/json",
                     "X-CSRF-Token": csrfToken,
                 },
-                body: JSON.stringify({ id, name: newName, categoryMealId: newCategoryId, description: newDescription }),
+                body: JSON.stringify({ 
+                    id, 
+                    name: newName, 
+                    categoryMealId: newCategoryId, 
+                    description: newDescription 
+                }),
             });
 
             if (!response.ok) {
