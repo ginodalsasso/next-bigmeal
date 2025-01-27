@@ -131,12 +131,17 @@ const UpdateIngredient: React.FC<UpdateIngredientProps> = ({
                 <Button
                     type="button"
                     onClick={onCancel}
+                    className="w-full"
                     variant="secondary"
                     disabled={isLoading || parentLoading}
                 >
                     Annuler
                 </Button>
-                <Button type="submit" variant="success" disabled={isLoading || parentLoading}>
+                <Button 
+                    type="submit" 
+                    variant="success" 
+                    className="w-full"
+                    disabled={isLoading || parentLoading}>
                     {isLoading || parentLoading ? "En cours..." : "Valider"}
                 </Button>
             </div>

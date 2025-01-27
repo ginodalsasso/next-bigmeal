@@ -58,7 +58,8 @@ const UpdateCategory: React.FC<UpdateCategoryProps> = ({
                 <Button
                     type="button"
                     onClick={onCancel}
-                    variant="cancel"
+                    variant="secondary"
+                    className="w-full"
                     disabled={isLoading || parentLoading}
                 >
                     Annuler
@@ -66,6 +67,7 @@ const UpdateCategory: React.FC<UpdateCategoryProps> = ({
                 <Button
                     type="submit"
                     variant="success"
+                    className="w-full"
                     disabled={isLoading || parentLoading}
                 >
                     {isLoading || parentLoading ? "En cours..." : "Valider"}

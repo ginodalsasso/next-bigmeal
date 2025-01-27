@@ -3,7 +3,7 @@
 import { useAuth } from "@/app/context/AuthContext";
 import Link from "next/link";
 import Image from "next/image";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 // Définition des liens avec chemins des SVG
 const links = [
@@ -13,22 +13,22 @@ const links = [
 
 const Bottombar = () => {
     const [active, setActive] = useState(""); // État de la navigation active
-    const [cartItems, setCartItems] = useState(0); // État pour le nombre d'articles
+    // const [cartItems, setCartItems] = useState(0); // État pour le nombre d'articles
     const { isAuth } = useAuth(); // Utilisation du contexte d'authentification
 
-    useEffect(() => {
-        const fetchCart = async () => {
-            const response = await fetch("/api/shopping-list/shopping-list-items");
-            const data = await response.json();
-            if (data.totalCartQuantity) {
-                setCartItems(data.totalCartQuantity);
-            } else {
-                setCartItems(0);
-            }
+    // useEffect(() => {
+    //     const fetchCart = async () => {
+    //         const response = await fetch("/api/shopping-list/shopping-list-items");
+    //         const data = await response.json();
+    //         if (data.totalCartQuantity) {
+    //             setCartItems(data.totalCartQuantity);
+    //         } else {
+    //             setCartItems(0);
+    //         }
 
-        };
-        fetchCart();
-    }, []);
+    //     };
+    //     fetchCart();
+    // }, []);
 
     return (
         <>
@@ -53,9 +53,9 @@ const Bottombar = () => {
                                         alt={link.alt}
                                     />
                                 </Link>
-                                {link.url === "/shopping-list" && cartItems > 0 && (
+                                {/* {link.url === "/shopping-list" && cartItems > 0 && (
                                     <span>{cartItems}</span>
-                                )}
+                                )} */}
                             </li>
                         ))}
                     </ul>

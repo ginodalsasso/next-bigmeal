@@ -103,12 +103,24 @@ const UpdateComposition: React.FC<UpdateCompositionProps> = ({
                 {error?.unit && <p className="error-form">{error.unit}</p>}
             </div>
 
-            <Button type="submit" variant="success" disabled={isLoading}>
-                {isLoading ? "Mise à jour en cours..." : "Mettre à jour"}
-            </Button>
-            <Button variant="secondary" onClick={onClose} disabled={isLoading}>
-                Annuler
-            </Button>
+            <div className="flex gap-2">
+                <Button 
+                    variant="secondary"     
+                    onClick={onClose} 
+                    className="w-full"
+                    disabled={isLoading}
+                >
+                    Annuler
+                </Button>
+                <Button 
+                    type="submit" 
+                    variant="success" 
+                    className="w-full"
+                    disabled={isLoading}
+                >
+                    {isLoading ? "Mise à jour en cours..." : "Mettre à jour"}
+                </Button>
+            </div>
         </form>
     );
 };

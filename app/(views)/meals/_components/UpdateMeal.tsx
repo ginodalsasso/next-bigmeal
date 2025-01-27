@@ -104,6 +104,7 @@ const UpdateMeal: React.FC<UpdateMealProps> = ({
                     type="button"
                     onClick={onCancel}
                     variant="cancel"
+                    className="w-full"
                     disabled={isLoading || externalLoading}
                 >
                     Annuler
@@ -111,6 +112,7 @@ const UpdateMeal: React.FC<UpdateMealProps> = ({
                 <Button
                     type="submit"
                     variant="success"
+                    className="w-full"
                     disabled={isLoading || externalLoading}
                 >
                     {isLoading || externalLoading ? "En cours..." : "Valider"}
