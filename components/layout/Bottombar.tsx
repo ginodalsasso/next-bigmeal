@@ -8,6 +8,7 @@ import React, { useState } from "react";
 // Définition des liens avec chemins des SVG
 const links = [
     { icon: "/img/home.svg", url: "/", alt: "Accueil"},
+    { icon: "/img/user.svg", url: "/profil", alt: "Profil" },
     { icon: "/img/cart.svg", url: "/shopping-list", alt: "Liste de courses" },
 ];
 
