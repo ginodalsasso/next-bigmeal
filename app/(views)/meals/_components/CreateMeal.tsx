@@ -11,6 +11,7 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { CreateMealProps } from "@/lib/types/props_interfaces";
 import { useCsrfToken } from "@/app/context/CsrfContext";
+import { ucFirst } from "@/lib/utils";
 
 const CreateMeal: React.FC<CreateMealProps> = ({ onMealCreated, onClose }) => {
     // _________________________ HOOKS _________________________
@@ -128,7 +129,7 @@ const CreateMeal: React.FC<CreateMealProps> = ({ onMealCreated, onClose }) => {
                 <option value="">-- Choisir une catégorie --</option>
                 {categories.map((categorie) => (
                     <option key={categorie.id} value={categorie.id}>
-                        {categorie.name}
+                        {ucFirst(categorie.name)}
                     </option>
                 ))}
             </select>

@@ -4,6 +4,7 @@ import { CategoryMealType } from "@/lib/types/schemas_interfaces";
 import { UpdateMealProps } from "@/lib/types/props_interfaces";
 import { useFormValidation } from "@/app/hooks/useFormValidation";
 import { mealConstraints } from "@/lib/constraints/forms_constraints";
+import { ucFirst } from "@/lib/utils";
 
 // _________________________ COMPOSANT _________________________
 
@@ -82,9 +83,9 @@ const UpdateMeal: React.FC<UpdateMealProps> = ({
                 required
             >
                 <option value="">-- Choisir une catégorie --</option>
-                {categories.map((cat) => (
-                    <option key={cat.id} value={cat.id}>
-                        {cat.name}
+                {categories.map((categorie) => (
+                    <option key={categorie.id} value={categorie.id}>
+                        {ucFirst(categorie.name)}
                     </option>
                 ))}
             </select>

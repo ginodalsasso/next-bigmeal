@@ -9,7 +9,7 @@ import { useFormValidation } from "@/app/hooks/useFormValidation";
 
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import { translatedSeason } from "@/lib/utils";
+import { translatedSeason, ucFirst } from "@/lib/utils";
 import { CreateIngredientProps } from "@/lib/types/props_interfaces";
 import { useCsrfToken } from "@/app/context/CsrfContext";
 
@@ -140,7 +140,7 @@ const CreateIngredient: React.FC<CreateIngredientProps> = ({
                 <option value="">-- Choisir une catégorie --</option>
                 {categories.map((category) => (
                     <option key={category.id} value={category.id}> 
-                        {category.name}
+                        {ucFirst(category.name)}
                     </option>
                 ))}
             </select>

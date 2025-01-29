@@ -29,6 +29,10 @@ body {
   @apply text-gray-200 font-medium cursor-pointer hover:underline;
 };
 
+.align-icon {
+  @apply flex items-center justify-center gap-1;
+};
+
 .nav-links-mobile {
   @apply text-gray-200 text-[22px] ;
 };

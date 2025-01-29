@@ -8,6 +8,7 @@ import { ingredientConstraints } from "@/lib/constraints/forms_constraints";
 
 import { Button } from "@/components/ui/button";
 import { useFormValidation } from "@/app/hooks/useFormValidation";
+import { translatedSeason, ucFirst } from "@/lib/utils";
 
 // _________________________ COMPOSANT _________________________
 const UpdateIngredient: React.FC<UpdateIngredientProps> = ({
@@ -98,7 +99,7 @@ const UpdateIngredient: React.FC<UpdateIngredientProps> = ({
                 {/* Liste des catégories */}
                 {categories.map((category) => (
                     <option key={category.id} value={category.id}>
-                        {category.name}
+                        {ucFirst(category.name)}
                     </option>
                 ))}
             </select>
@@ -121,7 +122,7 @@ const UpdateIngredient: React.FC<UpdateIngredientProps> = ({
                 <option value="">Non spécifié</option>
                 {Object.values(Season).map((season) => (
                     <option key={season} value={season}>
-                        {season}
+                        {translatedSeason(season)}
                     </option>
                 ))}
             </select>

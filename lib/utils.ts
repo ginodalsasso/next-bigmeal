@@ -32,7 +32,7 @@ export const translatedSeason = (season: string | undefined): string => {
             return "Printemps";
         case "SUMMER":
             return "Été";
-        case "AUTUMN":
+        case "FALL":
             return "Automne";
         case "WINTER":
             return "Hiver";

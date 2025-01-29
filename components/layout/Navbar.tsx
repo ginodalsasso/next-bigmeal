@@ -51,10 +51,16 @@ const Navbar = () => {
                             </li>
                             <li>
                                 <button
-                                    className="nav-links-desktop"
+                                    className="nav-links-desktop align-icon"
                                     onClick={handleLogout}
                                 >
                                     Se déconnecter
+                                    <Image
+                                        src={"/img/logout.svg"}
+                                        width={20}
+                                        height={20}
+                                        alt="Déconnexion"
+                                    />
                                 </button>
                             </li>
                         </>
@@ -115,10 +121,16 @@ const Navbar = () => {
                                     ))}
                                     <li>
                                         <button
-                                            className="nav-links-mobile"
+                                            className="nav-links-desktop align-icon"
                                             onClick={handleLogout}
-                                            >
+                                        >
                                             Se déconnecter
+                                            <Image
+                                                src={"/img/logout.svg"}
+                                                width={20}
+                                                height={20}
+                                                alt="Déconnexion"
+                                            />
                                         </button>
                                     </li>
                                 </>
