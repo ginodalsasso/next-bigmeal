@@ -19,7 +19,7 @@ const DeleteItem: React.FC<DeleteItemProps> = ({ onDelete, isDeleting }) => {
                 <AlertDialogHeader>
                     <AlertDialogTitle>Confirmation de Suppression</AlertDialogTitle>
                     <AlertDialogDescription>
-                        Êtes-vous sûr de vouloir supprimer cet élément ? Cette action est irréversible.
+                        Êtes-vous sûr de vouloir supprimer cet élément ? <br /> Cette action est irréversible.
                     </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>

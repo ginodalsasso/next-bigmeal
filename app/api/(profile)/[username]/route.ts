@@ -37,7 +37,8 @@ export async function GET(req: NextRequest, { params }: Props) {
                                 ingredient: true
                             }
                         }
-                    } 
+                    }, 
+                    orderBy: { createdAt: "desc" }
                 },
             },
         });

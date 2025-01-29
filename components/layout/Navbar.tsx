@@ -54,7 +54,9 @@ const Navbar = () => {
                                     className="nav-links-desktop align-icon"
                                     onClick={handleLogout}
                                 >
-                                    Se déconnecter
+                                    <span className="font-medium">
+                                        Se déconnecter
+                                    </span>
                                     <Image
                                         src={"/img/logout.svg"}
                                         width={20}
@@ -124,7 +126,9 @@ const Navbar = () => {
                                             className="nav-links-desktop align-icon"
                                             onClick={handleLogout}
                                         >
-                                            Se déconnecter
+                                            <span className="text-xl">
+                                                Se déconnecter
+                                            </span>
                                             <Image
                                                 src={"/img/logout.svg"}
                                                 width={20}
