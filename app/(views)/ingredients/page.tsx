@@ -27,6 +27,7 @@ import IsAdmin from "@/components/isAdmin";
 import IsUser from "@/components/isUser";
 import SearchBar from "@/components/layout/Searchbar";
 import FilterCheckboxes from "@/components/layout/FilterCheckboxes";
+import { ALL_FILTER_OPTIONS } from "@/lib/constants/constants";
 
 
 // _________________________ COMPOSANT _________________________
@@ -130,7 +131,8 @@ const IngredientPage = () => {
         }
     };
 
-    const filterOptions = ["Printemps", "Été", "Automne", "Hiver", "Légumes", "Viandes", "Poissons", "Charcuterie", "Épices", "Fromage", "Divers", "Céréales"];
+    // _________________________ FILTRAGE _________________________
+    const filterOptions = ALL_FILTER_OPTIONS;
 
     // Fonction pour filtrer en fonction de la recherche et des filtres actifs
     const filteredIngredients = ingredients.filter((ingredient) => {
