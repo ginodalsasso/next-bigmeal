@@ -21,19 +21,25 @@ const FilterCheckboxes: React.FC<FilterCheckboxesProps> = ({ options, onFilterCh
     };
 
     return (
-        <div>
-            {options.map((option, index) => (
-                <label key={index}>
-                    <input
-                        type="checkbox"
-                        value={option}
-                        checked={selectedFilters.includes(option)}
-                        onChange={handleFilterChange}
-                    />
-                    {option}
-                </label>
-            ))}
-        </div>
+        <div className="flex flex-wrap pb-2">
+        {options.map((option, index) => (
+            <label
+                key={index}
+                className={`cursor-pointer border px-4 py-2 ${selectedFilters.includes(option) ? 'bg-white text-black' : ''}`}
+            >
+                <input
+                    type="checkbox"
+                    className="hidden"
+                    value={option}
+                    checked={selectedFilters.includes(option)}
+                    onChange={handleFilterChange}
+                />
+                {option}
+            </label>
+        ))}
+    </div>
+
+
     );
 };
 

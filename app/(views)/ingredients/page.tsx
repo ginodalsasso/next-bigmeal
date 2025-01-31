@@ -188,13 +188,15 @@ const IngredientPage = () => {
                         </DialogContent>
                     </Dialog>
                 </IsUser>
+
                 {/* Barre de recherche */}
                 <SearchBar onSearch={(query) => setSearchQuery(query)} />
-                <FilterCheckboxes 
-                    options={filterOptions} 
-                    onFilterChange={setSelectedFilters} 
-                />
+                {/* Filtres */}
             </div>
+            <FilterCheckboxes 
+                options={filterOptions} 
+                onFilterChange={setSelectedFilters} 
+            />
             {/* Liste des ingrédients */}
             <div className="cards-wrapper">
                 <div className="cards-list">
