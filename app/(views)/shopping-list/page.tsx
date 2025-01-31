@@ -178,7 +178,7 @@ const setShoppingListExpired = async () => {
                                     checked={item.isChecked}
                                     onChange={() => toggleItemChecked(item.id, item.isChecked ?? false)}
                                 />
-                                <span className={item.isChecked ? "line-through" : ""}>
+                                <span className={item.isChecked ? "line-through" : "text-base"}>
                                     {item.quantity} {item.ingredient?.name || "Ingrédient non défini"}
                                 </span>
                             </TableCell>
@@ -188,13 +188,6 @@ const setShoppingListExpired = async () => {
                         </TableRow>
                     ))}
                 </TableBody>
-                {/* <TableFooter>
-                    <TableRow>
-                        <TableCell>
-                            Total: {countTotalQuantities([shoppingList])} ingrédients.
-                        </TableCell>
-                    </TableRow>
-                </TableFooter> */}
             </Table>
             <div className="flex justify-end mt-2">
                 <Button variant="default" className="w-full" onClick={setShoppingListExpired}>

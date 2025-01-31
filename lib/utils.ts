@@ -41,6 +41,21 @@ export const translatedSeason = (season: string | undefined): string => {
     }
 };
 
+export const reversedTranslatedSeason = (season: string): string => {
+    switch (season) {
+        case "Printemps":
+            return "SPRING";
+        case "Été":
+            return "SUMMER";
+        case "Automne":
+            return "FALL";
+        case "Hiver":
+            return "WINTER";
+        default:
+            return "Non spécifié";
+    }
+}
+
 // Traduction des unités de mesures
 export const translatedUnit = (unit: string | undefined): string => {
     switch (unit) {

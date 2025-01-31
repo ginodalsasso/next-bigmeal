@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import { translatedSeason } from "@/lib/utils";
+import { reversedTranslatedSeason, translatedSeason } from "@/lib/utils";
 import AddToShoppingListForm from "@/components/forms/AddToShoppingListForm";
 import EditItem from "@/components/layout/EditItem";
 import DeleteItem from "@/components/layout/DeleteItem";
@@ -26,6 +26,7 @@ import { useCsrfToken } from "@/app/context/CsrfContext";
 import IsAdmin from "@/components/isAdmin";
 import IsUser from "@/components/isUser";
 import SearchBar from "@/components/layout/Searchbar";
+import FilterCheckboxes from "@/components/layout/FilterCheckboxes";
 
 
 // _________________________ COMPOSANT _________________________
@@ -35,6 +36,7 @@ const IngredientPage = () => {
     const csrfToken = useCsrfToken();
     const [ingredients, setIngredients] = useState<IngredientType[]>([]);
     const [searchQuery, setSearchQuery] = useState("");
+    const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
 
 
     const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -128,10 +130,27 @@ const IngredientPage = () => {
         }
     };
 
-    // Filtrer les ingrédients en fonction de la recherche
-    const filteredIngredients = ingredients.filter((ingredient) =>
-        ingredient.name.toLowerCase().includes(searchQuery.toLowerCase())
-    );
+    const filterOptions = ["Printemps", "Été", "Automne", "Hiver", "Légumes", "Viandes", "Poissons", "Charcuterie", "Épices", "Fromage", "Divers", "Céréales"];
+
+    // Fonction pour filtrer en fonction de la recherche et des filtres actifs
+    const filteredIngredients = ingredients.filter((ingredient) => {
+        // Vérification du champ de recherche
+        const matchesSearch = ingredient.name.toLowerCase().includes(searchQuery.toLowerCase());
+
+        // Modification des chaines de caractères pour les saisons et catégories
+        const selectedSeasons = selectedFilters.map(filter => reversedTranslatedSeason(filter));
+        const selectedCategory = selectedFilters.map(filter => filter.toLowerCase());
+
+        // Vérification des filtres actifs
+        const category = ingredient.categoryIngredient.name;
+        const season = ingredient.season;
+        
+        const matchesFilters =
+            selectedFilters.length === 0 || // Aucun filtre => tout est affiché
+            selectedCategory.includes(category) || (season && selectedSeasons.includes(season));
+
+        return matchesSearch && matchesFilters;
+    });
     
 
     // _________________________ RENDU _________________________
@@ -169,6 +188,10 @@ const IngredientPage = () => {
                 </IsUser>
                 {/* Barre de recherche */}
                 <SearchBar onSearch={(query) => setSearchQuery(query)} />
+                <FilterCheckboxes 
+                    options={filterOptions} 
+                    onFilterChange={setSelectedFilters} 
+                />
             </div>
             {/* Liste des ingrédients */}
             <div className="cards-wrapper">
