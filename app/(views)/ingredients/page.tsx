@@ -27,7 +27,7 @@ import IsAdmin from "@/components/isAdmin";
 import IsUser from "@/components/isUser";
 import SearchBar from "@/components/layout/Searchbar";
 import FilterCheckboxes from "@/components/layout/FilterCheckboxes";
-import { ALL_FILTER_OPTIONS } from "@/lib/constants/constants";
+import { CATEGORIES_INGREDIENTS, SEASONS } from "@/lib/constants/constants";
 
 
 // _________________________ COMPOSANT _________________________
@@ -132,7 +132,7 @@ const IngredientPage = () => {
     };
 
     // _________________________ FILTRAGE _________________________
-    const filterOptions = ALL_FILTER_OPTIONS;
+    const filterOptions = SEASONS.concat(CATEGORIES_INGREDIENTS);
 
     // Fonction pour filtrer en fonction de la recherche et des filtres actifs
     const filteredIngredients = ingredients.filter((ingredient) => {

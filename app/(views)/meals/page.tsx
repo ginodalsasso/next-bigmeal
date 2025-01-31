@@ -26,6 +26,8 @@ import { useCsrfToken } from "@/app/context/CsrfContext";
 import IsAdmin from "@/components/isAdmin";
 import IsUser from "@/components/isUser";
 import SearchBar from "@/components/layout/Searchbar";
+import { CATEGORIES_MEALS } from "@/lib/constants/constants";
+import FilterCheckboxes from "@/components/layout/FilterCheckboxes";
 
 // _________________________ COMPOSANT _________________________
 const MealsPage = () => {
@@ -35,8 +37,8 @@ const MealsPage = () => {
     const [currentStep, setCurrentStep] = useState<"createMeal" | "createComposition" | "chooseStep">("createMeal"); // étape pour la création de repas ou de composition
     const [createdMealId, setCreatedMealId] = useState<string | null>(null);
     const [searchQuery, setSearchQuery] = useState(""); 
+    const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
     
-
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -147,9 +149,30 @@ const MealsPage = () => {
 
 
     // Filtrer les ingrédients en fonction de la recherche
-    const filteredMeals = meals.filter((meal) =>
-        meal.name.toLowerCase().includes(searchQuery.toLowerCase())
-    );
+    // const filteredMeals = meals.filter((meal) =>
+    //     meal.name.toLowerCase().includes(searchQuery.toLowerCase())
+    // );
+
+    // _________________________ FILTRAGE _________________________
+    const filterOptions = CATEGORIES_MEALS; // Options de filtre
+
+    // Fonction pour filtrer en fonction de la recherche et des filtres actifs
+    const filteredMeals = meals.filter((meal) => {
+        // Vérification du champ de recherche
+        const matchesSearch = meal.name.toLowerCase().includes(searchQuery.toLowerCase())
+
+        // Modification des chaines de caractères pour les saisons et catégories
+        const selectedCategory = selectedFilters.map(filter => filter.toLowerCase());
+
+        // Vérification des filtres actifs
+        const category = meal.categoryMeal.name;
+        
+        const matchesFilters =
+            selectedFilters.length === 0 || // Aucun filtre => tout est affiché
+            selectedCategory.includes(category);
+
+        return matchesSearch && matchesFilters;
+    });
         
 
     // _________________________ RENDU _________________________
@@ -211,6 +234,11 @@ const MealsPage = () => {
                 {/* Barre de recherche */}
                 <SearchBar onSearch={(query) => setSearchQuery(query)} />
             </div>
+            {/* Filtres */}
+            <FilterCheckboxes 
+                options={filterOptions} 
+                onFilterChange={setSelectedFilters} 
+            />
             {/* Liste des repas */}
             <div className="cards-wrapper">
                 <div className="cards-list">
