@@ -22,7 +22,7 @@ const nonce = Buffer.from(crypto.randomUUID()).toString("base64");
 
 const csp = `
     default-src 'self'; 
-    script-src 'self' 'nonce-${nonce}' 'unsafe-eval' 'strict-dynamic'; 
+    script-src 'self' 'nonce-${nonce}' 'unsafe-eval'; 
     style-src 'self' 'unsafe-inline'; 
     img-src 'self' data:; 
     font-src 'self'; 

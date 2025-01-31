@@ -147,12 +147,6 @@ const MealsPage = () => {
         }
     };
 
-
-    // Filtrer les ingrédients en fonction de la recherche
-    // const filteredMeals = meals.filter((meal) =>
-    //     meal.name.toLowerCase().includes(searchQuery.toLowerCase())
-    // );
-
     // _________________________ FILTRAGE _________________________
     const filterOptions = CATEGORIES_MEALS; // Options de filtre
 
