@@ -5,10 +5,10 @@ import DeleteItem from "@/components/layout/DeleteItem";
 import { Button } from "@/components/ui/button";
 import { ShoppingListType } from "@/lib/types/schemas_interfaces";
 import { dateToString } from "@/lib/utils";
+import { Separator } from "@radix-ui/react-separator";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
 const ShoppingListPage = () => {
     const csrfToken = useCsrfToken();
@@ -67,8 +67,6 @@ const ShoppingListPage = () => {
             if (!response.ok) {
                 throw new Error("Failed to update item");
             }
-
-            toast(`L'article a été ${newCheckedState ? "coché" : "décoché"} !`);
 
         } catch (error) {
             console.error("Erreur lors de la modification:", error);
@@ -187,85 +185,70 @@ const ShoppingListPage = () => {
 
     return (
         <div>
-            <div className="mb-4">
+            <div className="mb-4 text-right">
                 <p className="text-lg font-bold">Date de création : {dateToString(shoppingList.createdAt)}</p>
                 <p className="text-lg font-bold">{shoppingList?.items?.length} ingrédients à la liste.</p>
             </div>
 
             {/* Affichage des ingrédients seuls */}
             {ingredientsAlone && ingredientsAlone.length > 0 && (
-                <div>
-                    <h2>Ingrédients seuls</h2>
-                    <Table>
-                        <TableHeader>
-                            <TableRow>
-                                <TableHead><span className="text-lg font-bold">Noms</span></TableHead>
-                                <TableHead><span className="text-lg font-bold">Actions</span></TableHead>
-                            </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                            {ingredientsAlone.map((item) => (
-                                <TableRow key={item.id}>
-                                    <TableCell>
-                                        <input
-                                            type="checkbox"
-                                            className="mr-2 w-4 h-4"
-                                            checked={item.isChecked}
-                                            onChange={() => toggleItemChecked(item.id, item.isChecked ?? false)}
-                                        />
-                                        <span className={item.isChecked ? "line-through" : "text-base"}>
-                                            {item.quantity} {item.ingredient?.name || "Ingrédient non défini"}
-                                        </span>
-                                    </TableCell>
-                                    <TableCell>
-                                        <DeleteItem onDelete={() => deleteItem(item.id)} isDeleting={false} />
-                                    </TableCell>
-                                </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
+                <div className="mb-8 border border-neutral-500 p-4">
+                    <h2 className="text-2xl text-center">Ingrédients seuls</h2>
+                    {ingredientsAlone.map((item) => (
+                        <div key={item.id} >
+                            <div className="flex justify-between items-center">
+                                <div className="flex items-center">
+                                    <input
+                                        type="checkbox"
+                                        className="mr-2 w-4 h-4"
+                                        checked={item.isChecked}
+                                        onChange={() => toggleItemChecked(item.id, item.isChecked ?? false)}
+                                    />
+                                    <span className={item.isChecked ? "line-through" : ""}>
+                                        {item.quantity} {item.ingredient?.name || "Ingrédient non défini"}
+                                    </span>
+                                </div>
+                                <DeleteItem onDelete={() => deleteItem(item.id)} isDeleting={false} />
+                            </div>
+                            <Separator className="h-px bg-neutral-800 my-2" />
+                        </div>
+                    ))}
                 </div>
             )}
             
             {/* Affichage des ingrédients par repas */}
             {ingredientsByMeal && ingredientsByMeal.length > 0 && (
-                <div>
-                    <h2>Ingrédients par repas</h2>
+                <div className="mb-8 border border-neutral-500 p-4">
+                    <h2 className="text-2xl text-center">Repas</h2>
                     {Array.from(new Set(ingredientsByMeal.map(item => item.mealId))) // Extraire des IDs de repas uniques
                         .map(mealId => { // Parcourt chaque ID de repas unique
                             const mealItems = ingredientsByMeal.filter(item => item.mealId === mealId); //Filtre les ingrédients qui appartiennent à ce repas (mealId)
                             const mealName = mealItems[0]?.meal?.name || "Repas non défini"; // Récupère le nom du repas ou affiche "Repas non défini"
                         return (
-                            <div key={mealId}>
-                                <Table>
-                                <TableHeader>
-                                    <TableRow>
-                                        <TableHead>
-                                            {mealName}
-                                        </TableHead>
-                                        <TableHead>
-                                            <DeleteItem onDelete={() => deleteMeal(mealId)} isDeleting={false} />
-                                        </TableHead>
-                                    </TableRow>
-                                </TableHeader>
-                                    <TableBody>
-                                        {mealItems.map((item) => (
-                                            <TableRow key={item.id}>
-                                                <TableCell>
-                                                    <input
-                                                        type="checkbox"
-                                                        className="mr-2 w-4 h-4"
-                                                        checked={item.isChecked}
-                                                        onChange={() => toggleItemChecked(item.id, item.isChecked ?? false)}
-                                                    />
-                                                    <span className={item.isChecked ? "line-through" : "text-base"}>
-                                                        {item.quantity} {item.ingredient?.name || "Ingrédient non défini"}
-                                                    </span>
-                                                </TableCell>
-                                            </TableRow>
-                                        ))}
-                                    </TableBody>
-                                </Table>
+                            <div key={mealId} className="mb-4">
+                                <div className="flex justify-between items-center" >
+                                    <h3 className="text-lg font-bold">
+                                        {mealName}
+                                    </h3>
+                                    <DeleteItem onDelete={() => deleteMeal(mealId)} isDeleting={false} />
+                                </div>
+                                <Separator className="h-px bg-neutral-800 my-2" />
+                                {mealItems.map((item) => (
+                                    <div key={item.id}>
+                                        <div className="flex items-center my-2">
+                                            <input
+                                                type="checkbox"
+                                                className="mr-2 w-4 h-4"
+                                                checked={item.isChecked}
+                                                onChange={() => toggleItemChecked(item.id, item.isChecked ?? false)}
+                                            />
+                                            <span className={item.isChecked ? "line-through" : ""}>
+                                                {item.quantity} {item.ingredient?.name || "Ingrédient non défini"}
+                                            </span>
+                                        </div>
+                                    </div>
+                                ))}
+                                <Separator className="h-px bg-neutral-800 my-4" />
                             </div>
                         );
                     })}

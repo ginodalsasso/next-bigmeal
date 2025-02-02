@@ -11,7 +11,7 @@ const DeleteItem: React.FC<DeleteItemProps> = ({ onDelete, isDeleting }) => {
     return (
         <AlertDialog>
             <AlertDialogTrigger asChild>
-                <Button variant="delete" className="w-full" disabled={isDeleting}>
+                <Button variant="delete" className="w-auto"disabled={isDeleting}>
                     {isDeleting ? "Suppression..." : "Supprimer"}
                 </Button>
             </AlertDialogTrigger>
