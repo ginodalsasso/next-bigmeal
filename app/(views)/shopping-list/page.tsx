@@ -39,88 +39,87 @@ const ShoppingListPage = () => {
     
     // Transformer un item en coché ou non
     const toggleItemChecked = async (id: string, currentChecked: boolean) => {
-    try {
-        // Calcul de l'état cible (inversion de l'état actuel)
-        const newCheckedState = !currentChecked;
-
-        // Mise à jour optimiste (local)
-        setShoppingList((prev) => prev && {
-            ...prev,
-            items: prev.items.map((item) => {
-                if (item.id === id) {
-                    return { ...item, isChecked: newCheckedState };
-                }
-                return item;
-            })
-        });
-
-        // Appel API pour sauvegarder l'état
-        const response = await fetch("/api/shopping-list", {
-            method: "PUT",
-            headers: { 
-                "Content-Type": "application/json",
-                "X-CSRF-Token": csrfToken,
-            },
-            body: JSON.stringify({ id, isChecked: newCheckedState }),
-        });
-
-        if (!response.ok) {
-            throw new Error("Failed to update item");
-        }
-
-        toast(`L'article a été ${newCheckedState ? "coché" : "décoché"} !`);
-
-    } catch (error) {
-        console.error("Erreur lors de la modification:", error);
-        toast.error("Impossible de mettre à jour l'élément.");
-    }
-};
-
-const markShoppingListAsExpired = async () => {
-    if (shoppingList) {
         try {
-            const response = await fetch(`/api/shopping-list`, {
+            // Calcul de l'état cible (inversion de l'état actuel)
+            const newCheckedState = !currentChecked;
+
+            // Mise à jour optimiste (local)
+            setShoppingList((prev) => prev && {
+                ...prev,
+                items: prev.items.map((item) => {
+                    if (item.id === id) {
+                        return { ...item, isChecked: newCheckedState };
+                    }
+                    return item;
+                })
+            });
+
+            // Appel API pour sauvegarder l'état
+            const response = await fetch("/api/shopping-list", {
                 method: "PUT",
-                headers: {
+                headers: { 
                     "Content-Type": "application/json",
                     "X-CSRF-Token": csrfToken,
                 },
-                body: JSON.stringify({ id: shoppingList.id, isExpired: true }),
+                body: JSON.stringify({ id, isChecked: newCheckedState }),
             });
 
             if (!response.ok) {
-                throw new Error("Failed to mark shopping list as expired");
+                throw new Error("Failed to update item");
             }
 
-            toast.success("La liste de courses a été marquée comme terminée !");
-            router.push('/'); // Redirection vers la page d'accueil
+            toast(`L'article a été ${newCheckedState ? "coché" : "décoché"} !`);
+
         } catch (error) {
-            console.error("Erreur lors de la mise à jour :", error);
-            toast.error("Impossible de marquer la liste comme terminée.");
+            console.error("Erreur lors de la modification:", error);
+            toast.error("Impossible de mettre à jour l'élément.");
         }
-    }
-};
+    };
 
-const setShoppingListExpired = async () => {
-    if (shoppingList) {
-        // Vérifier si la liste de courses correspond à l'ID
-        const list = shoppingList;
-        if (list) {
-            const items = list.items;
-            // Vérifier si tous les items sont cochés
-            const allChecked = items.every((item) => item.isChecked);
-            if (allChecked) {
-                await markShoppingListAsExpired();
-            } else {
-                toast.error("Tous les ingrédients ne sont pas cochés !");
-                return false;
+    const markShoppingListAsExpired = async () => {
+        if (shoppingList) {
+            try {
+                const response = await fetch(`/api/shopping-list`, {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRF-Token": csrfToken,
+                    },
+                    body: JSON.stringify({ id: shoppingList.id, isExpired: true }),
+                });
+
+                if (!response.ok) {
+                    throw new Error("Failed to mark shopping list as expired");
+                }
+
+                toast.success("La liste de courses a été marquée comme terminée !");
+                router.push('/'); // Redirection vers la page d'accueil
+            } catch (error) {
+                console.error("Erreur lors de la mise à jour :", error);
+                toast.error("Impossible de marquer la liste comme terminée.");
             }
         }
-    }
-    toast.error("Liste introuvable.");
-    return false;
-};
+    };
 
+    const setShoppingListExpired = async () => {
+        if (shoppingList) {
+            // Vérifier si la liste de courses correspond à l'ID
+            const list = shoppingList;
+            if (list) {
+                const items = list.items;
+                // Vérifier si tous les items sont cochés
+                const allChecked = items.every((item) => item.isChecked);
+                if (allChecked) {
+                    await markShoppingListAsExpired();
+                } else {
+                    toast.error("Tous les ingrédients ne sont pas cochés !");
+                    return false;
+                }
+            }
+        }
+        toast.error("Liste introuvable.");
+        return false;
+    };
 
     // Appel API pour supprimer un item du panier
     const deleteItem = async (id: string) => {
@@ -149,6 +148,35 @@ const setShoppingListExpired = async () => {
             toast.error("Impossible de supprimer l'élément.");
         }
     };
+
+    // Appel API pour supprimer un repas du panier
+    const deleteMeal = async (mealId: string) => {
+        try {
+            const response = await fetch("/api/shopping-list", {
+                method: "DELETE",
+                headers: { 
+                    "Content-Type": "application/json",
+                    "X-CSRF-Token": csrfToken, 
+                },
+                body: JSON.stringify({ mealId }),
+            });
+
+            if (!response.ok) {
+                throw new Error("Failed to delete meal from shoppingList");
+            }
+
+            // Supprimer le repas du state
+            setShoppingList((prev) => prev && {
+                ...prev,
+                items: prev.items.filter((item) => item.mealId !== mealId)
+            });
+            toast("Repas supprimé avec succès");
+        } catch (error) {
+            console.error("Erreur lors de la suppression:", error);
+            toast.error("Impossible de supprimer le repas.");
+        }
+    };
+
 
     if (loading) return <div>Loading...</div>;
     // if (error) return <div>{error}</div>;
@@ -203,19 +231,23 @@ const setShoppingListExpired = async () => {
             {ingredientsByMeal && ingredientsByMeal.length > 0 && (
                 <div>
                     <h2>Ingrédients par repas</h2>
-                    {Array.from(new Set(ingredientsByMeal.map(item => item.mealId))).map(mealId => {
-                        const mealItems = ingredientsByMeal.filter(item => item.mealId === mealId);
-                        const mealName = mealItems[0]?.meal?.name || "Repas non défini";
+                    {Array.from(new Set(ingredientsByMeal.map(item => item.mealId))) // Extraire des IDs de repas uniques
+                        .map(mealId => { // Parcourt chaque ID de repas unique
+                            const mealItems = ingredientsByMeal.filter(item => item.mealId === mealId); //Filtre les ingrédients qui appartiennent à ce repas (mealId)
+                            const mealName = mealItems[0]?.meal?.name || "Repas non défini"; // Récupère le nom du repas ou affiche "Repas non défini"
                         return (
                             <div key={mealId}>
-                                <h3>{mealName}</h3>
                                 <Table>
-                                    <TableHeader>
-                                        <TableRow>
-                                            <TableHead><span className="text-lg font-bold">Noms</span></TableHead>
-                                            <TableHead><span className="text-lg font-bold">Actions</span></TableHead>
-                                        </TableRow>
-                                    </TableHeader>
+                                <TableHeader>
+                                    <TableRow>
+                                        <TableHead>
+                                            {mealName}
+                                        </TableHead>
+                                        <TableHead>
+                                            <DeleteItem onDelete={() => deleteMeal(mealId)} isDeleting={false} />
+                                        </TableHead>
+                                    </TableRow>
+                                </TableHeader>
                                     <TableBody>
                                         {mealItems.map((item) => (
                                             <TableRow key={item.id}>
@@ -229,9 +261,6 @@ const setShoppingListExpired = async () => {
                                                     <span className={item.isChecked ? "line-through" : "text-base"}>
                                                         {item.quantity} {item.ingredient?.name || "Ingrédient non défini"}
                                                     </span>
-                                                </TableCell>
-                                                <TableCell>
-                                                    <DeleteItem onDelete={() => deleteItem(item.id)} isDeleting={false} />
                                                 </TableCell>
                                             </TableRow>
                                         ))}

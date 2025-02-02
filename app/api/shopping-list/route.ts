@@ -211,19 +211,33 @@ export async function DELETE (req: NextRequest) {
         
         const body = await req.json();
 
-        const validationResult = idConstraints.safeParse(body);
+        if (body.id) { // Si l' id est présent dans le corps de la requête
+            const validationResult = idConstraints.safeParse({ id: body.id });
+            if (!validationResult.success) {
+                return NextResponse.json(
+                    { error: validationResult.error.format() },
+                    { status: 400 }
+                );
+            }
 
-        if (!validationResult.success) {
-            return NextResponse.json(
-                { error: validationResult.error.format() },
-                { status: 400 }
-            );
+            await db.shoppingListItem.delete({ where: { id: body.id } });
+            return NextResponse.json({ message: "Article supprimé" }, {status: 200});
+        
+        } else if (body.mealId) { // Si le mealId est présent dans le corps de la requête
+            const validationResult = idConstraints.safeParse({ id: body.mealId });
+            if (!validationResult.success) {
+                return NextResponse.json(
+                    { error: validationResult.error.format() },
+                    { status: 400 }
+                );
+            }
+
+            await db.shoppingListItem.deleteMany({ where: { mealId: body.mealId } });
+            return NextResponse.json({ message: "Articles supprimés" }, {status: 200});
+        } else {
+            return NextResponse.json({ error: "Invalid request body" }, { status: 400 });
         }
 
-        const { id } = validationResult.data;
-        await db.shoppingListItem.delete({ where: { id } });
-
-        return NextResponse.json({ message: "Article supprimé" }, {status: 200});
     } catch (error) {
         console.error("[DELETE_ITEM_ERROR]", error);
         return new NextResponse("Internal Error", {status: 500 });
