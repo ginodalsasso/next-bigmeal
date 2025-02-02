@@ -4,7 +4,7 @@ export const links = [
     { title: "repas", url: "/meals" },
     { title: "catégorie ingrédient", url: "/categories-ingredient" },
     { title: "catégorie repas", url: "/categories-meal" },
-    { title: "liste de courses", url: "/shopping-list" },
+    { icon:"/img/cart.svg", title: "liste de courses", url: "/shopping-list" },
 ];
 
 // Saisons et catégories

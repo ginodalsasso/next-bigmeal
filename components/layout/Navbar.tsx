@@ -30,7 +30,7 @@ const Navbar = () => {
 
     return (
         <nav className="w-full max-w-7xl p-4">
-            <div className="flex justify-between">
+            <div className="flex justify-between items-center ">
                 {/* Logo */}
                 <Link href="/" className="flex items-center text-lg font-bold">
                     Big-Meal
@@ -54,15 +54,15 @@ const Navbar = () => {
                                     className="nav-links-desktop align-icon"
                                     onClick={handleLogout}
                                 >
-                                    <span className="font-medium">
-                                        Se déconnecter
-                                    </span>
                                     <Image
                                         src={"/img/logout.svg"}
                                         width={20}
                                         height={20}
                                         alt="Déconnexion"
                                     />
+                                    <span className="font-medium">
+                                        Se déconnecter
+                                    </span>
                                 </button>
                             </li>
                         </>
@@ -93,7 +93,7 @@ const Navbar = () => {
                     <Image
                         src={openMenu}
                         alt="menu"
-                        className="w-[24px]"
+                        width={28}
                         onClick={() => setToggle(!toggle)}
                     />
                     <div
@@ -111,30 +111,38 @@ const Navbar = () => {
                             {isAuth ? ( 
                                 <>
                                     {links.map((link) => (
-                                        <li key={link.title}>
-                                        <Link
-                                            href={link.url}
-                                            className="nav-links-mobile"
-                                            onClick={() => setToggle(false)}
-                                            >
-                                            {ucFirst(link.title)}
-                                        </Link>
+                                        <li key={link.title} className="nav-links-desktop align-icon">
+                                            {link.icon && (
+                                                <Image
+                                                    src={link.icon}
+                                                    width={20}
+                                                    height={20}
+                                                    alt={link.title}
+                                                />
+                                            )}
+                                            <Link
+                                                href={link.url}
+                                                className="nav-links-mobile"
+                                                onClick={() => setToggle(false)}
+                                                >
+                                                {ucFirst(link.title)}
+                                            </Link>
                                         </li>
                                     ))}
                                     <li>
                                         <button
-                                            className="nav-links-desktop align-icon"
+                                            className="nav-links-mobile align-icon"
                                             onClick={handleLogout}
                                         >
-                                            <span className="text-xl">
-                                                Se déconnecter
-                                            </span>
                                             <Image
                                                 src={"/img/logout.svg"}
                                                 width={20}
                                                 height={20}
                                                 alt="Déconnexion"
                                             />
+                                            <span>
+                                                Se déconnecter
+                                            </span>
                                         </button>
                                     </li>
                                 </>
