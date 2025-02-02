@@ -27,11 +27,13 @@ export async function GET() {
                 items: {
                     include: {
                         ingredient: true,
+                        meal: true
                     },
                 },
 
             }
         });
+        
         return NextResponse.json(shoppingList, { status: 200 });
     } catch (error) {
         console.log("[SHOPPING_LIST]", error);
@@ -50,18 +52,16 @@ export async function POST(req: NextRequest) {
     }
 
     try {
-        
         const csrfToken = req.headers.get("x-csrf-token");
         const csrfTokenVerified = await verifyCSRFToken(csrfToken);
         if (csrfTokenVerified === false) {
-            return new NextResponse("CSRF Token is missing or invalid", {status: 403});
+            return new NextResponse("CSRF Token is missing or invalid", { status: 403 });
         }
-        
+
         const body = await req.json();
 
         // Valider et nettoyer les données
         const validationResult = ShoppingListConstraints.safeParse(body);
-
         if (!validationResult.success) {
             return NextResponse.json(
                 { error: validationResult.error.format() },
@@ -69,11 +69,10 @@ export async function POST(req: NextRequest) {
             );
         }
 
-        const { ingredientId, quantity } = body;
+        const { ingredientId, quantity, mealId = null } = body;
 
-        // Vérifier si une liste de courses existe
+        // Vérifie si une liste de courses existe
         let shoppingList = user.shoppingList[0]; // Prendre la première liste de l'utilisateur
-
         if (!shoppingList) {
             // Si aucune liste n'existe, en créer une nouvelle
             shoppingList = await db.shoppingList.create({
@@ -81,43 +80,59 @@ export async function POST(req: NextRequest) {
             });
         }
 
-        // Vérifier si l'ingrédient existe déjà dans la liste
-        const existingItem = await db.shoppingListItem.findFirst({
-            where: {
-                shoppingListId: shoppingList.id,
-                ingredientId,
-            },
-        });
-
-        if (existingItem) {
-            // Si l'élément existe, mettre à jour sa quantité
-            const updatedItem = await db.shoppingListItem.update({
-                where: {
-                    id: existingItem.id,
-                },
-                data: {
-                    quantity: existingItem.quantity + quantity,
-                },
-            });
-
-            return NextResponse.json(updatedItem, { status: 200 });
-        } else {
-            // Sinon, créer un nouvel élément
-            const newItemToShoppingList = await db.shoppingListItem.create({
+        if (mealId) {
+            // Si l'ingrédient est lié à un repas, créer un nouvel élément
+            const newItem = await db.shoppingListItem.create({
                 data: {
                     shoppingListId: shoppingList.id,
                     ingredientId,
                     quantity,
+                    mealId,
+                },
+            });
+            return NextResponse.json(newItem, { status: 201 });
+        } else {
+            // Vérifier si l'ingrédient existe déjà dans la liste (sans repas associé)
+            const existingItem = await db.shoppingListItem.findFirst({
+                where: {
+                    shoppingListId: shoppingList.id,
+                    ingredientId,
+                    mealId: null, // Vérifie uniquement les ingrédients seuls
                 },
             });
 
-            return NextResponse.json(newItemToShoppingList, { status: 201 });
+            if (existingItem) {
+                // Si l'élément existe, mettre à jour sa quantité
+                const updatedItem = await db.shoppingListItem.update({
+                    where: { 
+                        id: existingItem.id 
+                    },
+                    data: {
+                        quantity: existingItem.quantity + quantity,
+                    },
+                });
+
+                return NextResponse.json(updatedItem, { status: 200 });
+            } else {
+                // Sinon, créer un nouvel élément
+                const newItem = await db.shoppingListItem.create({
+                    data: {
+                        shoppingListId: shoppingList.id,
+                        ingredientId,
+                        quantity,
+                        mealId: null,
+                    },
+                });
+                
+                return NextResponse.json(newItem, { status: 201 });
+            }
         }
     } catch (error) {
         console.error("[CREATE_SHOPPING_LIST_ERROR]", error);
         return new NextResponse("Internal Server Error", { status: 500 });
     }
 }
+
 
 
 export async function PUT(req: NextRequest) {

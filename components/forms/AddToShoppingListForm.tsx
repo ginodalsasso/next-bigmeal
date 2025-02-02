@@ -38,6 +38,7 @@ const AddToShoppingListForm: React.FC<AddToShoppingListFormProps> = ({ type, id 
                     }
 
                     const meal = await response.json();
+                    // console.log('meal:', meal);
 
                     // Ajouter chaque ingrédient du repas à la liste de courses
                     for (const composition of meal.compositions) {
@@ -55,6 +56,7 @@ const AddToShoppingListForm: React.FC<AddToShoppingListFormProps> = ({ type, id 
                             body: JSON.stringify({
                                 ingredientId: composition.ingredient.id,
                                 quantity: composition.quantity,
+                                mealId: meal.id,
                             }),
                         });
                     }

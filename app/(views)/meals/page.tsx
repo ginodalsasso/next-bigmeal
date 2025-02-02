@@ -159,7 +159,7 @@ const MealsPage = () => {
         const selectedCategory = selectedFilters.map(filter => filter.toLowerCase());
 
         // Vérification des filtres actifs
-        const category = meal.categoryMeal.name;
+        const category = meal.categoryMeal?.name || "Non spécifié";
         
         const matchesFilters =
             selectedFilters.length === 0 || // Aucun filtre => tout est affiché

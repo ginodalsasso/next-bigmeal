@@ -154,6 +154,9 @@ const setShoppingListExpired = async () => {
     // if (error) return <div>{error}</div>;
     if (!shoppingList) return <div>Aucune liste de courses.</div>;
 
+    const ingredientsAlone = shoppingList?.items.filter(item => !item.mealId);
+    const ingredientsByMeal = shoppingList?.items.filter(item => item.mealId);
+
     return (
         <div>
             <div className="mb-4">
@@ -161,34 +164,85 @@ const setShoppingListExpired = async () => {
                 <p className="text-lg font-bold">{shoppingList?.items?.length} ingrédients à la liste.</p>
             </div>
 
-            <Table>
-                <TableHeader>
-                    <TableRow>
-                        <TableHead><span className="text-lg font-bold">Noms</span></TableHead>
-                        <TableHead><span className="text-lg font-bold">Actions</span></TableHead>
-                    </TableRow>
-                </TableHeader>
-                <TableBody>
-                    {shoppingList.items.map((item) => (
-                        <TableRow key={item.id}>
-                            <TableCell>
-                                <input
-                                    type="checkbox"
-                                    className="mr-2 w-4 h-4"
-                                    checked={item.isChecked}
-                                    onChange={() => toggleItemChecked(item.id, item.isChecked ?? false)}
-                                />
-                                <span className={item.isChecked ? "line-through" : "text-base"}>
-                                    {item.quantity} {item.ingredient?.name || "Ingrédient non défini"}
-                                </span>
-                            </TableCell>
-                            <TableCell>
-                                <DeleteItem onDelete={() => deleteItem(item.id)} isDeleting={false} />
-                            </TableCell>
-                        </TableRow>
-                    ))}
-                </TableBody>
-            </Table>
+            {/* Affichage des ingrédients seuls */}
+            {ingredientsAlone && ingredientsAlone.length > 0 && (
+                <div>
+                    <h2>Ingrédients seuls</h2>
+                    <Table>
+                        <TableHeader>
+                            <TableRow>
+                                <TableHead><span className="text-lg font-bold">Noms</span></TableHead>
+                                <TableHead><span className="text-lg font-bold">Actions</span></TableHead>
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                            {ingredientsAlone.map((item) => (
+                                <TableRow key={item.id}>
+                                    <TableCell>
+                                        <input
+                                            type="checkbox"
+                                            className="mr-2 w-4 h-4"
+                                            checked={item.isChecked}
+                                            onChange={() => toggleItemChecked(item.id, item.isChecked ?? false)}
+                                        />
+                                        <span className={item.isChecked ? "line-through" : "text-base"}>
+                                            {item.quantity} {item.ingredient?.name || "Ingrédient non défini"}
+                                        </span>
+                                    </TableCell>
+                                    <TableCell>
+                                        <DeleteItem onDelete={() => deleteItem(item.id)} isDeleting={false} />
+                                    </TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </div>
+            )}
+            
+            {/* Affichage des ingrédients par repas */}
+            {ingredientsByMeal && ingredientsByMeal.length > 0 && (
+                <div>
+                    <h2>Ingrédients par repas</h2>
+                    {Array.from(new Set(ingredientsByMeal.map(item => item.mealId))).map(mealId => {
+                        const mealItems = ingredientsByMeal.filter(item => item.mealId === mealId);
+                        const mealName = mealItems[0]?.meal?.name || "Repas non défini";
+                        return (
+                            <div key={mealId}>
+                                <h3>{mealName}</h3>
+                                <Table>
+                                    <TableHeader>
+                                        <TableRow>
+                                            <TableHead><span className="text-lg font-bold">Noms</span></TableHead>
+                                            <TableHead><span className="text-lg font-bold">Actions</span></TableHead>
+                                        </TableRow>
+                                    </TableHeader>
+                                    <TableBody>
+                                        {mealItems.map((item) => (
+                                            <TableRow key={item.id}>
+                                                <TableCell>
+                                                    <input
+                                                        type="checkbox"
+                                                        className="mr-2 w-4 h-4"
+                                                        checked={item.isChecked}
+                                                        onChange={() => toggleItemChecked(item.id, item.isChecked ?? false)}
+                                                    />
+                                                    <span className={item.isChecked ? "line-through" : "text-base"}>
+                                                        {item.quantity} {item.ingredient?.name || "Ingrédient non défini"}
+                                                    </span>
+                                                </TableCell>
+                                                <TableCell>
+                                                    <DeleteItem onDelete={() => deleteItem(item.id)} isDeleting={false} />
+                                                </TableCell>
+                                            </TableRow>
+                                        ))}
+                                    </TableBody>
+                                </Table>
+                            </div>
+                        );
+                    })}
+                </div>
+            )}
+
             <div className="flex justify-end mt-2">
                 <Button variant="default" className="w-full" onClick={setShoppingListExpired}>
                     J&apos;ai fini mes courses

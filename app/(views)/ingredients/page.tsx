@@ -132,7 +132,7 @@ const IngredientPage = () => {
     };
 
     // _________________________ FILTRAGE _________________________
-    const filterOptions = SEASONS.concat(CATEGORIES_INGREDIENTS);
+    const filterOptions = SEASONS.concat(CATEGORIES_INGREDIENTS); // Options de filtres
 
     // Fonction pour filtrer en fonction de la recherche et des filtres actifs
     const filteredIngredients = ingredients.filter((ingredient) => {
@@ -144,7 +144,7 @@ const IngredientPage = () => {
         const selectedCategory = selectedFilters.map(filter => filter.toLowerCase());
 
         // Vérification des filtres actifs
-        const category = ingredient.categoryIngredient.name;
+        const category = ingredient.categoryIngredient?.name || "Non spécifié";
         const season = ingredient.season;
         
         const matchesFilters =
