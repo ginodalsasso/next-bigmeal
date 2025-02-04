@@ -43,6 +43,7 @@ const ProfilePage =
 
     const forgotPassword = async () => {
         try {
+
             const response = await fetch(`/api/forgot-password`, {
                 method: 'POST',
                 headers: {
@@ -50,6 +51,7 @@ const ProfilePage =
                 },
                 body: JSON.stringify({ username: user?.username }),
             });
+            console.log(response);
             if (!response.ok) {
                 throw new Error("Failed to send an email to reset the password");
             }
