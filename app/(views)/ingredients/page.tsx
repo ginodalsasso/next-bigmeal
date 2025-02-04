@@ -215,16 +215,16 @@ const IngredientPage = () => {
                                     <EditItem
                                         renderEditForm={(onClose) => (
                                             <UpdateIngredient
-                                            initialName={ingredient.name}
-                                            initialCategory={ingredient.categoryIngredient?.id || ""}
-                                            initialSeason={ingredient.season}
-                                            onSubmit={async (newName, newCategory, newSeason) => {
-                                                await updateIngredient(ingredient.id, newName, newCategory, newSeason || null);
-                                                onClose();
-                                            }}
-                                            onCancel={onClose}
-                                            isLoading={false}
-                                            error={null}
+                                                initialName={ingredient.name}
+                                                initialCategory={ingredient.categoryIngredient?.id || ""}
+                                                initialSeason={ingredient.season}
+                                                onSubmit={async (newName, newCategory, newSeason) => {
+                                                    await updateIngredient(ingredient.id, newName, newCategory, newSeason || null);
+                                                    onClose();
+                                                }}
+                                                onCancel={onClose}
+                                                isLoading={false}
+                                                error={null}
                                             />
                                         )}
                                     />

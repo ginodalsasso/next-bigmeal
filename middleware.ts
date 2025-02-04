@@ -49,7 +49,7 @@ export default async function middleware(req: NextRequest) {
     }
 
     // Redirection si la route est publique et que l'utilisateur est connecté
-    if (isPublicRoute && session?.userId && path !== "/") {
+    if (isPublicRoute && session?.userId && path !== "/") { 
         return NextResponse.redirect(new URL("/", req.nextUrl));
     }
 

@@ -9,11 +9,12 @@ const limiter = rateLimit(5, 60000);
 
 export async function POST(req: NextRequest) {
     try {
-        // ✅ Appliquer la limitation de requêtes
+
         const res = NextResponse.next();
         await new Promise((resolve, reject) => {
             limiter(req, res, (error?: Error) => {
                 if (error) {
+                    console.log("Rate limit error:", error);
                     reject(error); // Rejette la promesse en cas d'erreur
                 } else {
                     resolve(true); // Résout la promesse si tout va bien

@@ -3,6 +3,7 @@
 import React, { useEffect, useState, use } from "react";
 import { UserType } from "@/lib/types/schemas_interfaces";
 import { dateToString } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 
 const ProfilePage = 
     ({ 
@@ -39,6 +40,27 @@ const ProfilePage =
         fetchUser();
     }, [username]);
 
+
+    const forgotPassword = async () => {
+        try {
+            const response = await fetch(`/api/forgot-password`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ username: user?.username }),
+            });
+            if (!response.ok) {
+                throw new Error("Failed to send an email to reset the password");
+            }
+
+            alert('Email envoyé');
+        } catch (error) {
+            console.error("Erreur lors de l'envoi de l'email de réinitialisation du mot de passe :", error);
+            alert('Erreur lors de l\'envoi de l\'email de réinitialisation du mot de passe');
+        }
+    }
+
     // _________________________ RENDU _________________________
     if (loading) return <div>Loading...</div>;
     if (error) return <div>{error}</div>;
@@ -71,6 +93,10 @@ const ProfilePage =
                         </details>
                     </div>
                 ))}
+
+            <Button variant="edit" onClick={forgotPassword}>
+                Réinitialiser le mot de passe
+            </Button>
 
         </div>
     );
