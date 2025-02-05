@@ -55,6 +55,11 @@ const ProfilePage =
                 body: JSON.stringify({ recipient: recipient.email }),
             });
 
+            if (recipient.email === "") {
+                toast('Veuillez fournir un email');
+                throw new Error("Empty email");
+            }
+
             toast('Email envoyé');
         } catch (error) {
             console.error("Erreur lors de l'envoi de l'email de réinitialisation du mot de passe :", error);

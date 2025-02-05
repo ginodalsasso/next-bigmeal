@@ -13,6 +13,7 @@ const dynamicRoutePatterns = [
     /^\/ingredients\/[a-zA-Z0-9-]+$/, // Par exemple : /ingredients/nomdelingredient
     /^\/meals\/[a-zA-Z0-9-]+$/, // Par exemple : /meals/nomdurepas
     /^\/=[a-zA-Z0-9-]+$/, // Par exemple : /=nomdeliste
+    /^\/reset-token\/=[a-zA-Z0-9-]+$/, // Par exemple : /=nomdeliste
     
 ];
 

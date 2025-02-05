@@ -8,7 +8,7 @@ export  async function POST(req: NextRequest) {
 
     const { recipient } = body;
     if (!recipient) {
-        return 
+        return new Response('Veuillez fournir un email', { status: 400 });
     }
 
     // Configuration de nodemailer pour envoyer un email
@@ -21,7 +21,7 @@ export  async function POST(req: NextRequest) {
     });
 
     const generatedToken = randomBytes(32).toString("hex");
-    const resetLink = `${process.env.BASE_URL}/reset-password?token=${generatedToken}`;
+    const resetLink = `${process.env.BASE_URL}/reset-password/${generatedToken}`;
 
     // Paramètres de l'email
     const mailOptions = {
@@ -39,3 +39,7 @@ export  async function POST(req: NextRequest) {
         console.error('Erreur lors de l\'envoi de l\'email :', error);
     }
 }
+
+// const storeResetToken = async (recipient: string, token: string): Promise<void> => {
+//     // Stocke le token dans la base de données
+// };

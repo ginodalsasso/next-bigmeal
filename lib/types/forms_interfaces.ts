@@ -70,6 +70,12 @@ export interface UserFormErrorType {
     password?: string;
 }
 
+export interface ForgotUserPasswordFormType {
+    general?: string;
+    password?: string;
+    confirmPassword?: string;
+}
+
 // FORMULAIRE DE CONNEXION
 export interface AddIngredientToShoppingListFormType {
     quantity: number;
