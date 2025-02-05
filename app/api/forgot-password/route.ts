@@ -5,9 +5,9 @@ import nodemailer from 'nodemailer';
 export  async function POST(req: NextRequest) {
     
     const body = await req.json();
-    const { username } = body;
-    console.log(body);
-    if (!username) {
+
+    const { recipient } = body;
+    if (!recipient) {
         return 
     }
 
@@ -26,7 +26,7 @@ export  async function POST(req: NextRequest) {
     // Paramètres de l'email
     const mailOptions = {
         from: process.env.EMAIL_USER,
-        to: username,
+        to: recipient,
         subject: 'Réinitialisation de votre mot de passe',
         text: `Cliquez sur le lien suivant pour réinitialiser votre mot de passe : ${resetLink}`,
     };
@@ -34,6 +34,7 @@ export  async function POST(req: NextRequest) {
     // Envoi de l'email
     try {
         await transporter.sendMail(mailOptions);
+        return new Response('Email envoyé', { status: 200 });
     } catch (error) {
         console.error('Erreur lors de l\'envoi de l\'email :', error);
     }

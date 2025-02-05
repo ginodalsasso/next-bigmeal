@@ -4,6 +4,7 @@ import React, { useEffect, useState, use } from "react";
 import { UserType } from "@/lib/types/schemas_interfaces";
 import { dateToString } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 
 const ProfilePage = 
     ({ 
@@ -16,6 +17,9 @@ const ProfilePage =
 
     // _________________________ ETATS _________________________
     const [user, setUser] = useState<UserType | null>(null);
+    const [recipient, setRecipient] = useState({ 
+        email: ""
+    });
     
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -40,23 +44,18 @@ const ProfilePage =
         fetchUser();
     }, [username]);
 
-
-    const forgotPassword = async () => {
+    // Fonction pour envoyer un email de réinitialisation du mot de passe
+    const forgotPasswordEmail = async () => {
         try {
-
-            const response = await fetch(`/api/forgot-password`, {
+            await fetch(`/api/forgot-password`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ username: user?.username }),
+                body: JSON.stringify({ recipient: recipient.email }),
             });
-            console.log(response);
-            if (!response.ok) {
-                throw new Error("Failed to send an email to reset the password");
-            }
 
-            alert('Email envoyé');
+            toast('Email envoyé');
         } catch (error) {
             console.error("Erreur lors de l'envoi de l'email de réinitialisation du mot de passe :", error);
             alert('Erreur lors de l\'envoi de l\'email de réinitialisation du mot de passe');
@@ -96,9 +95,21 @@ const ProfilePage =
                     </div>
                 ))}
 
-            <Button variant="edit" onClick={forgotPassword}>
-                Réinitialiser le mot de passe
-            </Button>
+            <form action={forgotPasswordEmail}>
+                <input 
+                    type="email"
+                    className="input-text-select"
+                    placeholder="Email"
+                    value={recipient.email}
+                    onChange={(e) =>
+                        setRecipient({ email: e.target.value })
+                    }                
+                />
+                
+                <Button type="submit" variant={"edit"}>
+                    Réinitialiser le mot de passe
+                </Button>
+            </form>
 
         </div>
     );

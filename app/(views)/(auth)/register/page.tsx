@@ -53,7 +53,7 @@ export default function RegisterPage() {
             }
         } catch (error) {
             console.error("Erreur lors de l'inscription :", error);
-            setError({ general: "Impossibld de s'incrire. Veuillez réessayer plus tard." });
+            setError({ general: "Impossible de s'incrire. Veuillez réessayer plus tard." });
         } finally {
             setIsLoading(false);
         }
