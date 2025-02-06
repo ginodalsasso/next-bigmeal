@@ -3,10 +3,11 @@
 import "./globals.css";
 import Navbar from "@/components/layout/Navbar";
 import { Toaster } from "sonner";
-import { AuthProvider } from "@/app/context/AuthContext";
+// import { AuthProvider } from "@/app/context/AuthContext";
 import { CsrfProvider } from "@/app/context/CsrfContext";
 import Sidebar from "@/components/layout/Sidebar";
 import Bottombar from "@/components/layout/Bottombar";
+import { SessionProvider }  from "next-auth/react";
 
 export default function RootLayout({
     children,
@@ -20,7 +21,8 @@ export default function RootLayout({
                 <title>Big Meal App</title>
                 <meta name="description" content="A simple meal app" />
             </head>
-            <AuthProvider>
+            <SessionProvider>
+            {/* <AuthProvider> */}
                 <CsrfProvider>
                     <body className="flex flex-col min-h-screen">
                         <header className="flex justify-center border-b bg-neutral-900 border-neutral-500">
@@ -38,7 +40,8 @@ export default function RootLayout({
                         <Toaster />
                     </body>
                 </CsrfProvider>
-            </AuthProvider>
-        </html>
+            {/* </AuthProvider> */}
+                </SessionProvider>
+            </html>
     );
 }
