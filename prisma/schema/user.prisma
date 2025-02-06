@@ -24,6 +24,8 @@ model User {
     email         String?         @unique
     emailVerified DateTime?
     image         String?
+    shoppingList ShoppingList[]
+
     accounts      Account[]
     sessions      Session[]
     // Optional for WebAuthn support
