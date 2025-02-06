@@ -5,13 +5,13 @@ import Link from "next/link";
 import Image from "next/image";
 import openMenu from "@/public/img/openMenu.svg";
 import closeMenu from "@/public/img/closeMenu.svg";
-import { useAuth } from "@/app/context/AuthContext";
+// import { useAuth } from "@/app/context/AuthContext";
 import { links } from "@/lib/constants/constants";
 import { ucFirst } from "@/lib/utils";
 
 const Navbar = () => {
     const [toggle, setToggle] = useState(false); // État du menu mobile
-    const { isAuth, user } = useAuth(); // Utilisation du contexte d'authentification
+    // const { isAuth, user } = useAuth(); // Utilisation du contexte d'authentification
 
     // Fonction de déconnexion
     const handleLogout = async () => {
@@ -39,15 +39,15 @@ const Navbar = () => {
                 {/* Desktop Navigation */}
                 <ul className="list-none hidden lg:flex flex-row items-center gap-6">
                     {/* Si l'utilisateur est connecté */}
-                    {isAuth ? (
+                    {/* {isAuth ? ( */}
                         <>
                             <li>
-                                <span className="text-gray-200 cursor-default">
+                                {/* <span className="text-gray-200 cursor-default">
                                     Bonjour, 
                                     <Link href={`/${user?.username}`}>
                                         {user?.username}
                                     </Link>
-                                </span>
+                                </span> */}
                             </li>
                             <li>
                                 <button
@@ -85,7 +85,7 @@ const Navbar = () => {
                                 </Link>
                             </li>
                         </>
-                    )}
+                    {/* )} */}
                 </ul>
 
                 {/* Mobile Navigation */}
@@ -108,7 +108,7 @@ const Navbar = () => {
                             onClick={() => setToggle(!toggle)}
                         />
                         <ul className="list-none flex justify-center items-end flex-col gap-5">
-                            {isAuth ? ( 
+                            {/* {isAuth ? (  */}
                                 <>
                                     {links.map((link) => (
                                         <li key={link.title} className="nav-links-desktop align-icon">
@@ -167,7 +167,7 @@ const Navbar = () => {
                                         </Link>
                                     </li>
                                 </>
-                            )}
+                            {/* )} */}
                         </ul>
                     </div>
                 </div>
