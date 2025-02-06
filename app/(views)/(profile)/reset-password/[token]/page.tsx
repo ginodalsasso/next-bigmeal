@@ -10,6 +10,7 @@ const ResetPasswordPage = () => {
     const searchParams = useSearchParams();
     const token = searchParams.get('token');
     const router = useRouter();
+    console.log(token);
 
     const [formData, setFormData] = useState({
         password: '',
@@ -20,12 +21,12 @@ const ResetPasswordPage = () => {
 
     useEffect(() => {
         const verifyToken = async () => {
-            if (!token) {
-                setError({ general: 'Token invalide' });
-                return;
-            }
+            // if (!token) {
+            //     setError({ general: 'Token invalide' });
+            //     return;
+            // }
             try {
-                const response = await fetch('/api/(forgotten-password)/verify-token', { // route a créer !!!!!!!!!!!!
+                const response = await fetch('/api/(forgotten-password)/verify-token', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

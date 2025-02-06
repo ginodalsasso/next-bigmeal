@@ -1,4 +1,4 @@
-import { randomBytes } from 'crypto';
+import jwt from 'jsonwebtoken';
 import { NextRequest } from 'next/server';
 import nodemailer from 'nodemailer';
 
@@ -20,7 +20,12 @@ export  async function POST(req: NextRequest) {
         },
     });
 
-    const generatedToken = randomBytes(32).toString("hex");
+    const secret = process.env.JWT_SECRET || 'default_secret';
+    const generatedToken = jwt.sign(
+        { email: recipient },
+        secret, 
+        { expiresIn: '1h' }
+    );
     const resetLink = `${process.env.BASE_URL}/reset-password/${generatedToken}`;
 
     // Paramètres de l'email

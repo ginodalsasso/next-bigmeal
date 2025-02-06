@@ -47,7 +47,7 @@ const ProfilePage =
     // Fonction pour envoyer un email de réinitialisation du mot de passe
     const forgotPasswordEmail = async () => {
         try {
-            await fetch(`/api/forgot-password`, {
+            await fetch(`/api/reset-password`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
