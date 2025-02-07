@@ -1,7 +1,7 @@
-import { RegisterConstraints } from "@/lib/constraints/forms_constraints";
+import { loginConstraints } from "@/lib/constraints/forms_constraints";
 import { db } from "@/lib/db";
 // import { createSession } from "@/lib/session";
-import { hash } from "bcrypt";
+import { hash } from "bcryptjs";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
@@ -9,7 +9,7 @@ export async function POST(req: NextRequest) {
         const body = await req.json();
 
         // Validation avec Zod
-        const validation = RegisterConstraints.safeParse(body);
+        const validation = loginConstraints.safeParse(body);
         if (!validation.success) {
             return NextResponse.json(
                 { errors: validation.error.flatten().fieldErrors },
@@ -17,11 +17,11 @@ export async function POST(req: NextRequest) {
             );
         }
 
-        const { username, password } = validation.data;
+        const { email, password } = validation.data;
 
         // Vérifier si l'utilisateur existe déjà
         const existingUser = await db.user.findUnique({
-            where: { username },
+            where: { email: email },
         });
         if (existingUser) {
             return NextResponse.json(
@@ -31,10 +31,10 @@ export async function POST(req: NextRequest) {
         }
 
         // Hasher le mot de passe et créer l'utilisateur
-        const hashedPassword = await hash(password, 10);
+        const hashedPassword = await hash(password, 12);
         const user = await db.user.create({
             data: {
-                username,
+                email: email,
                 password: hashedPassword,
             },
         });

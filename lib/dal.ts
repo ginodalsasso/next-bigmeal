@@ -3,7 +3,7 @@
 // import { cookies } from "next/headers";
 // import { decrypt } from "./session";
 // import { cache } from "react";
-// import { db } from "./db";
+import { db } from "./db";
 
 // // Vérification de la session utilisateur
 // export const verifySession = cache(async () => {
@@ -25,7 +25,6 @@
 //     }
 // });
 
-
 // export const getUserByUsername = (username: string) => {
 //     try{
 //         return db.user.findFirst({
@@ -35,8 +34,13 @@
 //         console.error("Failed to fetch user", error);
 //         return null;
 //     }
-// }   
+// }
 
+export const getUserByEmail = async (email: string) => {
+    return db.user.findUnique({
+        where: { email },
+    });
+};
 
 // export const getUser = cache(async () => {
 //     const session = await verifySession();
@@ -70,7 +74,6 @@
 //     }
 // });
 
-
 // export const getUserRole = cache(async () => {
 //     const session = await verifySession();
 //     if (!session) return null;
@@ -96,7 +99,6 @@
 //     }
 // });
 
-
 // // Récupérer le panier de l'utilisateur
 // export const getUserCart = cache(async () => {
 
@@ -118,16 +120,14 @@
 //         });
 
 //         // Extraire la quantité totale si des articles existent
-//         const totalCartQuantity = groupedItems.length > 0 
+//         const totalCartQuantity = groupedItems.length > 0
 //             ? groupedItems[0]._count || null // groupedItems[0] contient la première liste de courses
 //             : null;
 
-//         return totalCartQuantity; 
+//         return totalCartQuantity;
 
 //     } catch (error) {
 //         console.error("Failed to fetch cart", error);
 //         return null;
 //     }
 // });
-
-

@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { RegisterConstraints } from "@/lib/constraints/forms_constraints";
+import { loginConstraints } from "@/lib/constraints/forms_constraints";
 import { UserFormErrorType } from "@/lib/types/forms_interfaces";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -13,7 +13,7 @@ export default function RegisterPage() {
     const [error, setError] = useState<UserFormErrorType>({});
     const [isLoading, setIsLoading] = useState(false);
     const [formData, setFormData] = useState({ 
-        username: "", password: "" 
+        email: "", password: "" 
     });
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -22,11 +22,11 @@ export default function RegisterPage() {
         setError({}); // Réinitialise les erreurs existantes
 
         // Validation des données utilisateur avec Zod
-        const validation = RegisterConstraints.safeParse(formData);
+        const validation = loginConstraints.safeParse(formData);
         if (!validation.success) {
             const errors = validation.error.flatten().fieldErrors;
             setError({
-                username: errors.username?.[0],
+                email: errors.email?.[0],
                 password: errors.password?.[0],
             });
             setIsLoading(false);
@@ -71,15 +71,15 @@ export default function RegisterPage() {
             <input
                 type="text"
                 className="input-text-select "
-                placeholder="Pseudo"
-                value={formData.username}
+                placeholder="Email"
+                value={formData.email}
                 onChange={(e) =>
-                    setFormData({ ...formData, username: e.target.value })
+                    setFormData({ ...formData, email: e.target.value })
                 }
             />
-            {error.username && (
+            {error.email && (
                 <p className="error-form">
-                    {error.username}
+                    {error.email}
                 </p>
             )}
             <input

@@ -7,6 +7,14 @@ export const idConstraints = z.object({
     id: z.string(),
 });
 
+export const loginConstraints = z.object({
+    email: z
+        .string()
+        .email()
+,
+    password: z.string(),
+});
+
 export const categoriesConstraints = z.object({
     name: z
         .string()
