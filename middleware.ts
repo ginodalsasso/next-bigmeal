@@ -1,71 +1,57 @@
-// import { NextRequest, NextResponse } from "next/server";
-// import { decrypt } from "./lib/session";
+import { NextRequest, NextResponse } from "next/server";
+import { getToken } from "next-auth/jwt";
 
-// const protectedRoutes = [
-//     "/ingredients",
-//     "/meals",
-//     "/categories-ingredient",
-//     "/categories-meal",
-//     "/shopping-list",
-// ];
+export { auth as middleware } from "@/lib/auth";
 
-// const dynamicRoutePatterns = [
-//     /^\/ingredients\/[a-zA-Z0-9-]+$/, // Par exemple : /ingredients/nomdelingredient
-//     /^\/meals\/[a-zA-Z0-9-]+$/, // Par exemple : /meals/nomdurepas
-//     /^\/=[a-zA-Z0-9-]+$/, // Par exemple : /=nomdeliste
-//     /^\/reset-token\/=[a-zA-Z0-9-]+$/, // Par exemple : /=nomdeliste
-    
-// ];
+const protectedRoutes = [
+    "/ingredients",
+    "/meals",
+    "/categories-ingredient",
+    "/categories-meal",
+    "/shopping-list",
+];
 
-// const publicRoutes = ["/login", "/register", "/"];
+const dynamicRoutePatterns = [
+    /^\/ingredients\/[a-zA-Z0-9-]+$/, // Ex: /ingredients/tomate
+    /^\/meals\/[a-zA-Z0-9-]+$/, // Ex: /meals/pizza
+    /^\/=[a-zA-Z0-9-]+$/, // Ex: /=liste1
+    /^\/reset-token\/=[a-zA-Z0-9-]+$/, // Ex: /reset-token/123456
+];
 
+const publicRoutes = ["/login", "/register", "/"];
 
-// export default async function middleware(req: NextRequest) {
-    
-//     const path = req.nextUrl.pathname;
+export default async function middleware(req: NextRequest) {
+    const path = req.nextUrl.pathname;
+    const token = await getToken({ req });
 
-//     // Vérifie si la route est une route protégée ou p  ublique
-//     const isProtectedRoute = protectedRoutes.some(route => path.startsWith(route)) || 
-//                             dynamicRoutePatterns.some(pattern => pattern.test(path));
+    // Vérifie si la route est protégée ou publique
+    const isProtectedRoute =
+        protectedRoutes.some((route) => path.startsWith(route)) ||
+        dynamicRoutePatterns.some((pattern) => pattern.test(path));
 
-//     const isPublicRoute = publicRoutes.includes(path);
+    const isPublicRoute = publicRoutes.includes(path);
 
-//     // Récupère le cookie de session
-//     const cookie = req.cookies.get("session")?.value;
+    // Redirection si l'utilisateur N'EST PAS connecté et tente d'accéder à une route protégée
+    if (isProtectedRoute && !token) {
+        return NextResponse.redirect(new URL("/login", req.url));
+    }
 
-//     // Décrypte la session
-//     let session;
-//     if (cookie) {
-//         try {
-//             session = await decrypt(cookie);
-//         } catch (error) {
-//             console.error("Erreur lors de la vérification de la session:", error);
-//             session = null;
-//         }
-//     }
+    // Redirection si l'utilisateur EST connecté et tente d'accéder à /login ou /register
+    if (isPublicRoute && token && path !== "/") {
+        return NextResponse.redirect(new URL("/", req.url));
+    }
 
-//     // Redirection si la route est protégée et que l'utilisateur n'est pas connecté
-//     if (isProtectedRoute && (!session || !session?.userId)) {
-//         return NextResponse.redirect(new URL("/login", req.nextUrl));
-//     }
+    // Ajout des headers de sécurité
+    const response = NextResponse.next();
+    response.headers.set("X-Content-Type-Options", "nosniff");
+    response.headers.set("X-Frame-Options", "DENY");
+    response.headers.set("Strict-Transport-Security", "max-age=63072000; includeSubDomains; preload");
+    response.headers.set("X-XSS-Protection", "1; mode=block");
 
-//     // Redirection si la route est publique et que l'utilisateur est connecté
-//     if (isPublicRoute && session?.userId && path !== "/") { 
-//         return NextResponse.redirect(new URL("/", req.nextUrl));
-//     }
+    return response;
+}
 
-//     const response = NextResponse.next();
-//     response.headers.set("X-Content-Type-Options", "nosniff");
-//     response.headers.set("X-Frame-Options", "DENY");
-//     response.headers.set("Strict-Transport-Security", "max-age=63072000; includeSubDomains; preload");
-//     response.headers.set("X-XSS-Protection", "1; mode=block");
-
-
-//     return response;
-// }
-
-// export const config = {
-//     matcher: ["/((?!api|_next/static|_next/image|.*\\.png$).*)"],
-// };
-
-export { auth as middleware } from "@/lib/auth"
+// Appliquer le middleware sur toutes les routes sauf API et fichiers statiques
+export const config = {
+    matcher: ["/((?!api|_next/static|_next/image|.*\\.png$).*)"],
+};

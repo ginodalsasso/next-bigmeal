@@ -4,7 +4,6 @@ import { categoriesConstraints, idConstraints } from "@/lib/constraints/forms_co
 import { z } from "zod";
 // import { verifyAdmin } from "@/lib/auth";
 import { verifyCSRFToken } from "@/lib/csrf";
-import { verifyAdmin } from "@/lib/auth";
 
 
 export async function GET() {

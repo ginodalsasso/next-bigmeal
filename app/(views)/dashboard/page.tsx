@@ -40,7 +40,7 @@ export default function AuthComponent() {
     if (session) {
         return (
             <>
-                <h1>Welcome {session?.user?.name}</h1>
+                <h1>Welcome {session?.user?.role}</h1>
                 <button onClick={() => signOut()}> 
                     Déconnexion
                 </button>

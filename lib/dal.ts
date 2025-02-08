@@ -5,6 +5,13 @@
 // import { cache } from "react";
 import { db } from "./db";
 
+
+export const getUserByEmail = async (email: string) => {
+    return db.user.findUnique({
+        where: { email },
+    });
+};
+
 // // Vérification de la session utilisateur
 // export const verifySession = cache(async () => {
 //     const cookie = (await cookies()).get("session")?.value; // Récupération du cookie "session"
@@ -36,11 +43,6 @@ import { db } from "./db";
 //     }
 // }
 
-export const getUserByEmail = async (email: string) => {
-    return db.user.findUnique({
-        where: { email },
-    });
-};
 
 // export const getUser = cache(async () => {
 //     const session = await verifySession();
