@@ -105,7 +105,7 @@ export interface ShoppingListItemType {
 
 export interface UserType {
     id: string; 
-    username: string; 
+    email: string; 
     password: string;
     createdAt: Date;
     role: string;
