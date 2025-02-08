@@ -37,6 +37,7 @@ import Link from "next/link"
 export default function AuthComponent() {
     const { data: session } = useSession();
 
+
     if (session) {
         return (
             <>
@@ -53,6 +54,7 @@ export default function AuthComponent() {
             <p>Vous n&apos;êtes pas connecté</p>
             <Link href="/login">
                     <button>Connexion</button >
-                </Link >      </>
+                </Link >      
+        </>
     );
 }

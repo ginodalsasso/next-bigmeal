@@ -141,10 +141,10 @@ export default function LoginPage() {
 
     return (
         <div>
-            <button onClick={() => signIn("google", { callbackUrl: "/dashboard" })}>
+            <button onClick={() => signIn("google")}>
                 Se connecter avec Google
             </button>
-            <button onClick={() => signIn("github", { callbackUrl: "/dashboard" })}>
+            <button onClick={() => signIn("github")}>
                 Se connecter avec GitHub
             </button>
 

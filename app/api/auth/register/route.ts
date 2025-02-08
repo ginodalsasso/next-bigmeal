@@ -1,6 +1,5 @@
 import { loginConstraints } from "@/lib/constraints/forms_constraints";
 import { db } from "@/lib/db";
-// import { createSession } from "@/lib/session";
 import { hash } from "bcryptjs";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -25,7 +24,7 @@ export async function POST(req: NextRequest) {
         });
         if (existingUser) {
             return NextResponse.json(
-                { message: "Ce pseudo est déjà utilisé." },
+                { message: "Cet email est déjà utilisé." },
                 { status: 409 }
             );
         }

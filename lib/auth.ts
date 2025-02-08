@@ -73,6 +73,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             }
             return session;
         },
+
+        async redirect() {
+            return "/dashboard";
+        },
     },
-    
 });
