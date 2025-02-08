@@ -8,25 +8,12 @@ import closeMenu from "@/public/img/closeMenu.svg";
 import { links } from "@/lib/constants/constants";
 import { ucFirst } from "@/lib/utils";
 import IsUser from "../isUser";
+import { signOut } from "next-auth/react";
+import IsNotAuthenticated from "../isNotAuthenticated";
 
 const Navbar = () => {
     const [toggle, setToggle] = useState(false); // État du menu mobile
-
-    // Fonction de déconnexion
-    const handleLogout = async () => {
-        try {
-            const response = await fetch("/api/auth/logout", {
-                method: "POST",
-                credentials: "include", // Inclure les cookies pour la déconnexion
-            });
-            if (response.ok) {
-                window.location.href = "/login"; // Redirige l'utilisateur
-            }
-        } catch (error) {
-            console.error("Erreur lors de la déconnexion :", error);
-        }
-    };
-
+    
     return (
         <nav className="w-full max-w-7xl p-4">
             <div className="flex justify-between items-center ">
@@ -48,39 +35,42 @@ const Navbar = () => {
                             </span> */}
                         </li>
                         <li>
-                            <button
+                            <button 
                                 className="nav-links-desktop align-icon"
-                                onClick={handleLogout}
-                            >
+                                onClick={() => signOut()}
+                            > 
                                 <Image
                                     src={"/img/logout.svg"}
                                     width={20}
                                     height={20}
                                     alt="Déconnexion"
                                 />
-                                <span className="font-medium">
+                                <span>
                                     Se déconnecter
                                 </span>
                             </button>
                         </li>
                     </IsUser>
-                    <li>
-                        <Link
-                            href="/login"
-                            className="nav-links-desktop"
-                        >
-                            Se connecter
-                        </Link>
-                    </li>
-                    <li>
-                        <Link
-                            href="/register"
-                            className="nav-links-desktop"
-                        >
-                            S&apos;inscrire
-                        </Link>
-                    </li>
+                    <IsNotAuthenticated>
+                        <li>
+                            <Link
+                                href="/login"
+                                className="nav-links-desktop"
+                            >
+                                Se connecter
+                            </Link>
+                        </li>
+                        <li>
+                            <Link
+                                href="/register"
+                                className="nav-links-desktop"
+                            >
+                                S&apos;inscrire
+                            </Link>
+                        </li>
+                    </IsNotAuthenticated>
                 </ul>
+
 
                 {/* Mobile Navigation */}
                 <div className="lg:hidden">
@@ -123,10 +113,10 @@ const Navbar = () => {
                                     </li>
                                 ))}
                                 <li>
-                                    <button
-                                        className="nav-links-mobile align-icon"
-                                        onClick={handleLogout}
-                                    >
+                                    <button 
+                                        className="nav-links-desktop align-icon"
+                                        onClick={() => signOut()}
+                                    > 
                                         <Image
                                             src={"/img/logout.svg"}
                                             width={20}
@@ -136,27 +126,29 @@ const Navbar = () => {
                                         <span>
                                             Se déconnecter
                                         </span>
-                                    </button>
+                                </button>
                                 </li>
                             </IsUser>
-                            <li>
-                                <Link
-                                    href="/login"
-                                    className="nav-links-mobile"
-                                    onClick={() => setToggle(!toggle)}
-                                >
-                                    Se connecter
-                                </Link>
-                            </li>
-                            <li>
-                                <Link
-                                    href="/register"
-                                    className="nav-links-mobile"
-                                    onClick={() => setToggle(!toggle)}
-                                >
-                                    S&apos;inscrire
-                                </Link>
-                            </li>
+                            <IsNotAuthenticated>
+                                <li>
+                                    <Link
+                                        href="/login"
+                                        className="nav-links-mobile"
+                                        onClick={() => setToggle(!toggle)}
+                                    >
+                                        Se connecter
+                                    </Link>
+                                </li>
+                                <li>
+                                    <Link
+                                        href="/register"
+                                        className="nav-links-mobile"
+                                        onClick={() => setToggle(!toggle)}
+                                    >
+                                        S&apos;inscrire
+                                    </Link>
+                                </li>
+                            </IsNotAuthenticated>
                         </ul>
                     </div>
                 </div>

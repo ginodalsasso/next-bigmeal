@@ -23,7 +23,6 @@ const ProfilePage = () => {
                 }
                 const data: UserType = await response.json();
                 setUser(data);
-                console.log(data);
             } catch (error) {
                 console.error("Erreur lors de la récupération de l'utilisateur :", error);
                 setError("Impossible de charger le profil.");
