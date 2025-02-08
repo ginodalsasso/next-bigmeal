@@ -3,6 +3,7 @@ import { useFormValidation } from "@/app/hooks/useFormValidation";
 import { categoriesConstraints } from "@/lib/constraints/forms_constraints";
 import { Button } from "@/components/ui/button";
 import { UpdateCategoryProps } from "@/lib/types/props_interfaces";
+import FormErrorMessage from "@/components/forms/FormErrorMessage";
 
 type CategoryFormType = { name: string }; // Définir le type du formulaire
 
@@ -53,7 +54,8 @@ const UpdateCategory: React.FC<UpdateCategoryProps> = ({
                 className="input-text-select"
                 disabled={isLoading || parentLoading}
             />
-            {error?.name && <p className="error-form">{error.name}</p>}
+            <FormErrorMessage message={error?.name} />
+            
             <div className="flex gap-2">
                 <Button
                     type="button"
