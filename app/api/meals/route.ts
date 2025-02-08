@@ -1,7 +1,7 @@
 import { db } from "@/lib/db";
 import { NextRequest, NextResponse } from "next/server";
 import { idConstraints, mealConstraints } from "@/lib/constraints/forms_constraints";
-import { verifyCSRFToken } from "@/lib/csrf";
+import { verifyCSRFToken } from "@/lib/security/csrf";
 import { verifyAdmin, verifyUser } from "@/lib/auth";
 
 

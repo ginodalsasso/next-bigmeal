@@ -1,20 +1,21 @@
-// import { useAuth } from "@/app/context/AuthContext";
+import { useSession } from "next-auth/react";
 
-// interface IsUserProps {
-//     children: React.ReactNode;
-// }
+interface IsUserProps {
+    children: React.ReactNode;
+}
 
-// const IsUser = ({ children }: IsUserProps) => {
-//     const { user, isAuth } = useAuth();
+const IsUser = ({ children }: IsUserProps) => {
+    const { data: session, status } = useSession();
+    const user = session?.user;
 
-//     // Vérifie si l'utilisateur est authentifié et a le rôle 'USER' ou 'ADMIN'
-//     if (isAuth && user?.role === "USER" || user?.role === "ADMIN") {
-//         // Rend les enfants si l'utilisateur est un administrateur
-//         return <>{children}</>;
-//     }
+    // Vérifie si l'utilisateur est authentifié et a le rôle 'USER' ou 'ADMIN'
+    if (status === "authenticated" && user?.role === "USER" || user?.role === "ADMIN") {
+        // Rend les enfants si l'utilisateur est un administrateur
+        return <>{children}</>;
+    }
 
-//     return null;
-// };  
+    // Ne rend rien si l'utilisateur n'est pas un administrateur
+    return null;
+};  
 
-// export default IsUser;
-
+export default IsUser;

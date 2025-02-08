@@ -40,7 +40,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
                     return {
                         ...user,
-                        role: user.role ?? "user", // Rôle par défaut
+                        role: user.role ?? "USER", // Rôle par défaut
                     }
                 } catch (error) {
                     console.error("Authentication error:", error);

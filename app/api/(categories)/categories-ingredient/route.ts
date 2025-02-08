@@ -3,7 +3,7 @@ import { db } from "@/lib/db";
 import { categoriesConstraints, idConstraints } from "@/lib/constraints/forms_constraints";
 import { z } from "zod";
 // import { verifyAdmin } from "@/lib/auth";
-import { verifyCSRFToken } from "@/lib/csrf";
+import { verifyCSRFToken } from "@/lib/security/csrf";
 
 
 export async function GET() {

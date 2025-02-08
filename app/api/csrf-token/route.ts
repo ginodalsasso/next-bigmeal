@@ -1,4 +1,4 @@
-import { setCSRFToken } from "@/lib/csrf";
+import { setCSRFToken } from "@/lib/security/csrf";
 import { NextResponse } from "next/server";
 
 export async function GET() {

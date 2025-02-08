@@ -11,7 +11,7 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { translatedSeason, ucFirst } from "@/lib/utils";
 import { CreateIngredientProps } from "@/lib/types/props_interfaces";
-import { useCsrfToken } from "@/app/context/CsrfContext";
+import { getCsrfToken } from "next-auth/react";
 
 // _________________________ COMPOSANT _________________________
 const CreateIngredient: React.FC<CreateIngredientProps> = ({
@@ -19,7 +19,7 @@ const CreateIngredient: React.FC<CreateIngredientProps> = ({
     onClose,
 }) => {
     // _________________________ HOOKS _________________________
-    const csrfToken = useCsrfToken();
+    // const csrfToken = useCsrfToken();
     const [categories, setCategories] = useState<CategoryIngredientType[]>([]);
     const [form, setForm] = useState<IngredientFormType>({
         name: "",
@@ -53,6 +53,7 @@ const CreateIngredient: React.FC<CreateIngredientProps> = ({
 
     // Appel API pour créer un ingrédient
     const createIngredient = async (data: IngredientFormType) => {
+        const csrfToken = await getCsrfToken();
         try {
             const response = await fetch("/api/ingredients", {
                 method: "POST",

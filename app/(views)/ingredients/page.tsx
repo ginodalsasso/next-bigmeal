@@ -22,19 +22,21 @@ import { reversedTranslatedSeason, translatedSeason } from "@/lib/utils";
 import AddToShoppingListForm from "@/components/forms/AddToShoppingListForm";
 import EditItem from "@/components/layout/EditItem";
 import DeleteItem from "@/components/layout/DeleteItem";
-import { useCsrfToken } from "@/app/context/CsrfContext";
 import IsAdmin from "@/components/isAdmin";
 import IsUser from "@/components/isUser";
 import SearchBar from "@/components/layout/Searchbar";
 import FilterCheckboxes from "@/components/layout/FilterCheckboxes";
 import { CATEGORIES_INGREDIENTS, SEASONS } from "@/lib/constants/constants";
+import { getCsrfToken, useSession } from "next-auth/react";
 
 
 // _________________________ COMPOSANT _________________________
 const IngredientPage = () => {
+    
+    
+    // const { data: session } = useSession();
 
     // _________________________ ETATS _________________________
-    const csrfToken = useCsrfToken();
     const [ingredients, setIngredients] = useState<IngredientType[]>([]);
     const [searchQuery, setSearchQuery] = useState("");
     const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
@@ -75,6 +77,7 @@ const IngredientPage = () => {
 
     // Appel API pour mettre à jour un ingrédient
     const updateIngredient = async (id: string, newName: string, newCategory: string, newSeason: string|null) => {
+        const csrfToken = await getCsrfToken();
         try {
             const response = await fetch("/api/ingredients", {
                 method: "PUT",
@@ -109,6 +112,7 @@ const IngredientPage = () => {
 
     // Appel API pour supprimer un ingrédient
     const deleteIngredient = async (id: string) => {
+        const csrfToken = await getCsrfToken();
         try {
             const response = await fetch("/api/ingredients", {
                 method: "DELETE",

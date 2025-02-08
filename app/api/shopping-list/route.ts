@@ -1,6 +1,6 @@
 import { verifyUser } from "@/lib/auth";
 import { idConstraints, isCheckedShoppingListConstraints, ShoppingListConstraints } from "@/lib/constraints/forms_constraints";
-import { verifyCSRFToken } from "@/lib/csrf";
+import { verifyCSRFToken } from "@/lib/security/csrf";
 import { getUser, verifySession } from "@/lib/dal";
 import { db } from "@/lib/db";
 import { NextRequest, NextResponse } from "next/server";
