@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
-import { verifySession } from "@/lib/dal";
+import { getUserSession } from "@/lib/security/getSession";
 
 type Props = {
     params: Promise<{ username: string }>;
@@ -8,27 +8,14 @@ type Props = {
 
 export async function GET(req: NextRequest, { params }: Props) {
     try {
-        // Vérification de la session utilisateur
-        const session = await verifySession();
-        if (!session || !session.isAuth) {
-            return NextResponse.json(
-                { error: "Unauthorized: You must be logged in" },
-                { status: 401 }
-            );
-        }
-
-        // Récupération du paramètre username
+        const { session, error } = await getUserSession();
+        if (error) return error;
+        
         const { username } = await params;
-        if (!username) {
-            return NextResponse.json(
-                { error: "User ID is required" },
-                { status: 400 }
-            );
-        }
 
         // Vérification que l'utilisateur connecté correspond au username demandé
         const user = await db.user.findUnique({
-            where: { username: username },
+            where: { email:  email },
             include: { 
                 shoppingList: { 
                     include: { 

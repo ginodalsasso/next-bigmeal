@@ -13,3 +13,11 @@ export async function getAdminSession() {
     }
     return { session };
 }
+
+export async function getUserSession() {
+    const session = await auth();
+    if (!session) {
+        return { error: new NextResponse(null, { status: 302, headers: { Location: "/login" } }) };
+    }
+    return { session };
+}   

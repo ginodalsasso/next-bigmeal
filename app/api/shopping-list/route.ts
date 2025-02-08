@@ -1,25 +1,19 @@
-import { verifyUser } from "@/lib/auth";
 import { idConstraints, isCheckedShoppingListConstraints, ShoppingListConstraints } from "@/lib/constraints/forms_constraints";
 import { verifyCSRFToken } from "@/lib/security/csrf";
-import { getUser, verifySession } from "@/lib/dal";
+import { getUser } from "@/lib/dal";
 import { db } from "@/lib/db";
 import { NextRequest, NextResponse } from "next/server";
+import { getUserSession } from "@/lib/security/getSession";
 
 export async function GET() {
     try {
-        // Vérification de la session utilisateur
-        const session = await verifySession();
-        if (!session || !session.isAuth) {
-            return NextResponse.json(
-                { error: "Unauthorized: You must be logged in" },
-                { status: 401 }
-            );   
-        }
+        const { session, error } = await getUserSession();
+        if (error) return error;
 
          // Récupérer les listes de courses
         const shoppingList = await db.shoppingList.findFirst({
             where: { 
-                userId: session.userId,
+            userId: session.user.id,
                 isExpired: false
             },
 
@@ -44,18 +38,18 @@ export async function GET() {
 
 export async function POST(req: NextRequest) {
 
-    // Récupérer l'utilisateur
-    const user = await getUser();
-
-    if (!user) {
-        return new NextResponse("Unauthorized", { status: 401 });
-    }
-
     try {
-        const csrfToken = req.headers.get("x-csrf-token");
-        const csrfTokenVerified = await verifyCSRFToken(csrfToken);
-        if (csrfTokenVerified === false) {
+        const { session, error } = await getUserSession();
+        if (error) return error;
+        
+        const csrfTokenVerified = await verifyCSRFToken(req);
+        if (!csrfTokenVerified) {
             return new NextResponse("CSRF Token is missing or invalid", { status: 403 });
+        }
+
+        const user = await getUser();
+        if (!user) {
+            return new NextResponse("User not found", { status: 404 });
         }
 
         const body = await req.json();
@@ -137,13 +131,11 @@ export async function POST(req: NextRequest) {
 
 export async function PUT(req: NextRequest) {
     try {
-        const isUser = await verifyUser();
-        if (!isUser) {
-            return new NextResponse("Unauthorized", {status: 401});
-        }
-        const csrfToken = req.headers.get("x-csrf-token");
-        const csrfTokenVerified = await verifyCSRFToken(csrfToken);
-        if (csrfTokenVerified === false) {
+        const { session, error } = await getUserSession();
+        if (error) return error;
+        
+        const csrfTokenVerified = await verifyCSRFToken(req);
+        if (!csrfTokenVerified) {
             return new NextResponse("CSRF Token is missing or invalid", { status: 403 });
         }
 
@@ -199,14 +191,12 @@ export async function PUT(req: NextRequest) {
 
 export async function DELETE (req: NextRequest) {
     try {
-        const isUser = await verifyUser();
-        if (!isUser) {
-            return new NextResponse("Unauthorized", {status: 401});
-        }
-        const csrfToken = req.headers.get("x-csrf-token");
-        const csrfTokenVerified = await verifyCSRFToken(csrfToken);
-        if (csrfTokenVerified === false) {
-            return new NextResponse("CSRF Token is missing or invalid", {status: 403});
+        const { session, error } = await getUserSession();
+        if (error) return error;
+        
+        const csrfTokenVerified = await verifyCSRFToken(req);
+        if (!csrfTokenVerified) {
+            return new NextResponse("CSRF Token is missing or invalid", { status: 403 });
         }
         
         const body = await req.json();

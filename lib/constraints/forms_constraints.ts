@@ -79,12 +79,10 @@ export const newCompositionConstraints = z.array(
 );
 
 export const RegisterConstraints = z.object({
-    username: z
+    email: z
         .string()
-        .min(3, "Le nom d'utilisateur doit comporter au moins 3 caractères")
-        .max(100, "Le nom d'utilisateur doit comporter au maximum 100 caractères")
-        // .regex(/^[a-zA-Z0-9_-]+$/, "Le nom d'utilisateur ne doit contenir que des lettres, des chiffres, des tirets et des underscores")
-        .trim(),
+        .email()
+        .max(100, "L'email doit comporter au maximum 100 caractères"),
     password: z
         .string()
         // .min(8, "Le mot de passe doit comporter au moins 8 caractères")

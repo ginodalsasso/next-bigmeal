@@ -5,13 +5,12 @@ import Link from "next/link";
 import Image from "next/image";
 import openMenu from "@/public/img/openMenu.svg";
 import closeMenu from "@/public/img/closeMenu.svg";
-// import { useAuth } from "@/app/context/AuthContext";
 import { links } from "@/lib/constants/constants";
 import { ucFirst } from "@/lib/utils";
+import IsUser from "../isUser";
 
 const Navbar = () => {
     const [toggle, setToggle] = useState(false); // État du menu mobile
-    // const { isAuth, user } = useAuth(); // Utilisation du contexte d'authentification
 
     // Fonction de déconnexion
     const handleLogout = async () => {
@@ -39,53 +38,48 @@ const Navbar = () => {
                 {/* Desktop Navigation */}
                 <ul className="list-none hidden lg:flex flex-row items-center gap-6">
                     {/* Si l'utilisateur est connecté */}
-                    {/* {isAuth ? ( */}
-                        <>
-                            <li>
-                                {/* <span className="text-gray-200 cursor-default">
-                                    Bonjour, 
-                                    <Link href={`/${user?.username}`}>
-                                        {user?.username}
-                                    </Link>
-                                </span> */}
-                            </li>
-                            <li>
-                                <button
-                                    className="nav-links-desktop align-icon"
-                                    onClick={handleLogout}
-                                >
-                                    <Image
-                                        src={"/img/logout.svg"}
-                                        width={20}
-                                        height={20}
-                                        alt="Déconnexion"
-                                    />
-                                    <span className="font-medium">
-                                        Se déconnecter
-                                    </span>
-                                </button>
-                            </li>
-                        </>
-                    {/* ) : ( */}
-                        <>
-                            <li>
-                                <Link
-                                    href="/login"
-                                    className="nav-links-desktop"
-                                >
-                                    Se connecter
+                    <IsUser>
+                        <li>
+                            {/* <span className="text-gray-200 cursor-default">
+                                Bonjour, 
+                                <Link href={`/${user?.username}`}>
+                                    {user?.username}
                                 </Link>
-                            </li>
-                            <li>
-                                <Link
-                                    href="/register"
-                                    className="nav-links-desktop"
-                                >
-                                    S&apos;inscrire
-                                </Link>
-                            </li>
-                        </>
-                    {/* )} */}
+                            </span> */}
+                        </li>
+                        <li>
+                            <button
+                                className="nav-links-desktop align-icon"
+                                onClick={handleLogout}
+                            >
+                                <Image
+                                    src={"/img/logout.svg"}
+                                    width={20}
+                                    height={20}
+                                    alt="Déconnexion"
+                                />
+                                <span className="font-medium">
+                                    Se déconnecter
+                                </span>
+                            </button>
+                        </li>
+                    </IsUser>
+                    <li>
+                        <Link
+                            href="/login"
+                            className="nav-links-desktop"
+                        >
+                            Se connecter
+                        </Link>
+                    </li>
+                    <li>
+                        <Link
+                            href="/register"
+                            className="nav-links-desktop"
+                        >
+                            S&apos;inscrire
+                        </Link>
+                    </li>
                 </ul>
 
                 {/* Mobile Navigation */}
@@ -108,66 +102,61 @@ const Navbar = () => {
                             onClick={() => setToggle(!toggle)}
                         />
                         <ul className="list-none flex justify-center items-end flex-col gap-5">
-                            {/* {isAuth ? (  */}
-                                <>
-                                    {links.map((link) => (
-                                        <li key={link.title} className="nav-links-desktop align-icon">
-                                            {link.icon && (
-                                                <Image
-                                                    src={link.icon}
-                                                    width={20}
-                                                    height={20}
-                                                    alt={link.title}
-                                                />
-                                            )}
-                                            <Link
-                                                href={link.url}
-                                                className="nav-links-mobile"
-                                                onClick={() => setToggle(false)}
-                                                >
-                                                {ucFirst(link.title)}
-                                            </Link>
-                                        </li>
-                                    ))}
-                                    <li>
-                                        <button
-                                            className="nav-links-mobile align-icon"
-                                            onClick={handleLogout}
-                                        >
+                            <IsUser>
+                                {links.map((link) => (
+                                    <li key={link.title} className="nav-links-desktop align-icon">
+                                        {link.icon && (
                                             <Image
-                                                src={"/img/logout.svg"}
+                                                src={link.icon}
                                                 width={20}
                                                 height={20}
-                                                alt="Déconnexion"
+                                                alt={link.title}
                                             />
-                                            <span>
-                                                Se déconnecter
-                                            </span>
-                                        </button>
-                                    </li>
-                                </>
-                            {/* ) : ( */}
-                                <>
-                                    <li>
+                                        )}
                                         <Link
-                                            href="/login"
+                                            href={link.url}
                                             className="nav-links-mobile"
-                                            onClick={() => setToggle(!toggle)}
-                                        >
-                                            Se connecter
+                                            onClick={() => setToggle(false)}
+                                            >
+                                            {ucFirst(link.title)}
                                         </Link>
                                     </li>
-                                    <li>
-                                        <Link
-                                            href="/register"
-                                            className="nav-links-mobile"
-                                            onClick={() => setToggle(!toggle)}
-                                        >
-                                            S&apos;inscrire
-                                        </Link>
-                                    </li>
-                                </>
-                            {/* )} */}
+                                ))}
+                                <li>
+                                    <button
+                                        className="nav-links-mobile align-icon"
+                                        onClick={handleLogout}
+                                    >
+                                        <Image
+                                            src={"/img/logout.svg"}
+                                            width={20}
+                                            height={20}
+                                            alt="Déconnexion"
+                                        />
+                                        <span>
+                                            Se déconnecter
+                                        </span>
+                                    </button>
+                                </li>
+                            </IsUser>
+                            <li>
+                                <Link
+                                    href="/login"
+                                    className="nav-links-mobile"
+                                    onClick={() => setToggle(!toggle)}
+                                >
+                                    Se connecter
+                                </Link>
+                            </li>
+                            <li>
+                                <Link
+                                    href="/register"
+                                    className="nav-links-mobile"
+                                    onClick={() => setToggle(!toggle)}
+                                >
+                                    S&apos;inscrire
+                                </Link>
+                            </li>
                         </ul>
                     </div>
                 </div>

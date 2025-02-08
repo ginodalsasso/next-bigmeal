@@ -1,11 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
+import { getUserSession } from "@/lib/security/getSession";
 
 type Props = {
     params: Promise<{ ingredientName: string }>;
 }
 
 export async function GET( req: NextRequest, { params }: Props){
+
+    const { session, error } = await getUserSession();
+    if (error) return error;
         
     const { ingredientName } = await params;
 
