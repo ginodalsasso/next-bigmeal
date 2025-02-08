@@ -27,14 +27,6 @@ const Navbar = () => {
                     {/* Si l'utilisateur est connecté */}
                     <IsUser>
                         <li>
-                            {/* <span className="text-gray-200 cursor-default">
-                                Bonjour, 
-                                <Link href={`/${user?.username}`}>
-                                    {user?.username}
-                                </Link>
-                            </span> */}
-                        </li>
-                        <li>
                             <button 
                                 className="nav-links-desktop align-icon"
                                 onClick={() => signOut()}
@@ -51,6 +43,7 @@ const Navbar = () => {
                             </button>
                         </li>
                     </IsUser>
+                    {/* Si l'utilisateur n'est pas connecté */}
                     <IsNotAuthenticated>
                         <li>
                             <Link
