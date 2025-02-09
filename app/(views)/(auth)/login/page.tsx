@@ -2,14 +2,14 @@
 
 import { signIn } from "next-auth/react";
 import { useState } from "react";
-import { toast } from "sonner";
-import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { RegisterConstraints } from "@/lib/constraints/forms_constraints";
 import { UserFormErrorType } from "@/lib/types/forms_interfaces";
+import Router from "next/router";
+import FormErrorMessage from "@/components/forms/FormErrorMessage";
 
 export default function LoginPage() {
-    const router = useRouter();
+
     const [error, setError] = useState<UserFormErrorType>({});
     const [isLoading, setIsLoading] = useState(false);
 
@@ -19,8 +19,11 @@ export default function LoginPage() {
         const email = formData.get("email")?.toString();
         const password = formData.get("password")?.toString();
 
-        // Validate form data with zod
-        const validationResult = RegisterConstraints.safeParse({ username: email, password });
+        const validationResult = RegisterConstraints.safeParse({ 
+            username: email, 
+            password: password 
+        });
+        
         if (!validationResult.success) {
             const errors = validationResult.error.flatten().fieldErrors;
             setError({
@@ -51,9 +54,6 @@ export default function LoginPage() {
                 setError({
                     general: result.error || "Une erreur est survenue lors de la connexion.",
                 });
-            } else {
-                toast.success(`Bienvenue ${email} :)`);
-                router.push("/ingredients");
             }
         } catch (error) {
             console.error("Erreur lors de la connexion :", error);
@@ -73,11 +73,8 @@ export default function LoginPage() {
             </button>
 
             <form onSubmit={credentialsAction} className="flex flex-col gap-2">
-                {error.general && (
-                    <p className="error-form">
-                        {error.general}
-                    </p>
-                )}
+                <FormErrorMessage message={error.general} />
+
                 <label htmlFor="email">Email</label>
                 <input
                     className="input-text-select"
@@ -87,11 +84,7 @@ export default function LoginPage() {
                     placeholder="Email"
                     required
                 />
-                {error.email && (
-                    <p className="error-form">
-                        {error.email}
-                    </p>
-                )}
+                <FormErrorMessage message={error.email} />
 
                 <label htmlFor="password">Mot de passe</label>
                 <input
@@ -102,23 +95,13 @@ export default function LoginPage() {
                     placeholder="Mot de passe"
                     required
                 />
-                {error.password && (
-                    <p className="error-form">
-                        {error.password}
-                    </p>
-                )}
+                <FormErrorMessage message={error.password} />
 
-                <Button
-                    type="submit"
-                    disabled={isLoading}
-                    variant={isLoading ? "ghost" : "success"}
-                >
+                <Button type="submit" disabled={isLoading} variant={isLoading ? "ghost" : "success"}>
                     {isLoading ? "Connexion..." : "Se connecter"}
                 </Button>
-                <Button
-                    variant="link"
-                    onClick={() => router.push("/register")}
-                >
+
+                <Button variant="link" onClick={() => Router.push("/register")}>
                     S&apos;inscrire
                 </Button>
             </form>

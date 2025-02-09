@@ -61,6 +61,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         // Ajout du rôle utilisateur au token JWT
         async jwt({ token, user }) {
             if (user) {
+                token.id = user.id;
                 token.role = user.role;
             }
             return token;
@@ -69,6 +70,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         // Ajout du rôle utilisateur à la session
         async session({ session, token }) {
             if (session.user) {
+                session.user.id = token.id as string;
                 session.user.role = token.role as string; 
             }
             return session;

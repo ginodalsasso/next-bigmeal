@@ -20,22 +20,19 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { reversedTranslatedSeason, translatedSeason } from "@/lib/utils";
 import AddToShoppingListForm from "@/components/forms/AddToShoppingListForm";
-import EditItem from "@/components/layout/EditItem";
-import DeleteItem from "@/components/layout/DeleteItem";
+import EditItem from "@/components/layout/EditItemPopover";
+import DeleteItem from "@/components/layout/DeleteItemDialog";
 import IsAdmin from "@/components/isAdmin";
 import IsUser from "@/components/isUser";
 import SearchBar from "@/components/layout/Searchbar";
 import FilterCheckboxes from "@/components/layout/FilterCheckboxes";
 import { CATEGORIES_INGREDIENTS, SEASONS } from "@/lib/constants/constants";
-import { getCsrfToken, useSession } from "next-auth/react";
+import { getCsrfToken } from "next-auth/react";
 
 
 // _________________________ COMPOSANT _________________________
 const IngredientPage = () => {
     
-    
-    // const { data: session } = useSession();
-
     // _________________________ ETATS _________________________
     const [ingredients, setIngredients] = useState<IngredientType[]>([]);
     const [searchQuery, setSearchQuery] = useState("");

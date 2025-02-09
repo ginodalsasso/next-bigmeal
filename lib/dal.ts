@@ -17,7 +17,7 @@ export const getUser = cache(async () => {
     if (!session) {
         throw new Error("Unauthorized: You must be logged in");
     };
-
+    console.log("session", session);
     try {
         const user = await db.user.findUnique({
             where: {

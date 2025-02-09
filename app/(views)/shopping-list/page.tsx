@@ -1,6 +1,6 @@
 'use client';
 
-import DeleteItem from "@/components/layout/DeleteItem";
+import DeleteItem from "@/components/layout/DeleteItemDialog";
 import { Button } from "@/components/ui/button";
 import { ShoppingListType } from "@/lib/types/schemas_interfaces";
 import { dateToString } from "@/lib/utils";
