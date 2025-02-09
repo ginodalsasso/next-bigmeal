@@ -10,12 +10,11 @@ import { mealConstraints } from "@/lib/constraints/forms_constraints";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { CreateMealProps } from "@/lib/types/props_interfaces";
-import { useCsrfToken } from "@/app/context/CsrfContext";
 import { ucFirst } from "@/lib/utils";
+import { getCsrfToken } from "next-auth/react";
 
 const CreateMeal: React.FC<CreateMealProps> = ({ onMealCreated, onClose }) => {
     // _________________________ HOOKS _________________________
-    const csrfToken = useCsrfToken();
     const [categories, setCategories] = useState<CategoryMealType[]>([]);
 
     const [form, setForm] = useState<MealFormType>({
@@ -50,6 +49,7 @@ const CreateMeal: React.FC<CreateMealProps> = ({ onMealCreated, onClose }) => {
 
     // Appel API pour créer un repas
     const createMeal = async (data: MealFormType) => {
+        const csrfToken = await getCsrfToken();
         try {
             const response = await fetch("/api/meals", {
                 method: "POST",

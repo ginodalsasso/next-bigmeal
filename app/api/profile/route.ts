@@ -1,8 +1,8 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { getUserSession } from "@/lib/security/getSession";
 
-export async function GET(req: NextRequest) {
+export async function GET() {
     try {
         const { session, error } = await getUserSession();
         if (error) return error;

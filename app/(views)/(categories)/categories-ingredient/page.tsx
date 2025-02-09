@@ -9,13 +9,12 @@ import EditItem from "@/components/layout/EditItem";
 import DeleteItem from "@/components/layout/DeleteItem";
 import { toast } from "sonner";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { useCsrfToken } from "@/app/context/CsrfContext";
 import IsAdmin from "@/components/isAdmin";
+import { getCsrfToken } from "next-auth/react";
 
 // _________________________ COMPOSANT _________________________
 const CategoryIngredientPage = () => {
 // _________________________ ETATS _________________________
-const csrfToken = useCsrfToken();
 const [categoryIngredient, setCategoryIngredient] = useState<CategoryIngredientType[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -41,6 +40,7 @@ const [categoryIngredient, setCategoryIngredient] = useState<CategoryIngredientT
 
     // Appel API pour ajouter une catégorie
     const createCategoryIngredient = async (name: string) => {
+        const csrfToken = await getCsrfToken();
         try {
             const response = await fetch("/api/categories-ingredient", {
                 method: "POST",
@@ -62,6 +62,7 @@ const [categoryIngredient, setCategoryIngredient] = useState<CategoryIngredientT
 
     // Appel API pour mettre à jour une catégorie
     const updateCategoryIngredient = async (id: string, newName: string) => {
+        const csrfToken = await getCsrfToken();
         try {
             const response = await fetch("/api/categories-ingredient", {
                 method: "PUT",
@@ -85,6 +86,7 @@ const [categoryIngredient, setCategoryIngredient] = useState<CategoryIngredientT
 
     // Appel API pour supprimer une catégorie
     const deleteCategoryIngredient = async (id: string) => {
+        const csrfToken = await getCsrfToken();
         try {
             const response = await fetch("/api/categories-ingredient", {
                 method: "DELETE",

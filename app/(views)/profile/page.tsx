@@ -62,7 +62,7 @@ const ProfilePage = () => {
     if (!user) return <div>Utilisateur introuvable.</div>;
 
     return (
-        <div className="border rounded-lg p-6 xl:w-[70%] mx-auto">
+        <div className="border p-4">
             <h1 className="text-2xl font-bold">{user.email}</h1>
             <p>Role: {user.role}</p>
             <p>Compte créé le: {dateToString(user.createdAt)}</p>

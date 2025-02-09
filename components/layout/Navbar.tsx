@@ -26,6 +26,20 @@ const Navbar = () => {
                 <ul className="list-none hidden lg:flex flex-row items-center gap-6">
                     {/* Si l'utilisateur est connecté */}
                     <IsUser>
+                        <li className="nav-links-desktop align-icon">
+                            <Image
+                                src={"/img/user.svg"}
+                                width={18}
+                                height={18}
+                                alt="Profil"
+                            />
+                            <Link
+                                href="/profile"
+                                className="nav-links-desktop"
+                            >
+                                Profil
+                            </Link>
+                        </li>
                         <li>
                             <button 
                                 className="nav-links-desktop align-icon"
@@ -38,7 +52,7 @@ const Navbar = () => {
                                     alt="Déconnexion"
                                 />
                                 <span>
-                                    Se déconnecter
+                                    Déconnexion
                                 </span>
                             </button>
                         </li>
@@ -117,7 +131,7 @@ const Navbar = () => {
                                             alt="Déconnexion"
                                         />
                                         <span>
-                                            Se déconnecter
+                                            Déconnexion
                                         </span>
                                 </button>
                                 </li>

@@ -26,7 +26,7 @@ body {
 }
 
 .nav-links-desktop {
-  @apply text-gray-200 font-medium cursor-pointer hover:underline;
+  @apply text-gray-200 text-[22px] font-medium cursor-pointer hover:underline;
 };
 
 .align-icon {

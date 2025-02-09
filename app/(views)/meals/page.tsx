@@ -22,17 +22,16 @@ import CreateMeal from "./_components/CreateMeal";
 import UpdateMeal from "./_components/UpdateMeal";
 import CreateComposition from "./_components/CreateComposition";
 import AddToShoppingListForm from "@/components/forms/AddToShoppingListForm";
-import { useCsrfToken } from "@/app/context/CsrfContext";
 import IsAdmin from "@/components/isAdmin";
 import IsUser from "@/components/isUser";
 import SearchBar from "@/components/layout/Searchbar";
 import { CATEGORIES_MEALS } from "@/lib/constants/constants";
 import FilterCheckboxes from "@/components/layout/FilterCheckboxes";
+import { getCsrfToken } from "next-auth/react";
 
 // _________________________ COMPOSANT _________________________
 const MealsPage = () => {
     // _________________________ ETATS _________________________
-    const csrfToken = useCsrfToken(); 
     const [meals, setMeals] = useState<MealType[]>([]);
     const [currentStep, setCurrentStep] = useState<"createMeal" | "createComposition" | "chooseStep">("createMeal"); // étape pour la création de repas ou de composition
     const [createdMealId, setCreatedMealId] = useState<string | null>(null);
@@ -90,6 +89,7 @@ const MealsPage = () => {
 
     // Appel API pour modifier un repas
     const updateMeal = async (id: string, newName: string, newCategoryId: string, newDescription: string | null) => {
+        const csrfToken = await getCsrfToken();
         try {
             const response = await fetch("/api/meals", {
                 method: "PUT",
@@ -125,6 +125,7 @@ const MealsPage = () => {
 
     // Appel API pour supprimer un repas
     const deleteMeal = async (id: string) => {
+        const csrfToken = await getCsrfToken();
         try {
             const response = await fetch("/api/meals", {
                 method: "DELETE",
