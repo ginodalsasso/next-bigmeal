@@ -1,4 +1,4 @@
-import { loginConstraints } from "@/lib/constraints/forms_constraints";
+import { RegisterConstraints } from "@/lib/constraints/forms_constraints";
 import { db } from "@/lib/db";
 import { hash } from "bcryptjs";
 import { NextRequest, NextResponse } from "next/server";
@@ -8,7 +8,7 @@ export async function POST(req: NextRequest) {
         const body = await req.json();
 
         // Validation avec Zod
-        const validation = loginConstraints.safeParse(body);
+        const validation = RegisterConstraints.safeParse(body);
         if (!validation.success) {
             return NextResponse.json(
                 { errors: validation.error.flatten().fieldErrors },

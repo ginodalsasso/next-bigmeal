@@ -1,8 +1,10 @@
 "use client";
 
+import { useFormValidation } from "@/app/hooks/useFormValidation";
+import FormErrorMessage from "@/components/forms/FormErrorMessage";
 import { Button } from "@/components/ui/button";
-import { loginConstraints } from "@/lib/constraints/forms_constraints";
-import { UserFormErrorType } from "@/lib/types/forms_interfaces";
+import { RegisterConstraints } from "@/lib/constraints/forms_constraints";
+
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -10,8 +12,13 @@ import { toast } from "sonner";
 export default function RegisterPage() {
 
     const router = useRouter();
-    const [error, setError] = useState<UserFormErrorType>({});
-    const [isLoading, setIsLoading] = useState(false);
+
+    // Utilisation du hook de validation
+    const { error, setError, isLoading, setIsLoading, validate } = useFormValidation(
+        RegisterConstraints,
+        ["email", "password"] // Liste des champs à valider
+    );
+
     const [formData, setFormData] = useState({ 
         email: "", password: "" 
     });
@@ -21,14 +28,7 @@ export default function RegisterPage() {
         setIsLoading(true);
         setError({}); // Réinitialise les erreurs existantes
 
-        // Validation des données utilisateur avec Zod
-        const validation = loginConstraints.safeParse(formData);
-        if (!validation.success) {
-            const errors = validation.error.flatten().fieldErrors;
-            setError({
-                email: errors.email?.[0],
-                password: errors.password?.[0],
-            });
+        if (!validate(formData)) {
             setIsLoading(false);
             return;
         }
@@ -65,9 +65,8 @@ export default function RegisterPage() {
             className="mx-auto mt-[10%] sm:w-[400px] flex flex-col gap-2"
             onSubmit={handleSubmit}
         >
-            {error.general && (
-                <p className="error-form">{error.general}</p>
-            )}
+            <FormErrorMessage message={error?.general} />
+
             <input
                 type="text"
                 className="input-text-select "
@@ -77,11 +76,8 @@ export default function RegisterPage() {
                     setFormData({ ...formData, email: e.target.value })
                 }
             />
-            {error.email && (
-                <p className="error-form">
-                    {error.email}
-                </p>
-            )}
+            <FormErrorMessage message={error?.email} />
+
             <input
                 type="password"
                 className="input-text-select "
@@ -91,11 +87,7 @@ export default function RegisterPage() {
                     setFormData({ ...formData, password: e.target.value })
                 }
             />
-            {error.password && (
-                <p className="error-form">
-                    {error.password}
-                </p>
-            )}
+            <FormErrorMessage message={error?.password} />
 
             <Button
                 type="submit"

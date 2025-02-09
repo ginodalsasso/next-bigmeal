@@ -7,14 +7,6 @@ export const idConstraints = z.object({
     id: z.string(),
 });
 
-export const loginConstraints = z.object({
-    email: z
-        .string()
-        .email()
-,
-    password: z.string(),
-});
-
 export const categoriesConstraints = z.object({
     name: z
         .string()
@@ -82,6 +74,7 @@ export const RegisterConstraints = z.object({
     email: z
         .string()
         .email()
+        .min(3, "L'email doit comporter au moins 3 caractères")
         .max(100, "L'email doit comporter au maximum 100 caractères"),
     password: z
         .string()
@@ -89,6 +82,17 @@ export const RegisterConstraints = z.object({
         .max(100, "Le mot de passe doit comporter au maximum 100 caractères")
         // .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>~`'[\]\\/_+\-=])[A-Za-z\d!@#$%^&*(),.?":{}|<>~`'[\]\\/_+\-=]{12,}$/, "Le mot de passe doit comporter au moins 12 caractères, une lettre majuscule, une lettre minuscule, un chiffre et un caractère spécial"),
         .trim(),
+});
+
+export const LoginConstraints = z.object({
+    email: z
+        .string()
+        .email()
+        .nonempty("L'email ne peut pas être vide")
+        .max(100, "L'email doit comporter au maximum 100 caractères"),
+    password: z
+        .string()
+        .nonempty("Le mot de passe ne peut pas être vide"),
 });
 
 
