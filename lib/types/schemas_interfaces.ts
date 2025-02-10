@@ -114,6 +114,7 @@ export interface UserType {
     shoppingList: ShoppingListType[];
 }
 
+
 export interface UserContextType {
     id: string;
     username: string;

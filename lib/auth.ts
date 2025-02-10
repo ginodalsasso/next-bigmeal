@@ -2,7 +2,7 @@ import NextAuth from "next-auth";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { PrismaClient } from "@prisma/client";
 import Credentials from "next-auth/providers/credentials";
-import { loginConstraints } from "./constraints/forms_constraints";
+import { LoginConstraints } from "./constraints/forms_constraints";
 import { compare } from "bcryptjs";
 import { getUserByEmail } from "./dal";
 import GoogleProvider from "next-auth/providers/google";
@@ -25,7 +25,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             authorize: async (credentials) => {
                 try {
                     const { email, password } =
-                        await loginConstraints.parseAsync(credentials);
+                        await LoginConstraints.parseAsync(credentials);
 
                     const user = await getUserByEmail(email);
 

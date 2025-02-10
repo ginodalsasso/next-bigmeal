@@ -46,15 +46,12 @@ const UpdateComposition: React.FC<UpdateCompositionProps> = ({
                 },
                 body: JSON.stringify(composition),
             });
-
-            if (!response.ok) {
-                throw new Error("Erreur lors de la mise à jour de la composition");
-            }
+            if (!response.ok) throw new Error("Erreur lors de la mise à jour de la composition");
 
             const updatedComposition: CompositionType = await response.json();
-
             // Mettre à jour l'état parent via le callback
             onCompositionUpdated(updatedComposition);
+
             toast.success("Composition mise à jour avec succès !");
             onClose(); // Fermer le Popover après la mise à jour
         } catch (error) {

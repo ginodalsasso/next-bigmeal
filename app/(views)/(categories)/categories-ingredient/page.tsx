@@ -26,6 +26,7 @@ const [categoryIngredient, setCategoryIngredient] = useState<CategoryIngredientT
             try {
                 const response = await fetch("/api/categories-ingredient");
                 if (!response.ok) throw new Error("Failed to fetch categories-ingredient");
+                
                 const data: CategoryIngredientType[] = await response.json();
                 setCategoryIngredient(data);
             } catch (error) {
@@ -51,8 +52,12 @@ const [categoryIngredient, setCategoryIngredient] = useState<CategoryIngredientT
                 body: JSON.stringify({ name }),
             });
             if (!response.ok) throw new Error("Failed to add category");
+
             const newCategory: CategoryIngredientType = await response.json();
-            setCategoryIngredient((prev) => [...prev, newCategory]);
+            setCategoryIngredient((prev) => 
+                [...prev, newCategory]
+            );
+
             toast("Catégorie créée avec succès");
         } catch (error) {
             console.error("Erreur lors de la création:", error);
@@ -73,10 +78,12 @@ const [categoryIngredient, setCategoryIngredient] = useState<CategoryIngredientT
                 body: JSON.stringify({ id, name: newName }),
             });
             if (!response.ok) throw new Error("Failed to update category");
+
             const updatedCategory: CategoryIngredientType = await response.json();
             setCategoryIngredient((prev) =>
                 prev.map((category) => (category.id === id ? updatedCategory : category))
             );
+
             toast("Catégorie modifiée avec succès");
         } catch (error) {
             console.error("Erreur lors de la modification:", error);

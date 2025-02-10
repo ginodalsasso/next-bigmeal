@@ -5,12 +5,11 @@ import { toast } from 'sonner';
 import { ShoppingListConstraints } from '@/lib/constraints/forms_constraints';
 import Image from "next/image";
 import add from "@/public/img/add.svg";
-import {
-    AddIngredientToShoppingListFormErrorType,
-    AddIngredientToShoppingListFormType,
-} from '@/lib/types/forms_interfaces';
+import { AddIngredientToShoppingListFormType } from '@/lib/types/forms_interfaces';
 import { Button } from '../ui/button';
 import { getCsrfToken } from 'next-auth/react';
+import FormErrorMessage from './FormErrorMessage';
+import { useFormValidation } from '@/app/hooks/useFormValidation';
 
 interface AddToShoppingListFormProps {
     type: 'meal' | 'ingredient'; // Détermine le type d'ajout
@@ -19,9 +18,13 @@ interface AddToShoppingListFormProps {
 
 const AddToShoppingListForm: React.FC<AddToShoppingListFormProps> = ({ type, id }) => {
 
-    const [quantity, setQuantity] = useState<AddIngredientToShoppingListFormType>({ quantity: 1 });
-    const [error, setError] = useState<AddIngredientToShoppingListFormErrorType>({});
-    const [isLoading, setIsLoading] = useState(false);
+    const [quantity, setQuantity] = useState<AddIngredientToShoppingListFormType>({ quantity: 0 });
+
+    // Utilisation du hook de validation
+    const { error, setError, isLoading, setIsLoading, validate } = useFormValidation<AddIngredientToShoppingListFormType>(
+        ShoppingListConstraints,
+        ["quantity"] // Liste des champs à valider
+    );
 
     const handleAddToShoppingList = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -59,17 +62,13 @@ const AddToShoppingListForm: React.FC<AddToShoppingListFormProps> = ({ type, id 
                             }),
                         });
                     }
-
                     toast('Les ingrédients du repas ont été ajoutés à la liste de courses');
                     break;
                 }
 
                 case 'ingredient': {
-                    // Validation des quantités
-                    const validationResult = ShoppingListConstraints.safeParse({ quantity: quantity.quantity });
-                    if (!validationResult.success) {
-                        const formattedErrors = validationResult.error.flatten();
-                        setError({ quantity: formattedErrors.fieldErrors.quantity?.[0] });
+                    // Valider la quantité
+                    if(!validate(quantity)) {
                         setIsLoading(false);
                         return;
                     }
@@ -79,7 +78,7 @@ const AddToShoppingListForm: React.FC<AddToShoppingListFormProps> = ({ type, id 
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
-                            // "X-CSRF-Token": csrfToken,
+                            "X-CSRF-Token": csrfToken,
                         },
                         body: JSON.stringify({
                             ingredientId: id,
@@ -90,11 +89,9 @@ const AddToShoppingListForm: React.FC<AddToShoppingListFormProps> = ({ type, id 
                     if (!response.ok) {
                         throw new Error('Erreur lors de l\'ajout de l\'ingrédient à la liste de courses');
                     }
-
                     toast('Ingrédient ajouté à la liste de courses avec succès');
                     break;
                 }
-
                 default:
                     throw new Error('Type d\'ajout non supporté');
             }
@@ -116,16 +113,13 @@ const AddToShoppingListForm: React.FC<AddToShoppingListFormProps> = ({ type, id 
                 <input
                     type="number"
                     className="input-text-select"
-                    value={quantity.quantity}
+                    value={quantity.quantity || '1'}
                     min={1}
                     onChange={(e) => setQuantity({ quantity: parseInt(e.target.value) })}
                 />
             )}
-            {error.quantity && (
-                <p className="error-form">
-                    {error.quantity}
-                </p>
-            )}
+            <FormErrorMessage message={error?.quantity} />
+
             <Button variant="default" className={isLoading ? 'opacity-50 cursor-not-allowed' : 'w-full'} disabled={isLoading}>
                 <Image
                     src={add}

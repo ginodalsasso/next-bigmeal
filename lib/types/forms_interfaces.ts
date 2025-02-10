@@ -40,6 +40,8 @@ export interface MealFormErrorType {
 //     newCategoryMealId: string;
 // }
 
+
+
 // ____________ COMPOSITION
 export interface CompositionFormType {
     ingredientId: string;
@@ -56,11 +58,15 @@ export interface CompositionFormErrorType {
 }
 
 
+
+
 // ____________ CATEGORIES
 // FORMULAIRE D'ERREUR CATEGORY
 export interface CategoryFormErrorType {
     name?: string;
 }
+
+
 
 
 // ____________ USER    
@@ -76,7 +82,8 @@ export interface ForgotUserPasswordFormType {
     confirmPassword?: string;
 }
 
-// FORMULAIRE DE CONNEXION
+
+// ____________ SHOPPING LIST
 export interface AddIngredientToShoppingListFormType {
     quantity: number;
 }

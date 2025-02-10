@@ -44,9 +44,8 @@ const CreateIngredient: React.FC<CreateIngredientProps> = ({
         const fetchCategories = async () => {
             try {
                 const response = await fetch("/api/categories-ingredient");
-                if (!response.ok) {
-                    throw new Error("Erreur lors de la récupération des categories-ingredient");
-                }
+                if (!response.ok) throw new Error("Erreur lors de la récupération des categories-ingredient");
+                
                 const data: CategoryIngredientType[] = await response.json();
                 setCategories(data);
             } catch (error) {
@@ -68,9 +67,8 @@ const CreateIngredient: React.FC<CreateIngredientProps> = ({
                 },
                 body: JSON.stringify(data),
             });
-            if (!response.ok) {
-                throw new Error("Erreur lors de la création de l'ingrédient");
-            }
+            if (!response.ok) throw new Error("Erreur lors de la création de l'ingrédient");
+
             return JSON.parse(await response.text());
         } catch (error) {
             console.error("[CREATE_INGREDIENT_API_ERROR]", error);

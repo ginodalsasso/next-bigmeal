@@ -50,9 +50,8 @@ const IngredientPage = () => {
         const fetchIngredients = async () => {
             try {
                 const response = await fetch("/api/ingredients");
-                if (!response.ok) {
-                    throw new Error("Failed to fetch ingredients");
-                }
+                if (!response.ok) throw new Error("Failed to fetch ingredients");
+
                 const data: IngredientType[] = await response.json();
                 setIngredients(data);
             } catch (error) {
@@ -69,7 +68,9 @@ const IngredientPage = () => {
     // Fonction pour ajouter un ingrédient à la liste
     const addIngredient = (ingredient: IngredientType) => {
         // Ajouter l'ingrédient à la liste en conservant les anciens ingrédients
-        setIngredients((prevIngredients) => [...prevIngredients, ingredient]);
+        setIngredients((prevIngredients) =>
+            [...prevIngredients, ingredient]
+        );
     };
 
     // Appel API pour mettre à jour un ingrédient
@@ -89,10 +90,8 @@ const IngredientPage = () => {
                     season: newSeason 
                 }),
             });
+            if (!response.ok) throw new Error("Failed to update ingredient");
 
-            if (!response.ok) {
-                throw new Error("Failed to update ingredient");
-            }
             // Mettre à jour l'ingrédient dans le state
             const updatedIngredient: IngredientType = await response.json();
             setIngredients((prev) => // Remplacer l'ancien ingrédient par le nouveau
@@ -100,6 +99,7 @@ const IngredientPage = () => {
                     ingredient.id === id ? updatedIngredient : ingredient
                 )
             );
+
             toast("Ingrédient modifié avec succès");
         } catch (error) {
             console.error("Erreur lors de la modification:", error);
@@ -119,12 +119,12 @@ const IngredientPage = () => {
                 },
                 body: JSON.stringify({ id }),
             });
+            if (!response.ok) throw new Error("Failed to delete ingredient");
 
-            if (!response.ok) {
-                throw new Error("Failed to delete ingredient");
-            }
-
-            setIngredients((prev) => prev.filter((ingredient) => ingredient.id !== id));
+            setIngredients((prev) => 
+                prev.filter((ingredient) => ingredient.id !== id)
+            );
+            
             toast("Ingrédient supprimé avec succès");
         } catch (error) {
             console.error("Erreur lors de la suppression:", error);
@@ -150,7 +150,7 @@ const IngredientPage = () => {
         
         const matchesFilters =
             selectedFilters.length === 0 || // Aucun filtre => tout est affiché
-            selectedCategory.includes(category) || (season && selectedSeasons.includes(season));
+            selectedCategory.includes(category) || (season && selectedSeasons.includes(season)); 
 
         return matchesSearch && matchesFilters;
     });
@@ -192,8 +192,8 @@ const IngredientPage = () => {
 
                 {/* Barre de recherche */}
                 <SearchBar onSearch={(query) => setSearchQuery(query)} />
-                {/* Filtres */}
             </div>
+            {/* Filtres */}
             <FilterCheckboxes 
                 options={filterOptions} 
                 onFilterChange={setSelectedFilters} 

@@ -19,10 +19,8 @@ const ShoppingListPage = () => {
         const fetchShoppingList = async () => {
             try {
                 const response = await fetch("/api/shopping-list");
+                if (!response.ok) throw new Error("Failed to fetch shoppingList");
 
-                if (!response.ok) {
-                    throw new Error("Failed to fetch shoppingList");
-                }
                 const data: ShoppingListType = await response.json();
                 setShoppingList(data);
             } catch (error) {
@@ -63,10 +61,7 @@ const ShoppingListPage = () => {
                 },
                 body: JSON.stringify({ id, isChecked: newCheckedState }),
             });
-
-            if (!response.ok) {
-                throw new Error("Failed to update item");
-            }
+            if (!response.ok) throw new Error("Failed to update item");
 
         } catch (error) {
             console.error("Erreur lors de la modification:", error);
@@ -86,10 +81,7 @@ const ShoppingListPage = () => {
                     },
                     body: JSON.stringify({ id: shoppingList.id, isExpired: true }),
                 });
-
-                if (!response.ok) {
-                    throw new Error("Failed to mark shopping list as expired");
-                }
+                if (!response.ok) throw new Error("Failed to mark shopping list as expired");
 
                 toast.success("La liste de courses a été marquée comme terminée !");
                 router.push('/'); // Redirection vers la page d'accueil
@@ -108,6 +100,7 @@ const ShoppingListPage = () => {
                 const items = list.items;
                 // Vérifier si tous les items sont cochés
                 const allChecked = items.every((item) => item.isChecked);
+
                 if (allChecked) {
                     await markShoppingListAsExpired();
                 } else {
@@ -132,16 +125,14 @@ const ShoppingListPage = () => {
                 },
                 body: JSON.stringify({ id }),
             });
-
-            if (!response.ok) {
-                throw new Error("Failed to delete item from shoppingList");
-            }
+            if (!response.ok) throw new Error("Failed to delete item from shoppingList");
 
             // Supprimer le repas du state
             setShoppingList((prev) => prev && {
                 ...prev,
                 items: prev.items.filter((item) => item.id !== id)
             });
+
             toast("Article supprimé avec succès");
         } catch (error) {
             console.error("Erreur lors de la suppression:", error);
@@ -161,16 +152,14 @@ const ShoppingListPage = () => {
                 },
                 body: JSON.stringify({ mealId }),
             });
-
-            if (!response.ok) {
-                throw new Error("Failed to delete meal from shoppingList");
-            }
+            if (!response.ok) throw new Error("Failed to delete meal from shoppingList");
 
             // Supprimer le repas du state
             setShoppingList((prev) => prev && {
                 ...prev,
                 items: prev.items.filter((item) => item.mealId !== mealId)
             });
+
             toast("Repas supprimé avec succès");
         } catch (error) {
             console.error("Erreur lors de la suppression:", error);

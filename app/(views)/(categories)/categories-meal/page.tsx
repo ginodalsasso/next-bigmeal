@@ -27,6 +27,7 @@ const CategoryMealPage = () => {
             try {
                 const response = await fetch("/api/categories-meal");
                 if (!response.ok) throw new Error("Failed to fetch categories-meal");
+
                 const data: CategoryMealType[] = await response.json();
                 setCategoryMeal(data);
             } catch (error) {
@@ -52,8 +53,12 @@ const CategoryMealPage = () => {
                 body: JSON.stringify({ name }),
             });
             if (!response.ok) throw new Error("Failed to add category");
+
             const newCategory: CategoryMealType = await response.json();
-            setCategoryMeal((prev) => [...prev, newCategory]);
+            setCategoryMeal((prev) => 
+                [...prev, newCategory]
+            );
+
             toast("Catégorie créée avec succès");
         } catch (error) {
             console.error("Erreur lors de la création:", error);
@@ -74,10 +79,12 @@ const CategoryMealPage = () => {
                 body: JSON.stringify({ id, name: newName }),
             });
             if (!response.ok) throw new Error("Failed to update category");
+
             const updatedCategory: CategoryMealType = await response.json();
             setCategoryMeal((prev) =>
                 prev.map((category) => (category.id === id ? updatedCategory : category))
             );
+
             toast("Catégorie modifiée avec succès");
         } catch (error) {
             console.error("Erreur lors de la modification:", error);
@@ -98,7 +105,9 @@ const CategoryMealPage = () => {
                 body: JSON.stringify({ id }),
             });
             if (!response.ok) throw new Error("Failed to delete category");
+
             setCategoryMeal((prev) => prev.filter((category) => category.id !== id));
+            
             toast("Catégorie supprimée avec succès");
         } catch (error) {
             console.error("Erreur lors de la suppression:", error);

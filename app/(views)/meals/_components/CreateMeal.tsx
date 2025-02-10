@@ -36,9 +36,8 @@ const CreateMeal: React.FC<CreateMealProps> = ({ onMealCreated, onClose }) => {
         const fetchCategories = async () => {
             try {
                 const response = await fetch("/api/categories-meal");
-                if (!response.ok) {
-                    throw new Error("Erreur lors de la récupération des categories-repas");
-                }
+                if (!response.ok) throw new Error("Erreur lors de la récupération des categories-repas");
+
                 const data: CategoryMealType[] = await response.json();
                 setCategories(data);
             } catch (error) {
@@ -60,9 +59,8 @@ const CreateMeal: React.FC<CreateMealProps> = ({ onMealCreated, onClose }) => {
                 },
                 body: JSON.stringify(data),
             });
-            if (!response.ok) {
-                throw new Error("Erreur lors de la création du repas");
-            }
+            if (!response.ok) throw new Error("Erreur lors de la création du repas");
+
             return await response.json();
         } catch (error) {
             console.error("[CREATE_MEAL_API_ERROR]", error);
@@ -85,6 +83,7 @@ const CreateMeal: React.FC<CreateMealProps> = ({ onMealCreated, onClose }) => {
         try {
             const createdMeal = await createMeal(form);
             onMealCreated(createdMeal); // Ajout à la liste parent
+            
             toast("Repas créé avec succès");
         } catch (error) {
             console.error("[CREATE_MEAL]", error);

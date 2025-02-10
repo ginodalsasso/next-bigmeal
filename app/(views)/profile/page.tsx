@@ -18,9 +18,8 @@ const ProfilePage = () => {
         const fetchUser = async () => {
             try {
                 const response = await fetch("/api/profile");
-                if (!response.ok) {
-                    throw new Error("Utilisateur non trouvé");
-                }
+                if (!response.ok) throw new Error("Utilisateur non trouvé");
+                
                 const data: UserType = await response.json();
                 setUser(data);
             } catch (error) {

@@ -17,8 +17,8 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import add from "@/public/img/add.svg";
-import { useCsrfToken } from "@/app/context/CsrfContext";
 import IsAdmin from "@/components/isAdmin";
+import { getCsrfToken } from "next-auth/react";
 
 const MealDetailPage = 
     ({ 
@@ -29,7 +29,6 @@ const MealDetailPage =
     const { mealName } = use(params);
 
     // _________________________ ETATS _________________________
-    const csrfToken = useCsrfToken();
     const [meal, setMeal] = useState<MealType | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -41,9 +40,8 @@ const MealDetailPage =
         const fetchMeal = async () => {
             try {
                 const response = await fetch(`/api/meals/${mealName}`);
-                if (!response.ok) {
-                    throw new Error("Failed to fetch meal");
-                }
+                if (!response.ok) throw new Error("Failed to fetch meal");
+
                 const data: MealType = await response.json();
                 setMeal(data);
             } catch (error) {
@@ -77,6 +75,7 @@ const MealDetailPage =
     
     
     const deleteComposition = async (id: string) => {
+        const csrfToken = await getCsrfToken();
         try {
             const response = await fetch("/api/compositions", {
                 method: "DELETE",
@@ -86,10 +85,8 @@ const MealDetailPage =
                 },
                 body: JSON.stringify({ id }),
             });
+            if (!response.ok) throw new Error("Failed to delete composition");
 
-            if (!response.ok) {
-                throw new Error("Failed to delete composition");
-            }
             setMeal((prevMeal) => {
                 if (!prevMeal) return prevMeal;
                 return {
@@ -99,6 +96,7 @@ const MealDetailPage =
                     ),
                 };
             });
+            
             toast("Composition supprimée avec succès");
         } catch (error) {
             console.error("Erreur lors de la suppression:", error);

@@ -42,9 +42,8 @@ const CreateComposition: React.FC<CreateCompositionProps>= ({
         const fetchIngredients = async () => {
             try {
                 const response = await fetch("/api/ingredients");
-                if (!response.ok) {
-                    throw new Error("Erreur lors de la récupération des ingrédients");
-                }
+                if (!response.ok) throw new Error("Erreur lors de la récupération des ingrédients");
+
                 const data: IngredientType[] = await response.json();
                 setIngredients(data);
             } catch (error) {
@@ -69,7 +68,9 @@ const CreateComposition: React.FC<CreateCompositionProps>= ({
     // Supprimer une ligne de composition par son index (position dans le tableau)
     const removeLine = (index: number) => {
         // Filtrer les lignes pour ne pas inclure celle à supprimer
-        setForm((prev) => prev.filter((_, i) => i !== index));
+        setForm((prev) => 
+            prev.filter((_, i) => i !== index)
+        );
     };
 
     // Gestion de la soumission du formulaire
@@ -112,13 +113,11 @@ const CreateComposition: React.FC<CreateCompositionProps>= ({
                 },
                 body: JSON.stringify(form),
             });
-    
-            if (!response.ok) {
-                throw new Error("Erreur lors de la création des compositions");
-            }
+            if (!response.ok) throw new Error("Erreur lors de la création des compositions");
     
             const createdCompositions: CompositionType[] = await response.json(); // Récupérer les compositions insérées
             onCompositionCreated(createdCompositions); // Ajout à la liste parent
+            
             toast("Compositions créées avec succès");
             onClose(); // Fermer le dialogue
         } catch (error) {

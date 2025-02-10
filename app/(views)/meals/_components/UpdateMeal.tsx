@@ -35,9 +35,8 @@ const UpdateMeal: React.FC<UpdateMealProps> = ({
         const fetchCategories = async () => {
             try {
                 const response = await fetch("/api/categories-meal");
-                if (!response.ok) {
-                    throw new Error("Erreur lors de la récupération des catégories.");
-                }
+                if (!response.ok) throw new Error("Erreur lors de la récupération des catégories.");
+                
                 const data: CategoryMealType[] = await response.json();
                 setCategories(data);
             } catch (error) {
@@ -58,7 +57,7 @@ const UpdateMeal: React.FC<UpdateMealProps> = ({
         };
 
         if (validate(formData)) {
-            await onSubmit(name, category, description || "");
+            await onSubmit(name, category, description);
         }
 
         setIsLoading(false);

@@ -48,9 +48,8 @@ const MealsPage = () => {
         const fetchMeals = async () => {
             try {
                 const response = await fetch("/api/meals");
-                if (!response.ok) {
-                    throw new Error("Failed to fetch meals");
-                }
+                if (!response.ok) throw new Error("Failed to fetch meals");
+
                 const data: MealType[] = await response.json();
                 setMeals(data);
             } catch (error) {
@@ -104,10 +103,8 @@ const MealsPage = () => {
                     description: newDescription 
                 }),
             });
+            if (!response.ok) throw new Error("Failed to update meal");
 
-            if (!response.ok) {
-                throw new Error("Failed to update meal");
-            }
             // Mettre à jour le repas dans le state
             const updatedMeal: MealType = await response.json();
             setMeals((prev) =>
@@ -115,6 +112,7 @@ const MealsPage = () => {
                     meal.id === updatedMeal.id ? updatedMeal : meal // Si l'ID correspond, remplacer par le nouveau
                 )
             );
+
             toast("Repas modifié avec succès");
         } catch (error) {
             console.error("Erreur lors de la modification:", error);
@@ -135,12 +133,11 @@ const MealsPage = () => {
                 },
                 body: JSON.stringify({ id }),
             });
+            if (!response.ok) throw new Error("Failed to delete meal");
 
-            if (!response.ok) {
-                throw new Error("Failed to delete meal");
-            }
             // Supprimer le repas du state
             setMeals((prev) => prev.filter((meal) => meal.id !== id));
+            
             toast("Repas supprimé avec succès");
         } catch (error) {
             console.error("Erreur lors de la suppression:", error);

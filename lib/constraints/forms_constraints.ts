@@ -88,11 +88,11 @@ export const LoginConstraints = z.object({
     email: z
         .string()
         .email()
-        .nonempty("L'email ne peut pas être vide")
+        // .nonempty("L'email ne peut pas être vide")
         .max(100, "L'email doit comporter au maximum 100 caractères"),
     password: z
         .string()
-        .nonempty("Le mot de passe ne peut pas être vide"),
+        // .nonempty("Le mot de passe ne peut pas être vide"),
 });
 
 

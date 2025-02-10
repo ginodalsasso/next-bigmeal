@@ -45,9 +45,8 @@ const UpdateIngredient: React.FC<UpdateIngredientProps> = ({
         const fetchCategories = async () => {
             try {
                 const response = await fetch("/api/categories-ingredient");
-                if (!response.ok) {
-                    throw new Error("Erreur lors de la récupération des categories-ingredient");
-                }
+                if (!response.ok) throw new Error("Erreur lors de la récupération des categories-ingredient");
+                
                 const data: CategoryIngredientType[] = await response.json();
                 setCategories(data);
             } catch (error) {

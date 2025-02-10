@@ -2,16 +2,18 @@
 
 import { signIn } from "next-auth/react";
 import { Button } from "@/components/ui/button";
-import { RegisterConstraints } from "@/lib/constraints/forms_constraints";
-import Router from "next/router";
+import { LoginConstraints } from "@/lib/constraints/forms_constraints";
 import FormErrorMessage from "@/components/forms/FormErrorMessage";
 import { useFormValidation } from "@/app/hooks/useFormValidation";
+import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
     
+    const router = useRouter();
+    
     // Utilisation du hook de validation
     const { error, setError, isLoading, setIsLoading, validate } = useFormValidation(
-        RegisterConstraints,
+        LoginConstraints,
         ["email", "password"] // Liste des champs à valider
     );
 
@@ -29,7 +31,7 @@ export default function LoginPage() {
 
         try {
             const result = await signIn("credentials", {
-                redirect: false,
+                redirect: true,
                 email,
                 password,
             });
@@ -47,12 +49,6 @@ export default function LoginPage() {
 
     return (
         <div className="px-4 py-8 mx-auto mt-[10%] sm:w-[400px] flex flex-col gap-2">
-            <button onClick={() => signIn("google")} className="mb-4">
-                Se connecter avec Google
-            </button>
-            <button onClick={() => signIn("github")} className="mb-4">
-                Se connecter avec GitHub
-            </button>
 
             <form onSubmit={credentialsAction} className="flex flex-col gap-2">
                 <FormErrorMessage message={error?.general} />
@@ -83,8 +79,15 @@ export default function LoginPage() {
                     {isLoading ? "Connexion..." : "Se connecter"}
                 </Button>
 
-                <Button variant="link" onClick={() => Router.push("/register")}>
-                    S&apos;inscrire
+                <Button variant="secondary" onClick={() => router.push("/register")}>
+                    Pas encore de compte ? Créer un compte
+                </Button>
+
+                <Button variant="link" onClick={() => signIn("google")} className="mb-4">
+                    Se connecter avec Google
+                </Button>
+                <Button variant="link" onClick={() => signIn("github")} className="mb-4">
+                    Se connecter avec GitHub
                 </Button>
             </form>
         </div>
