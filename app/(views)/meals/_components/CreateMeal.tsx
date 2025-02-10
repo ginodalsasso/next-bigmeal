@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { CreateMealProps } from "@/lib/types/props_interfaces";
 import { ucFirst } from "@/lib/utils";
 import { getCsrfToken } from "next-auth/react";
+import FormErrorMessage from "@/components/forms/FormErrorMessage";
 
 const CreateMeal: React.FC<CreateMealProps> = ({ onMealCreated, onClose }) => {
     // _________________________ HOOKS _________________________
@@ -104,9 +105,7 @@ const CreateMeal: React.FC<CreateMealProps> = ({ onMealCreated, onClose }) => {
                 className="input-text-select"
                 required
             />
-            {error?.name && (
-                <p className="error-form">{error.name}</p>
-            )}
+            <FormErrorMessage message={error?.name} />
 
             {/* Text area pour la description */}
             <textarea
@@ -115,9 +114,7 @@ const CreateMeal: React.FC<CreateMealProps> = ({ onMealCreated, onClose }) => {
                 onChange={(e) => setForm({ ...form, description: e.target.value })}
                 className="input-text-select"
             />
-            {error?.description && (
-                <p className="error-form">{error.description}</p>
-            )}
+            <FormErrorMessage message={error?.description} />
 
             {/* Sélection pour la catégorie */}
             <select
@@ -133,9 +130,7 @@ const CreateMeal: React.FC<CreateMealProps> = ({ onMealCreated, onClose }) => {
                     </option>
                 ))}
             </select>
-            {error?.categoryMealId && (
-                <p className="error-form">{error.categoryMealId}</p>
-            )}
+            <FormErrorMessage message={error?.categoryMealId} />
 
             {/* Bouton de soumission */}
             <div className="flex flex-col-reverse gap-2 lg:justify-end">

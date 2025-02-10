@@ -5,6 +5,7 @@ import { UpdateMealProps } from "@/lib/types/props_interfaces";
 import { useFormValidation } from "@/app/hooks/useFormValidation";
 import { mealConstraints } from "@/lib/constraints/forms_constraints";
 import { ucFirst } from "@/lib/utils";
+import FormErrorMessage from "@/components/forms/FormErrorMessage";
 
 // _________________________ COMPOSANT _________________________
 
@@ -73,7 +74,7 @@ const UpdateMeal: React.FC<UpdateMealProps> = ({
                 className="input-text-select"
                 disabled={isLoading || externalLoading}
             />
-            {error?.name && <p className="error-form">{error.name}</p>}
+            <FormErrorMessage message={error?.name} />
 
             <select
                 value={category}
@@ -89,7 +90,7 @@ const UpdateMeal: React.FC<UpdateMealProps> = ({
                     </option>
                 ))}
             </select>
-            {error?.categoryMealId && <p className="error-form">{error.categoryMealId}</p>}
+            <FormErrorMessage message={error?.categoryMealId} />
 
             <textarea
                 placeholder="Description du repas"
@@ -98,7 +99,7 @@ const UpdateMeal: React.FC<UpdateMealProps> = ({
                 className="input-text-select"
                 disabled={isLoading || externalLoading}
             />
-            {error?.description && <p className="error-form">{error.description}</p>}
+            <FormErrorMessage message={error?.description} />
 
             <div className="flex gap-2">
                 <Button

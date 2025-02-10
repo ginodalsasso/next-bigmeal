@@ -13,6 +13,7 @@ import { IngredientUnit } from "@/lib/types/enums";
 import { translatedUnit } from "@/lib/utils";
 import { CreateCompositionProps } from "@/lib/types/props_interfaces";
 import { getCsrfToken } from "next-auth/react";
+import FormErrorMessage from "@/components/forms/FormErrorMessage";
 
 const CreateComposition: React.FC<CreateCompositionProps>= ({
     mealId,
@@ -155,9 +156,7 @@ const CreateComposition: React.FC<CreateCompositionProps>= ({
                             </option>
                         ))}
                     </select>
-                    {error[index]?.ingredientId && (
-                        <p className="error-form">{error[index].ingredientId}</p>
-                    )}
+                    <FormErrorMessage message={error[index]?.ingredientId} />
 
                     {/* Champ pour la quantité */}
                     <input
@@ -177,9 +176,7 @@ const CreateComposition: React.FC<CreateCompositionProps>= ({
                         className="input-text-select"
                         required
                     />
-                    {error[index]?.quantity && (
-                        <p className="error-form">{error[index].quantity}</p>
-                    )}
+                    <FormErrorMessage message={error[index]?.quantity} />
 
                     {/* Sélection de l'unité */}
                     <select
@@ -203,9 +200,7 @@ const CreateComposition: React.FC<CreateCompositionProps>= ({
                             </option>
                         ))}
                     </select>
-                    {error[index]?.unit && (
-                        <p className="error-form">{error[index].unit}</p>
-                    )}
+                    <FormErrorMessage message={error[index]?.unit} />
 
                     {/* Bouton pour supprimer une ligne */}
                     <Button

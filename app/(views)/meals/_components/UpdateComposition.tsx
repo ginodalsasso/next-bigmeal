@@ -11,6 +11,7 @@ import { updateCompositionConstraints } from "@/lib/constraints/forms_constraint
 import { useFormValidation } from "@/app/hooks/useFormValidation";
 import { UpdateCompositionProps } from "@/lib/types/props_interfaces";
 import { getCsrfToken } from "next-auth/react";
+import FormErrorMessage from "@/components/forms/FormErrorMessage";
 
 // _________________________ COMPOSANT _________________________
 const UpdateComposition: React.FC<UpdateCompositionProps> = ({
@@ -81,7 +82,7 @@ const UpdateComposition: React.FC<UpdateCompositionProps> = ({
                     required
                     disabled={isLoading}
                 />
-                {error?.quantity && <p className="error-form">{error.quantity}</p>}
+                <FormErrorMessage message={error?.quantity} />
 
                 {/* Sélecteur pour l'unité */}
                 <select
@@ -100,7 +101,7 @@ const UpdateComposition: React.FC<UpdateCompositionProps> = ({
                         </option>
                     ))}
                 </select>
-                {error?.unit && <p className="error-form">{error.unit}</p>}
+                <FormErrorMessage message={error?.unit} />
             </div>
 
             <div className="flex gap-2">

@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { translatedSeason, ucFirst } from "@/lib/utils";
 import { CreateIngredientProps } from "@/lib/types/props_interfaces";
 import { getCsrfToken } from "next-auth/react";
+import FormErrorMessage from "@/components/forms/FormErrorMessage";
 
 // _________________________ COMPOSANT _________________________
 const CreateIngredient: React.FC<CreateIngredientProps> = ({
@@ -30,7 +31,11 @@ const CreateIngredient: React.FC<CreateIngredientProps> = ({
     // Hook de validation
     const { error, isLoading, setIsLoading, validate } = useFormValidation<IngredientFormType>(
         ingredientConstraints,
-        ["name", "season", "categoryIngredientId"]
+        [
+            "name", 
+            "season", 
+            "categoryIngredientId"
+        ]
     );
 
     // _________________________ LOGIQUE _________________________
@@ -109,7 +114,7 @@ const CreateIngredient: React.FC<CreateIngredientProps> = ({
                 className="input-text-select"
                 required
             />
-            {error?.name && <p className="error-form">{error.name}</p>}
+            <FormErrorMessage message={error?.name} />
 
             {/* Sélection pour la saison */}
             <select
@@ -129,7 +134,7 @@ const CreateIngredient: React.FC<CreateIngredientProps> = ({
                     </option>
                 ))}
             </select>
-            {error?.season && <p className="error-form">{error.season}</p>}
+            <FormErrorMessage message={error?.season} />
 
             {/* Sélection pour la catégorie */}
             <select
@@ -145,9 +150,7 @@ const CreateIngredient: React.FC<CreateIngredientProps> = ({
                     </option>
                 ))}
             </select>
-            {error?.categoryIngredientId && (
-                <p className="error-form">{error.categoryIngredientId}</p>
-            )}
+            <FormErrorMessage message={error?.categoryIngredientId} />
 
             {/* Bouton de soumission */}
             <div className="flex flex-col-reverse gap-2 lg:justify-end">
