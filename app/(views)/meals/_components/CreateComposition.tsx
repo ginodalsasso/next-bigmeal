@@ -24,7 +24,7 @@ const CreateComposition: React.FC<CreateCompositionProps>= ({
     // _________________________ HOOKS _________________________
     const [ingredients, setIngredients] = useState<IngredientType[]>([]); // Liste des ingrédients disponibles
 
-    const [isLoading, setIsLoading] = useState(false); // Indique si l'action est en cours
+    const [isLoading, setIsLoading] = useState<boolean>(false); // Indique si l'action est en cours
     const [error, setError] = useState<Record<number, CompositionFormErrorType>>({});
     const [form, setForm] = useState<CompositionFormType[]>([
         {

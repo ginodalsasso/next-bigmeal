@@ -30,9 +30,9 @@ const MealDetailPage =
 
     // _________________________ ETATS _________________________
     const [meal, setMeal] = useState<MealType | null>(null);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
-    const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
     const [isPopoverOpen, setIsPopoverOpen] = useState<string | null>(null);
 
     // _________________________ LOGIQUE _________________________

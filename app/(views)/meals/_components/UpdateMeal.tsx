@@ -8,7 +8,6 @@ import { ucFirst } from "@/lib/utils";
 import FormErrorMessage from "@/components/forms/FormErrorMessage";
 
 // _________________________ COMPOSANT _________________________
-
 const UpdateMeal: React.FC<UpdateMealProps> = ({
     initialName,
     initialCategory,
@@ -17,13 +16,16 @@ const UpdateMeal: React.FC<UpdateMealProps> = ({
     onCancel,
     isLoading: externalLoading,
 }) => {
+    // _________________________ ÉTATS _________________________
+    const [form, setForm] = useState({
+        name: initialName,
+        categoryMealId: initialCategory,
+        description: initialDescription || "",
+    });
 
-    // _________________________ ETATS _________________________
-    const [name, setName] = useState(initialName);
-    const [category, setCategory] = useState(initialCategory);
-    const [description, setDescription] = useState(initialDescription || "");
     const [categories, setCategories] = useState<CategoryMealType[]>([]);
 
+    // Hook de validation
     const { error, validate, setIsLoading, isLoading } = useFormValidation(
         mealConstraints,
         ["name", "categoryMealId", "description"]
@@ -46,18 +48,25 @@ const UpdateMeal: React.FC<UpdateMealProps> = ({
         fetchCategories();
     }, []);
 
+    // Gestion des changements de champs
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+        setForm((prev) => ({
+            ...prev,
+            [e.target.name]: e.target.value,
+        }));
+    };
+
+    // Soumission du formulaire
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsLoading(true);
 
-        const formData = {
-            name,
-            categoryMealId: category,
-            description: description || null,
-        };
-
-        if (validate(formData)) {
-            await onSubmit(name, category, description);
+        if (validate(form)) {
+            await onSubmit(
+                form.name, 
+                form.categoryMealId, 
+                form.description
+            );
         }
 
         setIsLoading(false);
@@ -67,8 +76,9 @@ const UpdateMeal: React.FC<UpdateMealProps> = ({
         <form onSubmit={handleSubmit} className="space-y-2">
             <input
                 type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
+                name="name"
+                value={form.name}
+                onChange={handleChange}
                 placeholder="Nouveau nom"
                 className="input-text-select"
                 disabled={isLoading || externalLoading}
@@ -76,8 +86,9 @@ const UpdateMeal: React.FC<UpdateMealProps> = ({
             <FormErrorMessage message={error?.name} />
 
             <select
-                value={category}
-                onChange={(e) => setCategory(e.target.value)}
+                name="categoryMealId"
+                value={form.categoryMealId}
+                onChange={handleChange}
                 className="input-text-select"
                 disabled={isLoading || externalLoading}
                 required
@@ -92,9 +103,10 @@ const UpdateMeal: React.FC<UpdateMealProps> = ({
             <FormErrorMessage message={error?.categoryMealId} />
 
             <textarea
+                name="description"
                 placeholder="Description du repas"
-                value={description || ""}
-                onChange={(e) => setDescription(e.target.value)}
+                value={form.description}
+                onChange={handleChange}
                 className="input-text-select"
                 disabled={isLoading || externalLoading}
             />

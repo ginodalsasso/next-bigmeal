@@ -35,11 +35,11 @@ const MealsPage = () => {
     const [meals, setMeals] = useState<MealType[]>([]);
     const [currentStep, setCurrentStep] = useState<"createMeal" | "createComposition" | "chooseStep">("createMeal"); // étape pour la création de repas ou de composition
     const [createdMealId, setCreatedMealId] = useState<string | null>(null);
-    const [searchQuery, setSearchQuery] = useState(""); 
+    const [searchQuery, setSearchQuery] = useState<string>(""); 
     const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
     
-    const [isDialogOpen, setIsDialogOpen] = useState(false);
-    const [loading, setLoading] = useState(true);
+    const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
+    const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
 
     // _________________________ LOGIQUE _________________________

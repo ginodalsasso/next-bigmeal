@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 
 import { useFormValidation } from "@/app/hooks/useFormValidation";
-import { CategoryMealType } from "@/lib/types/schemas_interfaces";
+import { CategoryMealType, MealType } from "@/lib/types/schemas_interfaces";
 import { MealFormType } from "@/lib/types/forms_interfaces";
 import { mealConstraints } from "@/lib/constraints/forms_constraints";
 
@@ -61,7 +61,8 @@ const CreateMeal: React.FC<CreateMealProps> = ({ onMealCreated, onClose }) => {
             });
             if (!response.ok) throw new Error("Erreur lors de la création du repas");
 
-            return await response.json();
+            const createdMeal: MealType = await response.json();
+            return createdMeal;
         } catch (error) {
             console.error("[CREATE_MEAL_API_ERROR]", error);
             throw error;
@@ -81,7 +82,7 @@ const CreateMeal: React.FC<CreateMealProps> = ({ onMealCreated, onClose }) => {
 
         // Créer le repas avec les données validées
         try {
-            const createdMeal = await createMeal(form);
+            const createdMeal: MealType = await createMeal(form);
             onMealCreated(createdMeal); // Ajout à la liste parent
             
             toast("Repas créé avec succès");

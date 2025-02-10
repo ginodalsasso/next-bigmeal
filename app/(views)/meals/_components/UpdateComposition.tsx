@@ -20,7 +20,9 @@ const UpdateComposition: React.FC<UpdateCompositionProps> = ({
     onClose,
 }) => {
     // _________________________ HOOKS _________________________
-    const [composition, setComposition] = useState(initialComposition);
+    const [composition, setComposition] = useState<CompositionType>(initialComposition);
+
+    // Hook de validation
     const { error, validate, setIsLoading, isLoading } = useFormValidation(
         updateCompositionConstraints,
         ["quantity", "unit"]

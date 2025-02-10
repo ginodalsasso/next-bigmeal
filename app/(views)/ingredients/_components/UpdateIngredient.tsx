@@ -68,6 +68,7 @@ const UpdateIngredient: React.FC<UpdateIngredientProps> = ({
 
         try {
             const { name, season, categoryIngredientId } = form;
+            
             await onSubmit(name, categoryIngredientId, season);
         } catch (error) {
             console.error("[UPDATE_INGREDIENT_ERROR]", error);

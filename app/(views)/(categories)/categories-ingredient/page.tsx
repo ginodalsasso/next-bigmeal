@@ -12,10 +12,10 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import IsAdmin from "@/components/isAdmin";
 import { getCsrfToken } from "next-auth/react";
 
-// _________________________ COMPOSANT _________________________
-const CategoryIngredientPage = () => {
-// _________________________ ETATS _________________________
-const [categoryIngredient, setCategoryIngredient] = useState<CategoryIngredientType[]>([]);
+    // _________________________ COMPOSANT _________________________
+    const CategoryIngredientPage = () => {
+    // _________________________ ETATS _________________________
+    const [categoryIngredient, setCategoryIngredient] = useState<CategoryIngredientType[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
@@ -104,7 +104,9 @@ const [categoryIngredient, setCategoryIngredient] = useState<CategoryIngredientT
                 body: JSON.stringify({ id }),
             });
             if (!response.ok) throw new Error("Failed to delete category");
+            
             setCategoryIngredient((prev) => prev.filter((category) => category.id !== id));
+
             toast("Catégorie supprimée avec succès");
         } catch (error) {
             console.error("Erreur lors de la suppression:", error);

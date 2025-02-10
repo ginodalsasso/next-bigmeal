@@ -2,11 +2,10 @@
 
 import React, { useEffect, useState } from "react";
 import { Season } from "@/lib/types/enums";
-import { CategoryIngredientType } from "@/lib/types/schemas_interfaces";
+import { CategoryIngredientType, IngredientType } from "@/lib/types/schemas_interfaces";
 import { IngredientFormType } from "@/lib/types/forms_interfaces";
 import { ingredientConstraints } from "@/lib/constraints/forms_constraints";
 import { useFormValidation } from "@/app/hooks/useFormValidation";
-
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { translatedSeason, ucFirst } from "@/lib/utils";
@@ -20,7 +19,7 @@ const CreateIngredient: React.FC<CreateIngredientProps> = ({
     onClose,
 }) => {
     // _________________________ HOOKS _________________________
-    // const csrfToken = useCsrfToken();
+
     const [categories, setCategories] = useState<CategoryIngredientType[]>([]);
     const [form, setForm] = useState<IngredientFormType>({
         name: "",
@@ -63,13 +62,14 @@ const CreateIngredient: React.FC<CreateIngredientProps> = ({
                 method: "POST",
                 headers: { 
                     "Content-Type": "application/json",
-                    "X-CSRF-Token": csrfToken,
+                    "X-CSRF-Token": csrfToken || "",
                 },
                 body: JSON.stringify(data),
             });
             if (!response.ok) throw new Error("Erreur lors de la création de l'ingrédient");
 
-            return JSON.parse(await response.text());
+            const createdIngredient: IngredientType = await response.json();
+            return createdIngredient;
         } catch (error) {
             console.error("[CREATE_INGREDIENT_API_ERROR]", error);
             throw error;
@@ -89,7 +89,7 @@ const CreateIngredient: React.FC<CreateIngredientProps> = ({
 
         // Créer l'ingrédient avec les données du formulaire
         try {
-            const createdIngredient = await createIngredient(form);
+            const createdIngredient: IngredientType = await createIngredient(form);
             onIngredientCreated(createdIngredient); // Ajout à la liste parent
             toast("Ingrédient créé avec succès");
             onClose(); // Fermer le dialogue

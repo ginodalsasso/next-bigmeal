@@ -35,11 +35,11 @@ const IngredientPage = () => {
     
     // _________________________ ETATS _________________________
     const [ingredients, setIngredients] = useState<IngredientType[]>([]);
-    const [searchQuery, setSearchQuery] = useState("");
+    const [searchQuery, setSearchQuery] = useState<string>("");
     const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
 
 
-    const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
