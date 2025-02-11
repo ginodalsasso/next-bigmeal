@@ -1,10 +1,15 @@
 model User {
-    id                String         @id @default(auto()) @map("_id") @db.ObjectId
-    
-    username          String         @unique
-    password          String
-    createdAt         DateTime       @default(now())
-    role              String         @default("USER")
-
+    id            String          @id @default(auto()) @map("_id") @db.ObjectId
+    name          String?
+    email         String?         @unique
+    emailVerified DateTime?
+    password      String?
+    image         String?
+    role          String?            @default("USER")
     shoppingList ShoppingList[]
+
+    accounts      Account[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
 }

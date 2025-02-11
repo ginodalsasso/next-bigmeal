@@ -71,18 +71,28 @@ export const newCompositionConstraints = z.array(
 );
 
 export const RegisterConstraints = z.object({
-    username: z
+    email: z
         .string()
-        .min(3, "Le nom d'utilisateur doit comporter au moins 3 caractères")
-        .max(100, "Le nom d'utilisateur doit comporter au maximum 100 caractères")
-        // .regex(/^[a-zA-Z0-9_-]+$/, "Le nom d'utilisateur ne doit contenir que des lettres, des chiffres, des tirets et des underscores")
-        .trim(),
+        .email()
+        .min(3, "L'email doit comporter au moins 3 caractères")
+        .max(100, "L'email doit comporter au maximum 100 caractères"),
     password: z
         .string()
         // .min(8, "Le mot de passe doit comporter au moins 8 caractères")
         .max(100, "Le mot de passe doit comporter au maximum 100 caractères")
         // .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>~`'[\]\\/_+\-=])[A-Za-z\d!@#$%^&*(),.?":{}|<>~`'[\]\\/_+\-=]{12,}$/, "Le mot de passe doit comporter au moins 12 caractères, une lettre majuscule, une lettre minuscule, un chiffre et un caractère spécial"),
         .trim(),
+});
+
+export const LoginConstraints = z.object({
+    email: z
+        .string()
+        .email()
+        // .nonempty("L'email ne peut pas être vide")
+        .max(100, "L'email doit comporter au maximum 100 caractères"),
+    password: z
+        .string()
+        // .nonempty("Le mot de passe ne peut pas être vide"),
 });
 
 

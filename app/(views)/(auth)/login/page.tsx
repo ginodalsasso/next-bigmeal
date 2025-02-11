@@ -1,65 +1,43 @@
-'use client';
+"use client";
 
+import { signIn } from "next-auth/react";
 import { Button } from "@/components/ui/button";
-import { RegisterConstraints } from "@/lib/constraints/forms_constraints";
-import { UserFormErrorType } from "@/lib/types/forms_interfaces";
+import { LoginConstraints } from "@/lib/constraints/forms_constraints";
+import FormErrorMessage from "@/components/forms/FormErrorMessage";
+import { useFormValidation } from "@/app/hooks/useFormValidation";
 import { useRouter } from "next/navigation";
-// import { useRouter } from "next/navigation";
-import { FormEvent, useState } from "react";
-import { toast } from "sonner";
 
 export default function LoginPage() {
-
-    // __________________ HOOKS __________________
+    
     const router = useRouter();
-    const [error, setError] = useState<UserFormErrorType>({});
-    const [isLoading, setIsLoading] = useState(false);
+    
+    // Utilisation du hook de validation
+    const { error, setError, isLoading, setIsLoading, validate } = useFormValidation(
+        LoginConstraints,
+        ["email", "password"] // Liste des champs à valider
+    );
 
-
-    // _________________________ LOGIQUE _________________________
-    async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    const credentialsAction = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-    
         const formData = new FormData(event.currentTarget);
-        const username = formData.get("username")?.toString();
-        const password = formData.get("password")?.toString();
-    
-        // Valider les données du formulaire avec zod
-        const validationResult = RegisterConstraints.safeParse({ username, password });
-        if (!validationResult.success) {
-            const errors = validationResult.error.flatten().fieldErrors;
-            setError({
-                username: errors.username?.[0],
-                password: errors.password?.[0],
-            });
-            return;
-        }
+        const email = formData.get("email")?.toString() || "";
+        const password = formData.get("password")?.toString() || "";
 
-        if(username === "" || password === "") {
-            setError({
-                general: "Veuillez remplir tous les champs.",
-            });
-            return;
-        }
-    
+        // Validation via le hook
+        const isValid = validate({ email, password });
+        if (!isValid) return;
+
         setIsLoading(true);
-        setError({}); // Réinitialiser les erreurs
-    
+
         try {
-            const response = await fetch("/api/auth/login", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ username, password }),
+            const result = await signIn("credentials", {
+                redirect: true,
+                email,
+                password,
             });
-    
-            if (response.ok) {
-                window.location.href = "/ingredients";
-                toast.success(`Bienvenue ${username} :)`);
-            } else {
-                const errorData = await response.json();
-                setError({
-                    general: errorData.message || "Une erreur est survenue lors de la connexion.",
-                });
+
+            if (result?.error) {
+                setError({ general: result.error || "Une erreur est survenue lors de la connexion." });
             }
         } catch (error) {
             console.error("Erreur lors de la connexion :", error);
@@ -67,58 +45,51 @@ export default function LoginPage() {
         } finally {
             setIsLoading(false);
         }
-    }
+    };
 
-    // _________________________ RENDU _________________________
     return (
-        <form 
-            className="border px-4 py-8 mx-auto mt-[10%] sm:w-[400px] flex flex-col gap-2" 
-            onSubmit={handleSubmit}
-        >
-            {error.general && (
-                <p className="error-form">
-                    {error.general}
-                </p>
-            )}
-            <input 
-                className="input-text-select" 
-                type="text" 
-                name="username" 
-                placeholder="Pseudo" 
-                required 
-            />
-            {error.username && (
-                <p className="error-form">
-                    {error.username}
-                </p>
-            )}
+        <div className="px-4 py-8 mx-auto mt-[10%] sm:w-[400px] flex flex-col gap-2">
 
-            <input
-                className="input-text-select"
-                type="password"
-                name="password"
-                placeholder="Mot de passe"
-                required
-            />
-            {error.password && (
-                <p className="error-form">
-                    {error.password}
-                </p>
-            )}
+            <form onSubmit={credentialsAction} className="flex flex-col gap-2">
+                <FormErrorMessage message={error?.general} />
 
-            <Button
-                type="submit"
-                disabled={isLoading}
-                variant={isLoading ? "ghost" : "success"}
-            >
-                {isLoading ? "Connexion..." : "Se connecter"}
-            </Button>
-            <Button
-                variant="link"
-                onClick={() => router.push("/register")}
-            >
-                S&apos;inscrire
-            </Button>
-        </form>
+                <label htmlFor="email">Email</label>
+                <input
+                    className="input-text-select"
+                    type="email"
+                    id="email"
+                    name="email"
+                    placeholder="Email"
+                    required
+                />
+                <FormErrorMessage message={error?.email} />
+
+                <label htmlFor="password">Mot de passe</label>
+                <input
+                    className="input-text-select"
+                    type="password"
+                    id="password"
+                    name="password"
+                    placeholder="Mot de passe"
+                    required
+                />
+                <FormErrorMessage message={error?.password} />
+
+                <Button type="submit" disabled={isLoading} variant={isLoading ? "ghost" : "success"}>
+                    {isLoading ? "Connexion..." : "Se connecter"}
+                </Button>
+
+                <Button variant="secondary" onClick={() => router.push("/register")}>
+                    Pas encore de compte ? Créer un compte
+                </Button>
+
+                <Button variant="link" onClick={() => signIn("google")} className="mb-4">
+                    Se connecter avec Google
+                </Button>
+                <Button variant="link" onClick={() => signIn("github")} className="mb-4">
+                    Se connecter avec GitHub
+                </Button>
+            </form>
+        </div>
     );
 }

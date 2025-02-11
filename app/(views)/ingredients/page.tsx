@@ -20,27 +20,26 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { reversedTranslatedSeason, translatedSeason } from "@/lib/utils";
 import AddToShoppingListForm from "@/components/forms/AddToShoppingListForm";
-import EditItem from "@/components/layout/EditItem";
-import DeleteItem from "@/components/layout/DeleteItem";
-import { useCsrfToken } from "@/app/context/CsrfContext";
+import EditItem from "@/components/layout/EditItemPopover";
+import DeleteItem from "@/components/layout/DeleteItemDialog";
 import IsAdmin from "@/components/isAdmin";
 import IsUser from "@/components/isUser";
 import SearchBar from "@/components/layout/Searchbar";
 import FilterCheckboxes from "@/components/layout/FilterCheckboxes";
 import { CATEGORIES_INGREDIENTS, SEASONS } from "@/lib/constants/constants";
+import { getCsrfToken } from "next-auth/react";
 
 
 // _________________________ COMPOSANT _________________________
 const IngredientPage = () => {
-
+    
     // _________________________ ETATS _________________________
-    const csrfToken = useCsrfToken();
     const [ingredients, setIngredients] = useState<IngredientType[]>([]);
-    const [searchQuery, setSearchQuery] = useState("");
+    const [searchQuery, setSearchQuery] = useState<string>("");
     const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
 
 
-    const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
@@ -51,9 +50,8 @@ const IngredientPage = () => {
         const fetchIngredients = async () => {
             try {
                 const response = await fetch("/api/ingredients");
-                if (!response.ok) {
-                    throw new Error("Failed to fetch ingredients");
-                }
+                if (!response.ok) throw new Error("Failed to fetch ingredients");
+
                 const data: IngredientType[] = await response.json();
                 setIngredients(data);
             } catch (error) {
@@ -70,11 +68,14 @@ const IngredientPage = () => {
     // Fonction pour ajouter un ingrédient à la liste
     const addIngredient = (ingredient: IngredientType) => {
         // Ajouter l'ingrédient à la liste en conservant les anciens ingrédients
-        setIngredients((prevIngredients) => [...prevIngredients, ingredient]);
+        setIngredients((prevIngredients) =>
+            [...prevIngredients, ingredient]
+        );
     };
 
     // Appel API pour mettre à jour un ingrédient
     const updateIngredient = async (id: string, newName: string, newCategory: string, newSeason: string|null) => {
+        const csrfToken = await getCsrfToken();
         try {
             const response = await fetch("/api/ingredients", {
                 method: "PUT",
@@ -89,10 +90,8 @@ const IngredientPage = () => {
                     season: newSeason 
                 }),
             });
+            if (!response.ok) throw new Error("Failed to update ingredient");
 
-            if (!response.ok) {
-                throw new Error("Failed to update ingredient");
-            }
             // Mettre à jour l'ingrédient dans le state
             const updatedIngredient: IngredientType = await response.json();
             setIngredients((prev) => // Remplacer l'ancien ingrédient par le nouveau
@@ -100,6 +99,7 @@ const IngredientPage = () => {
                     ingredient.id === id ? updatedIngredient : ingredient
                 )
             );
+
             toast("Ingrédient modifié avec succès");
         } catch (error) {
             console.error("Erreur lors de la modification:", error);
@@ -109,6 +109,7 @@ const IngredientPage = () => {
 
     // Appel API pour supprimer un ingrédient
     const deleteIngredient = async (id: string) => {
+        const csrfToken = await getCsrfToken();
         try {
             const response = await fetch("/api/ingredients", {
                 method: "DELETE",
@@ -118,12 +119,12 @@ const IngredientPage = () => {
                 },
                 body: JSON.stringify({ id }),
             });
+            if (!response.ok) throw new Error("Failed to delete ingredient");
 
-            if (!response.ok) {
-                throw new Error("Failed to delete ingredient");
-            }
-
-            setIngredients((prev) => prev.filter((ingredient) => ingredient.id !== id));
+            setIngredients((prev) => 
+                prev.filter((ingredient) => ingredient.id !== id)
+            );
+            
             toast("Ingrédient supprimé avec succès");
         } catch (error) {
             console.error("Erreur lors de la suppression:", error);
@@ -149,7 +150,7 @@ const IngredientPage = () => {
         
         const matchesFilters =
             selectedFilters.length === 0 || // Aucun filtre => tout est affiché
-            selectedCategory.includes(category) || (season && selectedSeasons.includes(season));
+            selectedCategory.includes(category) || (season && selectedSeasons.includes(season)); 
 
         return matchesSearch && matchesFilters;
     });
@@ -191,8 +192,8 @@ const IngredientPage = () => {
 
                 {/* Barre de recherche */}
                 <SearchBar onSearch={(query) => setSearchQuery(query)} />
-                {/* Filtres */}
             </div>
+            {/* Filtres */}
             <FilterCheckboxes 
                 options={filterOptions} 
                 onFilterChange={setSelectedFilters} 

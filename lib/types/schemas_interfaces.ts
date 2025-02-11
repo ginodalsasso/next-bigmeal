@@ -105,7 +105,7 @@ export interface ShoppingListItemType {
 
 export interface UserType {
     id: string; 
-    username: string; 
+    email: string; 
     password: string;
     createdAt: Date;
     role: string;
@@ -113,6 +113,7 @@ export interface UserType {
     // Relation One-to-Many 
     shoppingList: ShoppingListType[];
 }
+
 
 export interface UserContextType {
     id: string;

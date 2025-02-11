@@ -12,7 +12,8 @@ import { Button } from "@/components/ui/button";
 import { IngredientUnit } from "@/lib/types/enums";
 import { translatedUnit } from "@/lib/utils";
 import { CreateCompositionProps } from "@/lib/types/props_interfaces";
-import { useCsrfToken } from "@/app/context/CsrfContext";
+import { getCsrfToken } from "next-auth/react";
+import FormErrorMessage from "@/components/forms/FormErrorMessage";
 
 const CreateComposition: React.FC<CreateCompositionProps>= ({
     mealId,
@@ -21,10 +22,9 @@ const CreateComposition: React.FC<CreateCompositionProps>= ({
 }) => {
 
     // _________________________ HOOKS _________________________
-    const csrfToken = useCsrfToken();
     const [ingredients, setIngredients] = useState<IngredientType[]>([]); // Liste des ingrédients disponibles
 
-    const [isLoading, setIsLoading] = useState(false); // Indique si l'action est en cours
+    const [isLoading, setIsLoading] = useState<boolean>(false); // Indique si l'action est en cours
     const [error, setError] = useState<Record<number, CompositionFormErrorType>>({});
     const [form, setForm] = useState<CompositionFormType[]>([
         {
@@ -42,9 +42,8 @@ const CreateComposition: React.FC<CreateCompositionProps>= ({
         const fetchIngredients = async () => {
             try {
                 const response = await fetch("/api/ingredients");
-                if (!response.ok) {
-                    throw new Error("Erreur lors de la récupération des ingrédients");
-                }
+                if (!response.ok) throw new Error("Erreur lors de la récupération des ingrédients");
+
                 const data: IngredientType[] = await response.json();
                 setIngredients(data);
             } catch (error) {
@@ -69,7 +68,9 @@ const CreateComposition: React.FC<CreateCompositionProps>= ({
     // Supprimer une ligne de composition par son index (position dans le tableau)
     const removeLine = (index: number) => {
         // Filtrer les lignes pour ne pas inclure celle à supprimer
-        setForm((prev) => prev.filter((_, i) => i !== index));
+        setForm((prev) => 
+            prev.filter((_, i) => i !== index)
+        );
     };
 
     // Gestion de la soumission du formulaire
@@ -103,6 +104,7 @@ const CreateComposition: React.FC<CreateCompositionProps>= ({
         }
         
         try {
+            const csrfToken = await getCsrfToken();
             const response = await fetch("/api/compositions", {
                 method: "POST",
                 headers: {
@@ -111,13 +113,11 @@ const CreateComposition: React.FC<CreateCompositionProps>= ({
                 },
                 body: JSON.stringify(form),
             });
-    
-            if (!response.ok) {
-                throw new Error("Erreur lors de la création des compositions");
-            }
+            if (!response.ok) throw new Error("Erreur lors de la création des compositions");
     
             const createdCompositions: CompositionType[] = await response.json(); // Récupérer les compositions insérées
             onCompositionCreated(createdCompositions); // Ajout à la liste parent
+            
             toast("Compositions créées avec succès");
             onClose(); // Fermer le dialogue
         } catch (error) {
@@ -155,9 +155,7 @@ const CreateComposition: React.FC<CreateCompositionProps>= ({
                             </option>
                         ))}
                     </select>
-                    {error[index]?.ingredientId && (
-                        <p className="error-form">{error[index].ingredientId}</p>
-                    )}
+                    <FormErrorMessage message={error[index]?.ingredientId} />
 
                     {/* Champ pour la quantité */}
                     <input
@@ -177,9 +175,7 @@ const CreateComposition: React.FC<CreateCompositionProps>= ({
                         className="input-text-select"
                         required
                     />
-                    {error[index]?.quantity && (
-                        <p className="error-form">{error[index].quantity}</p>
-                    )}
+                    <FormErrorMessage message={error[index]?.quantity} />
 
                     {/* Sélection de l'unité */}
                     <select
@@ -203,9 +199,7 @@ const CreateComposition: React.FC<CreateCompositionProps>= ({
                             </option>
                         ))}
                     </select>
-                    {error[index]?.unit && (
-                        <p className="error-form">{error[index].unit}</p>
-                    )}
+                    <FormErrorMessage message={error[index]?.unit} />
 
                     {/* Bouton pour supprimer une ligne */}
                     <Button

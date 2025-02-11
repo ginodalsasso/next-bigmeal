@@ -14,7 +14,7 @@ const IngredientDetailPage =
 
     // _________________________ ETATS _________________________
     const [ingredient, setIngredient] = useState<IngredientType | null>(null);
-    
+
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
@@ -23,9 +23,8 @@ const IngredientDetailPage =
         const fetchIngredient = async () => {
             try {
                 const response = await fetch(`/api/ingredients/${ingredientName}`);
-                if (!response.ok) {
-                    throw new Error("Failed to fetch ingredient");
-                }
+                if (!response.ok)  throw new Error("Failed to fetch ingredient");
+
                 const data: IngredientType = await response.json();
                 setIngredient(data);
             } catch (error) {

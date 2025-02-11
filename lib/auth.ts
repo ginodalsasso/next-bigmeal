@@ -1,45 +1,84 @@
-import hash from "bcrypt";
-import { getUserByUsername, getUserRole } from "./dal";
-import { encrypt } from "./session";
+import NextAuth from "next-auth";
+import { PrismaAdapter } from "@auth/prisma-adapter";
+import { PrismaClient } from "@prisma/client";
+import Credentials from "next-auth/providers/credentials";
+import { LoginConstraints } from "./constraints/forms_constraints";
+import { compare } from "bcryptjs";
+import { getUserByEmail } from "./dal";
+import GoogleProvider from "next-auth/providers/google";
+import GitHubProvider from "next-auth/providers/github";
 
-// Fonction pour connecter un utilisateur
-export async function signIn(username: string, password: string) {
-    const user = await getUserByUsername(username);
+const prisma = new PrismaClient();
 
-    if (!user) {
-        throw new Error("Invalid username or password.");
-    }
+export const { handlers, signIn, signOut, auth } = NextAuth({
+    adapter: PrismaAdapter(prisma),
+    session: { strategy: "jwt" },
+    providers: [
+        // Réglages de connexion avec email et mot de passe
+        Credentials({
+            name: "Credentials",
+            credentials: {
+                email: { label: "Email", type: "email" },
+                password: { label: "Password", type: "password" },
+            },
+            // Fonction pour vérifier les identifiants
+            authorize: async (credentials) => {
+                try {
+                    const { email, password } =
+                        await LoginConstraints.parseAsync(credentials);
 
-    const isPasswordValid = await hash.compare(password, user.password);
+                    const user = await getUserByEmail(email);
 
-    if (!isPasswordValid) {
-        throw new Error("Invalid username or password.");
-    }
+                    if (!user || !user.password) {
+                        throw new Error("Invalid credentials");
+                    }
 
-    // Créer un token JWT
-    const tokenDate = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 jours
-    const token = await encrypt({ userId: user.id, expiresAt: tokenDate });
+                    const isValid = await compare(password, user.password);
+                    if (!isValid) {
+                        throw new Error("Invalid credentials");
+                    }
 
-    return { token, user }; // Retourne le token et l'utilisateur
-}
+                    return {
+                        ...user,
+                        role: user.role ?? "USER", // Rôle par défaut
+                    }
+                } catch (error) {
+                    console.error("Authentication error:", error);
+                    return null;
+                }
+            },
+        }),
+        GoogleProvider({
+            clientId: process.env.AUTH_GOOGLE_ID,
+            clientSecret: process.env.AUTH_GOOGLE_SECRET,
+        }),
+        GitHubProvider({
+            clientId: process.env.AUTH_GITHUB_ID,
+            clientSecret: process.env.AUTH_GITHUB_SECRET,
+        }),
+    ],
+    callbacks: {
+        // Ajout du rôle utilisateur au token JWT
+        async jwt({ token, user }) {
+            if (user) {
+                token.id = user.id;
+                token.role = user.role;
+            }
+            return token;
+        },
 
+        // Ajout du rôle utilisateur à la session
+        async session({ session, token }) {
+            if (session.user) {
+                session.user.id = token.id as string;
+                session.user.role = token.role as string; 
+            }
+            return session;
+        },
 
-// Fonction pour vérifier si l'utilisateur connecté est admin
-export const verifyAdmin = async () => {
-    const user = await getUserRole();
-    if (!user || user.role !== "ADMIN") {
-        throw new Error("Unauthorized: Admin access required");
-    }
-    return user;
-};
+        async redirect() {
+            return "/dashboard";
+        },
 
-
-// Fonction pour vérifier si l'utilisateur connecté est un utilisateur ou un admin
-export const verifyUser = async () => {
-    const user = await getUserRole();
-    // 
-    if (!user || (user.role !== "USER" && user.role !== "ADMIN")) {
-        throw new Error("Unauthorized: User access required");
-    }
-    return user;
-}
+    },
+});

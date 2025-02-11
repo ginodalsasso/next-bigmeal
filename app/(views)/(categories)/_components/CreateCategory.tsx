@@ -3,10 +3,12 @@ import { useFormValidation } from "@/app/hooks/useFormValidation";
 import { categoriesConstraints } from "@/lib/constraints/forms_constraints";
 import { Button } from "@/components/ui/button";
 import { CreateCategoryProps } from "@/lib/types/props_interfaces";
+import FormErrorMessage from "@/components/forms/FormErrorMessage";
 
 type CategoryFormType = { name: string }; // Définir le type pour le formulaire
 
 const CreateCategory: React.FC<CreateCategoryProps> = ({ onAddCategory }) => {
+    
     // _________________________ ETATS __________________
     const [newCategoryName, setNewCategoryName] = useState(''); // Gestion du champ de formulaire
 
@@ -52,10 +54,8 @@ const CreateCategory: React.FC<CreateCategoryProps> = ({ onAddCategory }) => {
                     className="input-text-select"
                     required
                 />
-                {error?.name && (
-                    <p className="error-form">{error.name}</p>
-                )}
-                {/* <input type="hidden" name="_csrf" value="<%= csrfToken %>" /> */}
+                <FormErrorMessage message={error?.name} />
+
                 <Button
                     onClick={handleSubmit}
                     variant="success"

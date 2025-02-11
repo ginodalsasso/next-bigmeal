@@ -5,18 +5,17 @@ import { CategoryMealType } from "@/lib/types/schemas_interfaces";
 import CategoryForm from "../_components/CreateCategory";
 import UpdateCategory from "../_components/UpdateCategory";
 import ItemView from "@/components/layout/ItemView";
-import EditItem from "@/components/layout/EditItem";
-import DeleteItem from "@/components/layout/DeleteItem";
+import EditItem from "@/components/layout/EditItemPopover";
+import DeleteItem from "@/components/layout/DeleteItemDialog";
 import { toast } from "sonner";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { useCsrfToken } from "@/app/context/CsrfContext";
 import IsAdmin from "@/components/isAdmin";
+import { getCsrfToken } from "next-auth/react";
 
 
 // _________________________ COMPOSANT _________________________
 const CategoryMealPage = () => {
     // _________________________ ETATS _________________________
-    const csrfToken = useCsrfToken();
     const [categoryMeal, setCategoryMeal] = useState<CategoryMealType[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -28,6 +27,7 @@ const CategoryMealPage = () => {
             try {
                 const response = await fetch("/api/categories-meal");
                 if (!response.ok) throw new Error("Failed to fetch categories-meal");
+
                 const data: CategoryMealType[] = await response.json();
                 setCategoryMeal(data);
             } catch (error) {
@@ -42,6 +42,7 @@ const CategoryMealPage = () => {
 
     // Appel API pour ajouter une catégorie
     const createCategoryMeal = async (name: string) => {
+        const csrfToken = await getCsrfToken();
         try {
             const response = await fetch("/api/categories-meal", {
                 method: "POST",
@@ -52,8 +53,12 @@ const CategoryMealPage = () => {
                 body: JSON.stringify({ name }),
             });
             if (!response.ok) throw new Error("Failed to add category");
+
             const newCategory: CategoryMealType = await response.json();
-            setCategoryMeal((prev) => [...prev, newCategory]);
+            setCategoryMeal((prev) => 
+                [...prev, newCategory]
+            );
+
             toast("Catégorie créée avec succès");
         } catch (error) {
             console.error("Erreur lors de la création:", error);
@@ -63,6 +68,7 @@ const CategoryMealPage = () => {
 
     // Appel API pour mettre à jour une catégorie
     const updateCategoryMeal = async (id: string, newName: string) => {
+        const csrfToken = await getCsrfToken();
         try {
             const response = await fetch("/api/categories-meal", {
                 method: "PUT",
@@ -73,10 +79,12 @@ const CategoryMealPage = () => {
                 body: JSON.stringify({ id, name: newName }),
             });
             if (!response.ok) throw new Error("Failed to update category");
+
             const updatedCategory: CategoryMealType = await response.json();
             setCategoryMeal((prev) =>
                 prev.map((category) => (category.id === id ? updatedCategory : category))
             );
+
             toast("Catégorie modifiée avec succès");
         } catch (error) {
             console.error("Erreur lors de la modification:", error);
@@ -86,6 +94,7 @@ const CategoryMealPage = () => {
 
     // Appel API pour supprimer une catégorie
     const deleteCategoryMeal = async (id: string) => {
+        const csrfToken = await getCsrfToken();
         try {
             const response = await fetch("/api/categories-meal", {
                 method: "DELETE",
@@ -96,7 +105,9 @@ const CategoryMealPage = () => {
                 body: JSON.stringify({ id }),
             });
             if (!response.ok) throw new Error("Failed to delete category");
+
             setCategoryMeal((prev) => prev.filter((category) => category.id !== id));
+            
             toast("Catégorie supprimée avec succès");
         } catch (error) {
             console.error("Erreur lors de la suppression:", error);

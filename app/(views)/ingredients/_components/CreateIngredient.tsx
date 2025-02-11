@@ -2,16 +2,16 @@
 
 import React, { useEffect, useState } from "react";
 import { Season } from "@/lib/types/enums";
-import { CategoryIngredientType } from "@/lib/types/schemas_interfaces";
+import { CategoryIngredientType, IngredientType } from "@/lib/types/schemas_interfaces";
 import { IngredientFormType } from "@/lib/types/forms_interfaces";
 import { ingredientConstraints } from "@/lib/constraints/forms_constraints";
 import { useFormValidation } from "@/app/hooks/useFormValidation";
-
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { translatedSeason, ucFirst } from "@/lib/utils";
 import { CreateIngredientProps } from "@/lib/types/props_interfaces";
-import { useCsrfToken } from "@/app/context/CsrfContext";
+import { getCsrfToken } from "next-auth/react";
+import FormErrorMessage from "@/components/forms/FormErrorMessage";
 
 // _________________________ COMPOSANT _________________________
 const CreateIngredient: React.FC<CreateIngredientProps> = ({
@@ -19,7 +19,7 @@ const CreateIngredient: React.FC<CreateIngredientProps> = ({
     onClose,
 }) => {
     // _________________________ HOOKS _________________________
-    const csrfToken = useCsrfToken();
+
     const [categories, setCategories] = useState<CategoryIngredientType[]>([]);
     const [form, setForm] = useState<IngredientFormType>({
         name: "",
@@ -30,7 +30,11 @@ const CreateIngredient: React.FC<CreateIngredientProps> = ({
     // Hook de validation
     const { error, isLoading, setIsLoading, validate } = useFormValidation<IngredientFormType>(
         ingredientConstraints,
-        ["name", "season", "categoryIngredientId"]
+        [
+            "name", 
+            "season", 
+            "categoryIngredientId"
+        ]
     );
 
     // _________________________ LOGIQUE _________________________
@@ -39,9 +43,8 @@ const CreateIngredient: React.FC<CreateIngredientProps> = ({
         const fetchCategories = async () => {
             try {
                 const response = await fetch("/api/categories-ingredient");
-                if (!response.ok) {
-                    throw new Error("Erreur lors de la récupération des categories-ingredient");
-                }
+                if (!response.ok) throw new Error("Erreur lors de la récupération des categories-ingredient");
+                
                 const data: CategoryIngredientType[] = await response.json();
                 setCategories(data);
             } catch (error) {
@@ -53,19 +56,20 @@ const CreateIngredient: React.FC<CreateIngredientProps> = ({
 
     // Appel API pour créer un ingrédient
     const createIngredient = async (data: IngredientFormType) => {
+        const csrfToken = await getCsrfToken();
         try {
             const response = await fetch("/api/ingredients", {
                 method: "POST",
                 headers: { 
                     "Content-Type": "application/json",
-                    "X-CSRF-Token": csrfToken,
+                    "X-CSRF-Token": csrfToken || "",
                 },
                 body: JSON.stringify(data),
             });
-            if (!response.ok) {
-                throw new Error("Erreur lors de la création de l'ingrédient");
-            }
-            return JSON.parse(await response.text());
+            if (!response.ok) throw new Error("Erreur lors de la création de l'ingrédient");
+
+            const createdIngredient: IngredientType = await response.json();
+            return createdIngredient;
         } catch (error) {
             console.error("[CREATE_INGREDIENT_API_ERROR]", error);
             throw error;
@@ -85,7 +89,7 @@ const CreateIngredient: React.FC<CreateIngredientProps> = ({
 
         // Créer l'ingrédient avec les données du formulaire
         try {
-            const createdIngredient = await createIngredient(form);
+            const createdIngredient: IngredientType = await createIngredient(form);
             onIngredientCreated(createdIngredient); // Ajout à la liste parent
             toast("Ingrédient créé avec succès");
             onClose(); // Fermer le dialogue
@@ -108,7 +112,7 @@ const CreateIngredient: React.FC<CreateIngredientProps> = ({
                 className="input-text-select"
                 required
             />
-            {error?.name && <p className="error-form">{error.name}</p>}
+            <FormErrorMessage message={error?.name} />
 
             {/* Sélection pour la saison */}
             <select
@@ -128,7 +132,7 @@ const CreateIngredient: React.FC<CreateIngredientProps> = ({
                     </option>
                 ))}
             </select>
-            {error?.season && <p className="error-form">{error.season}</p>}
+            <FormErrorMessage message={error?.season} />
 
             {/* Sélection pour la catégorie */}
             <select
@@ -144,9 +148,7 @@ const CreateIngredient: React.FC<CreateIngredientProps> = ({
                     </option>
                 ))}
             </select>
-            {error?.categoryIngredientId && (
-                <p className="error-form">{error.categoryIngredientId}</p>
-            )}
+            <FormErrorMessage message={error?.categoryIngredientId} />
 
             {/* Bouton de soumission */}
             <div className="flex flex-col-reverse gap-2 lg:justify-end">

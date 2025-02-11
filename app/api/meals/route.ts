@@ -1,8 +1,8 @@
 import { db } from "@/lib/db";
 import { NextRequest, NextResponse } from "next/server";
 import { idConstraints, mealConstraints } from "@/lib/constraints/forms_constraints";
-import { verifyCSRFToken } from "@/lib/csrf";
-import { verifyAdmin, verifyUser } from "@/lib/auth";
+import { verifyCSRFToken } from "@/lib/security/csrf";
+import { getAdminSession, getUserSession } from "@/lib/security/getSession";
 
 
 export async function GET() {
@@ -26,15 +26,14 @@ export async function GET() {
 
 export async function POST(req: NextRequest) {
     try {
-        const isUser = await verifyUser();
-        if (!isUser) {
-            return new NextResponse("Unauthorized", {status: 401});
+        const { session, error } = await getUserSession();
+        if (error) return error;
+        
+        const csrfTokenVerified = await verifyCSRFToken(req);
+        if (!csrfTokenVerified) {
+            return new NextResponse("CSRF Token is missing or invalid", { status: 403 });
         }
-        const csrfToken = req.headers.get("x-csrf-token");
-        const csrfTokenVerified = await verifyCSRFToken(csrfToken);
-        if (csrfTokenVerified === false) {
-            return new NextResponse("CSRF Token is missing or invalid", {status: 403});
-        }
+        
             
         const body = await req.json();
         const { name, description, categoryMealId } = body;
@@ -67,14 +66,12 @@ export async function POST(req: NextRequest) {
 
 export async function PUT(req: NextRequest) {
     try {
-        const isAdmin = await verifyAdmin();
-        if (!isAdmin) {
-            return new NextResponse("Unauthorized", {status: 401});
-        }
-        const csrfToken = req.headers.get("x-csrf-token");
-        const csrfTokenVerified = await verifyCSRFToken(csrfToken);
-        if (csrfTokenVerified === false) {
-            return new NextResponse("CSRF Token is missing or invalid", {status: 403});
+        const { session, error } = await getAdminSession();
+        if (error) return error;
+        
+        const csrfTokenVerified = await verifyCSRFToken(req);
+        if (!csrfTokenVerified) {
+            return new NextResponse("CSRF Token is missing or invalid", { status: 403 });
         }
         
         const body = await req.json();
@@ -111,14 +108,12 @@ export async function PUT(req: NextRequest) {
 
 export async function DELETE (req: NextRequest) {
     try {
-        const isAdmin = await verifyAdmin();
-        if (!isAdmin) {
-            return new NextResponse("Unauthorized", {status: 401});
-        }
-        const csrfToken = req.headers.get("x-csrf-token");
-        const csrfTokenVerified = await verifyCSRFToken(csrfToken);
-        if (csrfTokenVerified === false) {
-            return new NextResponse("CSRF Token is missing or invalid", {status: 403});
+        const { session, error } = await getAdminSession();
+        if (error) return error;
+        
+        const csrfTokenVerified = await verifyCSRFToken(req);
+        if (!csrfTokenVerified) {
+            return new NextResponse("CSRF Token is missing or invalid", { status: 403 });
         }
         
         const body = await req.json();

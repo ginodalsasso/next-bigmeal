@@ -1,17 +1,16 @@
 'use client';
 
-import { useCsrfToken } from "@/app/context/CsrfContext";
-import DeleteItem from "@/components/layout/DeleteItem";
+import DeleteItem from "@/components/layout/DeleteItemDialog";
 import { Button } from "@/components/ui/button";
 import { ShoppingListType } from "@/lib/types/schemas_interfaces";
 import { dateToString } from "@/lib/utils";
 import { Separator } from "@radix-ui/react-separator";
+import { getCsrfToken } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
 
 const ShoppingListPage = () => {
-    const csrfToken = useCsrfToken();
     const router = useRouter(); 
     const [shoppingList, setShoppingList] = useState<ShoppingListType | null>(null);
     const [loading, setLoading] = useState(true);
@@ -20,10 +19,8 @@ const ShoppingListPage = () => {
         const fetchShoppingList = async () => {
             try {
                 const response = await fetch("/api/shopping-list");
+                if (!response.ok) throw new Error("Failed to fetch shoppingList");
 
-                if (!response.ok) {
-                    throw new Error("Failed to fetch shoppingList");
-                }
                 const data: ShoppingListType = await response.json();
                 setShoppingList(data);
             } catch (error) {
@@ -39,6 +36,7 @@ const ShoppingListPage = () => {
     
     // Transformer un item en coché ou non
     const toggleItemChecked = async (id: string, currentChecked: boolean) => {
+        const csrfToken = await getCsrfToken();
         try {
             // Calcul de l'état cible (inversion de l'état actuel)
             const newCheckedState = !currentChecked;
@@ -63,10 +61,7 @@ const ShoppingListPage = () => {
                 },
                 body: JSON.stringify({ id, isChecked: newCheckedState }),
             });
-
-            if (!response.ok) {
-                throw new Error("Failed to update item");
-            }
+            if (!response.ok) throw new Error("Failed to update item");
 
         } catch (error) {
             console.error("Erreur lors de la modification:", error);
@@ -75,6 +70,7 @@ const ShoppingListPage = () => {
     };
 
     const markShoppingListAsExpired = async () => {
+        const csrfToken = await getCsrfToken();
         if (shoppingList) {
             try {
                 const response = await fetch(`/api/shopping-list`, {
@@ -85,10 +81,7 @@ const ShoppingListPage = () => {
                     },
                     body: JSON.stringify({ id: shoppingList.id, isExpired: true }),
                 });
-
-                if (!response.ok) {
-                    throw new Error("Failed to mark shopping list as expired");
-                }
+                if (!response.ok) throw new Error("Failed to mark shopping list as expired");
 
                 toast.success("La liste de courses a été marquée comme terminée !");
                 router.push('/'); // Redirection vers la page d'accueil
@@ -107,6 +100,7 @@ const ShoppingListPage = () => {
                 const items = list.items;
                 // Vérifier si tous les items sont cochés
                 const allChecked = items.every((item) => item.isChecked);
+
                 if (allChecked) {
                     await markShoppingListAsExpired();
                 } else {
@@ -121,6 +115,7 @@ const ShoppingListPage = () => {
 
     // Appel API pour supprimer un item du panier
     const deleteItem = async (id: string) => {
+        const csrfToken = await getCsrfToken();
         try {
             const response = await fetch("/api/shopping-list", {
                 method: "DELETE",
@@ -130,16 +125,14 @@ const ShoppingListPage = () => {
                 },
                 body: JSON.stringify({ id }),
             });
-
-            if (!response.ok) {
-                throw new Error("Failed to delete item from shoppingList");
-            }
+            if (!response.ok) throw new Error("Failed to delete item from shoppingList");
 
             // Supprimer le repas du state
             setShoppingList((prev) => prev && {
                 ...prev,
                 items: prev.items.filter((item) => item.id !== id)
             });
+
             toast("Article supprimé avec succès");
         } catch (error) {
             console.error("Erreur lors de la suppression:", error);
@@ -149,6 +142,7 @@ const ShoppingListPage = () => {
 
     // Appel API pour supprimer un repas du panier
     const deleteMeal = async (mealId: string) => {
+        const csrfToken = await getCsrfToken();
         try {
             const response = await fetch("/api/shopping-list", {
                 method: "DELETE",
@@ -158,16 +152,14 @@ const ShoppingListPage = () => {
                 },
                 body: JSON.stringify({ mealId }),
             });
-
-            if (!response.ok) {
-                throw new Error("Failed to delete meal from shoppingList");
-            }
+            if (!response.ok) throw new Error("Failed to delete meal from shoppingList");
 
             // Supprimer le repas du state
             setShoppingList((prev) => prev && {
                 ...prev,
                 items: prev.items.filter((item) => item.mealId !== mealId)
             });
+
             toast("Repas supprimé avec succès");
         } catch (error) {
             console.error("Erreur lors de la suppression:", error);

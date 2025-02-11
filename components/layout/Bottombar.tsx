@@ -1,16 +1,16 @@
 "use client";
 
-import { useAuth } from "@/app/context/AuthContext";
 import Link from "next/link";
 import Image from "next/image";
 import React, { useState } from "react";
+import IsUser from "../isUser";
 
 
 
 const Bottombar = () => {
     const [active, setActive] = useState(""); // État de la navigation active
+
     // const [cartItems, setCartItems] = useState(0); // État pour le nombre d'articles
-    const { isAuth, user } = useAuth(); // Utilisation du contexte d'authentification
 
     // useEffect(() => {
     //     const fetchCart = async () => {
@@ -29,13 +29,13 @@ const Bottombar = () => {
 
     const links = [
         { icon: "/img/home.svg", url: "/", alt: "Accueil"},
-        { icon: "/img/user.svg", url: `/${user?.username}`, alt: "Profil" },
+        // { icon: "/img/user.svg", url: `/${user?.username}`, alt: "Profil" },
         { icon: "/img/cart.svg", url: "/shopping-list", alt: "Liste de courses" },
     ];
 
     return (
         <>
-            {isAuth ? (
+            <IsUser>
                 <div className="p-4">
                     <ul className="flex justify-around">
                         {links.map((link, index) => (
@@ -63,7 +63,7 @@ const Bottombar = () => {
                         ))}
                     </ul>
                 </div>
-            ) : null}
+            </IsUser>
         </>
     );
 };

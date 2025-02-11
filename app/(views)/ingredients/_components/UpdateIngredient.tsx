@@ -9,6 +9,7 @@ import { ingredientConstraints } from "@/lib/constraints/forms_constraints";
 import { Button } from "@/components/ui/button";
 import { useFormValidation } from "@/app/hooks/useFormValidation";
 import { translatedSeason, ucFirst } from "@/lib/utils";
+import FormErrorMessage from "@/components/forms/FormErrorMessage";
 
 // _________________________ COMPOSANT _________________________
 const UpdateIngredient: React.FC<UpdateIngredientProps> = ({
@@ -31,7 +32,11 @@ const UpdateIngredient: React.FC<UpdateIngredientProps> = ({
     // Hook de validation
     const { error, isLoading, setIsLoading, validate } = useFormValidation<IngredientFormType>(
         ingredientConstraints,
-        ["name", "season", "categoryIngredientId"] // Champs à valider
+        [
+            "name", 
+            "season", 
+            "categoryIngredientId"
+        ] // Champs à valider
     );
 
     // _________________________ LOGIQUE _________________________
@@ -40,9 +45,8 @@ const UpdateIngredient: React.FC<UpdateIngredientProps> = ({
         const fetchCategories = async () => {
             try {
                 const response = await fetch("/api/categories-ingredient");
-                if (!response.ok) {
-                    throw new Error("Erreur lors de la récupération des categories-ingredient");
-                }
+                if (!response.ok) throw new Error("Erreur lors de la récupération des categories-ingredient");
+                
                 const data: CategoryIngredientType[] = await response.json();
                 setCategories(data);
             } catch (error) {
@@ -64,6 +68,7 @@ const UpdateIngredient: React.FC<UpdateIngredientProps> = ({
 
         try {
             const { name, season, categoryIngredientId } = form;
+            
             await onSubmit(name, categoryIngredientId, season);
         } catch (error) {
             console.error("[UPDATE_INGREDIENT_ERROR]", error);
@@ -84,7 +89,7 @@ const UpdateIngredient: React.FC<UpdateIngredientProps> = ({
                 className="input-text-select"
                 disabled={isLoading || parentLoading}
             />
-            {error?.name && <p className="error-form">{error.name}</p>}
+            <FormErrorMessage message={error?.name} />
 
             {/* Sélection pour la catégorie */}
             <select
@@ -103,9 +108,7 @@ const UpdateIngredient: React.FC<UpdateIngredientProps> = ({
                     </option>
                 ))}
             </select>
-            {error?.categoryIngredientId && (
-                <p className="error-form">{error.categoryIngredientId}</p>
-            )}
+            <FormErrorMessage message={error?.categoryIngredientId} />
 
             {/* Sélection pour la saison */}
             <select
@@ -126,8 +129,9 @@ const UpdateIngredient: React.FC<UpdateIngredientProps> = ({
                     </option>
                 ))}
             </select>
-            {error?.season && <p className="error-form">{error.season}</p>}
+            <FormErrorMessage message={error?.season} />
 
+            {/* Boutons de soumission et d'annulation */}
             <div className="flex gap-2">
                 <Button
                     type="button"

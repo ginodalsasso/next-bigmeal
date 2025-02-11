@@ -5,18 +5,17 @@ import { CategoryIngredientType } from "@/lib/types/schemas_interfaces";
 import CategoryForm from "../_components/CreateCategory";
 import UpdateCategory from "../_components/UpdateCategory";
 import ItemView from "@/components/layout/ItemView";
-import EditItem from "@/components/layout/EditItem";
-import DeleteItem from "@/components/layout/DeleteItem";
+import EditItem from "@/components/layout/EditItemPopover";
+import DeleteItem from "@/components/layout/DeleteItemDialog";
 import { toast } from "sonner";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { useCsrfToken } from "@/app/context/CsrfContext";
 import IsAdmin from "@/components/isAdmin";
+import { getCsrfToken } from "next-auth/react";
 
-// _________________________ COMPOSANT _________________________
-const CategoryIngredientPage = () => {
-// _________________________ ETATS _________________________
-const csrfToken = useCsrfToken();
-const [categoryIngredient, setCategoryIngredient] = useState<CategoryIngredientType[]>([]);
+    // _________________________ COMPOSANT _________________________
+    const CategoryIngredientPage = () => {
+    // _________________________ ETATS _________________________
+    const [categoryIngredient, setCategoryIngredient] = useState<CategoryIngredientType[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
@@ -27,6 +26,7 @@ const [categoryIngredient, setCategoryIngredient] = useState<CategoryIngredientT
             try {
                 const response = await fetch("/api/categories-ingredient");
                 if (!response.ok) throw new Error("Failed to fetch categories-ingredient");
+                
                 const data: CategoryIngredientType[] = await response.json();
                 setCategoryIngredient(data);
             } catch (error) {
@@ -41,6 +41,7 @@ const [categoryIngredient, setCategoryIngredient] = useState<CategoryIngredientT
 
     // Appel API pour ajouter une catégorie
     const createCategoryIngredient = async (name: string) => {
+        const csrfToken = await getCsrfToken();
         try {
             const response = await fetch("/api/categories-ingredient", {
                 method: "POST",
@@ -51,8 +52,12 @@ const [categoryIngredient, setCategoryIngredient] = useState<CategoryIngredientT
                 body: JSON.stringify({ name }),
             });
             if (!response.ok) throw new Error("Failed to add category");
+
             const newCategory: CategoryIngredientType = await response.json();
-            setCategoryIngredient((prev) => [...prev, newCategory]);
+            setCategoryIngredient((prev) => 
+                [...prev, newCategory]
+            );
+
             toast("Catégorie créée avec succès");
         } catch (error) {
             console.error("Erreur lors de la création:", error);
@@ -62,6 +67,7 @@ const [categoryIngredient, setCategoryIngredient] = useState<CategoryIngredientT
 
     // Appel API pour mettre à jour une catégorie
     const updateCategoryIngredient = async (id: string, newName: string) => {
+        const csrfToken = await getCsrfToken();
         try {
             const response = await fetch("/api/categories-ingredient", {
                 method: "PUT",
@@ -72,10 +78,12 @@ const [categoryIngredient, setCategoryIngredient] = useState<CategoryIngredientT
                 body: JSON.stringify({ id, name: newName }),
             });
             if (!response.ok) throw new Error("Failed to update category");
+
             const updatedCategory: CategoryIngredientType = await response.json();
             setCategoryIngredient((prev) =>
                 prev.map((category) => (category.id === id ? updatedCategory : category))
             );
+
             toast("Catégorie modifiée avec succès");
         } catch (error) {
             console.error("Erreur lors de la modification:", error);
@@ -85,6 +93,7 @@ const [categoryIngredient, setCategoryIngredient] = useState<CategoryIngredientT
 
     // Appel API pour supprimer une catégorie
     const deleteCategoryIngredient = async (id: string) => {
+        const csrfToken = await getCsrfToken();
         try {
             const response = await fetch("/api/categories-ingredient", {
                 method: "DELETE",
@@ -95,7 +104,9 @@ const [categoryIngredient, setCategoryIngredient] = useState<CategoryIngredientT
                 body: JSON.stringify({ id }),
             });
             if (!response.ok) throw new Error("Failed to delete category");
+            
             setCategoryIngredient((prev) => prev.filter((category) => category.id !== id));
+
             toast("Catégorie supprimée avec succès");
         } catch (error) {
             console.error("Erreur lors de la suppression:", error);

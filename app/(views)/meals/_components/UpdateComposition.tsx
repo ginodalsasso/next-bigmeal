@@ -10,7 +10,8 @@ import { translatedUnit } from "@/lib/utils";
 import { updateCompositionConstraints } from "@/lib/constraints/forms_constraints";
 import { useFormValidation } from "@/app/hooks/useFormValidation";
 import { UpdateCompositionProps } from "@/lib/types/props_interfaces";
-import { useCsrfToken } from "@/app/context/CsrfContext";
+import { getCsrfToken } from "next-auth/react";
+import FormErrorMessage from "@/components/forms/FormErrorMessage";
 
 // _________________________ COMPOSANT _________________________
 const UpdateComposition: React.FC<UpdateCompositionProps> = ({
@@ -19,8 +20,9 @@ const UpdateComposition: React.FC<UpdateCompositionProps> = ({
     onClose,
 }) => {
     // _________________________ HOOKS _________________________
-    const csrfToken = useCsrfToken();
-    const [composition, setComposition] = useState(initialComposition);
+    const [composition, setComposition] = useState<CompositionType>(initialComposition);
+
+    // Hook de validation
     const { error, validate, setIsLoading, isLoading } = useFormValidation(
         updateCompositionConstraints,
         ["quantity", "unit"]
@@ -37,6 +39,7 @@ const UpdateComposition: React.FC<UpdateCompositionProps> = ({
 
         setIsLoading(true);
         try {
+                const csrfToken = await getCsrfToken();
                 const response = await fetch("/api/compositions", {
                 method: "PUT",
                 headers: { 
@@ -45,15 +48,12 @@ const UpdateComposition: React.FC<UpdateCompositionProps> = ({
                 },
                 body: JSON.stringify(composition),
             });
-
-            if (!response.ok) {
-                throw new Error("Erreur lors de la mise à jour de la composition");
-            }
+            if (!response.ok) throw new Error("Erreur lors de la mise à jour de la composition");
 
             const updatedComposition: CompositionType = await response.json();
-
             // Mettre à jour l'état parent via le callback
             onCompositionUpdated(updatedComposition);
+
             toast.success("Composition mise à jour avec succès !");
             onClose(); // Fermer le Popover après la mise à jour
         } catch (error) {
@@ -81,7 +81,7 @@ const UpdateComposition: React.FC<UpdateCompositionProps> = ({
                     required
                     disabled={isLoading}
                 />
-                {error?.quantity && <p className="error-form">{error.quantity}</p>}
+                <FormErrorMessage message={error?.quantity} />
 
                 {/* Sélecteur pour l'unité */}
                 <select
@@ -100,7 +100,7 @@ const UpdateComposition: React.FC<UpdateCompositionProps> = ({
                         </option>
                     ))}
                 </select>
-                {error?.unit && <p className="error-form">{error.unit}</p>}
+                <FormErrorMessage message={error?.unit} />
             </div>
 
             <div className="flex gap-2">

@@ -3,19 +3,19 @@
 import { useEffect, useState } from "react";
 
 import { useFormValidation } from "@/app/hooks/useFormValidation";
-import { CategoryMealType } from "@/lib/types/schemas_interfaces";
+import { CategoryMealType, MealType } from "@/lib/types/schemas_interfaces";
 import { MealFormType } from "@/lib/types/forms_interfaces";
 import { mealConstraints } from "@/lib/constraints/forms_constraints";
 
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { CreateMealProps } from "@/lib/types/props_interfaces";
-import { useCsrfToken } from "@/app/context/CsrfContext";
 import { ucFirst } from "@/lib/utils";
+import { getCsrfToken } from "next-auth/react";
+import FormErrorMessage from "@/components/forms/FormErrorMessage";
 
 const CreateMeal: React.FC<CreateMealProps> = ({ onMealCreated, onClose }) => {
     // _________________________ HOOKS _________________________
-    const csrfToken = useCsrfToken();
     const [categories, setCategories] = useState<CategoryMealType[]>([]);
 
     const [form, setForm] = useState<MealFormType>({
@@ -36,9 +36,8 @@ const CreateMeal: React.FC<CreateMealProps> = ({ onMealCreated, onClose }) => {
         const fetchCategories = async () => {
             try {
                 const response = await fetch("/api/categories-meal");
-                if (!response.ok) {
-                    throw new Error("Erreur lors de la récupération des categories-repas");
-                }
+                if (!response.ok) throw new Error("Erreur lors de la récupération des categories-repas");
+
                 const data: CategoryMealType[] = await response.json();
                 setCategories(data);
             } catch (error) {
@@ -50,6 +49,7 @@ const CreateMeal: React.FC<CreateMealProps> = ({ onMealCreated, onClose }) => {
 
     // Appel API pour créer un repas
     const createMeal = async (data: MealFormType) => {
+        const csrfToken = await getCsrfToken();
         try {
             const response = await fetch("/api/meals", {
                 method: "POST",
@@ -59,10 +59,10 @@ const CreateMeal: React.FC<CreateMealProps> = ({ onMealCreated, onClose }) => {
                 },
                 body: JSON.stringify(data),
             });
-            if (!response.ok) {
-                throw new Error("Erreur lors de la création du repas");
-            }
-            return await response.json();
+            if (!response.ok) throw new Error("Erreur lors de la création du repas");
+
+            const createdMeal: MealType = await response.json();
+            return createdMeal;
         } catch (error) {
             console.error("[CREATE_MEAL_API_ERROR]", error);
             throw error;
@@ -82,8 +82,9 @@ const CreateMeal: React.FC<CreateMealProps> = ({ onMealCreated, onClose }) => {
 
         // Créer le repas avec les données validées
         try {
-            const createdMeal = await createMeal(form);
+            const createdMeal: MealType = await createMeal(form);
             onMealCreated(createdMeal); // Ajout à la liste parent
+            
             toast("Repas créé avec succès");
         } catch (error) {
             console.error("[CREATE_MEAL]", error);
@@ -104,9 +105,7 @@ const CreateMeal: React.FC<CreateMealProps> = ({ onMealCreated, onClose }) => {
                 className="input-text-select"
                 required
             />
-            {error?.name && (
-                <p className="error-form">{error.name}</p>
-            )}
+            <FormErrorMessage message={error?.name} />
 
             {/* Text area pour la description */}
             <textarea
@@ -115,9 +114,7 @@ const CreateMeal: React.FC<CreateMealProps> = ({ onMealCreated, onClose }) => {
                 onChange={(e) => setForm({ ...form, description: e.target.value })}
                 className="input-text-select"
             />
-            {error?.description && (
-                <p className="error-form">{error.description}</p>
-            )}
+            <FormErrorMessage message={error?.description} />
 
             {/* Sélection pour la catégorie */}
             <select
@@ -133,9 +130,7 @@ const CreateMeal: React.FC<CreateMealProps> = ({ onMealCreated, onClose }) => {
                     </option>
                 ))}
             </select>
-            {error?.categoryMealId && (
-                <p className="error-form">{error.categoryMealId}</p>
-            )}
+            <FormErrorMessage message={error?.categoryMealId} />
 
             {/* Bouton de soumission */}
             <div className="flex flex-col-reverse gap-2 lg:justify-end">

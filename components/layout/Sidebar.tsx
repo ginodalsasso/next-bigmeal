@@ -1,19 +1,18 @@
 "use client";
 
-import { useAuth } from "@/app/context/AuthContext";
 import { links } from "@/lib/constants/constants";
 import { ucFirst } from "@/lib/utils";
 import Link from "next/link";
 import React, { useState } from "react";
+import IsUser from "../isUser";
 
 const Sidebar = () => {
         const [active, setActive] = useState(""); // État de la navigation active
-        const { isAuth } = useAuth(); // Utilisation du contexte d'authentification
         
 
     return (
         <>
-            {isAuth ? (
+            <IsUser>
                 <div className="h-screen sticky bg-neutral-900 py-4">
                     <ul>
                         {links.map((link) => (
@@ -32,8 +31,8 @@ const Sidebar = () => {
                             </li>
                         ))}
                     </ul>
-                </div>
-            ): null}
+                </div>.
+            </IsUser>
         </>
     );
 };
