@@ -5,13 +5,14 @@ import { UserType } from "@/lib/types/schemas_interfaces";
 import { dateToString } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import FormErrorMessage from "@/components/forms/FormErrorMessage";
 
 const ProfilePage = () => {
     // _________________________ ETATS _________________________
     const [user, setUser] = useState<UserType | null>(null);
-    const [recipient, setRecipient] = useState({ email: "" });
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
+    const [recipient, setRecipient] = useState<{ email: string }>({ email: "" });
+    const [loading, setLoading] = useState<boolean>(true);
+    const [error, setError] = useState<string>("");
 
     // _________________________ LOGIQUE _________________________
     useEffect(() => {
@@ -35,7 +36,7 @@ const ProfilePage = () => {
     // Fonction pour envoyer un email de réinitialisation du mot de passe
     const forgotPasswordEmail = async () => {
         if (!recipient.email) {
-            toast("Veuillez fournir un email");
+            setError("Veuillez fournir un email");
             return;
         }
 
@@ -45,7 +46,6 @@ const ProfilePage = () => {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ recipient: recipient.email }),
             });
-
             if (!response.ok) throw new Error("Échec de l'envoi");
 
             toast("Email de réinitialisation envoyé !");
@@ -107,6 +107,7 @@ const ProfilePage = () => {
                     value={recipient.email}
                     onChange={(e) => setRecipient({ email: e.target.value })}
                 />
+                <FormErrorMessage message={error} />
                 <Button type="submit" variant={"edit"}>
                     Réinitialiser le mot de passe
                 </Button>
