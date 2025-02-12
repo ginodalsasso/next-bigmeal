@@ -2,15 +2,14 @@
 
 import { Button } from '@/components/ui/button';
 import { ForgotUserPasswordFormType } from '@/lib/types/forms_interfaces';
-import { useSearchParams, useRouter } from 'next/navigation';
+import { useParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
 const ResetPasswordPage = () => {
-    const searchParams = useSearchParams();
-    const token = searchParams.get('token');
+    const { token } = useParams(); 
     const router = useRouter();
-    console.log(token);
 
     const [formData, setFormData] = useState({
         password: '',
@@ -21,19 +20,19 @@ const ResetPasswordPage = () => {
 
     useEffect(() => {
         const verifyToken = async () => {
-            // if (!token) {
-            //     setError({ general: 'Token invalide' });
-            //     return;
-            // }
+            if (!token) {
+                setError({ general: 'Token invalide' });
+                return;
+            }
             try {
-                const response = await fetch('/api/(forgotten-password)/verify-token', {
+                const response = await fetch('/api/verify-token', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({ token }),
                 });
-
+                console.log(response);
                 if (!response.ok) {
                     throw new Error('Token invalide ou expiré');
                 }
