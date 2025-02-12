@@ -25,7 +25,7 @@ const FilterCheckboxes: React.FC<FilterCheckboxesProps> = ({ options, onFilterCh
         {options.map((option, index) => (
             <label
                 key={index}
-                className={`cursor-pointer border px-4 py-2 ${selectedFilters.includes(option) ? 'bg-white text-black' : ''}`}
+                className={`cursor-pointer hover:bg-white hover:text-black border px-4 py-2 ${selectedFilters.includes(option) ? 'bg-white text-black' : ''}`}
             >
                 <input
                     type="checkbox"
