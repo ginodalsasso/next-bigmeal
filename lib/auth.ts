@@ -76,9 +76,12 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             return session;
         },
 
-        async redirect() {
-            return "/dashboard";
+        // Redirection après connexion
+        async redirect({ url, baseUrl }) {
+            // vérifiee si un callback est présent dans l'url pour rediriger sur la page demandée initialement
+            const callbackUrl = new URL(url, baseUrl).searchParams.get("callbackUrl");
+            // redirige vers la page d'accueil si pas de callback
+            return callbackUrl ? decodeURIComponent(callbackUrl) : "/";
         },
-
     },
 });

@@ -32,7 +32,6 @@ const ResetPasswordPage = () => {
                     },
                     body: JSON.stringify({ token }),
                 });
-                console.log(response);
                 if (!response.ok) {
                     throw new Error('Token invalide ou expiré');
                 }
@@ -58,12 +57,14 @@ const ResetPasswordPage = () => {
 
         try {
             const response = await fetch('/api/reset-password', {
-                method: 'POST',
+                method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({ token, password: formData.password }),
             });
+
+            console.log('response', response.body);
 
             if (response.ok) {
                 toast.success('Mot de passe réinitialisé avec succès !');

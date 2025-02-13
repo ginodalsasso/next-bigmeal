@@ -1,8 +1,9 @@
+import { db } from '@/lib/db';
 import jwt from 'jsonwebtoken';
 import { NextRequest } from 'next/server';
 import nodemailer from 'nodemailer';
 
-export  async function POST(req: NextRequest) {
+export async function POST(req: NextRequest) {
     
     const body = await req.json();
 
@@ -45,6 +46,27 @@ export  async function POST(req: NextRequest) {
     }
 }
 
-// const storeResetToken = async (recipient: string, token: string): Promise<void> => {
-//     // Stocke le token dans la base de données
-// };
+
+export async function PUT(req: NextRequest) {
+    const body = await req.json();
+    const { token, password } = body;
+
+    if (!token || !password) {
+        return new Response('Veuillez fournir un token et un mot de passe', { status: 400 });
+    }
+
+    const secret = process.env.JWT_SECRET || 'default_secret';
+    const decoded = jwt.verify(token, secret);  
+
+    if (typeof decoded !== 'string' && 'email' in decoded) {
+        // Mettre à jour le mot de passe dans la base de données
+        // getUserByEmail(decoded.email);
+        await db.user.update({
+            where: { email: decoded.email },
+            data: { password },
+        });
+        return new Response('Mot de passe réinitialisé', { status: 200 });
+    } else {
+        return new Response('Token invalide', { status: 400 });
+    }
+}

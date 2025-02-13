@@ -37,6 +37,7 @@ export default auth((req) => {
     // Redirection pour les routes protégées si non connecté
     if (isProtectedRoute && !isLoggedIn) {
         const redirectUrl = new URL("/login", nextUrl.origin);
+        // redirection vers la page demandée après connexion
         redirectUrl.searchParams.set("callbackUrl", encodeURIComponent(path));
         return NextResponse.redirect(redirectUrl);
     }

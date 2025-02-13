@@ -8,7 +8,7 @@ export async function POST(req: NextRequest) {
     try {
         const decoded = jwt.verify(token, secret); // Vérifie que le token est valide
 
-        // Vérifie que le token contient bien un email de type string
+        // Vérifie que le token contient bien un email de type string 
         if (typeof decoded !== 'string' && 'email' in decoded) {
             return new Response(JSON.stringify({ valid: true, email: decoded.email }), { status: 200 });
         } else {
