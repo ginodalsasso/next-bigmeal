@@ -67,10 +67,11 @@ export default function RegisterPage() {
         >
             <FormErrorMessage message={error?.general} />
 
+            <label htmlFor="email">Email</label>
             <input
                 type="text"
                 className="input-text-select "
-                placeholder="Email"
+                placeholder="email@exemple.com"
                 value={formData.email}
                 onChange={(e) =>
                     setFormData({ ...formData, email: e.target.value })
@@ -78,10 +79,11 @@ export default function RegisterPage() {
             />
             <FormErrorMessage message={error?.email} />
 
+            <label htmlFor="password">Mot de passe</label>
             <input
                 type="password"
                 className="input-text-select "
-                placeholder="Mot de passe"
+                placeholder="Votre mot de passe"
                 value={formData.password}
                 onChange={(e) =>
                     setFormData({ ...formData, password: e.target.value })

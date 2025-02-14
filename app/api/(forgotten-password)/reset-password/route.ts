@@ -56,7 +56,12 @@ export async function PUT(req: NextRequest) {
         const { token, password } = body;
         
         if (!token || !password) {
-            return new Response('Veuillez fournir un token et un mot de passe', { status: 400 });
+            return new Response(JSON.stringify({ 
+                message: 'Veuillez fournir un token et un mot de passe' 
+            }), { 
+                status: 400,
+                headers: { 'Content-Type': 'application/json' }
+            });
         }
         
         const secret = process.env.JWT_SECRET || 'default_secret';
@@ -67,7 +72,9 @@ export async function PUT(req: NextRequest) {
             decoded = jwt.verify(token, secret);
         } catch (error) {
             console.error('Erreur de vérification du token:', error);
-            return new Response(JSON.stringify({ message: 'Token invalide ou expiré' }), { 
+            return new Response(JSON.stringify({ 
+                message: 'Token invalide ou expiré' 
+            }), { 
                 status: 400,
                 headers: { 'Content-Type': 'application/json' }
             });
@@ -79,11 +86,26 @@ export async function PUT(req: NextRequest) {
             // Vérifier si l'utilisateur existe
             const user = await db.user.findUnique({
                 where: { email },
+                include: { accounts: true },
             });
-
+            console.log(user);
             if (!user) {
-                return new Response(JSON.stringify({ message: "Utilisateur introuvable" }), { 
+                return new Response(JSON.stringify({ 
+                    message: "Utilisateur introuvable" 
+                }), { 
                     status: 404,
+                    headers: { 'Content-Type': 'application/json' }
+                });
+            }
+
+            // Vérifier si l'utilisateur a un compte OAuth (Google/GitHub)
+            const hasOAuthAccount = user.accounts.some(acc => acc.provider === "google" || acc.provider === "github");
+
+            if (hasOAuthAccount) {
+                return new Response(JSON.stringify({ 
+                    message: "Impossible de réinitialiser le mot de passe. Votre compte est lié à Google ou GitHub." 
+                }), { 
+                    status: 403,
                     headers: { 'Content-Type': 'application/json' }
                 });
             }
@@ -97,12 +119,18 @@ export async function PUT(req: NextRequest) {
                 data: { password: hashedPassword },
             });
 
-            return new Response(JSON.stringify({ message: 'Mot de passe réinitialisé avec succès' }), { status: 200 });
+            return new Response(JSON.stringify({ 
+                message: 'Mot de passe réinitialisé avec succès' 
+            }), { status: 200 });
         } else {
-            return new Response(JSON.stringify({ message: 'Token invalide' }), { status: 400 });
+            return new Response(JSON.stringify({ 
+                message: 'Token invalide' 
+            }), { status: 400 });
         }
     } catch (error) {
         console.error('Erreur lors de la réinitialisation du mot de passe:', error);
-        return new Response(JSON.stringify({ message: 'Erreur serveur, veuillez réessayer plus tard' }), { status: 500 });
+        return new Response(JSON.stringify({ 
+            message: 'Erreur serveur, veuillez réessayer plus tard' 
+        }), { status: 500 });
     }
 }
