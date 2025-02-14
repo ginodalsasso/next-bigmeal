@@ -2,6 +2,8 @@ import { db } from '@/lib/db';
 import jwt from 'jsonwebtoken';
 import { NextRequest } from 'next/server';
 import nodemailer from 'nodemailer';
+import bcrypt from 'bcryptjs';
+
 
 export async function POST(req: NextRequest) {
     
@@ -48,25 +50,59 @@ export async function POST(req: NextRequest) {
 
 
 export async function PUT(req: NextRequest) {
-    const body = await req.json();
-    const { token, password } = body;
 
-    if (!token || !password) {
-        return new Response('Veuillez fournir un token et un mot de passe', { status: 400 });
-    }
+    try {
+        const body = await req.json();
+        const { token, password } = body;
+        
+        if (!token || !password) {
+            return new Response('Veuillez fournir un token et un mot de passe', { status: 400 });
+        }
+        
+        const secret = process.env.JWT_SECRET || 'default_secret';
+        
+        // Vérification du token
+        let decoded;
+        try {
+            decoded = jwt.verify(token, secret);
+        } catch (error) {
+            console.error('Erreur de vérification du token:', error);
+            return new Response(JSON.stringify({ message: 'Token invalide ou expiré' }), { 
+                status: 400,
+                headers: { 'Content-Type': 'application/json' }
+            });
+        }
+        
+        if (typeof decoded !== 'string' && 'email' in decoded) {
+            const email = decoded.email;
+            
+            // Vérifier si l'utilisateur existe
+            const user = await db.user.findUnique({
+                where: { email },
+            });
 
-    const secret = process.env.JWT_SECRET || 'default_secret';
-    const decoded = jwt.verify(token, secret);  
+            if (!user) {
+                return new Response(JSON.stringify({ message: "Utilisateur introuvable" }), { 
+                    status: 404,
+                    headers: { 'Content-Type': 'application/json' }
+                });
+            }
 
-    if (typeof decoded !== 'string' && 'email' in decoded) {
-        // Mettre à jour le mot de passe dans la base de données
-        // getUserByEmail(decoded.email);
-        await db.user.update({
-            where: { email: decoded.email },
-            data: { password },
-        });
-        return new Response('Mot de passe réinitialisé', { status: 200 });
-    } else {
-        return new Response('Token invalide', { status: 400 });
+            // Hash du mot de passe 
+            const hashedPassword = await bcrypt.hash(password, 12);
+
+            // Mise à jour du mot de passe
+            await db.user.update({
+                where: { email },
+                data: { password: hashedPassword },
+            });
+
+            return new Response(JSON.stringify({ message: 'Mot de passe réinitialisé avec succès' }), { status: 200 });
+        } else {
+            return new Response(JSON.stringify({ message: 'Token invalide' }), { status: 400 });
+        }
+    } catch (error) {
+        console.error('Erreur lors de la réinitialisation du mot de passe:', error);
+        return new Response(JSON.stringify({ message: 'Erreur serveur, veuillez réessayer plus tard' }), { status: 500 });
     }
 }

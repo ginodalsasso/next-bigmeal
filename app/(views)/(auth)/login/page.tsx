@@ -6,10 +6,15 @@ import { LoginConstraints } from "@/lib/constraints/forms_constraints";
 import FormErrorMessage from "@/components/forms/FormErrorMessage";
 import { useFormValidation } from "@/app/hooks/useFormValidation";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { toast } from "sonner";
 
 export default function LoginPage() {
     
     const router = useRouter();
+    const [recipient, setRecipient] = useState<{ email: string }>({ email: "" });
+    // const [error, setError] = useState<string>("");
+    
     
     // Utilisation du hook de validation
     const { error, setError, isLoading, setIsLoading, validate } = useFormValidation(
@@ -44,6 +49,29 @@ export default function LoginPage() {
             setError({ general: "Impossible de se connecter. Veuillez réessayer plus tard." });
         } finally {
             setIsLoading(false);
+        }
+    };
+
+    // Fonction pour envoyer un email de réinitialisation du mot de passe
+    const forgotPasswordEmail = async () => {
+        if (!recipient.email) {
+            toast("Veuillez fournir un email");
+
+            return;
+        }
+
+        try {
+            const response = await fetch(`/api/reset-password`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ recipient: recipient.email }),
+            });
+            if (!response.ok) throw new Error("Échec de l'envoi");
+
+            toast("Email de réinitialisation envoyé !");
+        } catch (error) {
+            console.error("Erreur lors de l'envoi de l'email :", error);
+            toast("Erreur lors de l'envoi de l'email");
         }
     };
 
@@ -90,6 +118,29 @@ export default function LoginPage() {
                     Se connecter avec GitHub
                 </Button>
             </form>
+
+            <div>
+                
+            <form
+                onSubmit={(e) => {
+                    e.preventDefault();
+                    forgotPasswordEmail();
+                }}
+                className="mt-6"
+            >
+                <input
+                    type="email"
+                    className="input-text-select"
+                    placeholder="Email"
+                    value={recipient.email}
+                    onChange={(e) => setRecipient({ email: e.target.value })}
+                />
+                {/* <FormErrorMessage message={error} /> */}
+                <Button type="submit" variant={"edit"}>
+                    Réinitialiser le mot de passe
+                </Button>
+            </form>
+            </div>
         </div>
     );
 }

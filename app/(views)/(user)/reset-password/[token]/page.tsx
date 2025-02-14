@@ -32,9 +32,8 @@ const ResetPasswordPage = () => {
                     },
                     body: JSON.stringify({ token }),
                 });
-                if (!response.ok) {
-                    throw new Error('Token invalide ou expiré');
-                }
+                if (!response.ok) throw new Error('Token invalide ou expiré');
+
             } catch (error) {
                 console.error('Erreur lors de la vérification du token :', error);
                 setError({ general: 'Token invalide ou expiré' });
@@ -63,8 +62,6 @@ const ResetPasswordPage = () => {
                 },
                 body: JSON.stringify({ token, password: formData.password }),
             });
-
-            console.log('response', response.body);
 
             if (response.ok) {
                 toast.success('Mot de passe réinitialisé avec succès !');

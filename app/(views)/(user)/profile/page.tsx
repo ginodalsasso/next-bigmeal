@@ -3,14 +3,10 @@
 import React, { useEffect, useState } from "react";
 import { UserType } from "@/lib/types/schemas_interfaces";
 import { dateToString } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
-import FormErrorMessage from "@/components/forms/FormErrorMessage";
 
 const ProfilePage = () => {
     // _________________________ ETATS _________________________
     const [user, setUser] = useState<UserType | null>(null);
-    const [recipient, setRecipient] = useState<{ email: string }>({ email: "" });
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string>("");
 
@@ -32,28 +28,6 @@ const ProfilePage = () => {
         };
         fetchUser();
     }, []);
-
-    // Fonction pour envoyer un email de réinitialisation du mot de passe
-    const forgotPasswordEmail = async () => {
-        if (!recipient.email) {
-            setError("Veuillez fournir un email");
-            return;
-        }
-
-        try {
-            const response = await fetch(`/api/reset-password`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ recipient: recipient.email }),
-            });
-            if (!response.ok) throw new Error("Échec de l'envoi");
-
-            toast("Email de réinitialisation envoyé !");
-        } catch (error) {
-            console.error("Erreur lors de l'envoi de l'email :", error);
-            toast("Erreur lors de l'envoi de l'email");
-        }
-    };
 
     // _________________________ RENDU _________________________
     if (loading) return <div>Chargement...</div>;
@@ -93,25 +67,6 @@ const ProfilePage = () => {
                 <p>Aucune liste de courses enregistrée.</p>
             )}
 
-            <form
-                onSubmit={(e) => {
-                    e.preventDefault();
-                    forgotPasswordEmail();
-                }}
-                className="mt-6"
-            >
-                <input
-                    type="email"
-                    className="input-text-select"
-                    placeholder="Email"
-                    value={recipient.email}
-                    onChange={(e) => setRecipient({ email: e.target.value })}
-                />
-                <FormErrorMessage message={error} />
-                <Button type="submit" variant={"edit"}>
-                    Réinitialiser le mot de passe
-                </Button>
-            </form>
         </div>
     );
 };
