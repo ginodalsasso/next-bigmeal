@@ -31,6 +31,48 @@ const ProfilePage = () => {
         fetchUser();
     }, []);
 
+    const handleChangedPassword = async (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        const formData = new FormData(event.currentTarget);
+
+        const password = formData.get("password")?.toString() || "";
+        const newPassword = formData.get("new-password")?.toString() || "";
+        const confirmPassword = formData.get("confirm-password")?.toString() || "";
+
+        if(!password || !newPassword || !confirmPassword) {
+            setError("Veuillez remplir tous les champs.");
+            return;
+        }
+
+        if (newPassword !== confirmPassword) {
+            setError("Les mots de passe ne correspondent pas.");
+            return;
+        }
+
+        try {
+            const response = await fetch("/api/profile", {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ password, newPassword }),
+            });
+
+            if (response.ok) {
+                setError("");
+                setIsChangedPassword(false);
+            } else {
+                const errorData = await response.json();
+                setError(errorData.message || "Une erreur est survenue lors de la modification du mot de passe.");
+            }
+        } catch (error) {
+            console.error("Erreur lors de la modification du mot de passe :", error);
+            setError("Impossible de modifier le mot de passe.");
+        }
+    }
+
+
+
     // _________________________ RENDU _________________________
     if (loading) return <div>Chargement...</div>;
     if (error) return <div className="text-red-500">{error}</div>;
@@ -41,10 +83,10 @@ const ProfilePage = () => {
             {/* Affichage conditionnel des formulaires */}
             {isChangedPassword ? (
                 <div>
-                    <form className="mb-2" action="">
+                    <form className="mb-2" onSubmit={handleChangedPassword}>
                         <label htmlFor="password">Votre mot de passe actuel</label>
                         <input
-                            className="input-text-select"
+                            className="input-text-select mb-6"
                             type="password"
                             id="password"
                             name="password"
@@ -58,7 +100,7 @@ const ProfilePage = () => {
                             name="new-password"
                             required
                         />
-                        <label htmlFor="confirm-password">Confirmer le mot de passe</label>
+                        <label htmlFor="confirm-password">Confirmer votre nouveau mot de passe</label>
                         <input
                             className="input-text-select"
                             type="password"
@@ -66,6 +108,7 @@ const ProfilePage = () => {
                             name="confirm-password"
                             required
                         />
+                        <Button type="submit">Modifier mon mot de passe</Button>
                     </form>
                     <Button variant="secondary" onClick={() => setIsChangedPassword(false)}>Revenir en arrière</Button>
                 </div>
