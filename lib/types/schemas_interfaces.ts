@@ -104,6 +104,7 @@ export interface ShoppingListItemType {
 
 
 export interface UserType {
+    meals: boolean;
     id: string; 
     email: string; 
     password: string;
