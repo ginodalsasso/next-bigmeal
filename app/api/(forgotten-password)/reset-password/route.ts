@@ -88,7 +88,6 @@ export async function PUT(req: NextRequest) {
                 where: { email },
                 include: { accounts: true },
             });
-            console.log(user);
             if (!user) {
                 return new Response(JSON.stringify({ 
                     message: "Utilisateur introuvable" 
@@ -98,9 +97,10 @@ export async function PUT(req: NextRequest) {
                 });
             }
 
-            // Vérifier si l'utilisateur a un compte OAuth (Google/GitHub)
-            const hasOAuthAccount = user.accounts.some(acc => acc.provider === "google" || acc.provider === "github");
-
+            // Vérifier si l'utilisateur a un compte OAuth
+            const providers = ['google', 'github'];
+            // pour chaque compte de l'utilisateur, on vérifie si le provider est dans la liste des providers
+            const hasOAuthAccount = user.accounts.some(account => account.provider && providers.includes(account.provider));
             if (hasOAuthAccount) {
                 return new Response(JSON.stringify({ 
                     message: "Impossible de réinitialiser le mot de passe. Votre compte est lié à Google ou GitHub." 

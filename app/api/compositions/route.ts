@@ -8,7 +8,7 @@ import { getAdminSession, getUserSession } from "@/lib/security/getSession";
 
 export async function POST(req: NextRequest) {
     try {
-        const { session, error } = await getUserSession();
+        const { error } = await getUserSession();
         if (error) return error;
         
         const csrfTokenVerified = await verifyCSRFToken(req);
@@ -63,7 +63,7 @@ export async function POST(req: NextRequest) {
 
 export async function PUT(req: NextRequest) {
     try {
-        const { session, error } = await getAdminSession();
+        const { error } = await getAdminSession();
         if (error) return error;
         
         const csrfTokenVerified = await verifyCSRFToken(req);
@@ -103,7 +103,7 @@ export async function PUT(req: NextRequest) {
 
 export async function DELETE(req: NextRequest) {
     try {
-        const { session, error } = await getAdminSession();
+        const { error } = await getAdminSession();
         if (error) return error;
         
         const csrfTokenVerified = await verifyCSRFToken(req);

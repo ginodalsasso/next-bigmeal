@@ -8,7 +8,7 @@ type Props = {
 
 export async function GET( req: NextRequest, { params }: Props){
 
-    const { session, error } = await getUserSession();
+    const { error } = await getUserSession();
     if (error) return error;
         
     const { ingredientName } = await params;
