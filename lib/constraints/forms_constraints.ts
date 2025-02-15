@@ -96,6 +96,24 @@ export const LoginConstraints = z.object({
 });
 
 
+export const ResetPasswordConstraints = z.object({
+    email: z
+        .string()
+        .nonempty("L'email ne peut pas être vide")
+        .email()
+        .trim(),
+});
+
+export const NewPasswordConstraints = z.object({
+    password: z
+        .string()
+        // .min(8, "Le mot de passe doit comporter au moins 8 caractères")
+        .max(100, "Le mot de passe doit comporter au maximum 100 caractères")
+        // .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>~`'[\]\\/_+\-=])[A-Za-z\d!@#$%^&*(),.?":{}|<>~`'[\]\\/_+\-=]{12,}$/, "Le mot de passe doit comporter au moins 12 caractères, une lettre majuscule, une lettre minuscule, un chiffre et un caractère spécial"),
+        .trim(),
+        confirmPassword: z.string(),
+});
+
 export const ShoppingListConstraints = z.object({
     quantity: z
         .number({ message: "La quantité doit être un nombre" })
