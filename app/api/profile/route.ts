@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { getUserSession } from "@/lib/security/getSession";
 import bcrypt from "bcryptjs";
+import { verifyCSRFToken } from "@/lib/security/csrf";
 
 export async function GET() {
     try {
@@ -45,6 +46,11 @@ export async function PUT(req: NextRequest) {
     try {
         const { session, error } = await getUserSession();
         if (error) return error;
+
+        const csrfTokenVerified = await verifyCSRFToken(req);
+        if (!csrfTokenVerified) {
+            return new NextResponse("CSRF Token is missing or invalid", { status: 403 });
+        }       
 
         const body = await req.json();
         const { password, newPassword } = body;

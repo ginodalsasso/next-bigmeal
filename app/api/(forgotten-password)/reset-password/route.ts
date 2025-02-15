@@ -1,8 +1,9 @@
 import { db } from '@/lib/db';
 import jwt from 'jsonwebtoken';
-import { NextRequest } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import nodemailer from 'nodemailer';
 import bcrypt from 'bcryptjs';
+import { verifyCSRFToken } from '@/lib/security/csrf';
 
 
 export async function POST(req: NextRequest) {
@@ -52,6 +53,11 @@ export async function POST(req: NextRequest) {
 export async function PUT(req: NextRequest) {
 
     try {
+        const csrfTokenVerified = await verifyCSRFToken(req);
+        if (!csrfTokenVerified) {
+            return new NextResponse("CSRF Token is missing or invalid", { status: 403 });
+        }       
+
         const body = await req.json();
         const { token, password } = body;
         
@@ -121,16 +127,25 @@ export async function PUT(req: NextRequest) {
 
             return new Response(JSON.stringify({ 
                 message: 'Mot de passe réinitialisé avec succès' 
-            }), { status: 200 });
+            }), { 
+                status: 200, 
+                headers: { 'Content-Type': 'application/json' }
+            });
         } else {
             return new Response(JSON.stringify({ 
                 message: 'Token invalide' 
-            }), { status: 400 });
+            }), { 
+                status: 400,
+                headers: { 'Content-Type': 'application/json' }
+            });
         }
     } catch (error) {
         console.error('Erreur lors de la réinitialisation du mot de passe:', error);
         return new Response(JSON.stringify({ 
             message: 'Erreur serveur, veuillez réessayer plus tard' 
-        }), { status: 500 });
+        }), { 
+            status: 500,
+            headers: { 'Content-Type': 'application/json' }
+        });
     }
 }

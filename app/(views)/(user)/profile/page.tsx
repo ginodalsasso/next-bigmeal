@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { UserType } from "@/lib/types/schemas_interfaces";
 import { dateToString } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { getCsrfToken } from "next-auth/react";
 
 const ProfilePage = () => {
     // _________________________ ETATS _________________________
@@ -49,11 +50,13 @@ const ProfilePage = () => {
             return;
         }
 
+        const csrfToken = await getCsrfToken();
         try {
             const response = await fetch("/api/profile", {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
+                    "X-CSRF-Token": csrfToken,
                 },
                 body: JSON.stringify({ password, newPassword }),
             });

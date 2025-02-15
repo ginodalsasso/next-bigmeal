@@ -10,11 +10,22 @@ export async function POST(req: NextRequest) {
 
         // Vérifie que le token contient bien un email de type string 
         if (typeof decoded !== 'string' && 'email' in decoded) {
-            return new Response(JSON.stringify({ valid: true, email: decoded.email }), { status: 200 });
+            return new Response(JSON.stringify({
+                valid: true, 
+                email: decoded.email
+            }), { 
+                status: 200,
+                headers: { 'Content-Type': 'application/json' }
+            });
         } else {
             throw new Error('Invalid token payload');
         }
     } catch (error) {
-        return new Response(JSON.stringify({ message: `Token invalide ou expiré: ${error}` }), { status: 400 });
+        return new Response(JSON.stringify({ 
+            message: `Token invalide ou expiré: ${error}` 
+        }), { 
+            status: 400,
+            headers: { 'Content-Type': 'application/json' }
+        });
     }
 }

@@ -2,6 +2,7 @@
 
 import { Button } from '@/components/ui/button';
 import { ForgotUserPasswordFormType } from '@/lib/types/forms_interfaces';
+import { getCsrfToken } from 'next-auth/react';
 import { useParams } from 'next/navigation';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
@@ -24,11 +25,13 @@ const ResetPasswordPage = () => {
                 setError({ general: 'Token invalide' });
                 return;
             }
+            const csrfToken = await getCsrfToken();
             try {
                 const response = await fetch('/api/verify-token', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
+                        'X-CSRF-Token': csrfToken,
                     },
                     body: JSON.stringify({ token }),
                 });
