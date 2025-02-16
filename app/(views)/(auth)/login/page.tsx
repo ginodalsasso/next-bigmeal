@@ -14,10 +14,11 @@ export default function LoginPage() {
     const router = useRouter();
     const [recipient, setRecipient] = useState<{ email: string }>({ email: "" });
     const [isForgotPassword, setIsForgotPassword] = useState<boolean>(false); // Affichage conditionnel des formulaires
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     
     
     // Utilisation du hook de validation
-    const { error, setError, isLoading, setIsLoading, validate } = useFormValidation(
+    const { error, setError, validate } = useFormValidation(
         LoginConstraints,
         ["email", "password"] // Liste des champs à valider
     );
@@ -68,16 +69,16 @@ export default function LoginPage() {
             });
             const data = await response.json();
             if (!response.ok) {
-                toast.error(data.message);
+                setError({ general: data.message || "Une erreur est survenue lors de l'envoi de l'email." });
                 return;
             }
 
             toast("Email de réinitialisation envoyé !");
         } catch (error) {
             console.error("Erreur lors de l'envoi de l'email :", error);
-            toast("Erreur lors de l'envoi de l'email");
-        }
-    };
+            setError({ general: "Impossible d'envoyer l'email. Veuillez réessayer plus tard." });
+        };
+    }
 
     return (
         <div className="px-4 py-8 mx-auto mt-[10%] sm:w-[400px] flex flex-col gap-2">

@@ -12,8 +12,11 @@ export async function GET() {
 
         return NextResponse.json(categoryIngredient, {status: 200});
     } catch(error) {
-        console.log("[CATEGORY INGREDIENT]", error); 
-        return new NextResponse("Internal Error", {status: 500 });
+        console.error("[CATEGORY INGREDIENT]", error); 
+        return NextResponse.json(
+            { message: "Erreur interne du serveur." },
+            { status: 500 }
+        );
     }
 }
 
@@ -25,7 +28,7 @@ export async function POST(req: NextRequest) {
         
         const csrfTokenVerified = await verifyCSRFToken(req);
         if (!csrfTokenVerified) {
-            return new NextResponse("CSRF Token is missing or invalid", { status: 403 });
+            return new NextResponse("Token CSRF manquant ou invalide", { status: 403 });
         }       
 
         const body = await req.json();
@@ -49,7 +52,10 @@ export async function POST(req: NextRequest) {
         return NextResponse.json(newCategoryIngredient, { status: 201 });
     } catch (error) {
         console.error("[CREATE_CATEGORY_INGREDIENT_ERROR]", error);
-        return new NextResponse("Internal Error", {status: 500 });
+        return NextResponse.json(
+            { message: "Erreur interne du serveur." },
+            { status: 500 }
+        );
     }
 }
 
@@ -63,7 +69,7 @@ export async function PUT(req: NextRequest) {
             
             const csrfTokenVerified = await verifyCSRFToken(req);
             if (!csrfTokenVerified) {
-                return new NextResponse("CSRF Token is missing or invalid", { status: 403 });
+                return new NextResponse("Token CSRF manquant ou invalide", { status: 403 });
             }    
 
             const body = await req.json();
@@ -91,7 +97,10 @@ export async function PUT(req: NextRequest) {
 
     } catch (error) {
         console.error("[UPDATE_CATEGORY_INGREDIENT_ERROR]", error);
-        return new NextResponse("Internal Error", {status: 500 });
+        return NextResponse.json(
+            { message: "Erreur interne du serveur." },
+            { status: 500 }
+        );
     }
 }
 
@@ -103,7 +112,7 @@ export async function DELETE (req: NextRequest) {
         
         const csrfTokenVerified = await verifyCSRFToken(req);
         if (!csrfTokenVerified) {
-            return new NextResponse("CSRF Token is missing or invalid", { status: 403 });
+            return new NextResponse("Token CSRF manquant ou invalide", { status: 403 });
         } 
 
         const body = await req.json();
@@ -123,7 +132,10 @@ export async function DELETE (req: NextRequest) {
         return NextResponse.json({ message: "Catégorie supprimée" }, {status: 200});
     } catch (error) {
         console.error("[DELETE_CATEGORY_INGREDIENT_ERROR]", error);
-        return new NextResponse("Internal Error", {status: 500 });
+        return NextResponse.json(
+            { message: "Erreur interne du serveur." },
+            { status: 500 }
+        );
     }
 }
 

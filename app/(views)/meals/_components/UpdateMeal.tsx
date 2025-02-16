@@ -6,27 +6,27 @@ import { useFormValidation } from "@/app/hooks/useFormValidation";
 import { mealConstraints } from "@/lib/constraints/forms_constraints";
 import { ucFirst } from "@/lib/utils";
 import FormErrorMessage from "@/components/forms/FormErrorMessage";
+import { getCsrfToken } from "next-auth/react";
+import { toast } from "sonner";
 
 // _________________________ COMPOSANT _________________________
 const UpdateMeal: React.FC<UpdateMealProps> = ({
-    initialName,
-    initialCategory,
-    initialDescription,
+    meal, 
     onSubmit,
-    onCancel,
-    isLoading: externalLoading,
+    onClose
 }) => {
     // _________________________ ÉTATS _________________________
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const [form, setForm] = useState({
-        name: initialName,
-        categoryMealId: initialCategory,
-        description: initialDescription || "",
+        name: meal.name,
+        categoryMealId: meal.categoryMeal?.id || "",
+        description: meal.description || "",
     });
 
     const [categories, setCategories] = useState<CategoryMealType[]>([]);
 
     // Hook de validation
-    const { error, validate, setIsLoading, isLoading } = useFormValidation(
+    const { error, setError, validate } = useFormValidation(
         mealConstraints,
         ["name", "categoryMealId", "description"]
     );
@@ -43,10 +43,11 @@ const UpdateMeal: React.FC<UpdateMealProps> = ({
                 setCategories(data);
             } catch (error) {
                 console.error("[FETCH_CATEGORIES_ERROR]", error);
+                setError({ general: "Erreur lors de la récupération des catégories." });
             }
         };
         fetchCategories();
-    }, []);
+    }, [setError]);
 
     // Gestion des changements de champs
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -59,17 +60,36 @@ const UpdateMeal: React.FC<UpdateMealProps> = ({
     // Soumission du formulaire
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        if (!validate(form)) return;
         setIsLoading(true);
 
-        if (validate(form)) {
-            await onSubmit(
-                form.name, 
-                form.categoryMealId, 
-                form.description
-            );
-        }
+        try {
+            const csrfToken = await getCsrfToken();
+            const response = await fetch("/api/meals", {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRF-Token": csrfToken,
+                },
+                body: JSON.stringify({
+                    id: meal.id,
+                    name: form.name,
+                    categoryMealId: form.categoryMealId,
+                    description: form.description,
+                }),
+            });
+            if (!response.ok) throw new Error("Échec de la mise à jour du repas.");
 
-        setIsLoading(false);
+            const updatedMeal = await response.json();
+            onSubmit(updatedMeal);
+            toast("Repas mis à jour avec succès");
+            onClose();
+        } catch (error) {
+            console.error("[UPDATE_MEAL_ERROR]", error);
+            setError({ general: "Erreur lors de la mise à jour." });
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     return (
@@ -81,7 +101,7 @@ const UpdateMeal: React.FC<UpdateMealProps> = ({
                 onChange={handleChange}
                 placeholder="Nouveau nom"
                 className="input-text-select"
-                disabled={isLoading || externalLoading}
+                disabled={isLoading}
             />
             <FormErrorMessage message={error?.name} />
 
@@ -90,7 +110,7 @@ const UpdateMeal: React.FC<UpdateMealProps> = ({
                 value={form.categoryMealId}
                 onChange={handleChange}
                 className="input-text-select"
-                disabled={isLoading || externalLoading}
+                disabled={isLoading}
                 required
             >
                 <option value="">-- Choisir une catégorie --</option>
@@ -108,17 +128,17 @@ const UpdateMeal: React.FC<UpdateMealProps> = ({
                 value={form.description}
                 onChange={handleChange}
                 className="input-text-select"
-                disabled={isLoading || externalLoading}
+                disabled={isLoading}
             />
             <FormErrorMessage message={error?.description} />
 
             <div className="flex gap-2">
                 <Button
                     type="button"
-                    onClick={onCancel}
+                    onClick={onClose}
                     variant="cancel"
                     className="w-full"
-                    disabled={isLoading || externalLoading}
+                    disabled={isLoading}
                 >
                     Annuler
                 </Button>
@@ -126,9 +146,9 @@ const UpdateMeal: React.FC<UpdateMealProps> = ({
                     type="submit"
                     variant="success"
                     className="w-full"
-                    disabled={isLoading || externalLoading}
+                    disabled={isLoading}
                 >
-                    {isLoading || externalLoading ? "En cours..." : "Valider"}
+                    {isLoading ? "En cours..." : "Valider"}
                 </Button>
             </div>
         </form>

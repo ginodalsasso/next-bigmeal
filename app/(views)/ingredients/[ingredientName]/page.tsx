@@ -28,7 +28,7 @@ const IngredientDetailPage =
                 const data: IngredientType = await response.json();
                 setIngredient(data);
             } catch (error) {
-                console.error("Erreur lors de la récupération de l'ingrédient :", error);
+                console.error("[FETCH_INGREDIENT_ERROR]", error);
                 setError('Erreur lors de la récupération de l\'ingrédient');
             } finally {
                 setLoading(false);

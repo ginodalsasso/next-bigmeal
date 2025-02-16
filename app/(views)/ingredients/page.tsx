@@ -74,38 +74,14 @@ const IngredientPage = () => {
     };
 
     // Appel API pour mettre à jour un ingrédient
-    const updateIngredient = async (id: string, newName: string, newCategory: string, newSeason: string|null) => {
-        const csrfToken = await getCsrfToken();
-        try {
-            const response = await fetch("/api/ingredients", {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-CSRF-Token": csrfToken,
-                },
-                body: JSON.stringify({ 
-                    id, 
-                    name: newName, 
-                    categoryIngredientId: newCategory, 
-                    season: newSeason 
-                }),
-            });
-            if (!response.ok) throw new Error("Failed to update ingredient");
-
-            // Mettre à jour l'ingrédient dans le state
-            const updatedIngredient: IngredientType = await response.json();
-            setIngredients((prev) => // Remplacer l'ancien ingrédient par le nouveau
-                prev.map((ingredient) =>
-                    ingredient.id === id ? updatedIngredient : ingredient
-                )
-            );
-
-            toast("Ingrédient modifié avec succès");
-        } catch (error) {
-            console.error("Erreur lors de la modification:", error);
-            setError("Erreur lors de la modification.");
-        }
+    const updateIngredient = async (updatedIngredient: IngredientType) => {
+        setIngredients((prev) => // Remplacer l'ancien ingrédient par le nouveau
+            prev.map((ingredient) =>
+                ingredient.id === updatedIngredient.id ? updatedIngredient : ingredient
+            )
+        );
     };
+
 
     // Appel API pour supprimer un ingrédient
     const deleteIngredient = async (id: string) => {
@@ -119,7 +95,7 @@ const IngredientPage = () => {
                 },
                 body: JSON.stringify({ id }),
             });
-            if (!response.ok) throw new Error("Failed to delete ingredient");
+            if (!response.ok) throw new Error("Erreur lors de la suppression de l'ingrédient");
 
             setIngredients((prev) => 
                 prev.filter((ingredient) => ingredient.id !== id)
@@ -127,7 +103,7 @@ const IngredientPage = () => {
             
             toast("Ingrédient supprimé avec succès");
         } catch (error) {
-            console.error("Erreur lors de la suppression:", error);
+            console.error("[DELETE_INGREDIENT_ERROR]", error);
             setError("Erreur lors de la suppression.");
         }
     };
@@ -182,7 +158,7 @@ const IngredientPage = () => {
                                 <DialogTitle className="text-center">Ajouter un ingrédient</DialogTitle>
                                 {/* Formulaire de création d'ingrédient */}
                                 <CreateIngredient
-                                    onIngredientCreated={addIngredient}
+                                    onSubmit={addIngredient}
                                     onClose={() => setIsDialogOpen(false)}
                                 />
                             </DialogHeader>
@@ -216,16 +192,12 @@ const IngredientPage = () => {
                                     <EditItem
                                         renderEditForm={(onClose) => (
                                             <UpdateIngredient
-                                                initialName={ingredient.name}
-                                                initialCategory={ingredient.categoryIngredient?.id || ""}
-                                                initialSeason={ingredient.season}
-                                                onSubmit={async (newName, newCategory, newSeason) => {
-                                                    await updateIngredient(ingredient.id, newName, newCategory, newSeason || null);
+                                                ingredient={ingredient}
+                                                onSubmit={async (updatedIngredient: IngredientType) => {
+                                                    await updateIngredient(updatedIngredient);
                                                     onClose();
                                                 }}
                                                 onCancel={onClose}
-                                                isLoading={false}
-                                                error={null}
                                             />
                                         )}
                                     />

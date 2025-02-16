@@ -45,7 +45,7 @@ const MealDetailPage =
                 const data: MealType = await response.json();
                 setMeal(data);
             } catch (error) {
-                console.error("Erreur lors de la récupération du repas :", error);
+                console.error("[FETCH_MEAL_ERROR]", error);
                 setError("Erreur lors de la récupération du repas");
             } finally {
                 setLoading(false);
@@ -129,7 +129,7 @@ const MealDetailPage =
                                 <DialogTitle>Ajouter une composition</DialogTitle>
                                 <CreateComposition
                                     mealId={meal.id}
-                                    onCompositionCreated={(compositions) => {
+                                    onSubmit={(compositions) => {
                                         setMeal((prevMeal) => {
                                             if (!prevMeal) return prevMeal;
                                             return { ...prevMeal, compositions: [...compositions] };

@@ -53,7 +53,7 @@ const MealsPage = () => {
                 const data: MealType[] = await response.json();
                 setMeals(data);
             } catch (error) {
-                console.error("Erreur lors de la récupération des repas:", error);
+                console.error("[FETCH_MEALS_ERROR", error);
                 setError("Erreur lors de la récupération des repas");
             } finally {
                 setLoading(false);
@@ -85,41 +85,12 @@ const MealsPage = () => {
         setCreatedMealId(null); // Réinitialiser l'ID du repas créé
     };
 
-
-    // Appel API pour modifier un repas
-    const updateMeal = async (id: string, newName: string, newCategoryId: string, newDescription: string | null) => {
-        const csrfToken = await getCsrfToken();
-        try {
-            const response = await fetch("/api/meals", {
-                method: "PUT",
-                headers: { 
-                    "Content-Type": "application/json",
-                    "X-CSRF-Token": csrfToken,
-                },
-                body: JSON.stringify({ 
-                    id, 
-                    name: newName, 
-                    categoryMealId: newCategoryId, 
-                    description: newDescription 
-                }),
-            });
-            if (!response.ok) throw new Error("Failed to update meal");
-
-            // Mettre à jour le repas dans le state
-            const updatedMeal: MealType = await response.json();
-            setMeals((prev) =>
-                prev.map((meal) =>
-                    meal.id === updatedMeal.id ? updatedMeal : meal // Si l'ID correspond, remplacer par le nouveau
-                )
-            );
-
-            toast("Repas modifié avec succès");
-        } catch (error) {
-            console.error("Erreur lors de la modification:", error);
-            setError("Erreur lors de la modification.");
-        }
-    };
-
+    const updateMeal = async (updatedMeal: MealType): Promise<void> => {
+        setMeals((prevMeals) =>
+            prevMeals.map((meal) => (meal.id === updatedMeal.id ? updatedMeal : meal))
+        );
+        toast("Repas mis à jour avec succès");
+    }
 
     // Appel API pour supprimer un repas
     const deleteMeal = async (id: string) => {
@@ -140,7 +111,7 @@ const MealsPage = () => {
             
             toast("Repas supprimé avec succès");
         } catch (error) {
-            console.error("Erreur lors de la suppression:", error);
+            console.error("[DELETE_MEAL_ERROR]", error);
             setError("Erreur lors de la suppression.");
         }
     };
@@ -202,7 +173,7 @@ const MealsPage = () => {
                                 {currentStep === "createComposition" && createdMealId && (
                                     <CreateComposition
                                         mealId={createdMealId}
-                                        onCompositionCreated={addComposition}
+                                        onSubmit={addComposition}
                                         onClose={() => {
                                             setIsDialogOpen(false);
                                             setCurrentStep("createMeal");
@@ -250,16 +221,9 @@ const MealsPage = () => {
                                     <EditItem
                                         renderEditForm={(onClose) => (
                                             <UpdateMeal
-                                            initialName={meal.name}
-                                            initialCategory={meal.categoryMeal?.id || ""}
-                                            initialDescription={meal.description || ""}
-                                            onSubmit={async (newName, newCategory, newDescription) => {
-                                                await updateMeal(meal.id, newName, newCategory, newDescription || null);
-                                                onClose();
-                                            }}
-                                            onCancel={onClose}
-                                            isLoading={false}
-                                            error={null}
+                                                meal={meal} 
+                                                onSubmit={updateMeal}
+                                                onClose={onClose}
                                             />
                                         )}
                                     />

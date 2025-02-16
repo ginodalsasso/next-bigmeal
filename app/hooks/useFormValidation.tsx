@@ -5,8 +5,8 @@ import { ZodSchema } from "zod";
 // `Partial<Record<keyof T, string>>` signifie :
 // - Un objet où les clés sont les propriétés de `T` (grâce à `keyof T`)
 // - Les valeurs sont des chaînes (messages d'erreur), ou peuvent être absentes (grâce à `Partial`)
+// - Il y a une clé supplémentaire "general" pour les erreurs générales
 type ValidationErrors<T> = Partial<Record<keyof T | "general", string>>;
-
 
 // Déclaration d'un hook personnalisé générique
 // - `<T extends object>` : Le hook accepte un type `T` qui doit être un objet.
@@ -17,7 +17,6 @@ export const useFormValidation = <T extends object>(
 ) => {
 
     const [error, setError] = useState<ValidationErrors<T> | null>(null);
-    const [isLoading, setIsLoading] = useState(false);
 
     // Fonction pour valider un objet de type `T` (le formulaire à valider)
     const validate = (form: T): boolean => {
@@ -38,7 +37,6 @@ export const useFormValidation = <T extends object>(
             });
 
             setError(errors);
-            setIsLoading(false);
 
             return false;
         }
@@ -48,5 +46,5 @@ export const useFormValidation = <T extends object>(
     };
 
     // Retourner les états et la fonction de validation pour utilisation dans les composants
-    return { error, setError ,isLoading, setIsLoading, validate };
+    return { error, setError, validate };
 };

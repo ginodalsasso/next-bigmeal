@@ -30,7 +30,7 @@ import { getCsrfToken } from "next-auth/react";
                 const data: CategoryIngredientType[] = await response.json();
                 setCategoryIngredient(data);
             } catch (error) {
-                console.error("Erreur lors de la récupération des catégories:", error);
+                console.error("[FETCH_CATEGORY_ERROR]", error);
                 setError("Erreur lors de la récupération des catégories.");
             } finally {
                 setLoading(false);
@@ -60,7 +60,7 @@ import { getCsrfToken } from "next-auth/react";
 
             toast("Catégorie créée avec succès");
         } catch (error) {
-            console.error("Erreur lors de la création:", error);
+            console.error("[CREATE_CATEGORY]", error);
             setError("Erreur lors de la création.");
         }
     };
@@ -86,7 +86,7 @@ import { getCsrfToken } from "next-auth/react";
 
             toast("Catégorie modifiée avec succès");
         } catch (error) {
-            console.error("Erreur lors de la modification:", error);
+            console.error("[UPDATE_CATEGORY_ERROR]", error);
             setError("Erreur lors de la modification.");
         }
     };
@@ -109,7 +109,7 @@ import { getCsrfToken } from "next-auth/react";
 
             toast("Catégorie supprimée avec succès");
         } catch (error) {
-            console.error("Erreur lors de la suppression:", error);
+            console.error("[DELETE_CATEGORY_ERROR]", error);
             setError("Erreur lors de la suppression.");
         }
     };
@@ -123,10 +123,9 @@ import { getCsrfToken } from "next-auth/react";
             {/* Formulaire de création */}
             <IsAdmin>
                 <div className="card mb-6 md:w-fit">
-                    <CategoryForm onAddCategory={createCategoryIngredient} />
+                    <CategoryForm onSubmit={createCategoryIngredient} />
                 </div>
             </IsAdmin>
-
 
             {/* Liste des catégories */}
             <Table>

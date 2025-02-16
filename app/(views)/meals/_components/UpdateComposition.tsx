@@ -12,6 +12,7 @@ import { useFormValidation } from "@/app/hooks/useFormValidation";
 import { UpdateCompositionProps } from "@/lib/types/props_interfaces";
 import { getCsrfToken } from "next-auth/react";
 import FormErrorMessage from "@/components/forms/FormErrorMessage";
+import { UpdateCompositionFormType } from "@/lib/types/forms_interfaces";
 
 // _________________________ COMPOSANT _________________________
 const UpdateComposition: React.FC<UpdateCompositionProps> = ({
@@ -20,10 +21,11 @@ const UpdateComposition: React.FC<UpdateCompositionProps> = ({
     onClose,
 }) => {
     // _________________________ HOOKS _________________________
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const [composition, setComposition] = useState<CompositionType>(initialComposition);
 
     // Hook de validation
-    const { error, validate, setIsLoading, isLoading } = useFormValidation(
+    const { error, setError, validate  } = useFormValidation<UpdateCompositionFormType>(
         updateCompositionConstraints,
         ["quantity", "unit"]
     );
@@ -58,7 +60,7 @@ const UpdateComposition: React.FC<UpdateCompositionProps> = ({
             onClose(); // Fermer le Popover après la mise à jour
         } catch (error) {
             console.error("[UPDATE_COMPOSITION_ERROR]", error);
-            toast.error("Erreur lors de la mise à jour de la composition");
+            setError({ general: "Erreur lors de la mise à jour de la composition." });
         } finally {
             setIsLoading(false);
         }
@@ -67,6 +69,8 @@ const UpdateComposition: React.FC<UpdateCompositionProps> = ({
     // _________________________ RENDU _________________________
     return (
         <form onSubmit={handleSubmit} className="flex flex-col gap-5 p-5">
+            <FormErrorMessage message={error?.general} />
+            
             <div className="flex flex-col gap-3 border-b pb-4">
                 {/* Champ pour la quantité */}
                 <input

@@ -17,7 +17,7 @@ import FormErrorMessage from "@/components/forms/FormErrorMessage";
 
 const CreateComposition: React.FC<CreateCompositionProps>= ({
     mealId,
-    onCompositionCreated,
+    onSubmit,
     onClose,
 }) => {
 
@@ -50,7 +50,6 @@ const CreateComposition: React.FC<CreateCompositionProps>= ({
                 console.error("[FETCH_INGREDIENTS_ERROR]", error);
             }
         };
-
         fetchIngredients();
     }, []);
 
@@ -116,7 +115,7 @@ const CreateComposition: React.FC<CreateCompositionProps>= ({
             if (!response.ok) throw new Error("Erreur lors de la création des compositions");
     
             const createdCompositions: CompositionType[] = await response.json(); // Récupérer les compositions insérées
-            onCompositionCreated(createdCompositions); // Ajout à la liste parent
+            onSubmit(createdCompositions); // Ajout à la liste parent
             
             toast("Compositions créées avec succès");
             onClose(); // Fermer le dialogue

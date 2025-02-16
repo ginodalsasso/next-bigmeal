@@ -63,7 +63,6 @@ export async function POST(req: NextRequest) {
     }
 }
 
-
 export async function PUT(req: NextRequest) {
     try {
         const { error } = await getAdminSession();
@@ -75,17 +74,17 @@ export async function PUT(req: NextRequest) {
         }
         
         const body = await req.json();
-
+        
         // Valider et nettoyer les données
         const validationResult = ingredientConstraints.safeParse(body);
-
+        
         if (!validationResult.success) {
             return NextResponse.json(
                 { error: validationResult.error.format() },
                 { status: 400 }
             );
         }
-
+        
         const { id, name, season, categoryIngredientId } = body; 
 
         const updatedIngredient = await db.ingredient.update({

@@ -15,20 +15,22 @@ import FormErrorMessage from "@/components/forms/FormErrorMessage";
 
 // _________________________ COMPOSANT _________________________
 const CreateIngredient: React.FC<CreateIngredientProps> = ({
-    onIngredientCreated,
+    onSubmit,
     onClose,
 }) => {
     // _________________________ HOOKS _________________________
 
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const [categories, setCategories] = useState<CategoryIngredientType[]>([]);
     const [form, setForm] = useState<IngredientFormType>({
+        id: "",
         name: "",
         season: null,
         categoryIngredientId: "",
     });
 
     // Hook de validation
-    const { error, isLoading, setIsLoading, validate } = useFormValidation<IngredientFormType>(
+    const { error, setError, validate } = useFormValidation<IngredientFormType>(
         ingredientConstraints,
         [
             "name", 
@@ -49,37 +51,18 @@ const CreateIngredient: React.FC<CreateIngredientProps> = ({
                 setCategories(data);
             } catch (error) {
                 console.error("[FETCH_CATEGORIES_ERROR]", error);
+                setError({ general: "Erreur lors de la récupération des catégories." });
             }
         };
         fetchCategories();
-    }, []);
+    }, [setError]);
 
-    // Appel API pour créer un ingrédient
-    const createIngredient = async (data: IngredientFormType) => {
-        const csrfToken = await getCsrfToken();
-        try {
-            const response = await fetch("/api/ingredients", {
-                method: "POST",
-                headers: { 
-                    "Content-Type": "application/json",
-                    "X-CSRF-Token": csrfToken || "",
-                },
-                body: JSON.stringify(data),
-            });
-            if (!response.ok) throw new Error("Erreur lors de la création de l'ingrédient");
-
-            const createdIngredient: IngredientType = await response.json();
-            return createdIngredient;
-        } catch (error) {
-            console.error("[CREATE_INGREDIENT_API_ERROR]", error);
-            throw error;
-        }
-    };
 
     // Gestion de la soumission du formulaire
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsLoading(true);
+        setError(null); // Réinitialise les erreurs existantes
 
         // Valider les données du formulaire
         if (!validate(form)) {
@@ -88,13 +71,26 @@ const CreateIngredient: React.FC<CreateIngredientProps> = ({
         }
 
         // Créer l'ingrédient avec les données du formulaire
+        const csrfToken = await getCsrfToken();
         try {
-            const createdIngredient: IngredientType = await createIngredient(form);
-            onIngredientCreated(createdIngredient); // Ajout à la liste parent
+            const response = await fetch("/api/ingredients", {
+                method: "POST",
+                headers: { 
+                    "Content-Type": "application/json",
+                    "X-CSRF-Token": csrfToken || "",
+                },
+                body: JSON.stringify(form),
+            });
+            if (!response.ok) throw new Error("Erreur lors de la création de l'ingrédient");
+
+            const createdIngredient: IngredientType = await response.json();
+
+            onSubmit(createdIngredient);
             toast("Ingrédient créé avec succès");
             onClose(); // Fermer le dialogue
         } catch (error) {
-            console.error("[CREATE_INGREDIENT]", error);
+            console.error("[CREATE_INGREDIENT_ERROR]", error);
+            setError({ general: "Erreur lors de la création de l'ingrédient." });
         } finally {
             setIsLoading(false);
         }
