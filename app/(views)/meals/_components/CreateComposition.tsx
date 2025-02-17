@@ -12,8 +12,8 @@ import { Button } from "@/components/ui/button";
 import { IngredientUnit } from "@/lib/types/enums";
 import { translatedUnit } from "@/lib/utils";
 import { CreateCompositionProps } from "@/lib/types/props_interfaces";
-import { getCsrfToken } from "next-auth/react";
 import FormErrorMessage from "@/components/forms/FormErrorMessage";
+import { useCsrfToken } from "@/app/hooks/useCsrfToken";
 
 const CreateComposition: React.FC<CreateCompositionProps>= ({
     mealId,
@@ -22,6 +22,7 @@ const CreateComposition: React.FC<CreateCompositionProps>= ({
 }) => {
 
     // _________________________ HOOKS _________________________
+    const csrfToken = useCsrfToken();
     const [ingredients, setIngredients] = useState<IngredientType[]>([]); // Liste des ingrédients disponibles
 
     const [isLoading, setIsLoading] = useState<boolean>(false); // Indique si l'action est en cours
@@ -103,14 +104,17 @@ const CreateComposition: React.FC<CreateCompositionProps>= ({
         }
         
         try {
-            const csrfToken = await getCsrfToken();
+            if (!csrfToken) {
+                console.error("CSRF token invalide");
+                return;
+            }
             const response = await fetch("/api/compositions", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-CSRF-Token": csrfToken,
-                },
-                body: JSON.stringify(form),
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRF-Token": csrfToken,
+            },
+            body: JSON.stringify(form),
             });
             if (!response.ok) throw new Error("Erreur lors de la création des compositions");
     

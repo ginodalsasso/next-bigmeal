@@ -10,11 +10,12 @@ import DeleteItem from "@/components/layout/DeleteItemDialog";
 import { toast } from "sonner";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import IsAdmin from "@/components/isAdmin";
-import { getCsrfToken } from "next-auth/react";
+import { useCsrfToken } from "@/app/hooks/useCsrfToken";
 
     // _________________________ COMPOSANT _________________________
     const CategoryIngredientPage = () => {
     // _________________________ ETATS _________________________
+    const csrfToken = useCsrfToken();
     const [categoryIngredient, setCategoryIngredient] = useState<CategoryIngredientType[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -41,7 +42,11 @@ import { getCsrfToken } from "next-auth/react";
 
     // Appel API pour ajouter une catégorie
     const createCategoryIngredient = async (name: string) => {
-        const csrfToken = await getCsrfToken();
+        if (!csrfToken) {
+            console.error("CSRF token invalide");
+            return;
+        }
+        
         try {
             const response = await fetch("/api/categories-ingredient", {
                 method: "POST",
@@ -67,7 +72,11 @@ import { getCsrfToken } from "next-auth/react";
 
     // Appel API pour mettre à jour une catégorie
     const updateCategoryIngredient = async (id: string, newName: string) => {
-        const csrfToken = await getCsrfToken();
+        if (!csrfToken) {
+            console.error("CSRF token invalide");
+            return;
+        }
+        
         try {
             const response = await fetch("/api/categories-ingredient", {
                 method: "PUT",
@@ -93,7 +102,11 @@ import { getCsrfToken } from "next-auth/react";
 
     // Appel API pour supprimer une catégorie
     const deleteCategoryIngredient = async (id: string) => {
-        const csrfToken = await getCsrfToken();
+        if (!csrfToken) {
+            console.error("CSRF token invalide");
+            return;
+        }
+
         try {
             const response = await fetch("/api/categories-ingredient", {
                 method: "DELETE",

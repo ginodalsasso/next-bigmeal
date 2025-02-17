@@ -10,7 +10,7 @@ import { useFormValidation } from "@/app/hooks/useFormValidation";
 import { translatedSeason, ucFirst } from "@/lib/utils";
 import FormErrorMessage from "@/components/forms/FormErrorMessage";
 import { toast } from "sonner";
-import { getCsrfToken } from "next-auth/react";
+import { useCsrfToken } from "@/app/hooks/useCsrfToken";
 
 const UpdateIngredient: React.FC<UpdateIngredientProps> = ({
     ingredient,
@@ -18,6 +18,7 @@ const UpdateIngredient: React.FC<UpdateIngredientProps> = ({
     onCancel,
 }) => {
     // _________________________ ETATS _________________________
+    const csrfToken = useCsrfToken();
     const [form, setForm] = useState<IngredientFormType>({
         id: ingredient.id,
         name: ingredient.name,
@@ -65,9 +66,11 @@ const UpdateIngredient: React.FC<UpdateIngredientProps> = ({
 
         try {
             // Récupérer le CSRF Token
-            const csrfToken = await getCsrfToken();
-            if (!csrfToken) throw new Error("CSRF Token non disponible");
-
+            if (!csrfToken) {
+                console.error("CSRF token invalide");
+                return;
+            }
+    
             // Appel API pour mettre à jour l'ingrédient
             const response = await fetch("/api/ingredients", {
                 method: "PUT",

@@ -10,8 +10,8 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { translatedSeason, ucFirst } from "@/lib/utils";
 import { CreateIngredientProps } from "@/lib/types/props_interfaces";
-import { getCsrfToken } from "next-auth/react";
 import FormErrorMessage from "@/components/forms/FormErrorMessage";
+import { useCsrfToken } from "@/app/hooks/useCsrfToken";
 
 // _________________________ COMPOSANT _________________________
 const CreateIngredient: React.FC<CreateIngredientProps> = ({
@@ -19,7 +19,7 @@ const CreateIngredient: React.FC<CreateIngredientProps> = ({
     onClose,
 }) => {
     // _________________________ HOOKS _________________________
-
+    const csrfToken = useCsrfToken();
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [categories, setCategories] = useState<CategoryIngredientType[]>([]);
     const [form, setForm] = useState<IngredientFormType>({
@@ -71,13 +71,16 @@ const CreateIngredient: React.FC<CreateIngredientProps> = ({
         }
 
         // Créer l'ingrédient avec les données du formulaire
-        const csrfToken = await getCsrfToken();
+        if (!csrfToken) {
+            console.error("CSRF token invalide");
+            return;
+        }
         try {
             const response = await fetch("/api/ingredients", {
                 method: "POST",
                 headers: { 
                     "Content-Type": "application/json",
-                    "X-CSRF-Token": csrfToken || "",
+                    "X-CSRF-Token": csrfToken,
                 },
                 body: JSON.stringify(form),
             });

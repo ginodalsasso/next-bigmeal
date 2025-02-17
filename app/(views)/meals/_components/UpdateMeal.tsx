@@ -6,8 +6,8 @@ import { useFormValidation } from "@/app/hooks/useFormValidation";
 import { mealConstraints } from "@/lib/constraints/forms_constraints";
 import { ucFirst } from "@/lib/utils";
 import FormErrorMessage from "@/components/forms/FormErrorMessage";
-import { getCsrfToken } from "next-auth/react";
 import { toast } from "sonner";
+import { useCsrfToken } from "@/app/hooks/useCsrfToken";
 
 // _________________________ COMPOSANT _________________________
 const UpdateMeal: React.FC<UpdateMealProps> = ({
@@ -16,6 +16,7 @@ const UpdateMeal: React.FC<UpdateMealProps> = ({
     onClose
 }) => {
     // _________________________ ÉTATS _________________________
+    const csrfToken = useCsrfToken();
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [form, setForm] = useState({
         name: meal.name,
@@ -64,7 +65,10 @@ const UpdateMeal: React.FC<UpdateMealProps> = ({
         setIsLoading(true);
 
         try {
-            const csrfToken = await getCsrfToken();
+            if (!csrfToken) {
+                console.error("CSRF token invalide");
+                return;
+            }
             const response = await fetch("/api/meals", {
                 method: "PUT",
                 headers: {

@@ -27,13 +27,14 @@ import IsUser from "@/components/isUser";
 import SearchBar from "@/components/layout/Searchbar";
 import FilterCheckboxes from "@/components/layout/FilterCheckboxes";
 import { CATEGORIES_INGREDIENTS, SEASONS } from "@/lib/constants/constants";
-import { getCsrfToken } from "next-auth/react";
+import { useCsrfToken } from "@/app/hooks/useCsrfToken";
 
 
 // _________________________ COMPOSANT _________________________
 const IngredientPage = () => {
     
     // _________________________ ETATS _________________________
+    const csrfToken = useCsrfToken();
     const [ingredients, setIngredients] = useState<IngredientType[]>([]);
     const [searchQuery, setSearchQuery] = useState<string>("");
     const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
@@ -85,7 +86,10 @@ const IngredientPage = () => {
 
     // Appel API pour supprimer un ingrédient
     const deleteIngredient = async (id: string) => {
-        const csrfToken = await getCsrfToken();
+        if (!csrfToken) {
+            console.error("CSRF token invalide");
+            return;
+        }
         try {
             const response = await fetch("/api/ingredients", {
                 method: "DELETE",
