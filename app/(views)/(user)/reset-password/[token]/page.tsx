@@ -1,8 +1,8 @@
 'use client';
 
+import { useCsrfToken } from '@/app/hooks/useCsrfToken';
 import { Button } from '@/components/ui/button';
 import { ForgotUserPasswordFormType } from '@/lib/types/forms_interfaces';
-import { getCsrfToken } from 'next-auth/react';
 import { useParams } from 'next/navigation';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
@@ -11,6 +11,7 @@ import { toast } from 'sonner';
 const ResetPasswordPage = () => {
     const { token } = useParams(); 
     const router = useRouter();
+    const csrfToken = useCsrfToken();
 
     const [formData, setFormData] = useState({
         password: '',
@@ -25,7 +26,12 @@ const ResetPasswordPage = () => {
                 setError({ general: 'Token invalide' });
                 return;
             }
-            const csrfToken = await getCsrfToken();
+
+            if (!csrfToken) {
+                console.error("CSRF token invalide");
+                return;
+            }
+
             try {
                 const response = await fetch('/api/verify-token', {
                     method: 'POST',
@@ -44,7 +50,7 @@ const ResetPasswordPage = () => {
         };
 
         verifyToken();
-    }, [token]);
+    }, [token, csrfToken]);
 
     
     const handleSubmit = async (e: React.FormEvent) => {

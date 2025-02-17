@@ -10,9 +10,9 @@ import { translatedUnit } from "@/lib/utils";
 import { updateCompositionConstraints } from "@/lib/constraints/forms_constraints";
 import { useFormValidation } from "@/app/hooks/useFormValidation";
 import { UpdateCompositionProps } from "@/lib/types/props_interfaces";
-import { getCsrfToken } from "next-auth/react";
 import FormErrorMessage from "@/components/forms/FormErrorMessage";
 import { UpdateCompositionFormType } from "@/lib/types/forms_interfaces";
+import { useCsrfToken } from "@/app/hooks/useCsrfToken";
 
 // _________________________ COMPOSANT _________________________
 const UpdateComposition: React.FC<UpdateCompositionProps> = ({
@@ -21,6 +21,7 @@ const UpdateComposition: React.FC<UpdateCompositionProps> = ({
     onClose,
 }) => {
     // _________________________ HOOKS _________________________
+    const csrfToken = useCsrfToken();
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [composition, setComposition] = useState<CompositionType>(initialComposition);
 
@@ -41,8 +42,11 @@ const UpdateComposition: React.FC<UpdateCompositionProps> = ({
 
         setIsLoading(true);
         try {
-                const csrfToken = await getCsrfToken();
-                const response = await fetch("/api/compositions", {
+            if (!csrfToken) {
+                console.error("CSRF token invalide");
+                return;
+            }
+            const response = await fetch("/api/compositions", {
                 method: "PUT",
                 headers: { 
                     "Content-Type": "application/json",

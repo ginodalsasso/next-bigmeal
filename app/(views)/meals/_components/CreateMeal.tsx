@@ -11,11 +11,12 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { CreateMealProps } from "@/lib/types/props_interfaces";
 import { ucFirst } from "@/lib/utils";
-import { getCsrfToken } from "next-auth/react";
 import FormErrorMessage from "@/components/forms/FormErrorMessage";
+import { useCsrfToken } from "@/app/hooks/useCsrfToken";
 
 const CreateMeal: React.FC<CreateMealProps> = ({ onMealCreated, onClose }) => {
     // _________________________ HOOKS _________________________
+    const csrfToken = useCsrfToken();
     const [categories, setCategories] = useState<CategoryMealType[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -64,8 +65,10 @@ const CreateMeal: React.FC<CreateMealProps> = ({ onMealCreated, onClose }) => {
     
         try {
             // Récupérer le CSRF Token
-            const csrfToken = await getCsrfToken();
-            if (!csrfToken) throw new Error("CSRF Token non disponible");
+            if (!csrfToken) {
+                console.error("CSRF token invalide");
+                return;
+            }    
     
             const response = await fetch("/api/meals", {
                 method: "POST",

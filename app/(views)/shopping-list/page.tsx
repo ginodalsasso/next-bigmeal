@@ -1,17 +1,18 @@
 'use client';
 
+import { useCsrfToken } from "@/app/hooks/useCsrfToken";
 import DeleteItem from "@/components/layout/DeleteItemDialog";
 import { Button } from "@/components/ui/button";
 import { ShoppingListType } from "@/lib/types/schemas_interfaces";
 import { dateToString } from "@/lib/utils";
 import { Separator } from "@radix-ui/react-separator";
-import { getCsrfToken } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
 
 const ShoppingListPage = () => {
     const router = useRouter(); 
+    const csrfToken = useCsrfToken();
     const [shoppingList, setShoppingList] = useState<ShoppingListType | null>(null);
     const [loading, setLoading] = useState(true);
 
@@ -36,7 +37,10 @@ const ShoppingListPage = () => {
     
     // Transformer un item en coché ou non
     const toggleItemChecked = async (id: string, currentChecked: boolean) => {
-        const csrfToken = await getCsrfToken();
+        if (!csrfToken) {
+            console.error("CSRF token invalide");
+            return;
+        }
         try {
             // Calcul de l'état cible (inversion de l'état actuel)
             const newCheckedState = !currentChecked;
@@ -70,7 +74,10 @@ const ShoppingListPage = () => {
     };
 
     const markShoppingListAsExpired = async () => {
-        const csrfToken = await getCsrfToken();
+        if (!csrfToken) {
+            console.error("CSRF token invalide");
+            return;
+        }
         if (shoppingList) {
             try {
                 const response = await fetch(`/api/shopping-list`, {
@@ -115,7 +122,10 @@ const ShoppingListPage = () => {
 
     // Appel API pour supprimer un item du panier
     const deleteItem = async (id: string) => {
-        const csrfToken = await getCsrfToken();
+        if (!csrfToken) {
+            console.error("CSRF token invalide");
+            return;
+        }
         try {
             const response = await fetch("/api/shopping-list", {
                 method: "DELETE",
@@ -142,7 +152,10 @@ const ShoppingListPage = () => {
 
     // Appel API pour supprimer un repas du panier
     const deleteMeal = async (mealId: string) => {
-        const csrfToken = await getCsrfToken();
+        if (!csrfToken) {
+            console.error("CSRF token invalide");
+            return;
+        }
         try {
             const response = await fetch("/api/shopping-list", {
                 method: "DELETE",

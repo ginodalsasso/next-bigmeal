@@ -10,12 +10,13 @@ import DeleteItem from "@/components/layout/DeleteItemDialog";
 import { toast } from "sonner";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import IsAdmin from "@/components/isAdmin";
-import { getCsrfToken } from "next-auth/react";
+import { useCsrfToken } from "@/app/hooks/useCsrfToken";
 
 
 // _________________________ COMPOSANT _________________________
 const CategoryMealPage = () => {
     // _________________________ ETATS _________________________
+    const csrfToken = useCsrfToken();
     const [categoryMeal, setCategoryMeal] = useState<CategoryMealType[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -42,7 +43,11 @@ const CategoryMealPage = () => {
 
     // Appel API pour ajouter une catégorie
     const createCategoryMeal = async (name: string) => {
-        const csrfToken = await getCsrfToken();
+        if (!csrfToken) {
+            console.error("CSRF token invalide");
+            return;
+        }
+
         try {
             const response = await fetch("/api/categories-meal", {
                 method: "POST",
@@ -68,7 +73,10 @@ const CategoryMealPage = () => {
 
     // Appel API pour mettre à jour une catégorie
     const updateCategoryMeal = async (id: string, newName: string) => {
-        const csrfToken = await getCsrfToken();
+        if (!csrfToken) {
+            console.error("CSRF token invalide");
+            return;
+        }
         try {
             const response = await fetch("/api/categories-meal", {
                 method: "PUT",
@@ -94,7 +102,10 @@ const CategoryMealPage = () => {
 
     // Appel API pour supprimer une catégorie
     const deleteCategoryMeal = async (id: string) => {
-        const csrfToken = await getCsrfToken();
+        if (!csrfToken) {
+            console.error("CSRF token invalide");
+            return;
+        }
         try {
             const response = await fetch("/api/categories-meal", {
                 method: "DELETE",
@@ -124,7 +135,7 @@ const CategoryMealPage = () => {
             {/* Formulaire de création */}
             <IsAdmin>
                 <div className="card mb-6 md:w-fit">
-                    <CategoryForm onAddCategory={createCategoryMeal} />
+                    <CategoryForm onSubmit={createCategoryMeal} />
                 </div>
             </IsAdmin>
 

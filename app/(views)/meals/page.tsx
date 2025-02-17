@@ -27,11 +27,12 @@ import IsUser from "@/components/isUser";
 import SearchBar from "@/components/layout/Searchbar";
 import { CATEGORIES_MEALS } from "@/lib/constants/constants";
 import FilterCheckboxes from "@/components/layout/FilterCheckboxes";
-import { getCsrfToken } from "next-auth/react";
+import { useCsrfToken } from "@/app/hooks/useCsrfToken";
 
 // _________________________ COMPOSANT _________________________
 const MealsPage = () => {
     // _________________________ ETATS _________________________
+    const csrfToken = useCsrfToken();
     const [meals, setMeals] = useState<MealType[]>([]);
     const [currentStep, setCurrentStep] = useState<"createMeal" | "createComposition" | "chooseStep">("createMeal"); // étape pour la création de repas ou de composition
     const [createdMealId, setCreatedMealId] = useState<string | null>(null);
@@ -94,7 +95,10 @@ const MealsPage = () => {
 
     // Appel API pour supprimer un repas
     const deleteMeal = async (id: string) => {
-        const csrfToken = await getCsrfToken();
+        if (!csrfToken) {
+            console.error("CSRF token invalide");
+            return;
+        }
         try {
             const response = await fetch("/api/meals", {
                 method: "DELETE",

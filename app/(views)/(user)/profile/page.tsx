@@ -4,10 +4,11 @@ import React, { useEffect, useState } from "react";
 import { UserType } from "@/lib/types/schemas_interfaces";
 import { dateToString } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { getCsrfToken } from "next-auth/react";
+import { useCsrfToken } from "@/app/hooks/useCsrfToken";
 
 const ProfilePage = () => {
     // _________________________ ETATS _________________________
+    const csrfToken = useCsrfToken();
     const [user, setUser] = useState<UserType | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string>("");
@@ -50,7 +51,10 @@ const ProfilePage = () => {
             return;
         }
 
-        const csrfToken = await getCsrfToken();
+        if (!csrfToken) {
+            console.error("CSRF token invalide");
+            return;
+        }
         try {
             const response = await fetch("/api/profile", {
                 method: "PUT",
