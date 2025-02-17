@@ -34,11 +34,13 @@ export async function GET() {
         }
         return NextResponse.json(user, { status: 200 });
     } catch (error) {
-        console.error("Error fetching user:", error);
-        return NextResponse.json(
-            { error: "Internal Server Error" },
-            { status: 500 }
-        );
+        console.error("[FETCH_USER_ERROR]", error);
+        return new Response(JSON.stringify({ 
+            message: 'Erreur serveur, veuillez réessayer plus tard' 
+        }), { 
+            status: 500,
+            headers: { 'Content-Type': 'application/json' }
+        });
     }
 }
 
@@ -75,7 +77,7 @@ export async function PUT(req: NextRequest) {
         if (!passwordMatch) {
             return new Response(
                 JSON.stringify({
-                    message: "Mot de passe incorrect",
+                    message: "Les mots de passe ne correspondent pas",
                 }),
                 {
                     status: 401,
@@ -100,10 +102,12 @@ export async function PUT(req: NextRequest) {
             { status: 200 }
         );
     } catch (error) {
-        console.error("Error updating password:", error);
-        return NextResponse.json(
-            { error: "Internal Server Error" },
-            { status: 500 }
-        );
+        console.error("UPDATE_PASSWORD_ERROR", error);
+        return new Response(JSON.stringify({ 
+            message: 'Erreur serveur, veuillez réessayer plus tard' 
+        }), { 
+            status: 500,
+            headers: { 'Content-Type': 'application/json' }
+        });
     }
 }

@@ -19,9 +19,10 @@ interface AddToShoppingListFormProps {
 const AddToShoppingListForm: React.FC<AddToShoppingListFormProps> = ({ type, id }) => {
 
     const [quantity, setQuantity] = useState<AddIngredientToShoppingListFormType>({ quantity: 0 });
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     // Utilisation du hook de validation
-    const { error, setError, isLoading, setIsLoading, validate } = useFormValidation<AddIngredientToShoppingListFormType>(
+    const { error, setError, validate } = useFormValidation<AddIngredientToShoppingListFormType>(
         ShoppingListConstraints,
         ["quantity"] // Liste des champs à valider
     );
@@ -36,9 +37,7 @@ const AddToShoppingListForm: React.FC<AddToShoppingListFormProps> = ({ type, id 
                 case 'meal': {
                     // Récupérer les ingrédients du repas
                     const response = await fetch(`/api/meals/${id}`);
-                    if (!response.ok) {
-                        throw new Error('Erreur lors de la récupération des ingrédients du repas');
-                    }
+                    if (!response.ok) throw new Error('Erreur lors de la récupération des ingrédients du repas');
 
                     const meal = await response.json();
 
@@ -85,10 +84,8 @@ const AddToShoppingListForm: React.FC<AddToShoppingListFormProps> = ({ type, id 
                             quantity: quantity.quantity,
                         }),
                     });
+                    if (!response.ok)  throw new Error('Erreur lors de l\'ajout de l\'ingrédient à la liste de courses');
 
-                    if (!response.ok) {
-                        throw new Error('Erreur lors de l\'ajout de l\'ingrédient à la liste de courses');
-                    }
                     toast('Ingrédient ajouté à la liste de courses avec succès');
                     break;
                 }
@@ -97,7 +94,7 @@ const AddToShoppingListForm: React.FC<AddToShoppingListFormProps> = ({ type, id 
             }
         } catch (error) {
             console.error('Erreur:', error);
-            toast.error('Impossible d\'ajouter à la liste de courses.');
+            setError({ general: 'Erreur lors de l\'ajout à la liste de courses' });
         } finally {
             setIsLoading(false);
         }
@@ -108,6 +105,8 @@ const AddToShoppingListForm: React.FC<AddToShoppingListFormProps> = ({ type, id 
             onSubmit={handleAddToShoppingList}
             className="flex items-center justify-end gap-2 "
         >
+            <FormErrorMessage message={error?.general} />
+
             {/* Si type = 'ingredient', on affiche le champ de quantité */}
             {type === 'ingredient' && (
                 <input

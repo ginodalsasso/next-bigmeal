@@ -30,8 +30,13 @@ export async function GET() {
         
         return NextResponse.json(shoppingList, { status: 200 });
     } catch (error) {
-        console.log("[SHOPPING_LIST]", error);
-        return new NextResponse("Internal Error", { status: 500 });
+        console.error("[FETCH_SHOPPING_LIST_ERROR]", error);
+        return new Response(JSON.stringify({ 
+            message: 'Erreur serveur, veuillez réessayer plus tard' 
+        }), { 
+            status: 500,
+            headers: { 'Content-Type': 'application/json' }
+        });
     }
 }
 
@@ -49,7 +54,7 @@ export async function POST(req: NextRequest) {
 
         const user = await getUser();
         if (!user) {
-            return new NextResponse("User not found", { status: 404 });
+            return new NextResponse("Utilisateur introuvable", { status: 404 });
         }
 
         const body = await req.json();
@@ -123,7 +128,12 @@ export async function POST(req: NextRequest) {
         }
     } catch (error) {
         console.error("[CREATE_SHOPPING_LIST_ERROR]", error);
-        return new NextResponse("Internal Server Error", { status: 500 });
+        return new Response(JSON.stringify({ 
+            message: 'Erreur serveur, veuillez réessayer plus tard' 
+        }), { 
+            status: 500,
+            headers: { 'Content-Type': 'application/json' }
+        });
     }
 }
 
@@ -167,7 +177,7 @@ export async function PUT(req: NextRequest) {
 
             if (typeof isExpired !== 'boolean') {
                 return NextResponse.json(
-                    { error: "Invalid data: isExpired must be a boolean" },
+                    { error: "isExpired doit être un booléen" },
                     { status: 400 }
                 );
             }
@@ -179,11 +189,16 @@ export async function PUT(req: NextRequest) {
 
             return NextResponse.json(updatedList, { status: 200 });
         } else {
-            return NextResponse.json({ error: "Invalid request body" }, { status: 400 });
+            return NextResponse.json({ error: "Requête invalide" }, { status: 400 });
         }
     } catch (error) {
         console.error("[UPDATE_ERROR]", error);
-        return new NextResponse("Internal Error", { status: 500 });
+        return new Response(JSON.stringify({ 
+            message: 'Erreur serveur, veuillez réessayer plus tard' 
+        }), { 
+            status: 500,
+            headers: { 'Content-Type': 'application/json' }
+        });
     }
 }
 
@@ -230,7 +245,12 @@ export async function DELETE (req: NextRequest) {
 
     } catch (error) {
         console.error("[DELETE_ITEM_ERROR]", error);
-        return new NextResponse("Internal Error", {status: 500 });
+        return new Response(JSON.stringify({ 
+            message: 'Erreur serveur, veuillez réessayer plus tard' 
+        }), { 
+            status: 500,
+            headers: { 'Content-Type': 'application/json' }
+        });
     }
 }
 

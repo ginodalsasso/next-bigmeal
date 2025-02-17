@@ -19,8 +19,13 @@ export async function GET() {
         return NextResponse.json(ingredients, {status: 200}); 
 
     } catch(error) {
-        console.log("[INGREDIENTS]", error); 
-        return new NextResponse("Internal Error", {status: 500 });
+        console.error("[FETCH_INGREDIENTS_ERROR]", error); 
+        return new Response(JSON.stringify({ 
+            message: 'Erreur serveur, veuillez réessayer plus tard' 
+        }), { 
+            status: 500,
+            headers: { 'Content-Type': 'application/json' }
+        });
     }
 }
 
@@ -59,7 +64,12 @@ export async function POST(req: NextRequest) {
 
     } catch (error) {
         console.error("[CREATE_INGREDIENT_ERROR]", error);
-        return new NextResponse("Internal Error", {status: 500 });
+        return new Response(JSON.stringify({ 
+            message: 'Erreur serveur, veuillez réessayer plus tard' 
+        }), { 
+            status: 500,
+            headers: { 'Content-Type': 'application/json' }
+        });
     }
 }
 
@@ -100,7 +110,12 @@ export async function PUT(req: NextRequest) {
         return NextResponse.json(updatedIngredient, { status: 200 });
     } catch (error) {
         console.error("[UPDATE_INGREDIENT_ERROR]", error);
-        return new NextResponse("Internal Error", {status: 500 });
+        return new Response(JSON.stringify({ 
+            message: 'Erreur serveur, veuillez réessayer plus tard' 
+        }), { 
+            status: 500,
+            headers: { 'Content-Type': 'application/json' }
+        });
     }
 }
 
@@ -132,7 +147,12 @@ export async function DELETE (req: NextRequest) {
         return NextResponse.json({ message: "Ingredient supprimé" }, {status: 200});
     } catch (error) {
         console.error("[DELETE_INGREDIENT_ERROR]", error);
-        return new NextResponse("Internal Error", {status: 500 });
+        return new Response(JSON.stringify({ 
+            message: 'Erreur serveur, veuillez réessayer plus tard' 
+        }), { 
+            status: 500,
+            headers: { 'Content-Type': 'application/json' }
+        });
     }
 }
 

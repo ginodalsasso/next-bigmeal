@@ -45,7 +45,13 @@ export async function POST(req: NextRequest) {
         await transporter.sendMail(mailOptions);
         return new Response('Email envoyé', { status: 200 });
     } catch (error) {
-        console.error('Erreur lors de l\'envoi de l\'email :', error);
+        console.error('[EMAIL_ERROR]', error);
+        return new Response(JSON.stringify({ 
+            message: 'Erreur serveur, veuillez réessayer plus tard' 
+        }), { 
+            status: 500,
+            headers: { 'Content-Type': 'application/json' }
+        });
     }
 }
 
@@ -140,7 +146,7 @@ export async function PUT(req: NextRequest) {
             });
         }
     } catch (error) {
-        console.error('Erreur lors de la réinitialisation du mot de passe:', error);
+        console.error('[RESET-PASSWORD_ERROR]', error);
         return new Response(JSON.stringify({ 
             message: 'Erreur serveur, veuillez réessayer plus tard' 
         }), { 

@@ -15,7 +15,7 @@ export async function GET() {
         console.error("[CATEGORY INGREDIENT]", error); 
         return NextResponse.json(
             { message: "Erreur interne du serveur." },
-            { status: 500 }
+            { status: 500, }
         );
     }
 }

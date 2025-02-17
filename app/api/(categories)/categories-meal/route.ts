@@ -13,8 +13,11 @@ export async function GET() {
 
         return NextResponse.json(categoryMeal, {status: 200});
     } catch(error) {
-        console.log("[CATEGORY INGREDIENT]", error); 
-        return new NextResponse("Internal Error", {status: 500 });
+        console.error("[CATEGORY INGREDIENT_ERROR]", error); 
+        return NextResponse.json(
+            { message: "Erreur interne du serveur." },
+            { status: 500 }
+        );
     }
 }
 
@@ -49,8 +52,11 @@ export async function POST(req: NextRequest) {
 
         return NextResponse.json(newcategoryMeal, { status: 201 });
     } catch (error) {
-        console.error("[CREATE_CATEGORY_MEAL_ERROR]", error);
-        return new NextResponse("Internal Error", {status: 500 });
+        console.error("[CATEGORY INGREDIENT_ERROR]", error); 
+        return NextResponse.json(
+            { message: "Erreur interne du serveur." },
+            { status: 500 }
+        );
     }
 }
 
@@ -90,8 +96,11 @@ export async function PUT(req: NextRequest) {
     
             return NextResponse.json(updatedCategory, { status: 200 });
     } catch (error) {
-        console.error("[UPDATE_CATEGORY_MEAL_ERROR]", error);
-        return new NextResponse("Internal Error", {status: 500 });
+        console.error("[CATEGORY INGREDIENT_ERROR]", error); 
+        return NextResponse.json(
+            { message: "Erreur interne du serveur." },
+            { status: 500 }
+        );
     }
 }
 
@@ -122,8 +131,11 @@ export async function DELETE (req: NextRequest) {
 
         return NextResponse.json({ message: "Catégorie supprimée" }, {status: 200});
     } catch (error) {
-        console.error("[DELETE_CATEGORY_MEAL_ERROR]", error);
-        return new NextResponse("Internal Error", {status: 500 });
+        console.error("[CATEGORY INGREDIENT_ERROR]", error); 
+        return NextResponse.json(
+            { message: "Erreur interne du serveur." },
+            { status: 500 }
+        );
     }
 }
 
