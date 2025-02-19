@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { CategoryMealType } from "@/lib/types/schemas_interfaces";
 import CategoryForm from "../_components/CreateCategory";
 import UpdateCategory from "../_components/UpdateCategory";
@@ -19,28 +19,7 @@ export default function CategoryMealList({ fetchedCategories }: { fetchedCategor
     // _________________________ ETATS _________________________
     const csrfToken = useCsrfToken();
     const [categoryMeal, setCategoryMeal] = useState<CategoryMealType[]>(fetchedCategories);
-    const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-
-   // _________________________ LOGIQUE _________________________
-    // Récupérer les catégories de repas
-    useEffect(() => {
-        const fetchCategoryMeal = async () => {
-            try {
-                const response = await fetch("/api/categories-meal");
-                if (!response.ok) throw new Error("Failed to fetch categories-meal");
-
-                const data: CategoryMealType[] = await response.json();
-                setCategoryMeal(data);
-            } catch (error) {
-                console.error("Erreur lors de la récupération des catégories:", error);
-                setError("Erreur lors de la récupération des catégories de repas");
-            } finally {
-                setLoading(false);
-            }
-        };
-        fetchCategoryMeal();
-    }, []);
 
     // _________________________ CRUD _________________________
     // Appel API pour ajouter une catégorie
@@ -129,11 +108,10 @@ export default function CategoryMealList({ fetchedCategories }: { fetchedCategor
     };
 
     // _________________________ RENDU _________________________
-    if (loading) return <div>Loading...</div>;
-    if (error) return <div>{error}</div>;
-
     return (
         <div>
+            {error && <div className="text-red-500">{error}</div>}
+
             {/* Formulaire de création */}
             <IsAdmin>
                 <div className="card mb-6 md:w-fit">
