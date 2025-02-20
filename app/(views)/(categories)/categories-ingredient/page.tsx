@@ -1,4 +1,4 @@
-import CategoryIngredient from "../_components/CategoryIngredient";
+import CategoryIngredientList from "../_components/CategoryIngredientList";
 
 async function getCategories() {
     const response = await fetch(`${process.env.API_URL}/api/categories-ingredient`, { cache: "no-store" });
@@ -9,5 +9,5 @@ async function getCategories() {
 export default async function CategoryIngredientPage() {
     const categoryIngredient = await getCategories();
     
-    return <CategoryIngredient fetchedCategories={categoryIngredient} />;
+    return <CategoryIngredientList fetchedCategories={categoryIngredient} />;
 }

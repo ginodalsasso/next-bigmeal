@@ -1,4 +1,4 @@
-import CategoryMeal from "../_components/CategoryMeal";
+import CategoryMealList from "../_components/CategoryMealList";
 
 async function getCategories() {
     const response = await fetch(`${process.env.API_URL}/api/categories-meal`, { cache: "no-store" });
@@ -9,5 +9,5 @@ async function getCategories() {
 export default async function CategoryMealPage() {
     const categoryMeal = await getCategories();
     
-    return <CategoryMeal fetchedCategories={categoryMeal} />;
+    return <CategoryMealList fetchedCategories={categoryMeal} />;
 }

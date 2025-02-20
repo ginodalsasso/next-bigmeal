@@ -1,4 +1,4 @@
-import Meals from "./_components/Meals";
+import MealsList from "./_components/MealsList";
 
 async function getMeals() {
     const response = await fetch(`${process.env.API_URL}/api/meals`, { cache: "no-store" });
@@ -9,5 +9,5 @@ async function getMeals() {
 export default async function MealPage() {
     const meals = await getMeals();
     
-    return <Meals fetchedMeals={meals} />;
+    return <MealsList fetchedMeals={meals} />;
 }

@@ -1,4 +1,4 @@
-import IngredientList from "./_components/Ingredients";
+import IngredientsList from "./_components/IngredientsList";
 
 async function getIngredients() {
     const response = await fetch(`${process.env.API_URL}/api/ingredients`, { cache: "no-store" });
@@ -9,5 +9,5 @@ async function getIngredients() {
 export default async function IngredientPage() {
     const ingredients = await getIngredients();
     
-    return <IngredientList fetchedIngredients={ingredients} />;
+    return <IngredientsList fetchedIngredients={ingredients} />;
 }

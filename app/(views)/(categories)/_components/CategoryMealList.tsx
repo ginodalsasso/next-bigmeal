@@ -2,8 +2,8 @@
 
 import React, { useState } from "react";
 import { CategoryMealType } from "@/lib/types/schemas_interfaces";
-import CategoryForm from "../_components/CreateCategory";
-import UpdateCategory from "../_components/UpdateCategory";
+import CategoryForm from "./CreateCategory";
+import UpdateCategory from "./UpdateCategory";
 import ItemView from "@/components/layout/ItemView";
 import EditItem from "@/components/layout/EditItemPopover";
 import DeleteItem from "@/components/layout/DeleteItemDialog";

@@ -33,34 +33,17 @@ import { useCsrfToken } from "@/app/hooks/useCsrfToken";
 export default function MealsList( {fetchedMeals}: { fetchedMeals: MealType[] }) {
     // _________________________ ETATS _________________________
     const csrfToken = useCsrfToken();
+    
     const [meals, setMeals] = useState<MealType[]>(fetchedMeals);
+
+    const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
     const [currentStep, setCurrentStep] = useState<"createMeal" | "createComposition" | "chooseStep">("createMeal"); // étape pour la création de repas ou de composition
     const [createdMealId, setCreatedMealId] = useState<string | null>(null);
+    
     const [searchQuery, setSearchQuery] = useState<string>(""); 
     const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
     
-    const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
-
-    // _________________________ LOGIQUE _________________________
-    // // Récupérer les repas
-    // useEffect(() => {
-    //     const fetchMeals = async () => {
-    //         try {
-    //             const response = await fetch("/api/meals");
-    //             if (!response.ok) throw new Error("Failed to fetch meals");
-
-    //             const data: MealType[] = await response.json();
-    //             setMeals(data);
-    //         } catch (error) {
-    //             console.error("[FETCH_MEALS_ERROR", error);
-    //             setError("Erreur lors de la récupération des repas");
-    //         } finally {
-    //             setLoading(false);
-    //         }
-    //     };
-    //     fetchMeals();
-    // }, []);
 
     // _________________________ CRUD _________________________
     // Réinitialiser l'étape à createMeal lorsque le dialogue est fermé
