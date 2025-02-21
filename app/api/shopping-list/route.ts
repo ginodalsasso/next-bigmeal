@@ -7,13 +7,12 @@ import { getUserSession } from "@/lib/security/getSession";
 
 export async function GET() {
     try {
-        const { session, error } = await getUserSession();
-        if (error) return error;
+        const { session } = await getUserSession();
 
          // Récupérer les listes de courses
         const shoppingList = await db.shoppingList.findFirst({
             where: { 
-            userId: session.user.id,
+            userId: session?.user.id,
                 isExpired: false
             },
 
