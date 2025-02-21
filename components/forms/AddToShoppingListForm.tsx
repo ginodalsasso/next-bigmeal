@@ -112,7 +112,7 @@ const AddToShoppingListForm: React.FC<AddToShoppingListFormProps> = ({ type, id 
                 <input
                     type="number"
                     className="input-text-select"
-                    value={quantity.quantity || '1'}
+                    value={quantity.quantity || ''}
                     min={1}
                     onChange={(e) => setQuantity({ quantity: parseInt(e.target.value) })}
                 />
