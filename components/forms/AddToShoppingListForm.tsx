@@ -18,7 +18,7 @@ interface AddToShoppingListFormProps {
 
 const AddToShoppingListForm: React.FC<AddToShoppingListFormProps> = ({ type, id }) => {
 
-    const [quantity, setQuantity] = useState<AddIngredientToShoppingListFormType>({ quantity: 0 });
+    const [quantity, setQuantity] = useState<AddIngredientToShoppingListFormType>({ quantity: 1 });
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
     // Utilisation du hook de validation

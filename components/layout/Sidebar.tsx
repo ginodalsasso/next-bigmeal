@@ -5,6 +5,7 @@ import { ucFirst } from "@/lib/utils";
 import Link from "next/link";
 import React, { useState } from "react";
 import IsUser from "../isUser";
+import Image from "next/image";
 
 const Sidebar = () => {
         const [active, setActive] = useState(""); // État de la navigation active
@@ -14,15 +15,23 @@ const Sidebar = () => {
         <>
             <IsUser>
                 <div className="h-screen sticky bg-neutral-900 py-4">
-                    <ul>
+                    <ul className="px-4">
                         {links.map((link) => (
-                            <li key={link.title}>
+                            <li className="align-icon flex-wrap-reverse	" key={link.title}>
+                                {link.icon && (
+                                    <Image
+                                        src={link.icon}
+                                        width={20}
+                                        height={20}
+                                        alt={link.title}
+                                    />
+                                )}
                                 <Link
                                     href={link.url}
-                                    className={`block px-4 py-2 ${
+                                    className={`block py-2 ${
                                         active === link.title
-                                            ? "bg-gray-200 text-black"
-                                            : "text-gray-200 hover:bg-gray-200 hover:text-black"
+                                            ? "text-[18px] text-gray-200 text-black underline"
+                                            : "text-[18px] text-gray-200 hover:underline"
                                     }`}
                                     onClick={() => setActive(link.title)}
                                 >

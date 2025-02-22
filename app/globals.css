@@ -26,11 +26,11 @@ body {
 }
 
 .nav-links-desktop {
-  @apply text-gray-200 text-[22px] font-medium cursor-pointer hover:underline;
+  @apply text-gray-200 text-[18px] font-medium cursor-pointer hover:underline;
 };
 
 .align-icon {
-  @apply flex items-center justify-center gap-2;
+  @apply flex items-center gap-6;
 };
 
 .nav-links-mobile {

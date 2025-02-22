@@ -27,23 +27,24 @@ const Navbar = () => {
                     {/* Si l'utilisateur est connecté */}
                     <IsUser>
                         <li className="nav-links-desktop align-icon">
-                            <Image
-                                src={"/img/user.svg"}
-                                width={18}
-                                height={18}
-                                alt="Profil"
-                            />
                             <Link
                                 href="/profile"
                                 className="nav-links-desktop"
+                                title="Profil"
                             >
-                                Profil
+                                <Image
+                                    src={"/img/user.svg"}
+                                    width={18}
+                                    height={18}
+                                    alt="Profil"
+                                />
                             </Link>
                         </li>
                         <li>
                             <button 
                                 className="nav-links-desktop align-icon"
                                 onClick={() => signOut()}
+                                title="Déconnexion"
                             > 
                                 <Image
                                     src={"/img/logout.svg"}
@@ -51,9 +52,6 @@ const Navbar = () => {
                                     height={20}
                                     alt="Déconnexion"
                                 />
-                                <span>
-                                    Déconnexion
-                                </span>
                             </button>
                         </li>
                     </IsUser>
@@ -102,6 +100,13 @@ const Navbar = () => {
                             <IsUser>
                                 {links.map((link) => (
                                     <li key={link.title} className="nav-links-desktop align-icon">
+                                        <Link
+                                            href={link.url}
+                                            className="nav-links-mobile"
+                                            onClick={() => setToggle(false)}
+                                            >
+                                            {ucFirst(link.title)}
+                                        </Link>
                                         {link.icon && (
                                             <Image
                                                 src={link.icon}
@@ -110,29 +115,22 @@ const Navbar = () => {
                                                 alt={link.title}
                                             />
                                         )}
-                                        <Link
-                                            href={link.url}
-                                            className="nav-links-mobile"
-                                            onClick={() => setToggle(false)}
-                                            >
-                                            {ucFirst(link.title)}
-                                        </Link>
                                     </li>
                                 ))}
                                 <li>
                                     <button 
-                                        className="nav-links-desktop align-icon"
+                                        className="nav-links-mobile align-icon"
                                         onClick={() => signOut()}
                                     > 
+                                        <span>
+                                            Déconnexion
+                                        </span>
                                         <Image
                                             src={"/img/logout.svg"}
                                             width={20}
                                             height={20}
                                             alt="Déconnexion"
                                         />
-                                        <span>
-                                            Déconnexion
-                                        </span>
                                 </button>
                                 </li>
                             </IsUser>
