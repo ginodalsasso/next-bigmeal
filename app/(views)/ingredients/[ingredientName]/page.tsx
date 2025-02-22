@@ -43,14 +43,14 @@ const IngredientDetailPage =
     if (!ingredient) return <div>Ingredient introuvable.</div>;
 
     return (
-        <div className="border rounded-lg p-6 xl:w-[70%] mx-auto">
-            <h1 className="text-4xl font-semibold text-emerald-500 text-center mb-2">
+        <div className="mx-auto rounded-lg border p-6 xl:w-[70%]">
+            <h1 className="mb-2 text-center text-4xl font-semibold text-emerald-500">
                 {ingredient.name}
             </h1>
-            <p className="mx-auto text-center w-[90%] p-4 bg-slate-700 rounded-md">
+            <p className="mx-auto w-[90%] rounded-md bg-slate-700 p-4 text-center">
                 {ingredient.season}
             </p>
-            <p className="text-center mt-4">
+            <p className="mt-4 text-center">
                 {ingredient.categoryIngredient?.name || "Catégorie non disponible"}
             </p>
             {ingredient.season && <p>Saison: {ingredient.season}</p>}

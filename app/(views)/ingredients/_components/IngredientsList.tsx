@@ -122,7 +122,7 @@ export default function IngredientList({ fetchedIngredients }: { fetchedIngredie
     return (
         <>
             {/* Dialogue pour ajouter un ingrédient */}
-            <div className="flex justify-between flex-col md:flex-row-reverse md:items-center gap-2 pb-2">
+            <div className="flex flex-col justify-between gap-2 pb-2 md:flex-row-reverse md:items-center">
                 <IsUser>
                     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                         <DialogTrigger asChild>
@@ -171,7 +171,7 @@ export default function IngredientList({ fetchedIngredients }: { fetchedIngredie
                                 }}
                             />
                             <IsAdmin>
-                                <div className="flex gap-2 w-full">
+                                <div className="flex w-full gap-2">
                                     <EditItem
                                         renderEditForm={(onClose) => (
                                             <UpdateIngredient

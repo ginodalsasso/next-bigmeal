@@ -83,7 +83,7 @@ const ResetPasswordPage = () => {
     return (
         <form
             onSubmit={handleSubmit}
-            className="border px-4 py-8 mx-auto mt-[10%] sm:w-[400px] flex flex-col gap-2"
+            className="mx-auto mt-[10%] flex flex-col gap-2 border px-4 py-8 sm:w-[400px]"
         >
             <h1 className="text-2xl font-bold">Réinitialiser le mot de passe</h1>
             {error.general && <p className="error-form">{error.general}</p>}

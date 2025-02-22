@@ -14,7 +14,7 @@ const Sidebar = () => {
     return (
         <>
             <IsUser>
-                <div className="h-screen sticky bg-neutral-900 py-4">
+                <div className="sticky h-screen bg-neutral-900 py-4">
                     <ul className="px-4">
                         {links.map((link) => (
                             <li className="align-icon flex-wrap-reverse	" key={link.title}>
@@ -28,10 +28,10 @@ const Sidebar = () => {
                                 )}
                                 <Link
                                     href={link.url}
-                                    className={`block py-2 ${
+                                    className={`block py-2 text-[18px] text-gray-200 ${
                                         active === link.title
-                                            ? "text-[18px] text-gray-200 text-black underline"
-                                            : "text-[18px] text-gray-200 hover:underline"
+                                            ? "text-black underline"
+                                            : "hover:underline"
                                     }`}
                                     onClick={() => setActive(link.title)}
                                 >

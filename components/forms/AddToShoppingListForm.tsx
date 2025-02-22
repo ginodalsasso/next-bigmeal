@@ -118,7 +118,7 @@ const AddToShoppingListForm: React.FC<AddToShoppingListFormProps> = ({ type, id 
                 />
             )}
             <FormErrorMessage message={error?.quantity} />
-            <Button variant="default" className={isLoading ? 'opacity-50 cursor-not-allowed' : 'w-full'} disabled={isLoading}>
+            <Button variant="default" className={isLoading ? 'cursor-not-allowed opacity-50' : 'w-full'} disabled={isLoading}>
                 <Image
                     src={add}
                     alt="Ajouter un ingrédient"

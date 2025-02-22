@@ -125,7 +125,7 @@ const ProfilePage = () => {
                         <p>Role: {user.role}</p>
                         <p>Compte créé le: {dateToString(user.createdAt)}</p>
 
-                        <h2 className="text-xl font-semibold mt-6">Liste de courses</h2>
+                        <h2 className="mt-6 text-xl font-semibold">Liste de courses</h2>
                         {user.shoppingList && user.shoppingList.length > 0 ? (
                             user.shoppingList.map((list) => (
                                 <div key={list.id}>
