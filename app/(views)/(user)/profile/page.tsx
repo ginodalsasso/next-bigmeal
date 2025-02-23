@@ -5,6 +5,7 @@ import { UserType } from "@/lib/types/schemas_interfaces";
 import { dateToString } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { useCsrfToken } from "@/app/hooks/useCsrfToken";
+import DeleteProfile from "../_component/DeleteProfile";
 
 const ProfilePage = () => {
     // _________________________ ETATS _________________________
@@ -77,7 +78,6 @@ const ProfilePage = () => {
             setError("Impossible de modifier le mot de passe.");
         }
     }
-
 
 
     // _________________________ RENDU _________________________
@@ -154,6 +154,10 @@ const ProfilePage = () => {
 
                         {/* Bouton pour passer à la modification du mot de passe */}
                         <Button onClick={() => setIsChangedPassword(true)}>Changer mon mot de passe</Button>
+
+                        {/* Bouton pour supprimer le compte */}
+                        <DeleteProfile userId={user.id} />
+
                     </div>
                 )}
         </div>
