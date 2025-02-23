@@ -64,7 +64,7 @@ export default function RegisterPage() {
 
     return (
         <form 
-            className="mx-auto mt-[10%] sm:w-[400px] flex flex-col gap-2"
+            className="mx-auto mt-[10%] flex flex-col gap-2 sm:w-[400px]"
             onSubmit={handleSubmit}
         >
             <FormErrorMessage message={error?.general} />

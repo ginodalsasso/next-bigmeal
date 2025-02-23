@@ -1,10 +1,10 @@
 // Liens de navigation
 export const links = [
-    { title: "ingrédients", url: "/ingredients" },
-    { title: "repas", url: "/meals" },
-    { title: "catégorie ingrédient", url: "/categories-ingredient" },
-    { title: "catégorie repas", url: "/categories-meal" },
     { icon:"/img/cart.svg", title: "liste de courses", url: "/shopping-list" },
+    { icon:"/img/ingredient.svg", title: "ingrédients", url: "/ingredients" },
+    { icon:"/img/meal.svg", title: "repas", url: "/meals" },
+    { icon:"/img/folder.svg", title: "catégorie ingrédient", url: "/categories-ingredient" },
+    { icon:"/img/folder.svg", title: "catégorie repas", url: "/categories-meal" },
 ];
 
 // Saisons et catégories

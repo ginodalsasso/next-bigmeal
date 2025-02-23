@@ -1,6 +1,5 @@
 'use client';
 
-import { useCsrfToken } from '@/app/hooks/useCsrfToken';
 import { Button } from '@/components/ui/button';
 import { ForgotUserPasswordFormType } from '@/lib/types/forms_interfaces';
 import { useParams } from 'next/navigation';
@@ -11,7 +10,6 @@ import { toast } from 'sonner';
 const ResetPasswordPage = () => {
     const { token } = useParams(); 
     const router = useRouter();
-    const csrfToken = useCsrfToken();
 
     const [formData, setFormData] = useState({
         password: '',
@@ -27,22 +25,16 @@ const ResetPasswordPage = () => {
                 return;
             }
 
-            if (!csrfToken) {
-                console.error("CSRF token invalide");
-                return;
-            }
-
             try {
                 const response = await fetch('/api/verify-token', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'X-CSRF-Token': csrfToken,
                     },
                     body: JSON.stringify({ token }),
                 });
                 if (!response.ok) throw new Error('Token invalide ou expiré');
-
+                
             } catch (error) {
                 console.error('Erreur lors de la vérification du token :', error);
                 setError({ general: 'Token invalide ou expiré' });
@@ -50,7 +42,7 @@ const ResetPasswordPage = () => {
         };
 
         verifyToken();
-    }, [token, csrfToken]);
+    }, [token]);
 
     
     const handleSubmit = async (e: React.FormEvent) => {
@@ -91,7 +83,7 @@ const ResetPasswordPage = () => {
     return (
         <form
             onSubmit={handleSubmit}
-            className="border px-4 py-8 mx-auto mt-[10%] sm:w-[400px] flex flex-col gap-2"
+            className="mx-auto mt-[10%] flex flex-col gap-2 border px-4 py-8 sm:w-[400px]"
         >
             <h1 className="text-2xl font-bold">Réinitialiser le mot de passe</h1>
             {error.general && <p className="error-form">{error.general}</p>}

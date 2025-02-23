@@ -16,34 +16,35 @@ const Navbar = () => {
     
     return (
         <nav className="w-full max-w-7xl p-4">
-            <div className="flex justify-between items-center ">
+            <div className="flex items-center justify-between ">
                 {/* Logo */}
                 <Link href="/" className="flex items-center text-lg font-bold">
                     Big-Meal
                 </Link>
 
                 {/* Desktop Navigation */}
-                <ul className="list-none hidden lg:flex flex-row items-center gap-6">
+                <ul className="hidden list-none flex-row items-center gap-6 lg:flex">
                     {/* Si l'utilisateur est connecté */}
                     <IsUser>
                         <li className="nav-links-desktop align-icon">
-                            <Image
-                                src={"/img/user.svg"}
-                                width={18}
-                                height={18}
-                                alt="Profil"
-                            />
                             <Link
                                 href="/profile"
                                 className="nav-links-desktop"
+                                title="Profil"
                             >
-                                Profil
+                                <Image
+                                    src={"/img/user.svg"}
+                                    width={18}
+                                    height={18}
+                                    alt="Profil"
+                                />
                             </Link>
                         </li>
                         <li>
                             <button 
                                 className="nav-links-desktop align-icon"
                                 onClick={() => signOut()}
+                                title="Déconnexion"
                             > 
                                 <Image
                                     src={"/img/logout.svg"}
@@ -51,9 +52,6 @@ const Navbar = () => {
                                     height={20}
                                     alt="Déconnexion"
                                 />
-                                <span>
-                                    Déconnexion
-                                </span>
                             </button>
                         </li>
                     </IsUser>
@@ -90,18 +88,25 @@ const Navbar = () => {
                     <div
                         className={`${
                             !toggle ? "hidden" : "flex"
-                        } bg-black p-6 absolute top-0 right-0 w-full h-full z-10 flex justify-end`}
+                        } absolute right-0 top-0 z-10 flex size-full justify-end bg-black p-6`}
                     >
                         <Image
                             src={closeMenu}
                             alt="menu"
-                            className="top-6 right-5 absolute"
+                            className="absolute right-5 top-6"
                             onClick={() => setToggle(!toggle)}
                         />
-                        <ul className="list-none flex justify-center items-end flex-col gap-5">
+                        <ul className="flex list-none flex-col items-end justify-center gap-5">
                             <IsUser>
                                 {links.map((link) => (
                                     <li key={link.title} className="nav-links-desktop align-icon">
+                                        <Link
+                                            href={link.url}
+                                            className="nav-links-mobile"
+                                            onClick={() => setToggle(false)}
+                                            >
+                                            {ucFirst(link.title)}
+                                        </Link>
                                         {link.icon && (
                                             <Image
                                                 src={link.icon}
@@ -110,29 +115,22 @@ const Navbar = () => {
                                                 alt={link.title}
                                             />
                                         )}
-                                        <Link
-                                            href={link.url}
-                                            className="nav-links-mobile"
-                                            onClick={() => setToggle(false)}
-                                            >
-                                            {ucFirst(link.title)}
-                                        </Link>
                                     </li>
                                 ))}
                                 <li>
                                     <button 
-                                        className="nav-links-desktop align-icon"
+                                        className="nav-links-mobile align-icon"
                                         onClick={() => signOut()}
                                     > 
+                                        <span>
+                                            Déconnexion
+                                        </span>
                                         <Image
                                             src={"/img/logout.svg"}
                                             width={20}
                                             height={20}
                                             alt="Déconnexion"
                                         />
-                                        <span>
-                                            Déconnexion
-                                        </span>
                                 </button>
                                 </li>
                             </IsUser>

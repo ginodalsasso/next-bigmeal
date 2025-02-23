@@ -18,7 +18,7 @@ interface AddToShoppingListFormProps {
 
 const AddToShoppingListForm: React.FC<AddToShoppingListFormProps> = ({ type, id }) => {
 
-    const [quantity, setQuantity] = useState<AddIngredientToShoppingListFormType>({ quantity: 0 });
+    const [quantity, setQuantity] = useState<AddIngredientToShoppingListFormType>({ quantity: 1 });
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
     // Utilisation du hook de validation
@@ -103,7 +103,7 @@ const AddToShoppingListForm: React.FC<AddToShoppingListFormProps> = ({ type, id 
     return (
         <form
             onSubmit={handleAddToShoppingList}
-            className="flex items-center justify-end gap-2 "
+            className="flex items-center gap-2"
         >
             <FormErrorMessage message={error?.general} />
 
@@ -111,19 +111,19 @@ const AddToShoppingListForm: React.FC<AddToShoppingListFormProps> = ({ type, id 
             {type === 'ingredient' && (
                 <input
                     type="number"
-                    className="input-text-select"
+                    className="input-text-select "
                     value={quantity.quantity || ''}
                     min={1}
                     onChange={(e) => setQuantity({ quantity: parseInt(e.target.value) })}
                 />
             )}
             <FormErrorMessage message={error?.quantity} />
-
-            <Button variant="default" className={isLoading ? 'opacity-50 cursor-not-allowed' : 'w-full'} disabled={isLoading}>
+            <Button variant="default" className={isLoading ? 'cursor-not-allowed opacity-50' : 'w-full'} disabled={isLoading}>
                 <Image
                     src={add}
                     alt="Ajouter un ingrédient"
-                    className="w-4"
+                    width={18}
+                    height={18}
                 />
                 <span className="hidden sm:block">
                     {isLoading ? 'Ajout...' : type === 'meal' ? 'Ajouter le repas' : 'Ajouter l\'ingrédient'}
