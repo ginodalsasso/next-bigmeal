@@ -20,7 +20,7 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { reversedTranslatedSeason, translatedSeason } from "@/lib/utils";
 import AddToShoppingListForm from "@/components/forms/AddToShoppingListForm";
-import EditItem from "@/components/layout/EditItemPopover";
+import EditItem from "@/components/layout/EditItemDrawer";
 import DeleteItem from "@/components/layout/DeleteItemDialog";
 import IsAdmin from "@/components/isAdmin";
 import IsUser from "@/components/isUser";

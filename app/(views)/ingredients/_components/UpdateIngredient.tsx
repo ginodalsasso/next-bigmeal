@@ -80,7 +80,6 @@ const UpdateIngredient: React.FC<UpdateIngredientProps> = ({
                 },
                 body: JSON.stringify(form),
             });
-            console.log("RESPONSE", response);
             if (!response.ok) throw new Error("Échec de la mise à jour de l'ingrédient");
 
             const updatedIngredient: IngredientType = await response.json();
@@ -98,7 +97,7 @@ const UpdateIngredient: React.FC<UpdateIngredientProps> = ({
 
     // _________________________ RENDU _________________________
     return (
-        <form onSubmit={handleSubmit} className="space-y-2">
+        <form onSubmit={handleSubmit} className="space-y-2 md:w-[50vw]">
             <FormErrorMessage message={error?.general} />
 
             {/* Champ pour le nom */}
@@ -151,11 +150,10 @@ const UpdateIngredient: React.FC<UpdateIngredientProps> = ({
             <FormErrorMessage message={error?.season} />
 
             {/* Boutons de soumission et d'annulation */}
-            <div className="flex gap-2">
+            <div className="flex flex-col gap-2">
                 <Button
                     type="button"
                     onClick={onCancel}
-                    className="w-full"
                     variant="secondary"
                     disabled={isLoading}
                 >
@@ -164,7 +162,6 @@ const UpdateIngredient: React.FC<UpdateIngredientProps> = ({
                 <Button 
                     type="submit" 
                     variant="success" 
-                    className="w-full"
                     disabled={isLoading}>
                     {isLoading ? "En cours..." : "Valider"}
                 </Button>

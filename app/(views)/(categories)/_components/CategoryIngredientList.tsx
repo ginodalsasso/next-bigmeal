@@ -5,7 +5,7 @@ import { CategoryIngredientType } from "@/lib/types/schemas_interfaces";
 import CategoryForm from "../_components/CreateCategory";
 import UpdateCategory from "../_components/UpdateCategory";
 import ItemView from "@/components/layout/ItemView";
-import EditItem from "@/components/layout/EditItemPopover";
+import EditItem from "@/components/layout/EditItemDrawer";
 import DeleteItem from "@/components/layout/DeleteItemDialog";
 import { toast } from "sonner";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";

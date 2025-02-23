@@ -6,7 +6,7 @@ import add from "@/public/img/add.svg";
 import { MealType } from "@/lib/types/schemas_interfaces";
 
 import ItemView from "@/components/layout/ItemView";
-import EditItem from "@/components/layout/EditItemPopover";
+import EditItem from "@/components/layout/EditItemDrawer";
 import DeleteItem from "@/components/layout/DeleteItemDialog";
 
 import {
