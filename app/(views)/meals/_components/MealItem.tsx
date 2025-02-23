@@ -85,7 +85,7 @@ export default function MealItem( {fetchedMeal}: { fetchedMeal: MealType }) {
     if (!meal) return <div>Repas introuvable.</div>;
 
     return (
-        <div className="mx-auto border bg-neutral-900 p-6 xl:w-[70%]">
+        <div className="mx-auto border bg-neutral-900 p-6">
             <h1 className="mb-2 text-center text-4xl font-semibold text-emerald-500">{ucFirst(meal.name)}</h1>
             <p>{meal.description || "Aucune description disponible pour ce repas."}</p>
             <IsAdmin>

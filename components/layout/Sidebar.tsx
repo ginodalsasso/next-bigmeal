@@ -49,14 +49,18 @@ const Sidebar = () => {
                         </li>
                     ))}
 
-                    {/* Catégorie déroulante avec <details> */}
+                    {/* Catégorie déroulante */}
                     <li className="flex items-baseline gap-6">
                         <Image src="/img/folder.svg" width={20} height={20} alt="Catégorie" />
                         <div className="w-full">
                             <details className="group">
-                                <summary className=" flex cursor-pointer items-center justify-between py-2 text-[18px] text-gray-200 hover:underline">
+                                <summary className="flex cursor-pointer items-center justify-between py-2 text-[18px] text-gray-200 hover:underline">
                                     Catégories 
-                                    <span className="text-[12px] transition-transform duration-300 group-open:rotate-90">▶</span>
+                                    <span className="text-[12px] transition-transform duration-300 group-open:rotate-90">
+                                        <Image src="/img/triangle.svg" width={8} height={8} alt="Catégorie" />
+                                    </span>
+                                    
+
                                 </summary>
                                 <ul>
                                     {categories.map((category) => (

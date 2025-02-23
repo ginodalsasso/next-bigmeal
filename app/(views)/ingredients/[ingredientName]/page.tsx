@@ -43,7 +43,7 @@ const IngredientDetailPage =
     if (!ingredient) return <div>Ingredient introuvable.</div>;
 
     return (
-        <div className="mx-auto rounded-lg border p-6 xl:w-[70%]">
+        <div className="mx-auto rounded-lg border p-6">
             <h1 className="mb-2 text-center text-4xl font-semibold text-emerald-500">
                 {ingredient.name}
             </h1>
