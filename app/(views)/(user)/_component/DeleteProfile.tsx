@@ -3,8 +3,8 @@
 import React, { useState } from "react";
 import { AlertDialog, AlertDialogTrigger, AlertDialogContent, AlertDialogHeader, AlertDialogFooter, AlertDialogTitle, AlertDialogDescription } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import { useRouter } from "next/navigation";
 import { useCsrfToken } from "@/app/hooks/useCsrfToken";
+import { signOut } from "next-auth/react";
 
 interface DeleteProfileProps {
     userId: string;
@@ -14,7 +14,6 @@ const DeleteProfile: React.FC<DeleteProfileProps> = ({ userId }) => {
     const [isDeleting, setIsDeleting] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const csrfToken = useCsrfToken();
-    const router = useRouter();
 
     const handleDelete = async () => {
         if (!csrfToken) {
@@ -35,11 +34,12 @@ const DeleteProfile: React.FC<DeleteProfileProps> = ({ userId }) => {
             });
 
             if (response.ok) {
-                router.push("/");
+                await signOut();
             } else {
                 const errorData = await response.json();
                 setError(errorData.message || "Une erreur est survenue lors de la suppression.");
             }
+
         } catch (error) {
             console.error("Erreur lors de la suppression du compte :", error);
             setError("Impossible de supprimer le compte.");

@@ -3,6 +3,7 @@ import { db } from "@/lib/db";
 import { getUserSession } from "@/lib/security/getSession";
 import bcrypt from "bcryptjs";
 import { verifyCSRFToken } from "@/lib/security/csrf";
+import { idConstraints } from "@/lib/constraints/forms_constraints";
 
 export async function GET() {
     try {
@@ -111,3 +112,44 @@ export async function PUT(req: NextRequest) {
         });
     }
 }
+
+export async function DELETE(req: NextRequest) {
+        try {
+            const { session, error } = await getUserSession();
+            if (error) return error;
+            
+            const csrfTokenVerified = await verifyCSRFToken(req);
+            if (!csrfTokenVerified) {
+                return new NextResponse("CSRF Token is missing or invalid", { status: 403 });
+            }
+    
+            const body = await req.json();
+
+            if (session.user.id !== body.id) {
+                return new NextResponse("Vous n'avez pas les droits pour cette action", { status: 403 });
+            }
+    
+            const validationResult = idConstraints.safeParse(body);
+    
+            if (!validationResult.success) {
+                return NextResponse.json(
+                    { error: validationResult.error.format() },
+                    { status: 400 }
+                );
+            }
+    
+            const { id } = validationResult.data;
+            await db.user.delete({ where: { id } });
+    
+            return NextResponse.json({ message: "Utilisateur supprimé" }, {status: 200});
+        } catch (error) {
+            console.error("[DELETE_USER_ERROR]", error);
+            return new Response(JSON.stringify({ 
+                message: 'Erreur serveur, veuillez réessayer plus tard' 
+            }), { 
+                status: 500,
+                headers: { 'Content-Type': 'application/json' }
+            });
+        }
+    }
+    
