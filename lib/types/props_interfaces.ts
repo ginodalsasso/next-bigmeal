@@ -27,9 +27,11 @@ export interface UpdateMealProps {
 }
 
 
-export interface CreateCategoryProps { 
-    onSubmit: (name: string) => Promise<void>; 
+export interface CreateCategoryProps<T> { 
+    apiUrl: string; // URL API dynamique
+    onCategoryCreated: (newCategory: T) => void; 
 }
+
 
 // FORMULAIRE DE MISE A JOUR DE CATEGORIES
 export interface UpdateCategoryProps {

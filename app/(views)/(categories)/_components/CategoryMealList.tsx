@@ -2,7 +2,6 @@
 
 import React, { useState } from "react";
 import { CategoryMealType } from "@/lib/types/schemas_interfaces";
-import CategoryForm from "./CreateCategory";
 import UpdateCategory from "./UpdateCategory";
 import ItemView from "@/components/layout/ItemView";
 import EditItem from "@/components/layout/EditItemDrawer";
@@ -11,6 +10,7 @@ import { toast } from "sonner";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import IsAdmin from "@/components/isAdmin";
 import { useCsrfToken } from "@/app/hooks/useCsrfToken";
+import CreateCategory from "./CreateCategory";
 
 
 // _________________________ COMPOSANT _________________________
@@ -22,34 +22,10 @@ export default function CategoryMealList({ fetchedCategories }: { fetchedCategor
     const [error, setError] = useState<string | null>(null);
 
     // _________________________ CRUD _________________________
-    // Appel API pour ajouter une catégorie
-    const createCategoryMeal = async (name: string) => {
-        if (!csrfToken) {
-            console.error("CSRF token invalide");
-            return;
-        }
 
-        try {
-            const response = await fetch("/api/categories-meal", {
-                method: "POST",
-                headers: { 
-                    "Content-Type": "application/json",
-                    "X-CSRF-Token": csrfToken,
-                },
-                body: JSON.stringify({ name }),
-            });
-            if (!response.ok) throw new Error("Failed to add category");
-
-            const newCategory: CategoryMealType = await response.json();
-            setCategoryMeal((prev) => 
-                [...prev, newCategory]
-            );
-
-            toast("Catégorie créée avec succès");
-        } catch (error) {
-            console.error("Erreur lors de la création:", error);
-            setError("Erreur lors de la création.");
-        }
+    // Mise à jour de la liste après création
+    const handleCategoryCreated = (newCategory: CategoryMealType) => {
+        setCategoryMeal((prev) => [...prev, newCategory]);
     };
 
     // Appel API pour mettre à jour une catégorie
@@ -115,7 +91,10 @@ export default function CategoryMealList({ fetchedCategories }: { fetchedCategor
             {/* Formulaire de création */}
             <IsAdmin>
                 <div className="card mb-6 md:w-fit">
-                    <CategoryForm onSubmit={createCategoryMeal} />
+                    <CreateCategory<CategoryMealType> 
+                            apiUrl="/api/categories-meal" 
+                            onCategoryCreated={handleCategoryCreated} 
+                    />
                 </div>
             </IsAdmin>
 

@@ -2,7 +2,6 @@
 
 import React, { useState } from "react";
 import { CategoryIngredientType } from "@/lib/types/schemas_interfaces";
-import CategoryForm from "../_components/CreateCategory";
 import UpdateCategory from "../_components/UpdateCategory";
 import ItemView from "@/components/layout/ItemView";
 import EditItem from "@/components/layout/EditItemDrawer";
@@ -11,41 +10,20 @@ import { toast } from "sonner";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import IsAdmin from "@/components/isAdmin";
 import { useCsrfToken } from "@/app/hooks/useCsrfToken";
+import CreateCategory from "../_components/CreateCategory";
 
 // _________________________ COMPOSANT _________________________
 export default function CategoryIngredientList({ fetchedCategories }: { fetchedCategories: CategoryIngredientType[] }) {
 
     // _________________________ ETATS _________________________
     const csrfToken = useCsrfToken();
-    const [categories, setCategories] = useState<CategoryIngredientType[]>(fetchedCategories);
+    const [categoryIngredient, setCategoryIngredient] = useState<CategoryIngredientType[]>(fetchedCategories);
     const [error, setError] = useState<string | null>(null);
 
     // _________________________ CRUD _________________________
-    const createCategoryIngredient = async (name: string) => {
-        if (!csrfToken) {
-            console.error("CSRF token invalide");
-            return;
-        }
-
-        try {
-            const response = await fetch("/api/categories-ingredient", {
-                method: "POST",
-                headers: { 
-                    "Content-Type": "application/json",
-                    "X-CSRF-Token": csrfToken,
-                },
-                body: JSON.stringify({ name }),
-            });
-            if (!response.ok) throw new Error("Failed to add category");
-
-            const newCategory: CategoryIngredientType = await response.json();
-            setCategories((prev) => [...prev, newCategory]);
-
-            toast("Catégorie créée avec succès");
-        } catch (error) {
-            console.error("[CREATE_CATEGORY]", error);
-            setError("Erreur lors de la création.");
-        }
+    // Mise à jour de la liste après création
+    const handleCategoryCreated = (newCategory: CategoryIngredientType) => {
+        setCategoryIngredient((prev) => [...prev, newCategory]);
     };
 
     const updateCategoryIngredient = async (id: string, newName: string) => {
@@ -66,7 +44,7 @@ export default function CategoryIngredientList({ fetchedCategories }: { fetchedC
             if (!response.ok) throw new Error("Failed to update category");
 
             const updatedCategory: CategoryIngredientType = await response.json();
-            setCategories((prev) =>
+            setCategoryIngredient((prev) =>
                 prev.map((category) => (category.id === id ? updatedCategory : category))
             );
 
@@ -94,7 +72,7 @@ export default function CategoryIngredientList({ fetchedCategories }: { fetchedC
             });
             if (!response.ok) throw new Error("Failed to delete category");
             
-            setCategories((prev) => prev.filter((category) => category.id !== id));
+            setCategoryIngredient((prev) => prev.filter((category) => category.id !== id));
 
             toast("Catégorie supprimée avec succès");
         } catch (error) {
@@ -109,8 +87,11 @@ export default function CategoryIngredientList({ fetchedCategories }: { fetchedC
             {error && <div className="text-red-500">{error}</div>}
 
             <IsAdmin>
-                <div className="card mb-6 md:w-fit">
-                    <CategoryForm onSubmit={createCategoryIngredient} />
+            <div className="card mb-6 md:w-fit">
+                    <CreateCategory<CategoryIngredientType> 
+                            apiUrl="/api/categories-meal" 
+                            onCategoryCreated={handleCategoryCreated} 
+                    />
                 </div>
             </IsAdmin>
 
@@ -124,7 +105,7 @@ export default function CategoryIngredientList({ fetchedCategories }: { fetchedC
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {categories.map((category) => (
+                    {categoryIngredient.map((category) => (
                         <TableRow key={category.id}>
                             <TableCell>
                                 <ItemView title={category.name} details={{}} />
