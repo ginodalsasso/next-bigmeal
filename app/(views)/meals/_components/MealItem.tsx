@@ -85,8 +85,8 @@ export default function MealItem( {fetchedMeal}: { fetchedMeal: MealType }) {
     if (!meal) return <div>Repas introuvable.</div>;
 
     return (
-        <div className="border bg-neutral-900 p-6 xl:w-[70%] mx-auto">
-            <h1 className="text-4xl font-semibold text-emerald-500 text-center mb-2">{ucFirst(meal.name)}</h1>
+        <div className="mx-auto border bg-neutral-900 p-6">
+            <h1 className="mb-2 text-center text-4xl font-semibold text-emerald-500">{ucFirst(meal.name)}</h1>
             <p>{meal.description || "Aucune description disponible pour ce repas."}</p>
             <IsAdmin>
                 <div className="mt-4">
@@ -123,7 +123,7 @@ export default function MealItem( {fetchedMeal}: { fetchedMeal: MealType }) {
                     meal.compositions.map((composition) => (
                         <div
                             key={composition.id}
-                            className="flex justify-between items-center border-b py-2"
+                            className="flex items-center justify-between border-b py-2"
                         >
                             <p className="font-medium">{ucFirst(composition.ingredient?.name || "Ingrédient inconnu")}</p>
                             <div className="flex items-center gap-1">

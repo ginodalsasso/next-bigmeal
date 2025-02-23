@@ -132,7 +132,7 @@ export default function MealsList( {fetchedMeals}: { fetchedMeals: MealType[] })
     return (
         <>
             {/* Dialogue pour ajouter un repas ou une composition */}
-            <div className="flex justify-between items-center flex-row-reverse gap-2 pb-2">
+            <div className="flex flex-row-reverse items-center justify-between gap-2 pb-2">
                 <IsUser>
                     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                         <DialogTrigger asChild>
@@ -202,7 +202,7 @@ export default function MealsList( {fetchedMeals}: { fetchedMeals: MealType[] })
                                 linkToDetails={`/meals/${meal.name}`}
                             />
                             <IsAdmin>
-                                <div className="flex gap-2 w-full">
+                                <div className="flex w-full gap-2">
                                     {/* Édition du repas */}
                                     <EditItem
                                         renderEditForm={(onClose) => (

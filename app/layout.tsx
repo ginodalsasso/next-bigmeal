@@ -20,17 +20,17 @@ export default function RootLayout({
                 <meta name="description" content="A simple meal app" />
             </head>
             <SessionProvider>
-                <body className="flex flex-col min-h-screen">
-                    <header className="flex justify-center border-b bg-neutral-900 border-neutral-500">
+                <body className="flex min-h-screen flex-col">
+                    <header className="flex justify-center border-b border-neutral-500 bg-neutral-900">
                         <Navbar />
                     </header>
                     <div className="flex">
-                        <aside className="hidden lg:block border-r border-neutral-500">
+                        <aside className="hidden border-r border-neutral-500 lg:block">
                             <Sidebar />
                         </aside>
-                        <main className="flex-1 px-4 pt-4 pb-20 md:p-6">{children}</main>
+                        <main className="flex-1 px-4 pb-20 pt-4 md:p-6">{children}</main>
                     </div>
-                    <div className="lg:hidden fixed w-full bottom-0 bg-black border-t">
+                    <div className="fixed bottom-0 w-full border-t bg-black lg:hidden">
                         <Bottombar />
                     </div>
                     <Toaster />
