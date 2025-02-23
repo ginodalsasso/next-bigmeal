@@ -1,21 +1,16 @@
-import { Season } from "./enums";
 import { CompositionType, IngredientType, MealType } from "./schemas_interfaces";
 
 
 export interface CreateIngredientProps { 
-    onIngredientCreated: (ingredient: IngredientType) => void, 
+    onSubmit: (ingredient: IngredientType) => void, 
     onClose: () => void 
 }
 
 // FORMULAIRE DE MISE A JOUR D'INGREDIENT
 export interface UpdateIngredientProps {
-    initialName: string;
-    initialCategory: string;
-    initialSeason: Season | null | undefined;
-    onSubmit: (newName: string, newCategory: string, newSeason: Season | null | undefined) => Promise<void>;
+    ingredient: IngredientType; // Ingrédient à mettre à jour
+    onSubmit: (updatedIngredient: IngredientType) => Promise<void>;
     onCancel: () => void;
-    isLoading: boolean;
-    error: string | null;
 }
 
 
@@ -26,18 +21,14 @@ export interface CreateMealProps {
 
 // FORMULAIRE DE MISE A JOUR DE MEAL
 export interface UpdateMealProps {
-    initialName: string;
-    initialCategory: string;
-    initialDescription: string;
-    onSubmit: (newName: string, newCategory: string, newDescription: string) => Promise<void>;
-    onCancel: () => void;
-    isLoading: boolean;
-    error: string | null;
+    meal : MealType, // Repas à mettre à jour
+    onSubmit: (meal: MealType) => Promise<void>, // Fonction pour mettre à jour le repas
+    onClose: () => void // Fonction pour fermer le dialogue
 }
 
 
 export interface CreateCategoryProps { 
-    onAddCategory: (name: string) => Promise<void>; 
+    onSubmit: (name: string) => Promise<void>; 
 }
 
 // FORMULAIRE DE MISE A JOUR DE CATEGORIES
@@ -52,7 +43,7 @@ export interface UpdateCategoryProps {
 
 export interface CreateCompositionProps {
     mealId: string; // ID du repas parent de la composition
-    onCompositionCreated: (compositions: CompositionType[]) => void; // Callback pour ajouter les compositions
+    onSubmit: (composition: CompositionType[]) => void; // Callback pour ajouter la composition
     onClose: () => void; // Callback pour fermer le dialogue
 }
 

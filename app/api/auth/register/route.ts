@@ -40,7 +40,7 @@ export async function POST(req: NextRequest) {
 
         return NextResponse.json(user, { status: 201 });
     } catch (error) {
-        console.error("[REGISTER]", error);
+        console.error("[REGISTER_ERROR]", error);
         return NextResponse.json(
             { message: "Erreur interne du serveur." },
             { status: 500 }

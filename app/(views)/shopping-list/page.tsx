@@ -185,14 +185,14 @@ const ShoppingListPage = () => {
             {/* Affichage des ingrédients seuls */}
             {ingredientsAlone && ingredientsAlone.length > 0 && (
                 <div className="mb-8 border border-neutral-500 p-4">
-                    <h2 className="text-2xl text-center">Ingrédients seuls</h2>
+                    <h2 className="text-center text-2xl">Ingrédients seuls</h2>
                     {ingredientsAlone.map((item) => (
                         <div key={item.id} >
-                            <div className="flex justify-between items-center">
+                            <div className="flex items-center justify-between">
                                 <div className="flex items-center">
                                     <input
                                         type="checkbox"
-                                        className="mr-2 w-4 h-4"
+                                        className="mr-2 size-4"
                                         checked={item.isChecked}
                                         onChange={() => toggleItemChecked(item.id, item.isChecked ?? false)}
                                     />
@@ -202,7 +202,7 @@ const ShoppingListPage = () => {
                                 </div>
                                 <DeleteItem onDelete={() => deleteItem(item.id)} isDeleting={false} />
                             </div>
-                            <Separator className="h-px bg-neutral-800 my-2" />
+                            <Separator className="my-2 h-px bg-neutral-800" />
                         </div>
                     ))}
                 </div>
@@ -211,26 +211,26 @@ const ShoppingListPage = () => {
             {/* Affichage des ingrédients par repas */}
             {ingredientsByMeal && ingredientsByMeal.length > 0 && (
                 <div className="mb-8 border border-neutral-500 p-4">
-                    <h2 className="text-2xl text-center">Repas</h2>
+                    <h2 className="text-center text-2xl">Repas</h2>
                     {Array.from(new Set(ingredientsByMeal.map(item => item.mealId))) // Extraire des IDs de repas uniques
                         .map(mealId => { // Parcourt chaque ID de repas unique
                             const mealItems = ingredientsByMeal.filter(item => item.mealId === mealId); //Filtre les ingrédients qui appartiennent à ce repas (mealId)
                             const mealName = mealItems[0]?.meal?.name || "Repas non défini"; // Récupère le nom du repas ou affiche "Repas non défini"
                         return (
                             <div key={mealId} className="mb-4">
-                                <div className="flex justify-between items-center" >
+                                <div className="flex items-center justify-between" >
                                     <h3 className="text-lg font-bold">
                                         {mealName}
                                     </h3>
                                     <DeleteItem onDelete={() => deleteMeal(mealId)} isDeleting={false} />
                                 </div>
-                                <Separator className="h-px bg-neutral-800 my-2" />
+                                <Separator className="my-2 h-px bg-neutral-800" />
                                 {mealItems.map((item) => (
                                     <div key={item.id}>
-                                        <div className="flex items-center my-2">
+                                        <div className="my-2 flex items-center">
                                             <input
                                                 type="checkbox"
-                                                className="mr-2 w-4 h-4"
+                                                className="mr-2 size-4"
                                                 checked={item.isChecked}
                                                 onChange={() => toggleItemChecked(item.id, item.isChecked ?? false)}
                                             />
@@ -240,14 +240,14 @@ const ShoppingListPage = () => {
                                         </div>
                                     </div>
                                 ))}
-                                <Separator className="h-px bg-neutral-800 my-4" />
+                                <Separator className="my-4 h-px bg-neutral-800" />
                             </div>
                         );
                     })}
                 </div>
             )}
 
-            <div className="flex justify-end mt-2">
+            <div className="mt-2 flex justify-end">
                 <Button variant="default" className="w-full" onClick={setShoppingListExpired}>
                     J&apos;ai fini mes courses
                 </Button>

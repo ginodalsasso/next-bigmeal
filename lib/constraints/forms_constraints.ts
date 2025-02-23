@@ -16,6 +16,7 @@ export const categoriesConstraints = z.object({
 });
 
 export const ingredientConstraints = z.object({
+    id: z.string(),
     name: z
         .string()
         .min(3, "Le nom doit comporter au moins 3 caractères")

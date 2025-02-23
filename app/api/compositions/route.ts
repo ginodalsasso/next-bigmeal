@@ -57,7 +57,12 @@ export async function POST(req: NextRequest) {
         return NextResponse.json(insertedCompositions, { status: 201 });
     } catch (error) {
         console.error("[CREATE_COMPOSITIONS_ERROR]", error);
-        return NextResponse.json({ error: "Erreur interne" }, { status: 500 });
+        return new Response(JSON.stringify({ 
+            message: 'Erreur serveur, veuillez réessayer plus tard' 
+        }), { 
+            status: 500,
+            headers: { 'Content-Type': 'application/json' }
+        });
     }
 }
 
@@ -93,10 +98,12 @@ export async function PUT(req: NextRequest) {
         return NextResponse.json(updatedComposition, { status: 200 });
     } catch (error) {
         console.error("[UPDATE_COMPOSITION_ERROR]", error);
-        return NextResponse.json(
-            { error: "Internal Server Error" },
-            { status: 500 }
-        );
+        return new Response(JSON.stringify({ 
+            message: 'Erreur serveur, veuillez réessayer plus tard' 
+        }), { 
+            status: 500,
+            headers: { 'Content-Type': 'application/json' }
+        });
     }
 }
 
@@ -128,6 +135,11 @@ export async function DELETE(req: NextRequest) {
         return NextResponse.json({ message: "Composition supprimée" }, { status: 200 });
     } catch (error) {
         console.error("[DELETE_COMPOSITION_ERROR]", error);
-        return new NextResponse("Internal Error", { status: 500 });
+        return new Response(JSON.stringify({ 
+            message: 'Erreur serveur, veuillez réessayer plus tard' 
+        }), { 
+            status: 500,
+            headers: { 'Content-Type': 'application/json' }
+        });
     }
 }

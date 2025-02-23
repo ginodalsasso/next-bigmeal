@@ -13,9 +13,6 @@ body {
   background-color: var(--black);
 }
 
-/* .cards-wrapper {
-  @apply md:border p-6 rounded-xl;
-} */
 
 .cards-list {
   @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-2;
@@ -26,11 +23,11 @@ body {
 }
 
 .nav-links-desktop {
-  @apply text-gray-200 text-[22px] font-medium cursor-pointer hover:underline;
+  @apply text-gray-200 text-[18px] font-medium cursor-pointer hover:underline;
 };
 
 .align-icon {
-  @apply flex items-center justify-center gap-2;
+  @apply flex items-center gap-6;
 };
 
 .nav-links-mobile {
@@ -109,6 +106,17 @@ body {
 @layer base {
   * {
     @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
   }
   body {
     @apply bg-background text-foreground;

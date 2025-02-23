@@ -12,21 +12,23 @@ import { toast } from "sonner";
 export default function RegisterPage() {
 
     const router = useRouter();
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     // Utilisation du hook de validation
-    const { error, setError, isLoading, setIsLoading, validate } = useFormValidation(
+    const { error, setError, validate } = useFormValidation(
         RegisterConstraints,
         ["email", "password"] // Liste des champs à valider
     );
 
     const [formData, setFormData] = useState({ 
-        email: "", password: "" 
+        email: "", 
+        password: "" 
     });
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsLoading(true);
-        setError({}); // Réinitialise les erreurs existantes
+        setError(null); // Réinitialise les erreurs existantes
 
         if (!validate(formData)) {
             setIsLoading(false);
@@ -52,7 +54,7 @@ export default function RegisterPage() {
                 });
             }
         } catch (error) {
-            console.error("Erreur lors de l'inscription :", error);
+            console.error("[REGISTER_ERROR]", error);
             setError({ general: "Impossible de s'incrire. Veuillez réessayer plus tard." });
         } finally {
             setIsLoading(false);
@@ -62,7 +64,7 @@ export default function RegisterPage() {
 
     return (
         <form 
-            className="mx-auto mt-[10%] sm:w-[400px] flex flex-col gap-2"
+            className="mx-auto mt-[10%] flex flex-col gap-2 sm:w-[400px]"
             onSubmit={handleSubmit}
         >
             <FormErrorMessage message={error?.general} />
