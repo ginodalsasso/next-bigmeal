@@ -26,33 +26,9 @@ export default function CategoryIngredientList({ fetchedCategories }: { fetchedC
         setCategoryIngredient((prev) => [...prev, newCategory]);
     };
 
-    const updateCategoryIngredient = async (id: string, newName: string) => {
-        if (!csrfToken) {
-            console.error("CSRF token invalide");
-            return;
-        }
-
-        try {
-            const response = await fetch("/api/categories-ingredient", {
-                method: "PUT",
-                headers: { 
-                    "Content-Type": "application/json",
-                    "X-CSRF-Token": csrfToken,
-                },
-                body: JSON.stringify({ id, name: newName }),
-            });
-            if (!response.ok) throw new Error("Failed to update category");
-
-            const updatedCategory: CategoryIngredientType = await response.json();
-            setCategoryIngredient((prev) =>
-                prev.map((category) => (category.id === id ? updatedCategory : category))
-            );
-
-            toast("Catégorie modifiée avec succès");
-        } catch (error) {
-            console.error("[UPDATE_CATEGORY_ERROR]", error);
-            setError("Erreur lors de la modification.");
-        }
+    // Mise à jour de la liste après modification
+    const handleCategoryUpdated = (updatedCategory: CategoryIngredientType) => {
+        setCategoryIngredient((prev) => prev.map((category) => (category.id === updatedCategory.id ? updatedCategory : category)));
     };
 
     const deleteCategoryIngredient = async (id: string) => {
@@ -89,8 +65,8 @@ export default function CategoryIngredientList({ fetchedCategories }: { fetchedC
             <IsAdmin>
             <div className="card mb-6 md:w-fit">
                     <CreateCategory<CategoryIngredientType> 
-                            apiUrl="/api/categories-meal" 
-                            onCategoryCreated={handleCategoryCreated} 
+                            apiUrl="/api/categories-ingredient" 
+                            onSubmit={handleCategoryCreated} 
                     />
                 </div>
             </IsAdmin>
@@ -115,15 +91,11 @@ export default function CategoryIngredientList({ fetchedCategories }: { fetchedC
                                     <div className="flex gap-2">
                                         <EditItem
                                             renderEditForm={(onClose) => (
-                                                <UpdateCategory
-                                                    initialName={category.name}
-                                                    onSubmit={async (newName) => {
-                                                        await updateCategoryIngredient(category.id, newName);
-                                                        onClose();
-                                                    }}
+                                                <UpdateCategory<CategoryIngredientType>
+                                                    apiUrl="/api/categories-ingredient"
+                                                    category={category}
+                                                    onSubmit={handleCategoryUpdated}
                                                     onCancel={onClose}
-                                                    isLoading={false}
-                                                    error={null}
                                                 />
                                             )}
                                         />  

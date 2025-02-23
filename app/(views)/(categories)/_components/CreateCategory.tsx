@@ -12,9 +12,9 @@ type CategoryFormType = { name: string };
 /**
  * <T,> est un type générique qui permet de définir le type de la nouvelle catégorie
  * en props: - apiUrl est l'URL de l'API pour créer une nouvelle catégorie
- *           - onCategoryCreated est une fonction qui met à jour la liste des catégories dans le parent 
+ *           - onSubmit est une fonction qui met à jour la liste des catégories dans le parent 
 **/
-const CreateCategory = <T,>({ apiUrl, onCategoryCreated }: CreateCategoryProps<T>) => {
+const CreateCategory = <T,>({ apiUrl, onSubmit }: CreateCategoryProps<T>) => {
     
     // _________________________ ETATS __________________
     const [newCategoryName, setNewCategoryName] = useState('');
@@ -56,7 +56,7 @@ const CreateCategory = <T,>({ apiUrl, onCategoryCreated }: CreateCategoryProps<T
             if (!response.ok) throw new Error("Erreur lors de l'ajout de la catégorie");
 
             const newCategory = await response.json();
-            onCategoryCreated(newCategory); // 🔄 Met à jour la liste dans le parent
+            onSubmit(newCategory); // 🔄 Met à jour la liste dans le parent
             setNewCategoryName('');
             toast("Catégorie créée avec succès");
         } catch (error) {

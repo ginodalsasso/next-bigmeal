@@ -28,33 +28,9 @@ export default function CategoryMealList({ fetchedCategories }: { fetchedCategor
         setCategoryMeal((prev) => [...prev, newCategory]);
     };
 
-    // Appel API pour mettre à jour une catégorie
-    const updateCategoryMeal = async (id: string, newName: string) => {
-        if (!csrfToken) {
-            console.error("CSRF token invalide");
-            return;
-        }
-        try {
-            const response = await fetch("/api/categories-meal", {
-                method: "PUT",
-                headers: { 
-                    "Content-Type": "application/json",
-                    "X-CSRF-Token": csrfToken,
-                },
-                body: JSON.stringify({ id, name: newName }),
-            });
-            if (!response.ok) throw new Error("Failed to update category");
-
-            const updatedCategory: CategoryMealType = await response.json();
-            setCategoryMeal((prev) =>
-                prev.map((category) => (category.id === id ? updatedCategory : category))
-            );
-
-            toast("Catégorie modifiée avec succès");
-        } catch (error) {
-            console.error("Erreur lors de la modification:", error);
-            setError("Erreur lors de la modification.");
-        }
+    // Mise à jour de la liste après modification
+    const handleCategoryUpdated = (updatedCategory: CategoryMealType) => {
+        setCategoryMeal((prev) => prev.map((category) => (category.id === updatedCategory.id ? updatedCategory : category)));
     };
 
     // Appel API pour supprimer une catégorie
@@ -93,7 +69,7 @@ export default function CategoryMealList({ fetchedCategories }: { fetchedCategor
                 <div className="card mb-6 md:w-fit">
                     <CreateCategory<CategoryMealType> 
                             apiUrl="/api/categories-meal" 
-                            onCategoryCreated={handleCategoryCreated} 
+                            onSubmit={handleCategoryCreated} 
                     />
                 </div>
             </IsAdmin>
@@ -120,16 +96,12 @@ export default function CategoryMealList({ fetchedCategories }: { fetchedCategor
                                 <div className="flex gap-2">
                                     <EditItem
                                         renderEditForm={(onClose) => (
-                                            <UpdateCategory
-                                                initialName={category.name}
-                                                onSubmit={async (newName) => {
-                                                    await updateCategoryMeal(category.id, newName);
-                                                    onClose();
-                                                }}
+                                            <UpdateCategory<CategoryMealType>
+                                                apiUrl="/api/categories-ingredient"
+                                                category={category}
+                                                onSubmit={handleCategoryUpdated}
                                                 onCancel={onClose}
-                                                isLoading={false}
-                                                error={null}
-                                            /> 
+                                            />
                                         )}
                                     />
                                     <DeleteItem
