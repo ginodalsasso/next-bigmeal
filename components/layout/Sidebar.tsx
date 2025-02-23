@@ -5,13 +5,6 @@ import Link from "next/link";
 import React, { useState } from "react";
 import IsUser from "../isUser";
 import Image from "next/image";
-import {
-    NavigationMenu,
-    NavigationMenuContent,
-    NavigationMenuItem,
-    NavigationMenuList,
-    NavigationMenuTrigger,
-} from "@/components/ui/navigation-menu";
 
 const Sidebar = () => {
     const [active, setActive] = useState(""); // État de la navigation active
@@ -56,34 +49,32 @@ const Sidebar = () => {
                         </li>
                     ))}
 
-                    {/* Catégorie déroulante */}
-                    <li className="align-icon flex-wrap-reverse">
+                    {/* Catégorie déroulante avec <details> */}
+                    <li className="flex items-baseline gap-6">
                         <Image src="/img/folder.svg" width={20} height={20} alt="Catégorie" />
-                        <NavigationMenu>
-                            <NavigationMenuList>
-                                <NavigationMenuItem>
-                                    <NavigationMenuTrigger className="flex py-2 text-[18px] text-gray-200 hover:underline">
-                                        Catégories
-                                    </NavigationMenuTrigger>
-                                    <NavigationMenuContent className="bg-neutral-800 p-2">
-                                        <ul className="flex flex-col">
-                                            {categories.map((category) => (
-                                                <li key={category.title}>
-                                                    <Link
-                                                        href={category.url}
-                                                        className="block px-3 py-2 text-gray-200 hover:underline"
-                                                        onClick={() => setActive(category.title)}
-                                                    >
-                                                        {ucFirst(category.title)}
-                                                    </Link>
-                                                </li>
-                                            ))}
-                                        </ul>
-                                    </NavigationMenuContent>
-                                </NavigationMenuItem>
-                            </NavigationMenuList>
-                        </NavigationMenu>
+                        <div className="w-full">
+                            <details className="group">
+                                <summary className=" flex cursor-pointer items-center justify-between py-2 text-[18px] text-gray-200 hover:underline">
+                                    Catégories 
+                                    <span className="text-[12px] transition-transform duration-300 group-open:rotate-90">▶</span>
+                                </summary>
+                                <ul>
+                                    {categories.map((category) => (
+                                        <li key={category.title}>
+                                            <Link
+                                                href={category.url}
+                                                className="text-gray-200 hover:underline"
+                                                onClick={() => setActive(category.title)}
+                                            >
+                                                {ucFirst(category.title)}
+                                            </Link>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </details>
+                        </div>
                     </li>
+
                 </ul>
             </div>
         </IsUser>
