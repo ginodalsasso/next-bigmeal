@@ -1,6 +1,7 @@
 import React from "react";
 import { AlertDialog, AlertDialogTrigger, AlertDialogContent, AlertDialogHeader, AlertDialogFooter, AlertDialogTitle, AlertDialogDescription } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
+import Image from "next/image";
 
 interface DeleteItemProps {
     onDelete: () => Promise<void>;
@@ -11,8 +12,16 @@ const DeleteItem: React.FC<DeleteItemProps> = ({ onDelete, isDeleting }) => {
     return (
         <AlertDialog>
             <AlertDialogTrigger asChild>
-                <Button variant="delete" className="w-auto"disabled={isDeleting}>
-                    {isDeleting ? "Suppression..." : "Supprimer"}
+                <Button variant="delete" className="w-auto" title="Supprimer" disabled={isDeleting}>
+                    {isDeleting ? 
+                        "..." :                                 
+                        <Image
+                            src={"/img/trash.svg"}
+                            width={18}
+                            height={18}
+                            alt="Icône de suppression"
+                        />
+                    }
                 </Button>
             </AlertDialogTrigger>
             <AlertDialogContent>

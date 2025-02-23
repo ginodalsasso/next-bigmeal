@@ -29,7 +29,7 @@ const Bottombar = () => {
 
     const links = [
         { icon: "/img/home.svg", url: "/", alt: "Accueil"},
-        // { icon: "/img/user.svg", url: `/${user?.username}`, alt: "Profil" },
+        { icon: "/img/user.svg", url: "/profile", alt: "Profil" },
         { icon: "/img/cart.svg", url: "/shopping-list", alt: "Liste de courses" },
     ];
 

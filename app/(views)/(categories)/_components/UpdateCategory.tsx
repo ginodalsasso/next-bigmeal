@@ -15,10 +15,11 @@ const UpdateCategory: React.FC<UpdateCategoryProps> = ({
     isLoading: parentLoading,
 }) => {
     // _________________________ ETATS _________________________
-    const [name, setName] = useState(initialName);
+    const [name, setName] = useState<string>(initialName);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     // Hook de validation
-    const { error, validate, isLoading, setIsLoading } = useFormValidation<CategoryFormType>(
+    const { error, setError, validate } = useFormValidation<CategoryFormType>(
         categoriesConstraints,
         ["name"] // Champs à valider
     );
@@ -28,6 +29,7 @@ const UpdateCategory: React.FC<UpdateCategoryProps> = ({
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsLoading(true);
+        setError(null); // Réinitialise les erreurs existantes
 
         if (!validate({ name })) {
             setIsLoading(false);
@@ -38,6 +40,7 @@ const UpdateCategory: React.FC<UpdateCategoryProps> = ({
             await onSubmit(name);
         } catch (error) {
             console.error("[UPDATE_CATEGORY_ERROR]", error);
+            setError({ general: "Erreur lors de la mise à jour de la catégorie." });
         } finally {
             setIsLoading(false);
         }
@@ -46,6 +49,8 @@ const UpdateCategory: React.FC<UpdateCategoryProps> = ({
     // _________________________ RENDU _________________________
     return (
         <form onSubmit={handleSubmit} className="space-y-2">
+            <FormErrorMessage message={error?.general} />
+
             <input
                 type="text"
                 value={name}

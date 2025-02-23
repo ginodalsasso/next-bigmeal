@@ -36,7 +36,12 @@ export async function GET( req: NextRequest, { params }: Props){
 
         return NextResponse.json(ingredient);
     } catch (error) {
-        console.error("Error fetching ingredient:", error);
-        return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+        console.error("[FETCH_INGREDIENT_ERROR]", error);
+        return new Response(JSON.stringify({ 
+            message: 'Erreur serveur, veuillez réessayer plus tard' 
+        }), { 
+            status: 500,
+            headers: { 'Content-Type': 'application/json' }
+        });
     }
 }

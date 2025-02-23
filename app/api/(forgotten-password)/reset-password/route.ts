@@ -1,9 +1,8 @@
 import { db } from '@/lib/db';
 import jwt from 'jsonwebtoken';
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
 import nodemailer from 'nodemailer';
 import bcrypt from 'bcryptjs';
-import { verifyCSRFToken } from '@/lib/security/csrf';
 
 
 export async function POST(req: NextRequest) {
@@ -30,6 +29,8 @@ export async function POST(req: NextRequest) {
         secret, 
         { expiresIn: '1h' }
     );
+
+
     const resetLink = `${process.env.BASE_URL}/reset-password/${generatedToken}`;
 
     // Paramètres de l'email
@@ -45,7 +46,13 @@ export async function POST(req: NextRequest) {
         await transporter.sendMail(mailOptions);
         return new Response('Email envoyé', { status: 200 });
     } catch (error) {
-        console.error('Erreur lors de l\'envoi de l\'email :', error);
+        console.error('[EMAIL_ERROR]', error);
+        return new Response(JSON.stringify({ 
+            message: 'Erreur serveur, veuillez réessayer plus tard' 
+        }), { 
+            status: 500,
+            headers: { 'Content-Type': 'application/json' }
+        });
     }
 }
 
@@ -53,11 +60,6 @@ export async function POST(req: NextRequest) {
 export async function PUT(req: NextRequest) {
 
     try {
-        const csrfTokenVerified = await verifyCSRFToken(req);
-        if (!csrfTokenVerified) {
-            return new NextResponse("CSRF Token is missing or invalid", { status: 403 });
-        }       
-
         const body = await req.json();
         const { token, password } = body;
         
@@ -140,7 +142,7 @@ export async function PUT(req: NextRequest) {
             });
         }
     } catch (error) {
-        console.error('Erreur lors de la réinitialisation du mot de passe:', error);
+        console.error('[RESET-PASSWORD_ERROR]', error);
         return new Response(JSON.stringify({ 
             message: 'Erreur serveur, veuillez réessayer plus tard' 
         }), { 

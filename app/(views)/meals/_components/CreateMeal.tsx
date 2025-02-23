@@ -11,12 +11,14 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { CreateMealProps } from "@/lib/types/props_interfaces";
 import { ucFirst } from "@/lib/utils";
-import { getCsrfToken } from "next-auth/react";
 import FormErrorMessage from "@/components/forms/FormErrorMessage";
+import { useCsrfToken } from "@/app/hooks/useCsrfToken";
 
 const CreateMeal: React.FC<CreateMealProps> = ({ onMealCreated, onClose }) => {
     // _________________________ HOOKS _________________________
+    const csrfToken = useCsrfToken();
     const [categories, setCategories] = useState<CategoryMealType[]>([]);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const [form, setForm] = useState<MealFormType>({
         name: "",
@@ -25,7 +27,7 @@ const CreateMeal: React.FC<CreateMealProps> = ({ onMealCreated, onClose }) => {
     });
 
     // Hook de validation
-    const { error, validate, isLoading, setIsLoading } = useFormValidation<MealFormType>(
+    const { error, setError, validate } = useFormValidation<MealFormType>(
         mealConstraints,
         ["name", "description", "categoryMealId"]
     );
@@ -42,60 +44,63 @@ const CreateMeal: React.FC<CreateMealProps> = ({ onMealCreated, onClose }) => {
                 setCategories(data);
             } catch (error) {
                 console.error("[FETCH_CATEGORIES_ERROR]", error);
+                setError({ general: "Erreur lors de la récupération des catégories." });
             }
         };
         fetchCategories();
-    }, []);
+    }, [setError]);
 
-    // Appel API pour créer un repas
-    const createMeal = async (data: MealFormType) => {
-        const csrfToken = await getCsrfToken();
+
+    // Gestion de la soumission du formulaire de création de repas
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setIsLoading(true);
+        setError(null); // Réinitialiser les erreurs
+    
+        // Valider les données du formulaire avec le hook
+        if (!validate(form)) {
+            setIsLoading(false);
+            return;
+        }
+    
         try {
+            // Récupérer le CSRF Token
+            if (!csrfToken) {
+                console.error("CSRF token invalide");
+                return;
+            }    
+    
             const response = await fetch("/api/meals", {
                 method: "POST",
                 headers: { 
                     "Content-Type": "application/json",
                     "X-CSRF-Token": csrfToken,
                 },
-                body: JSON.stringify(data),
+                body: JSON.stringify(form),
             });
+    
             if (!response.ok) throw new Error("Erreur lors de la création du repas");
-
+    
             const createdMeal: MealType = await response.json();
-            return createdMeal;
-        } catch (error) {
-            console.error("[CREATE_MEAL_API_ERROR]", error);
-            throw error;
-        }
-    };
-
-    // Gestion de la soumission du formulaire
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        setIsLoading(true);
-
-        // Valider les données du formulaire avec le hook
-        if (!validate(form)) {
-            setIsLoading(false);
-            return;
-        }
-
-        // Créer le repas avec les données validées
-        try {
-            const createdMeal: MealType = await createMeal(form);
-            onMealCreated(createdMeal); // Ajout à la liste parent
-            
+    
+            // Mettre à jour l’état parent avec le nouveau repas
+            onMealCreated(createdMeal);
             toast("Repas créé avec succès");
+    
         } catch (error) {
-            console.error("[CREATE_MEAL]", error);
+            console.error("[CREATE_MEAL_ERROR]", error);
+            setError({ general: "Erreur lors de la création du repas." });
         } finally {
             setIsLoading(false);
         }
     };
+    
 
     // _________________________ RENDU _________________________
     return (
         <form className="flex flex-col gap-5 p-5" onSubmit={handleSubmit}>
+            <FormErrorMessage message={error?.general} />
+
             {/* Champ pour le nom du repas */}
             <input
                 type="text"
