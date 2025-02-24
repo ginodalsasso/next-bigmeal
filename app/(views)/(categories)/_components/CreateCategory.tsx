@@ -9,6 +9,7 @@ import { CreateCategoryProps } from "@/lib/types/props_interfaces";
 
 type CategoryFormType = { name: string };
 
+
 /**
  * <T,> est un type générique qui permet de définir le type de la nouvelle catégorie
  * en props: - apiUrl est l'URL de l'API pour créer une nouvelle catégorie

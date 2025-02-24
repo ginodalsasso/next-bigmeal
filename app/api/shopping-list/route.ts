@@ -1,4 +1,4 @@
-import { idConstraints, isCheckedShoppingListConstraints, ShoppingListConstraints } from "@/lib/constraints/forms_constraints";
+import { isCheckedShoppingListConstraints, ShoppingListConstraints } from "@/lib/constraints/forms_constraints";
 import { verifyCSRFToken } from "@/lib/security/csrf";
 import { getUser } from "@/lib/dal";
 import { db } from "@/lib/db";
@@ -200,57 +200,3 @@ export async function PUT(req: NextRequest) {
         });
     }
 }
-
-
-
-export async function DELETE (req: NextRequest) {
-    try {
-        const { error } = await getUserSession();
-        if (error) return error;
-        
-        const csrfTokenVerified = await verifyCSRFToken(req);
-        if (!csrfTokenVerified) {
-            return new NextResponse("CSRF Token is missing or invalid", { status: 403 });
-        }
-        
-        const body = await req.json();
-
-        if (body.id) { // Si l' id est présent dans le corps de la requête
-            const validationResult = idConstraints.safeParse({ id: body.id });
-            if (!validationResult.success) {
-                return NextResponse.json(
-                    { error: validationResult.error.format() },
-                    { status: 400 }
-                );
-            }
-
-            await db.shoppingListItem.delete({ where: { id: body.id } });
-            return NextResponse.json({ message: "Article supprimé" }, {status: 200});
-        
-        } else if (body.mealId) { // Si le mealId est présent dans le corps de la requête
-            const validationResult = idConstraints.safeParse({ id: body.mealId });
-            if (!validationResult.success) {
-                return NextResponse.json(
-                    { error: validationResult.error.format() },
-                    { status: 400 }
-                );
-            }
-
-            await db.shoppingListItem.deleteMany({ where: { mealId: body.mealId } });
-            return NextResponse.json({ message: "Articles supprimés" }, {status: 200});
-        } else {
-            return NextResponse.json({ error: "Invalid request body" }, { status: 400 });
-        }
-
-    } catch (error) {
-        console.error("[DELETE_ITEM_ERROR]", error);
-        return new Response(JSON.stringify({ 
-            message: 'Erreur serveur, veuillez réessayer plus tard' 
-        }), { 
-            status: 500,
-            headers: { 'Content-Type': 'application/json' }
-        });
-    }
-}
-
-

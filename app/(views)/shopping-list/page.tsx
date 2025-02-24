@@ -113,63 +113,25 @@ const ShoppingListPage = () => {
         return false;
     };
 
-    // Appel API pour supprimer un item du panier
-    const deleteItem = async (id: string) => {
-        const csrfToken = await getCsrfToken();
-        try {
-            const response = await fetch("/api/shopping-list", {
-                method: "DELETE",
-                headers: { 
-                    "Content-Type": "application/json",
-                    "X-CSRF-Token": csrfToken, 
-                },
-                body: JSON.stringify({ id }),
-            });
-            if (!response.ok) throw new Error("Failed to delete item from shoppingList");
 
-            // Supprimer le repas du state
-            setShoppingList((prev) => prev && {
-                ...prev,
-                items: prev.items.filter((item) => item.id !== id)
-            });
-
-            toast("Article supprimé avec succès");
-        } catch (error) {
-            console.error("Erreur lors de la suppression:", error);
-            toast.error("Impossible de supprimer l'élément.");
-        }
+    // Suppression d'un ingrédient dans le state après suppression API
+    const handleIngredientDeleted = (ingredientId: string) => {
+        setShoppingList((prev) => prev && {
+            ...prev,
+            items: prev.items.filter((item) => item.id !== ingredientId)
+        });
     };
 
-    // Appel API pour supprimer un repas du panier
-    const deleteMeal = async (mealId: string) => {
-        const csrfToken = await getCsrfToken();
-        try {
-            const response = await fetch("/api/shopping-list", {
-                method: "DELETE",
-                headers: { 
-                    "Content-Type": "application/json",
-                    "X-CSRF-Token": csrfToken, 
-                },
-                body: JSON.stringify({ mealId }),
-            });
-            if (!response.ok) throw new Error("Failed to delete meal from shoppingList");
-
-            // Supprimer le repas du state
-            setShoppingList((prev) => prev && {
-                ...prev,
-                items: prev.items.filter((item) => item.mealId !== mealId)
-            });
-
-            toast("Repas supprimé avec succès");
-        } catch (error) {
-            console.error("Erreur lors de la suppression:", error);
-            toast.error("Impossible de supprimer le repas.");
-        }
-    };
+    // Suppression d'un repas dans le state après suppression API
+    const handleMealDeleted = (mealId: string) => {
+        setShoppingList((prev) => prev && {
+            ...prev,
+            items: prev.items.filter((item) => item.mealId !== mealId)
+        });
+    }
 
 
     if (loading) return <div>Loading...</div>;
-    // if (error) return <div>{error}</div>;
     if (!shoppingList) return <div>Aucune liste de courses.</div>;
 
     const ingredientsAlone = shoppingList?.items.filter(item => !item.mealId);
@@ -200,8 +162,11 @@ const ShoppingListPage = () => {
                                         {item.quantity} {item.ingredient?.name || "Ingrédient non défini"}
                                     </span>
                                 </div>
-                                <DeleteItem onDelete={() => deleteItem(item.id)} isDeleting={false} />
-                            </div>
+                                <DeleteItem
+                                    apiUrl="/api/shopping-list/item"
+                                    id={item.id}
+                                    onSubmit={handleIngredientDeleted}
+                                />                            </div>
                             <Separator className="my-2 h-px bg-neutral-800" />
                         </div>
                     ))}
@@ -222,8 +187,11 @@ const ShoppingListPage = () => {
                                     <h3 className="text-lg font-bold">
                                         {mealName}
                                     </h3>
-                                    <DeleteItem onDelete={() => deleteMeal(mealId)} isDeleting={false} />
-                                </div>
+                                    <DeleteItem
+                                        apiUrl="/api/shopping-list/meal"
+                                        id={mealId}
+                                        onSubmit={handleMealDeleted}
+                                    />                                </div>
                                 <Separator className="my-2 h-px bg-neutral-800" />
                                 {mealItems.map((item) => (
                                     <div key={item.id}>

@@ -6,19 +6,15 @@ import UpdateCategory from "../_components/UpdateCategory";
 import ItemView from "@/components/layout/ItemView";
 import EditItem from "@/components/layout/EditItemDrawer";
 import DeleteItem from "@/components/layout/DeleteItemDialog";
-import { toast } from "sonner";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import IsAdmin from "@/components/isAdmin";
-import { useCsrfToken } from "@/app/hooks/useCsrfToken";
 import CreateCategory from "../_components/CreateCategory";
 
 // _________________________ COMPOSANT _________________________
 export default function CategoryIngredientList({ fetchedCategories }: { fetchedCategories: CategoryIngredientType[] }) {
 
     // _________________________ ETATS _________________________
-    const csrfToken = useCsrfToken();
     const [categoryIngredient, setCategoryIngredient] = useState<CategoryIngredientType[]>(fetchedCategories);
-    const [error, setError] = useState<string | null>(null);
 
     // _________________________ CRUD _________________________
     // Mise à jour de la liste après création
@@ -31,37 +27,14 @@ export default function CategoryIngredientList({ fetchedCategories }: { fetchedC
         setCategoryIngredient((prev) => prev.map((category) => (category.id === updatedCategory.id ? updatedCategory : category)));
     };
 
-    const deleteCategoryIngredient = async (id: string) => {
-        if (!csrfToken) {
-            console.error("CSRF token invalide");
-            return;
-        }
-
-        try {
-            const response = await fetch("/api/categories-ingredient", {
-                method: "DELETE",
-                headers: { 
-                    "Content-Type": "application/json",
-                    "X-CSRF-Token": csrfToken, 
-                },
-                body: JSON.stringify({ id }),
-            });
-            if (!response.ok) throw new Error("Failed to delete category");
-            
-            setCategoryIngredient((prev) => prev.filter((category) => category.id !== id));
-
-            toast("Catégorie supprimée avec succès");
-        } catch (error) {
-            console.error("[DELETE_CATEGORY_ERROR]", error);
-            setError("Erreur lors de la suppression.");
-        }
+    // Suppression d'une catégorie dans le state après suppression API
+    const handleCategoryDeleted = (id: string) => {
+        setCategoryIngredient((prev) => prev.filter((category) => category.id !== id));
     };
 
     //  _________________________ RENDU _________________________
     return (
         <div>
-            {error && <div className="text-red-500">{error}</div>}
-
             <IsAdmin>
             <div className="card mb-6 md:w-fit">
                     <CreateCategory<CategoryIngredientType> 
@@ -99,9 +72,10 @@ export default function CategoryIngredientList({ fetchedCategories }: { fetchedC
                                                 />
                                             )}
                                         />  
-                                        <DeleteItem
-                                            onDelete={() => deleteCategoryIngredient(category.id)}
-                                            isDeleting={false}
+                                         <DeleteItem
+                                            apiUrl="/api/categories-ingredient"
+                                            id={category.id}
+                                            onSubmit={handleCategoryDeleted}
                                         />
                                     </div>
                                 </TableCell>

@@ -27,13 +27,10 @@ import IsUser from "@/components/isUser";
 import SearchBar from "@/components/layout/Searchbar";
 import { CATEGORIES_MEALS } from "@/lib/constants/constants";
 import FilterCheckboxes from "@/components/layout/FilterCheckboxes";
-import { useCsrfToken } from "@/app/hooks/useCsrfToken";
 
 // _________________________ COMPOSANT _________________________
 export default function MealsList( {fetchedMeals}: { fetchedMeals: MealType[] }) {
     // _________________________ ETATS _________________________
-    const csrfToken = useCsrfToken();
-    
     const [meals, setMeals] = useState<MealType[]>(fetchedMeals);
 
     const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
@@ -43,8 +40,6 @@ export default function MealsList( {fetchedMeals}: { fetchedMeals: MealType[] })
     const [searchQuery, setSearchQuery] = useState<string>(""); 
     const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
     
-    const [error, setError] = useState<string | null>(null);
-
     // _________________________ CRUD _________________________
     // Réinitialiser l'étape à createMeal lorsque le dialogue est fermé
     useEffect(() => {
@@ -69,6 +64,7 @@ export default function MealsList( {fetchedMeals}: { fetchedMeals: MealType[] })
         setCreatedMealId(null); // Réinitialiser l'ID du repas créé
     };
 
+    // Suppression d'un repas dans le state après suppression API
     const updateMeal = async (updatedMeal: MealType): Promise<void> => {
         setMeals((prevMeals) =>
             prevMeals.map((meal) => (meal.id === updatedMeal.id ? updatedMeal : meal))
@@ -76,32 +72,12 @@ export default function MealsList( {fetchedMeals}: { fetchedMeals: MealType[] })
         toast("Repas mis à jour avec succès");
     }
 
-    // Appel API pour supprimer un repas
-    const deleteMeal = async (id: string) => {
-        if (!csrfToken) {
-            console.error("CSRF token invalide");
-            return;
-        }
-        try {
-            const response = await fetch("/api/meals", {
-                method: "DELETE",
-                headers: { 
-                    "Content-Type": "application/json",
-                    "X-CSRF-Token": csrfToken, 
-                },
-                body: JSON.stringify({ id }),
-            });
-            if (!response.ok) throw new Error("Failed to delete meal");
 
-            // Supprimer le repas du state
-            setMeals((prev) => prev.filter((meal) => meal.id !== id));
-            
-            toast("Repas supprimé avec succès");
-        } catch (error) {
-            console.error("[DELETE_MEAL_ERROR]", error);
-            setError("Erreur lors de la suppression.");
-        }
+    // Suppression d'un repas dans le state après suppression API
+    const handleMealDeleted = (id: string) => {
+        setMeals((prev) => prev.filter((meal) => meal.id !== id));
     };
+
 
     // _________________________ FILTRAGE _________________________
     const filterOptions = CATEGORIES_MEALS; // Options de filtre
@@ -126,7 +102,6 @@ export default function MealsList( {fetchedMeals}: { fetchedMeals: MealType[] })
         
 
     // _________________________ RENDU _________________________
-    if (error) return <div>{error}</div>;
     if (!meals) return <div>Repas introuvables.</div>;
 
     return (
@@ -215,8 +190,9 @@ export default function MealsList( {fetchedMeals}: { fetchedMeals: MealType[] })
                                     />
                                     {/* Suppression du repas */}
                                     <DeleteItem
-                                        onDelete={() => deleteMeal(meal.id)}
-                                        isDeleting={false}
+                                        apiUrl="/api/meals"
+                                        id={meal.id}
+                                        onSubmit={handleMealDeleted}
                                     />
                                 </div>
                             </IsAdmin>
