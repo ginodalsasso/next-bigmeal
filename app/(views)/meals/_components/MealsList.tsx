@@ -119,12 +119,16 @@ export default function MealsList( {fetchedMeals}: { fetchedMeals: MealType[] })
                         <DialogContent>
                             <DialogHeader>
                                 <DialogTitle>
+
+                                    {/* Titre du dialogue en fonction de l'étape */}
                                     {currentStep === "createMeal"
                                         ? "Ajouter un repas"
                                         : currentStep === "createComposition"
                                         ? "Ajouter une composition"
                                         : "Choisir une étape"}
                                 </DialogTitle>
+
+                                {/* Contenu du dialogue en fonction de l'étape */}
                                 {currentStep === "createMeal" && (
                                     <CreateMeal
                                         onMealCreated={addMeal}
@@ -155,14 +159,17 @@ export default function MealsList( {fetchedMeals}: { fetchedMeals: MealType[] })
                         </DialogContent>
                     </Dialog>
                 </IsUser>
+
                 {/* Barre de recherche */}
                 <SearchBar onSearch={(query) => setSearchQuery(query)} />
             </div>
+
             {/* Filtres */}
             <FilterCheckboxes 
                 options={filterOptions} 
                 onFilterChange={setSelectedFilters} 
             />
+
             {/* Liste des repas */}
             <div className="cards-wrapper">
                 <div className="cards-list">
@@ -176,6 +183,7 @@ export default function MealsList( {fetchedMeals}: { fetchedMeals: MealType[] })
                                 }}
                                 linkToDetails={`/meals/${meal.name}`}
                             />
+
                             <IsAdmin>
                                 <div className="flex w-full gap-2">
                                     {/* Édition du repas */}
@@ -196,6 +204,8 @@ export default function MealsList( {fetchedMeals}: { fetchedMeals: MealType[] })
                                     />
                                 </div>
                             </IsAdmin>
+                            
+                            {/* Ajouter le repas à la liste de courses */}
                             <AddToShoppingListForm type="meal" id={meal.name} />
                         </div>
                     ))}

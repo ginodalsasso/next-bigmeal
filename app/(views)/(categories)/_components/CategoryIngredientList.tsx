@@ -72,7 +72,7 @@ export default function CategoryIngredientList({ fetchedCategories }: { fetchedC
                                                 />
                                             )}
                                         />  
-                                         <DeleteItem
+                                        <DeleteItem
                                             apiUrl="/api/categories-ingredient"
                                             id={category.id}
                                             onSubmit={handleCategoryDeleted}

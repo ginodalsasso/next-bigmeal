@@ -7,9 +7,9 @@ import Image from "next/image";
 import add from "@/public/img/add.svg";
 import { AddIngredientToShoppingListFormType } from '@/lib/types/forms_interfaces';
 import { Button } from '../ui/button';
-import { getCsrfToken } from 'next-auth/react';
 import FormErrorMessage from './FormErrorMessage';
 import { useFormValidation } from '@/app/hooks/useFormValidation';
+import { useCsrfToken } from '@/app/hooks/useCsrfToken';
 
 interface AddToShoppingListFormProps {
     type: 'meal' | 'ingredient'; // Détermine le type d'ajout
@@ -21,6 +21,8 @@ const AddToShoppingListForm: React.FC<AddToShoppingListFormProps> = ({ type, id 
     const [quantity, setQuantity] = useState<AddIngredientToShoppingListFormType>({ quantity: 1 });
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
+    const csrfToken = useCsrfToken();
+
     // Utilisation du hook de validation
     const { error, setError, validate } = useFormValidation<AddIngredientToShoppingListFormType>(
         ShoppingListConstraints,
@@ -31,7 +33,6 @@ const AddToShoppingListForm: React.FC<AddToShoppingListFormProps> = ({ type, id 
         e.preventDefault();
         setIsLoading(true);
         setError({});
-        const csrfToken = await getCsrfToken();
         try {
             switch (type) {
                 case 'meal': {
@@ -43,6 +44,13 @@ const AddToShoppingListForm: React.FC<AddToShoppingListFormProps> = ({ type, id 
 
                     // Ajouter chaque ingrédient du repas à la liste de courses
                     for (const composition of meal.compositions) {
+
+                        if (!csrfToken) {
+                            console.error("CSRF token invalide");
+                            setError({ general: "Problème de sécurité, veuillez réessayer." });
+                            return;
+                        }
+
                         if (!composition.ingredient?.id) {
                             console.error("Invalid ingredient in composition:", composition);
                             continue;
@@ -66,6 +74,12 @@ const AddToShoppingListForm: React.FC<AddToShoppingListFormProps> = ({ type, id 
                 }
 
                 case 'ingredient': {
+                    if (!csrfToken) {
+                        console.error("CSRF token invalide");
+                        setError({ general: "Problème de sécurité, veuillez réessayer." });
+                        return;
+                    }
+                    
                     // Valider la quantité
                     if(!validate(quantity)) {
                         setIsLoading(false);

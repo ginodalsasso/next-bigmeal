@@ -7,12 +7,11 @@ import FormErrorMessage from "@/components/forms/FormErrorMessage";
 import { useFormValidation } from "@/app/hooks/useFormValidation";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { toast } from "sonner";
+import ForgotPasswordForm from "../_component/ForgotPasswordForm";
 
 export default function LoginPage() {
     
     const router = useRouter();
-    const [recipient, setRecipient] = useState<{ email: string }>({ email: "" });
     const [isForgotPassword, setIsForgotPassword] = useState<boolean>(false); // Affichage conditionnel des formulaires
     const [isLoading, setIsLoading] = useState<boolean>(false);
     
@@ -54,58 +53,14 @@ export default function LoginPage() {
         }
     };
 
-    // Fonction pour envoyer un email de réinitialisation du mot de passe
-    const forgotPasswordEmail = async () => {
-        if (!recipient.email) {
-            toast("Veuillez fournir un email");
-            return;
-        }
-
-        try {
-            const response = await fetch(`/api/reset-password`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ recipient: recipient.email }),
-            });
-            const data = await response.json();
-            if (!response.ok) {
-                setError({ general: data.message || "Une erreur est survenue lors de l'envoi de l'email." });
-                return;
-            }
-
-            toast("Email de réinitialisation envoyé !");
-        } catch (error) {
-            console.error("Erreur lors de l'envoi de l'email :", error);
-            setError({ general: "Impossible d'envoyer l'email. Veuillez réessayer plus tard." });
-        };
-    }
 
     return (
         <div className="mx-auto mt-[10%] flex flex-col gap-2 px-4 py-8 sm:w-[400px]">
 
             {/* Affichage conditionnel des formulaires */}
             {isForgotPassword ? (
-                // 🔹 Formulaire de réinitialisation du mot de passe
-                <div className="flex flex-col gap-2">
-                    <h2 className="text-xl font-bold">Réinitialisation du mot de passe</h2>
-                    <p className="text-sm text-gray-600">Saisissez votre email pour recevoir un lien de réinitialisation.</p>
-
-                    <input
-                        type="email"
-                        className="input-text-select"
-                        placeholder="Email"
-                        value={recipient.email}
-                        onChange={(e) => setRecipient({ email: e.target.value })}
-                    />
-
-                    <Button type="button" onClick={forgotPasswordEmail} variant={"edit"}>
-                        Envoyer l&apos;email
-                    </Button>
-
-                    <Button type="button" onClick={() => setIsForgotPassword(false)} variant="secondary">
-                        Retour à la connexion
-                    </Button>
-                </div>
+                // Formulaire de réinitialisation du mot de passe
+                <ForgotPasswordForm onBackToLogin={() => setIsForgotPassword(false)} />
             ) : (
                 // Formulaire de connexion
                 <form onSubmit={credentialsAction} className="flex flex-col gap-2">
@@ -147,6 +102,7 @@ export default function LoginPage() {
                         Pas encore de compte ? Créer un compte
                     </Button>
 
+                    { /* Connexion avec Google et GitHub */}
                     <Button variant="link" onClick={() => signIn("google")} className="mb-4">
                         Se connecter avec Google
                     </Button>

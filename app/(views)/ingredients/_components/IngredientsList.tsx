@@ -123,11 +123,13 @@ export default function IngredientList({ fetchedIngredients }: { fetchedIngredie
                 {/* Barre de recherche */}
                 <SearchBar onSearch={(query) => setSearchQuery(query)} />
             </div>
+            
             {/* Filtres */}
             <FilterCheckboxes 
                 options={filterOptions} 
                 onFilterChange={setSelectedFilters} 
             />
+
             {/* Liste des ingrédients */}
             <div className="cards-wrapper">
                 <div className="cards-list">

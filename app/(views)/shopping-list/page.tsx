@@ -1,17 +1,18 @@
 'use client';
 
+import { useCsrfToken } from "@/app/hooks/useCsrfToken";
 import DeleteItem from "@/components/layout/DeleteItemDialog";
 import { Button } from "@/components/ui/button";
 import { ShoppingListType } from "@/lib/types/schemas_interfaces";
 import { dateToString } from "@/lib/utils";
 import { Separator } from "@radix-ui/react-separator";
-import { getCsrfToken } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
 
 const ShoppingListPage = () => {
     const router = useRouter(); 
+    const csrfToken = useCsrfToken();
     const [shoppingList, setShoppingList] = useState<ShoppingListType | null>(null);
     const [loading, setLoading] = useState(true);
 
@@ -36,8 +37,11 @@ const ShoppingListPage = () => {
     
     // Transformer un item en coché ou non
     const toggleItemChecked = async (id: string, currentChecked: boolean) => {
-        const csrfToken = await getCsrfToken();
         try {
+            if (!csrfToken) {
+                console.error("CSRF token invalide");
+                return;
+            }
             // Calcul de l'état cible (inversion de l'état actuel)
             const newCheckedState = !currentChecked;
 
@@ -69,9 +73,13 @@ const ShoppingListPage = () => {
         }
     };
 
+    // Marquer la liste de courses comme terminée
     const markShoppingListAsExpired = async () => {
-        const csrfToken = await getCsrfToken();
         if (shoppingList) {
+            if (!csrfToken) {
+                console.error("CSRF token invalide");
+                return;
+            }
             try {
                 const response = await fetch(`/api/shopping-list`, {
                     method: "PUT",
@@ -92,6 +100,7 @@ const ShoppingListPage = () => {
         }
     };
 
+    // Vérifier si tous les ingrédients sont cochés
     const setShoppingListExpired = async () => {
         if (shoppingList) {
             // Vérifier si la liste de courses correspond à l'ID
@@ -166,7 +175,8 @@ const ShoppingListPage = () => {
                                     apiUrl="/api/shopping-list/item"
                                     id={item.id}
                                     onSubmit={handleIngredientDeleted}
-                                />                            </div>
+                                />                            
+                            </div>
                             <Separator className="my-2 h-px bg-neutral-800" />
                         </div>
                     ))}
@@ -177,6 +187,7 @@ const ShoppingListPage = () => {
             {ingredientsByMeal && ingredientsByMeal.length > 0 && (
                 <div className="mb-8 border border-neutral-500 p-4">
                     <h2 className="text-center text-2xl">Repas</h2>
+                    {/* Parcourt les repas et les ingrédients associés */}
                     {Array.from(new Set(ingredientsByMeal.map(item => item.mealId))) // Extraire des IDs de repas uniques
                         .map(mealId => { // Parcourt chaque ID de repas unique
                             const mealItems = ingredientsByMeal.filter(item => item.mealId === mealId); //Filtre les ingrédients qui appartiennent à ce repas (mealId)
