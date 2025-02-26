@@ -61,6 +61,7 @@ export default function LoginPage() {
             {isForgotPassword ? (
                 // Formulaire de réinitialisation du mot de passe
                 <ForgotPasswordForm onBackToLogin={() => setIsForgotPassword(false)} />
+
             ) : (
                 // Formulaire de connexion
                 <form onSubmit={credentialsAction} className="flex flex-col gap-2">

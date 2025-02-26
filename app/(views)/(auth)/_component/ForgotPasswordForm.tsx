@@ -1,20 +1,23 @@
 import { useFormValidation } from "@/app/hooks/useFormValidation";
 import FormErrorMessage from "@/components/forms/FormErrorMessage";
 import { Button } from "@/components/ui/button";
-import { ResetPasswordConstraints } from "@/lib/constraints/forms_constraints";
+import { ForgotPasswordConstraints } from "@/lib/constraints/forms_constraints";
 import React, { useState } from "react";
 import { toast } from "sonner";
 
 
 const ForgotPasswordForm = ({ onBackToLogin }: { onBackToLogin: () => void }) => {
+
+    // _________________________ ETATS _________________________
     const [recipient, setRecipient] = useState<{ email: string }>({ email: "" });
 
     // Utilisation du hook de validation
     const { error, setError, validate } = useFormValidation(
-        ResetPasswordConstraints,
+        ForgotPasswordConstraints,
         ["email"] // Liste des champs à valider
     );
 
+    // _________________________ LOGIQUE _________________________
     // Fonction pour envoyer un email de réinitialisation du mot de passe
     const forgotPasswordEmail = async () => {
         if (!validate(recipient)){

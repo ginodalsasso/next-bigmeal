@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { CategoryMealType } from "@/lib/types/schemas_interfaces";
 import UpdateCategory from "./UpdateCategory";
 import ItemView from "@/components/layout/ItemView";
-import EditItem from "@/components/layout/EditItemDrawer";
+import EditItemDrawer from "@/components/layout/EditItemDrawer";
 import DeleteItem from "@/components/layout/DeleteItemDialog";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import IsAdmin from "@/components/isAdmin";
@@ -67,7 +67,8 @@ export default function CategoryMealList({ fetchedCategories }: { fetchedCategor
                         <IsAdmin>
                             <TableCell>
                                 <div className="flex gap-2">
-                                    <EditItem
+                                    {/* CRUD */}
+                                    <EditItemDrawer
                                         renderEditForm={(onClose) => (
                                             <UpdateCategory<CategoryMealType>
                                                 apiUrl="/api/categories-ingredient"

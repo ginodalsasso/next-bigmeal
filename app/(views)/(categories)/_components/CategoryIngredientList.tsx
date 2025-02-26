@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { CategoryIngredientType } from "@/lib/types/schemas_interfaces";
 import UpdateCategory from "../_components/UpdateCategory";
 import ItemView from "@/components/layout/ItemView";
-import EditItem from "@/components/layout/EditItemDrawer";
+import EditItemDrawer from "@/components/layout/EditItemDrawer";
 import DeleteItem from "@/components/layout/DeleteItemDialog";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import IsAdmin from "@/components/isAdmin";
@@ -62,7 +62,8 @@ export default function CategoryIngredientList({ fetchedCategories }: { fetchedC
                             <IsAdmin>
                                 <TableCell>
                                     <div className="flex gap-2">
-                                        <EditItem
+                                        {/* CRUD */}
+                                        <EditItemDrawer
                                             renderEditForm={(onClose) => (
                                                 <UpdateCategory<CategoryIngredientType>
                                                     apiUrl="/api/categories-ingredient"
