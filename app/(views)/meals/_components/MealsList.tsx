@@ -26,7 +26,7 @@ import IsAdmin from "@/components/isAdmin";
 import IsUser from "@/components/isUser";
 import SearchBar from "@/components/layout/Searchbar";
 import { CATEGORIES_MEALS } from "@/lib/constants/constants";
-import FilterCheckboxes from "@/components/layout/FilterCheckboxes";
+import FilterCheckboxes from "@/components/layout/FilterItems";
 
 // _________________________ COMPOSANT _________________________
 export default function MealsList( {fetchedMeals}: { fetchedMeals: MealType[] }) {

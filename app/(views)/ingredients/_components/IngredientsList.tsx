@@ -24,7 +24,7 @@ import DeleteItem from "@/components/layout/DeleteItemDialog";
 import IsAdmin from "@/components/isAdmin";
 import IsUser from "@/components/isUser";
 import SearchBar from "@/components/layout/Searchbar";
-import FilterCheckboxes from "@/components/layout/FilterCheckboxes";
+import FilterItems from "@/components/layout/FilterItems";
 import { CATEGORIES_INGREDIENTS, SEASONS } from "@/lib/constants/constants";
 
 
@@ -125,7 +125,7 @@ export default function IngredientList({ fetchedIngredients }: { fetchedIngredie
             </div>
             
             {/* Filtres */}
-            <FilterCheckboxes 
+            <FilterItems 
                 options={filterOptions} 
                 onFilterChange={setSelectedFilters} 
             />
