@@ -1,4 +1,5 @@
 import { signOut } from "next-auth/react";
+import API_ROUTES from "../constants/api_routes";
 
 
 export async function fetchUserProfileAPI() {
@@ -17,7 +18,7 @@ export async function fetchUserProfileAPI() {
 
 export async function deleteProfileAPI(userId: string, csrfToken: string) {
     try {
-        const response = await fetch("/api/profile", {
+        const response = await fetch( API_ROUTES.user.profile, {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json",
@@ -40,7 +41,7 @@ export async function deleteProfileAPI(userId: string, csrfToken: string) {
 
 export async function resetPasswordAPI(password: string, newPassword: string, csrfToken: string) {
     try {
-        const response = await fetch("/api/profile", {
+        const response = await fetch( API_ROUTES.user.profile, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
@@ -61,7 +62,7 @@ export async function resetPasswordAPI(password: string, newPassword: string, cs
 
 export async function verifyResetTokenAPI(token: string | string[]) {
     try {
-        const response = await fetch("/api/verify-token", {
+        const response = await fetch( API_ROUTES.resetPassword.verifyToken, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -80,7 +81,7 @@ export async function verifyResetTokenAPI(token: string | string[]) {
 
 export async function resetForgottenPasswordAPI(token: string | string[], password: string) {
     try {
-        const response = await fetch("/api/reset-password", {
+        const response = await fetch( API_ROUTES.resetPassword.resetPassword, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",

@@ -1,6 +1,8 @@
+import API_ROUTES from "../constants/api_routes";
+
 export async function fetchShoppingListAPI() {
     try {
-        const response = await fetch("/api/shopping-list");
+        const response = await fetch( API_ROUTES.shoppingList);
         if (!response.ok) throw new Error("Erreur lors de la récupération de la liste.");
         return response.json();
     } catch (error) {
@@ -11,7 +13,7 @@ export async function fetchShoppingListAPI() {
 
 export async function createShoppingListMealAPI(ingredientId: string, quantity: number , mealId: string, csrfToken: string) {
     try {
-        const response = await fetch('/api/shopping-list', {
+        const response = await fetch( API_ROUTES.shoppingList, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -33,7 +35,7 @@ export async function createShoppingListMealAPI(ingredientId: string, quantity: 
 
 export async function createShoppingListIngredientAPI(ingredientId: string, quantity: number, csrfToken: string) {
     try {
-        const response = await fetch('/api/shopping-list', {
+        const response = await fetch( API_ROUTES.shoppingList, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -54,7 +56,7 @@ export async function createShoppingListIngredientAPI(ingredientId: string, quan
 
 export async function toggleItemCheckedAPI(id: string, isChecked: boolean, csrfToken: string) {
     try {
-        const response = await fetch("/api/shopping-list", {
+        const response = await fetch( API_ROUTES.shoppingList, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
@@ -71,7 +73,7 @@ export async function toggleItemCheckedAPI(id: string, isChecked: boolean, csrfT
 
 export async function markShoppingListAsExpiredAPI(id: string, csrfToken: string) {
     try {
-        const response = await fetch("/api/shopping-list", {
+        const response = await fetch( API_ROUTES.shoppingList, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",

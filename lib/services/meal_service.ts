@@ -1,6 +1,8 @@
+import API_ROUTES from "../constants/api_routes";
+
 export async function createMealAPI(mealData: object, csrfToken: string) {
     try {
-        const response = await fetch("/api/meals", {
+        const response = await fetch( API_ROUTES.meals, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -22,7 +24,7 @@ export async function createMealAPI(mealData: object, csrfToken: string) {
 
 export async function updateMealAPI(mealData: object, csrfToken: string) {
     try {
-        const response = await fetch("/api/meals", {
+        const response = await fetch( API_ROUTES.meals, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",

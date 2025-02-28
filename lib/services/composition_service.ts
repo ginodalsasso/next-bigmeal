@@ -1,6 +1,8 @@
+import API_ROUTES from "../constants/api_routes";
+
 export async function createCompositionAPI(compositionData: object, csrfToken: string) {
     try {
-        const response = await fetch("/api/compositions", {
+        const response = await fetch( API_ROUTES.compositions, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -23,7 +25,7 @@ export async function createCompositionAPI(compositionData: object, csrfToken: s
 
 export async function updateCompositionAPI(compositionData: object, csrfToken: string) {
     try {
-        const response = await fetch("/api/compositions", {
+        const response = await fetch( API_ROUTES.compositions, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",

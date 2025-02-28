@@ -25,7 +25,7 @@ import IsAdmin from "@/components/isAdmin";
 import IsUser from "@/components/isUser";
 import SearchBar from "@/components/layout/Searchbar";
 import FilterItems from "@/components/layout/FilterItems";
-import { CATEGORIES_INGREDIENTS, SEASONS } from "@/lib/constants/constants";
+import { CATEGORIES_INGREDIENTS, SEASONS } from "@/lib/constants/ui_constants";
 
 
 // _________________________ COMPOSANT _________________________

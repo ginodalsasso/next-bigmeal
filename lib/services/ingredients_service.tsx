@@ -1,6 +1,8 @@
+import API_ROUTES from "../constants/api_routes";
+
 export async function createIngredientAPI(ingredientData: object, csrfToken: string) {
     try {
-        const response = await fetch("/api/ingredients", {
+        const response = await fetch( API_ROUTES.ingredients, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -23,7 +25,7 @@ export async function createIngredientAPI(ingredientData: object, csrfToken: str
 
 export async function updateIngredientAPI(ingredientData: object, csrfToken: string) {
     try {
-        const response = await fetch("/api/ingredients", {
+        const response = await fetch( API_ROUTES.ingredients, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
@@ -45,7 +47,7 @@ export async function updateIngredientAPI(ingredientData: object, csrfToken: str
 
 export async function fetchIngredientAPI(ingredientName: string) {
     try {
-        const response = await fetch(`/api/ingredients/${ingredientName}`);
+        const response = await fetch(`${API_ROUTES.ingredients}/${ingredientName}`);
         if (!response.ok) {
             throw new Error("Failed to fetch ingredient");
         }

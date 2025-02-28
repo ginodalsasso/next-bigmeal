@@ -25,7 +25,7 @@ import AddToShoppingListForm from "@/components/forms/AddToShoppingListForm";
 import IsAdmin from "@/components/isAdmin";
 import IsUser from "@/components/isUser";
 import SearchBar from "@/components/layout/Searchbar";
-import { CATEGORIES_MEALS } from "@/lib/constants/constants";
+import { CATEGORIES_MEALS } from "@/lib/constants/ui_constants";
 import FilterCheckboxes from "@/components/layout/FilterItems";
 
 // _________________________ COMPOSANT _________________________
