@@ -26,6 +26,7 @@ export default function CategoryIngredientList({ fetchedCategories }: { fetchedC
     // _________________________ ETATS _________________________
     const [categoryIngredient, setCategoryIngredient] = useState<CategoryIngredientType[]>(fetchedCategories);
 
+
     // _________________________ CRUD _________________________
     // Mise à jour de la liste après création
     const handleCategoryCreated = (newCategory: CategoryIngredientType) => {
@@ -42,6 +43,7 @@ export default function CategoryIngredientList({ fetchedCategories }: { fetchedC
         setCategoryIngredient((prev) => prev.filter((category) => category.id !== id));
     };
 
+    
     //  _________________________ RENDU _________________________
     return (
         <div>

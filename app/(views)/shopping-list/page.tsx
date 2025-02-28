@@ -23,6 +23,7 @@ import { dateToString } from "@/lib/utils";
 import {  fetchShoppingListAPI, markShoppingListAsExpiredAPI, toggleItemCheckedAPI } from "@/lib/services/shopping_list_service";
 
 
+// _________________________ COMPONENT _________________________
 const ShoppingListPage = () => {
     const router = useRouter(); 
     const csrfToken = useCsrfToken();
@@ -30,6 +31,7 @@ const ShoppingListPage = () => {
     const [loading, setLoading] = useState(true);
 
 
+    // _________________________ LOGIQUE _________________________
     useEffect(() => {
         const fetchShoppingList = async () => {
             try {
@@ -133,6 +135,7 @@ const ShoppingListPage = () => {
     }
 
 
+    // _________________________ RENDU _________________________
     if (loading) return <div>Loading...</div>;
     if (!shoppingList) return <div>Aucune liste de courses.</div>;
 

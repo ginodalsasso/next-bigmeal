@@ -29,6 +29,7 @@ type CategoryFormType = { name: string };
 **/
 const CreateCategory = <T,>({ apiUrl, onSubmit }: CreateCategoryProps<T>) => {
     
+    
     // _________________________ ETATS __________________
     const [newCategoryName, setNewCategoryName] = useState('');
     const [isLoading, setIsLoading] = useState(false);

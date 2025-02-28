@@ -34,6 +34,7 @@ import { CATEGORIES_MEALS } from "@/lib/constants/ui_constants";
 
 // _________________________ COMPOSANT _________________________
 export default function MealsList( {fetchedMeals}: { fetchedMeals: MealType[] }) {
+    
     // _________________________ ETATS _________________________
     const [meals, setMeals] = useState<MealType[]>(fetchedMeals);
 

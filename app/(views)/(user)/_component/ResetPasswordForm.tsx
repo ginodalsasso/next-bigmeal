@@ -34,14 +34,14 @@ const ResetPasswordForm = ({ onBackToProfile }: { onBackToProfile: () => void })
 
         const password = formData.get("password")?.toString() || "";
         const newPassword = formData.get("new-password")?.toString() || "";
-        const confirmPassword = formData.get("confirm-password")?.toString() || "";
+        const confirmNewPassword = formData.get("confirm-password")?.toString() || "";
 
-        if (!validate( { password, newPassword, confirmPassword })) {
+        if (!validate( { password, newPassword, confirmNewPassword })) {
             setError({ general: "Veuillez saisir un mot de passe valide." });
             return;
         }
 
-        if (newPassword !== confirmPassword) {
+        if (newPassword !== confirmNewPassword) {
             setError({ password: "Les mots de passe ne correspondent pas." });
             return;
         }
@@ -51,7 +51,7 @@ const ResetPasswordForm = ({ onBackToProfile }: { onBackToProfile: () => void })
             return;
         }
         try {
-            await resetPasswordAPI(password, newPassword, csrfToken);
+            await resetPasswordAPI(password, newPassword, confirmNewPassword, csrfToken);
             toast.success("Votre mot de passe a bien été modifié.");
             onBackToProfile();
         } catch (error) {
@@ -61,6 +61,7 @@ const ResetPasswordForm = ({ onBackToProfile }: { onBackToProfile: () => void })
     }
 
 
+    // _________________________ RENDU _________________________
     return (
         <div>
             <form className="mb-2" onSubmit={handleChangedPassword}>

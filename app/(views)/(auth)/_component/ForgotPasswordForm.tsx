@@ -14,7 +14,7 @@ import { ForgotPasswordConstraints } from "@/lib/constraints/forms_constraints";
 import { sendForgotPasswordEmailAPI } from "@/lib/services/auth_service";
 
 
-
+// _________________________ COMPONENT _________________________
 const ForgotPasswordForm = ({ onBackToLogin }: { onBackToLogin: () => void }) => {
 
     // _________________________ ETATS _________________________

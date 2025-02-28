@@ -26,7 +26,7 @@ import FormErrorMessage from "@/components/forms/FormErrorMessage";
 import { getCategoriesIngredient } from "@/lib/services/data_fetcher";
 import { updateIngredientAPI } from "@/lib/services/ingredients_service";
 
-
+// _________________________ COMPONENT _________________________
 const UpdateIngredient: React.FC<UpdateIngredientProps> = ({
     ingredient,
     onSubmit,

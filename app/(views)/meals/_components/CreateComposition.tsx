@@ -28,6 +28,7 @@ import { getIngredients } from "@/lib/services/data_fetcher";
 import { createCompositionAPI } from "@/lib/services/composition_service";
 
 
+// _________________________ COMPONENT _________________________
 const CreateComposition: React.FC<CreateCompositionProps>= ({
     mealId,
     onSubmit,

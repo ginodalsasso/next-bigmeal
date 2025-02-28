@@ -10,6 +10,7 @@ import { IngredientType } from "@/lib/types/schemas_interfaces";
 import { fetchIngredientAPI } from "@/lib/services/ingredients_service";
 
 
+// _________________________ COMPONENT _________________________
 const IngredientDetailPage = 
     ({ 
         params 

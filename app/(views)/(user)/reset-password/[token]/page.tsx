@@ -15,7 +15,10 @@ import { ForgotUserPasswordFormType } from '@/lib/types/forms_interfaces';
 import { resetForgottenPasswordAPI, verifyResetTokenAPI } from '@/lib/services/user_service';
 
 
+// _________________________ COMPONENT _________________________
 const ResetPasswordPage = () => {
+
+    // _________________________ ETATS _________________________
     const { token } = useParams(); 
     const router = useRouter();
 
@@ -74,6 +77,8 @@ const ResetPasswordPage = () => {
         }
     };
 
+
+    // _________________________ RENDU __________________
     return (
         <form
             onSubmit={handleSubmit}

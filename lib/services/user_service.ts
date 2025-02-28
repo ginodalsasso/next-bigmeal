@@ -39,7 +39,7 @@ export async function deleteProfileAPI(userId: string, csrfToken: string) {
     }
 }
 
-export async function resetPasswordAPI(password: string, newPassword: string, csrfToken: string) {
+export async function resetPasswordAPI(password: string, newPassword: string, confirmNewPassword: string, csrfToken: string) {
     try {
         const response = await fetch( API_ROUTES.user.profile, {
             method: "PUT",
@@ -47,7 +47,7 @@ export async function resetPasswordAPI(password: string, newPassword: string, cs
                 "Content-Type": "application/json",
                 "X-CSRF-Token": csrfToken
             },
-            body: JSON.stringify({ password, newPassword }),
+            body: JSON.stringify({ password, newPassword, confirmNewPassword }),
         });
 
         if (!response.ok) {

@@ -37,6 +37,7 @@ import { CATEGORIES_INGREDIENTS, SEASONS } from "@/lib/constants/ui_constants";
 // _________________________ COMPOSANT _________________________
 export default function IngredientList({ fetchedIngredients }: { fetchedIngredients: IngredientType[] }) {
     
+    
     // _________________________ ETATS _________________________
     const [ingredients, setIngredients] = useState<IngredientType[]>(fetchedIngredients);
     const [searchQuery, setSearchQuery] = useState<string>("");

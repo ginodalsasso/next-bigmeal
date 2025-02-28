@@ -9,5 +9,6 @@ export default async function MealDetailPage({ params }: { params: { mealName: s
     // Récupère le nom du repas dans les paramètres de la requête
     const meal = await getMeal(params.mealName);
     
+    // _________________________ RENDU _________________________
     return <MealItem fetchedMeal={meal} />;
 }

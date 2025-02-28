@@ -23,8 +23,10 @@ import IsAdmin from "@/components/isAdmin";
 // _________________________ COMPOSANT _________________________
 export default function CategoryMealList({ fetchedCategories }: { fetchedCategories: CategoryMealType[] }) {
 
+
     // _________________________ ETATS _________________________
     const [categoryMeal, setCategoryMeal] = useState<CategoryMealType[]>(fetchedCategories);
+
 
     // _________________________ CRUD _________________________
 
@@ -43,6 +45,7 @@ export default function CategoryMealList({ fetchedCategories }: { fetchedCategor
         setCategoryMeal((prev) => prev.filter((category) => category.id !== id));
     };
 
+    
     // _________________________ RENDU _________________________
     return (
         <div>

@@ -44,14 +44,14 @@ export default function LoginPage() {
         setIsLoading(true);
 
         try {
-            const result = await signIn("credentials", {
+            const response = await signIn("credentials", {
                 redirect: true,
                 email,
                 password,
             });
 
-            if (result?.error) {
-                setError({ general: result.error || "Une erreur est survenue lors de la connexion." });
+            if (response?.error) {
+                setError({ general: response.error || "Une erreur est survenue lors de la connexion." });
             }
         } catch (error) {
             console.error("Erreur lors de la connexion :", error);

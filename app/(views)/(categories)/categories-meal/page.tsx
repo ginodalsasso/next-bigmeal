@@ -7,5 +7,7 @@ import { getCategoriesMeal } from "@/lib/services/data_fetcher";
 export default async function CategoryMealPage() {
     const categoryMeal = await getCategoriesMeal();
     
+    
+    // _________________________ RENDU _________________________
     return <CategoryMealList fetchedCategories={categoryMeal} />;
 }

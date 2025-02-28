@@ -16,9 +16,10 @@ import FormErrorMessage from "@/components/forms/FormErrorMessage";
 import { RegisterConstraints } from "@/lib/constraints/forms_constraints";
 import { registerUserAPI } from "@/lib/services/auth_service";
 
-
+// _________________________ COMPONENT _________________________
 export default function RegisterPage() {
 
+    // _________________________ ETATS _________________________
     const router = useRouter();
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -33,6 +34,7 @@ export default function RegisterPage() {
         password: "" 
     });
 
+    // Création du compte utilisateur
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsLoading(true);

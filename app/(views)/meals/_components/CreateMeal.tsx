@@ -28,7 +28,9 @@ import { getCategoriesMeal } from "@/lib/services/data_fetcher";
 import { createMealAPI } from "@/lib/services/meal_service";
 
 
+// _________________________ COMPONENT _________________________
 const CreateMeal: React.FC<CreateMealProps> = ({ onMealCreated, onClose }) => {
+    
     // _________________________ HOOKS _________________________
     const csrfToken = useCsrfToken();
     const [categories, setCategories] = useState<CategoryMealType[]>([]);

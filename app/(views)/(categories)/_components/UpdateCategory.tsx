@@ -24,6 +24,7 @@ interface UpdateCategoryProps<T> {
     onCancel: () => void;
 }
 
+// _________________________ COMPONENT _________________________
 const UpdateCategory = <T extends { id: string; name: string }>({
     apiUrl,
     category,

@@ -18,11 +18,14 @@ interface DeleteProfileProps {
     userId: string;
 }
 
+// _________________________ COMPONENT _________________________
 const DeleteProfile: React.FC<DeleteProfileProps> = ({ userId }) => {
     const [isDeleting, setIsDeleting] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const csrfToken = useCsrfToken();
 
+
+    // _________________________ LOGIQUE _________________________
     const handleDelete = async () => {
         if (!csrfToken) {
             console.error("CSRF token invalide");
@@ -41,6 +44,7 @@ const DeleteProfile: React.FC<DeleteProfileProps> = ({ userId }) => {
         }
     };
 
+    // _________________________ RENDU _________________________
     return (
         <>
             <AlertDialog>

@@ -16,7 +16,9 @@ import ResetPasswordForm from "../_component/ResetPasswordForm";
 import { fetchUserProfileAPI } from "@/lib/services/user_service";
 
 
+// _________________________ COMPONENT _________________________
 const ProfilePage = () => {
+
     // _________________________ ETATS _________________________
     const [user, setUser] = useState<UserType | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
@@ -45,6 +47,7 @@ const ProfilePage = () => {
     if (loading) return <div>Chargement...</div>;
     if (error) return <div className="text-red-500">{error}</div>;
     if (!user) return <div>Utilisateur introuvable.</div>;
+
 
     return (
         <div className="border p-4">

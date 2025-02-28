@@ -99,6 +99,8 @@ const UpdateMeal: React.FC<UpdateMealProps> = ({
         }
     };
 
+
+    // _________________________ RENDU _________________________
     return (
         <form onSubmit={handleSubmit} className="space-y-2">
             <input
