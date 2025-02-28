@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { getUserSession } from "@/lib/security/getSession";
 import bcrypt from "bcryptjs";
-import { verifyCSRFToken } from "@/lib/security/csrf";
+import { verifyCSRFToken } from "@/lib/security/verifyCsrfToken";
 import { idConstraints } from "@/lib/constraints/forms_constraints";
 
 export async function GET() {

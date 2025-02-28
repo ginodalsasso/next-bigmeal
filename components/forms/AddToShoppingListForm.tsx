@@ -10,6 +10,8 @@ import { Button } from '../ui/button';
 import FormErrorMessage from './FormErrorMessage';
 import { useFormValidation } from '@/app/hooks/useFormValidation';
 import { useCsrfToken } from '@/app/hooks/useCsrfToken';
+import { getMeal } from '@/lib/services/data_fetcher';
+import { createShoppingListIngredientAPI, createShoppingListMealAPI } from '@/lib/services/shopping_list_service';
 
 interface AddToShoppingListFormProps {
     type: 'meal' | 'ingredient'; // Détermine le type d'ajout
@@ -37,10 +39,7 @@ const AddToShoppingListForm: React.FC<AddToShoppingListFormProps> = ({ type, id 
             switch (type) {
                 case 'meal': {
                     // Récupérer les ingrédients du repas
-                    const response = await fetch(`/api/meals/${id}`);
-                    if (!response.ok) throw new Error('Erreur lors de la récupération des ingrédients du repas');
-
-                    const meal = await response.json();
+                    const meal =  await getMeal(id);
 
                     // Ajouter chaque ingrédient du repas à la liste de courses
                     for (const composition of meal.compositions) {
@@ -56,18 +55,7 @@ const AddToShoppingListForm: React.FC<AddToShoppingListFormProps> = ({ type, id 
                             continue;
                         }
                 
-                        await fetch('/api/shopping-list', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                "X-CSRF-Token": csrfToken,
-                            },
-                            body: JSON.stringify({
-                                ingredientId: composition.ingredient.id,
-                                quantity: composition.quantity,
-                                mealId: meal.id,
-                            }),
-                        });
+                        await createShoppingListMealAPI(composition.ingredient.id, composition.quantity, meal.id, csrfToken);
                     }
                     toast('Les ingrédients du repas ont été ajoutés à la liste de courses');
                     break;
@@ -86,20 +74,8 @@ const AddToShoppingListForm: React.FC<AddToShoppingListFormProps> = ({ type, id 
                         return;
                     }
 
-                    // Ajouter un ingrédient individuel
-                    const response = await fetch('/api/shopping-list', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            "X-CSRF-Token": csrfToken,
-                        },
-                        body: JSON.stringify({
-                            ingredientId: id,
-                            quantity: quantity.quantity,
-                        }),
-                    });
-                    if (!response.ok)  throw new Error('Erreur lors de l\'ajout de l\'ingrédient à la liste de courses');
-
+                    await createShoppingListIngredientAPI(id, quantity.quantity, csrfToken);
+                    
                     toast('Ingrédient ajouté à la liste de courses avec succès');
                     break;
                 }

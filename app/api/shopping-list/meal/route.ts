@@ -1,6 +1,6 @@
 import { idConstraints } from "@/lib/constraints/forms_constraints";
 import { db } from "@/lib/db";
-import { verifyCSRFToken } from "@/lib/security/csrf";
+import { verifyCSRFToken } from "@/lib/security/verifyCsrfToken";
 import { getUserSession } from "@/lib/security/getSession";
 import { NextRequest, NextResponse } from "next/server";
 
