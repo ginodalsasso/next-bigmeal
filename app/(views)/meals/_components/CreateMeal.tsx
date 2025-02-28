@@ -13,6 +13,7 @@ import { CreateMealProps } from "@/lib/types/props_interfaces";
 import { ucFirst } from "@/lib/utils";
 import FormErrorMessage from "@/components/forms/FormErrorMessage";
 import { useCsrfToken } from "@/app/hooks/useCsrfToken";
+import { getCategoriesMeal } from "@/lib/data_fetcher";
 
 const CreateMeal: React.FC<CreateMealProps> = ({ onMealCreated, onClose }) => {
     // _________________________ HOOKS _________________________
@@ -37,19 +38,18 @@ const CreateMeal: React.FC<CreateMealProps> = ({ onMealCreated, onClose }) => {
     useEffect(() => {
         const fetchCategories = async () => {
             try {
-                const response = await fetch("/api/categories-meal");
-                if (!response.ok) throw new Error("Erreur lors de la récupération des categories-repas");
+                const data: CategoryMealType[] = await getCategoriesMeal();
+                setCategories(data); 
 
-                const data: CategoryMealType[] = await response.json();
-                setCategories(data);
             } catch (error) {
                 console.error("[FETCH_CATEGORIES_ERROR]", error);
                 setError({ general: "Erreur lors de la récupération des catégories." });
             }
         };
+
         fetchCategories();
     }, [setError]);
-
+    
 
     // Gestion de la soumission du formulaire de création de repas
     const handleSubmit = async (e: React.FormEvent) => {
