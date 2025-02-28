@@ -2,6 +2,7 @@ import { useFormValidation } from "@/app/hooks/useFormValidation";
 import FormErrorMessage from "@/components/forms/FormErrorMessage";
 import { Button } from "@/components/ui/button";
 import { ForgotPasswordConstraints } from "@/lib/constraints/forms_constraints";
+import { sendForgotPasswordEmailAPI } from "@/lib/services/auth_service";
 import React, { useState } from "react";
 import { toast } from "sonner";
 
@@ -26,18 +27,7 @@ const ForgotPasswordForm = ({ onBackToLogin }: { onBackToLogin: () => void }) =>
         }
 
         try {
-            const response = await fetch(`/api/reset-password`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ recipient: recipient.email }),
-            });
-
-            const data = await response.json();
-            if (!response.ok) {
-                setError({ general: data.message || "Une erreur est survenue lors de l'envoi de l'email." });
-                return;
-            }
-
+            await sendForgotPasswordEmailAPI(recipient.email);
             toast("Email de réinitialisation envoyé !");
         } catch (error) {
             console.error("Erreur lors de l'envoi de l'email :", error);

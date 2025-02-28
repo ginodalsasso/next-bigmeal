@@ -4,6 +4,7 @@ import { useFormValidation } from "@/app/hooks/useFormValidation";
 import FormErrorMessage from "@/components/forms/FormErrorMessage";
 import { Button } from "@/components/ui/button";
 import { RegisterConstraints } from "@/lib/constraints/forms_constraints";
+import { registerUserAPI } from "@/lib/services/auth_service";
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -36,23 +37,8 @@ export default function RegisterPage() {
         }
 
         try {
-            const response = await fetch("/api/auth/register", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(formData),
-            });
-
-            if (response.ok) {
-                router.push("/login");
-                toast.success("Inscription réussie");
-            } else {
-                const errorData = await response.json();
-                setError({
-                    general: errorData.message || "Une erreur est survenue lors de l'inscription.",
-                });
-            }
+            await registerUserAPI(formData.email, formData.password);
+            toast("Compte créé avec succès !");
         } catch (error) {
             console.error("[REGISTER_ERROR]", error);
             setError({ general: "Impossible de s'incrire. Veuillez réessayer plus tard." });
@@ -60,7 +46,6 @@ export default function RegisterPage() {
             setIsLoading(false);
         }
     };
-
 
     return (
         <form 

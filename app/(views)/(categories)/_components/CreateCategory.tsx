@@ -6,6 +6,7 @@ import FormErrorMessage from "@/components/forms/FormErrorMessage";
 import { toast } from "sonner";
 import { useCsrfToken } from "@/app/hooks/useCsrfToken";
 import { CreateCategoryProps } from "@/lib/types/props_interfaces";
+import { createCategoryAPI } from "@/lib/services/categories_service";
 
 type CategoryFormType = { name: string };
 
@@ -46,18 +47,9 @@ const CreateCategory = <T,>({ apiUrl, onSubmit }: CreateCategoryProps<T>) => {
         }
 
         try {
-            const response = await fetch(apiUrl, {
-                method: "POST",
-                headers: { 
-                    "Content-Type": "application/json",
-                    "X-CSRF-Token": csrfToken
-                },
-                body: JSON.stringify({ name: newCategoryName }),
-            });
-            if (!response.ok) throw new Error("Erreur lors de l'ajout de la catégorie");
+            const newCategory = createCategoryAPI(newCategoryName, csrfToken, apiUrl);
 
-            const newCategory = await response.json();
-            onSubmit(newCategory); // 🔄 Met à jour la liste dans le parent
+            onSubmit(await newCategory); 
             setNewCategoryName('');
             toast("Catégorie créée avec succès");
         } catch (error) {

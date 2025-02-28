@@ -1,6 +1,7 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
+import { resetForgottenPasswordAPI, verifyResetTokenAPI } from '@/lib/services/user_service';
 import { ForgotUserPasswordFormType } from '@/lib/types/forms_interfaces';
 import { useParams } from 'next/navigation';
 import { useRouter } from 'next/navigation';
@@ -26,14 +27,7 @@ const ResetPasswordPage = () => {
             }
 
             try {
-                const response = await fetch('/api/verify-token', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ token }),
-                });
-                if (!response.ok) throw new Error('Token invalide ou expiré');
+                await verifyResetTokenAPI(token);
                 
             } catch (error) {
                 console.error('Erreur lors de la vérification du token :', error);
@@ -57,21 +51,14 @@ const ResetPasswordPage = () => {
         }
 
         try {
-            const response = await fetch('/api/reset-password', {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ token, password: formData.password }),
-            });
-
-            if (response.ok) {
-                toast.success('Mot de passe réinitialisé avec succès !');
-                router.push('/login');
+            if (token) {
+                resetForgottenPasswordAPI(token, formData.password);
             } else {
-                const errorData = await response.json();
-                setError({ general: errorData.message || 'Erreur lors de la réinitialisation du mot de passe' });
+                setError({ general: 'Token invalide' });
             }
+            toast.success('Mot de passe réinitialisé avec succès !');
+            router.push('/login');
+
         } catch (error) {
             console.error('Erreur lors de la réinitialisation du mot de passe :', error);
             setError({ general: 'Erreur lors de la réinitialisation du mot de passe' });

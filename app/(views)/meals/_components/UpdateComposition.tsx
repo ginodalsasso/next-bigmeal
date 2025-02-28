@@ -13,6 +13,7 @@ import { UpdateCompositionProps } from "@/lib/types/props_interfaces";
 import FormErrorMessage from "@/components/forms/FormErrorMessage";
 import { UpdateCompositionFormType } from "@/lib/types/forms_interfaces";
 import { useCsrfToken } from "@/app/hooks/useCsrfToken";
+import { updateCompositionAPI } from "@/lib/services/composition_service";
 
 // _________________________ COMPOSANT _________________________
 const UpdateComposition: React.FC<UpdateCompositionProps> = ({
@@ -41,22 +42,14 @@ const UpdateComposition: React.FC<UpdateCompositionProps> = ({
         }
 
         setIsLoading(true);
+        
+        if (!csrfToken) {
+            console.error("CSRF token invalide");
+            return;
+        }
+        
         try {
-            if (!csrfToken) {
-                console.error("CSRF token invalide");
-                return;
-            }
-            const response = await fetch("/api/compositions", {
-                method: "PUT",
-                headers: { 
-                    "Content-Type": "application/json",
-                    "X-CSRF-Token": csrfToken,
-                },
-                body: JSON.stringify(composition),
-            });
-            if (!response.ok) throw new Error("Erreur lors de la mise à jour de la composition");
-
-            const updatedComposition: CompositionType = await response.json();
+            const updatedComposition = await updateCompositionAPI(composition, csrfToken);
             // Mettre à jour l'état parent via le callback
             onCompositionUpdated(updatedComposition);
 

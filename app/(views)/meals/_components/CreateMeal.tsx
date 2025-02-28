@@ -14,6 +14,7 @@ import { ucFirst } from "@/lib/utils";
 import FormErrorMessage from "@/components/forms/FormErrorMessage";
 import { useCsrfToken } from "@/app/hooks/useCsrfToken";
 import { getCategoriesMeal } from "@/lib/services/data_fetcher";
+import { createMealAPI } from "@/lib/services/meal_service";
 
 const CreateMeal: React.FC<CreateMealProps> = ({ onMealCreated, onClose }) => {
     // _________________________ HOOKS _________________________
@@ -63,26 +64,14 @@ const CreateMeal: React.FC<CreateMealProps> = ({ onMealCreated, onClose }) => {
             return;
         }
     
-        try {
-            // Récupérer le CSRF Token
-            if (!csrfToken) {
-                console.error("CSRF token invalide");
-                return;
-            }    
-    
-            const response = await fetch("/api/meals", {
-                method: "POST",
-                headers: { 
-                    "Content-Type": "application/json",
-                    "X-CSRF-Token": csrfToken,
-                },
-                body: JSON.stringify(form),
-            });
-    
-            if (!response.ok) throw new Error("Erreur lors de la création du repas");
-    
-            const createdMeal: MealType = await response.json();
-    
+        // Récupérer le CSRF Token
+        if (!csrfToken) {
+            console.error("CSRF token invalide");
+            return;
+        }
+        
+        try { 
+            const createdMeal = await createMealAPI(form, csrfToken);
             // Mettre à jour l’état parent avec le nouveau repas
             onMealCreated(createdMeal);
             toast("Repas créé avec succès");

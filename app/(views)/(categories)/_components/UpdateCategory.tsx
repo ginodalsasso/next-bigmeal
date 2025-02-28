@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import FormErrorMessage from "@/components/forms/FormErrorMessage";
 import { toast } from "sonner";
 import { useCsrfToken } from "@/app/hooks/useCsrfToken";
+import { updateCategoryAPI } from "@/lib/services/categories_service";
 
 type CategoryFormType = { name: string };
 
@@ -51,18 +52,9 @@ const UpdateCategory = <T extends { id: string; name: string }>({
         }
 
         try {
-            const response = await fetch(apiUrl, {
-                method: "PUT",
-                headers: { 
-                    "Content-Type": "application/json",
-                    "X-CSRF-Token": csrfToken,
-                },
-                body: JSON.stringify({ id: category.id, name }),
-            });
-            if (!response.ok) throw new Error("Erreur lors de la mise à jour de la catégorie");
-
-            const updatedCategory: T = await response.json();
-            onSubmit(updatedCategory);
+            const updatedCategory = updateCategoryAPI(category.id, name, csrfToken, apiUrl);
+            
+            onSubmit(await updatedCategory);
             toast("Catégorie mise à jour avec succès");
             onCancel(); // Fermer la modale ou le formulaire après succès
         } catch (error) {

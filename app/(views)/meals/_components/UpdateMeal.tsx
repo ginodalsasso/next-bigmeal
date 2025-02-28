@@ -9,6 +9,7 @@ import FormErrorMessage from "@/components/forms/FormErrorMessage";
 import { toast } from "sonner";
 import { useCsrfToken } from "@/app/hooks/useCsrfToken";
 import { getCategoriesMeal } from "@/lib/services/data_fetcher";
+import { updateMealAPI } from "@/lib/services/meal_service";
 
 // _________________________ COMPOSANT _________________________
 const UpdateMeal: React.FC<UpdateMealProps> = ({
@@ -65,27 +66,14 @@ const UpdateMeal: React.FC<UpdateMealProps> = ({
         if (!validate(form)) return;
         setIsLoading(true);
 
-        try {
-            if (!csrfToken) {
-                console.error("CSRF token invalide");
-                return;
-            }
-            const response = await fetch("/api/meals", {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-CSRF-Token": csrfToken,
-                },
-                body: JSON.stringify({
-                    id: meal.id,
-                    name: form.name,
-                    categoryMealId: form.categoryMealId,
-                    description: form.description,
-                }),
-            });
-            if (!response.ok) throw new Error("Échec de la mise à jour du repas.");
+        if (!csrfToken) {
+            console.error("CSRF token invalide");
+            return;
+        }
 
-            const updatedMeal = await response.json();
+        try {
+            const updatedMeal = await updateMealAPI(form, csrfToken);
+            
             onSubmit(updatedMeal);
             toast("Repas mis à jour avec succès");
             onClose();

@@ -3,6 +3,7 @@ import { useFormValidation } from "@/app/hooks/useFormValidation";
 import FormErrorMessage from "@/components/forms/FormErrorMessage";
 import { Button } from "@/components/ui/button";
 import { ResetPasswordConstraints } from "@/lib/constraints/forms_constraints";
+import { resetPasswordAPI } from "@/lib/services/user_service";
 import React from "react";
 import { toast } from "sonner";
 
@@ -40,22 +41,9 @@ const ResetPasswordForm = ({ onBackToProfile }: { onBackToProfile: () => void })
             return;
         }
         try {
-            const response = await fetch("/api/profile", {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-CSRF-Token": csrfToken,
-                },
-                body: JSON.stringify({ password, newPassword }),
-            });
-
-            if (response.ok) {
-                setError({});
-                toast("Mot de passe modifié !");
-            } else {
-                const errorData = await response.json();
-                setError(errorData.message || "Une erreur est survenue lors de la modification du mot de passe.");
-            }
+            await resetPasswordAPI(password, newPassword, csrfToken);
+            toast.success("Votre mot de passe a bien été modifié.");
+            onBackToProfile();
         } catch (error) {
             console.error("Erreur lors de la modification du mot de passe :", error);
             setError({ general: "Impossible de modifier le mot de passe. Veuillez réessayer plus tard." });

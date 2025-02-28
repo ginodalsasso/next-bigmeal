@@ -12,6 +12,7 @@ import FormErrorMessage from "@/components/forms/FormErrorMessage";
 import { toast } from "sonner";
 import { useCsrfToken } from "@/app/hooks/useCsrfToken";
 import { getCategoriesIngredient } from "@/lib/services/data_fetcher";
+import { updateIngredientAPI } from "@/lib/services/ingredients_service";
 
 const UpdateIngredient: React.FC<UpdateIngredientProps> = ({
     ingredient,
@@ -65,25 +66,14 @@ const UpdateIngredient: React.FC<UpdateIngredientProps> = ({
             return;
         }
 
-        try {
-            // Récupérer le CSRF Token
-            if (!csrfToken) {
-                console.error("CSRF token invalide");
-                return;
-            }
-    
-            // Appel API pour mettre à jour l'ingrédient
-            const response = await fetch("/api/ingredients", {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-CSRF-Token": csrfToken,
-                },
-                body: JSON.stringify(form),
-            });
-            if (!response.ok) throw new Error("Échec de la mise à jour de l'ingrédient");
+        // Récupérer le CSRF Token
+        if (!csrfToken) {
+            console.error("CSRF token invalide");
+            return;
+        }
 
-            const updatedIngredient: IngredientType = await response.json();
+        try {
+            const updatedIngredient = await updateIngredientAPI(form, csrfToken);
 
             onSubmit(updatedIngredient);
             toast("Ingrédient modifié avec succès");

@@ -13,6 +13,7 @@ import { CreateIngredientProps } from "@/lib/types/props_interfaces";
 import FormErrorMessage from "@/components/forms/FormErrorMessage";
 import { useCsrfToken } from "@/app/hooks/useCsrfToken";
 import { getCategoriesIngredient } from "@/lib/services/data_fetcher";
+import { createIngredientAPI } from "@/lib/services/ingredients_service";
 
 // _________________________ COMPOSANT _________________________
 const CreateIngredient: React.FC<CreateIngredientProps> = ({
@@ -77,17 +78,7 @@ const CreateIngredient: React.FC<CreateIngredientProps> = ({
             return;
         }
         try {
-            const response = await fetch("/api/ingredients", {
-                method: "POST",
-                headers: { 
-                    "Content-Type": "application/json",
-                    "X-CSRF-Token": csrfToken,
-                },
-                body: JSON.stringify(form),
-            });
-            if (!response.ok) throw new Error("Erreur lors de la création de l'ingrédient");
-
-            const createdIngredient: IngredientType = await response.json();
+            const createdIngredient = await createIngredientAPI(form, csrfToken);
 
             onSubmit(createdIngredient);
             toast("Ingrédient créé avec succès");

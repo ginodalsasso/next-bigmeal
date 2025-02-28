@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState, use } from "react";
 import { IngredientType } from "@/lib/types/schemas_interfaces";
+import { fetchIngredientAPI } from "@/lib/services/ingredients_service";
 
 const IngredientDetailPage = 
     ({ 
@@ -22,11 +23,10 @@ const IngredientDetailPage =
     useEffect(() => {
         const fetchIngredient = async () => {
             try {
-                const response = await fetch(`/api/ingredients/${ingredientName}`);
-                if (!response.ok)  throw new Error("Failed to fetch ingredient");
-
-                const data: IngredientType = await response.json();
-                setIngredient(data);
+                await fetchIngredientAPI(ingredientName).then((data) => {
+                    setIngredient(data);
+                }
+            );
             } catch (error) {
                 console.error("[FETCH_INGREDIENT_ERROR]", error);
                 setError('Erreur lors de la récupération de l\'ingrédient');

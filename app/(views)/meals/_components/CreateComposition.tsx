@@ -15,6 +15,7 @@ import { CreateCompositionProps } from "@/lib/types/props_interfaces";
 import FormErrorMessage from "@/components/forms/FormErrorMessage";
 import { useCsrfToken } from "@/app/hooks/useCsrfToken";
 import { getIngredients } from "@/lib/services/data_fetcher";
+import { createCompositionAPI } from "@/lib/services/composition_service";
 
 const CreateComposition: React.FC<CreateCompositionProps>= ({
     mealId,
@@ -78,24 +79,23 @@ const CreateComposition: React.FC<CreateCompositionProps>= ({
         e.preventDefault();
         setIsLoading(true);
         setError({});
-        
-        // Valider les données du formulaire
-        const validationResult = newCompositionConstraints.safeParse(form); // Déclarez ici
+
+        // Validation du formulaire
+        const validationResult = newCompositionConstraints.safeParse(form);
 
         if (!validationResult.success) {
+            // Formatage des erreurs pour les afficher Record<number, CompositionFormErrorType> = {index: {champ: message}}
             const formattedErrors: Record<number, CompositionFormErrorType> = {};
-        
-            validationResult.error.errors.forEach((err) => {
-                const [index, key] = err.path; // `path` contient l'index et le champ (ex. [0, "ingredientId"])
-                if (typeof index === "number" && typeof key === "string") {
-                    // si l'index n'existe pas, on crée un objet vide
-                    if (!formattedErrors[index]) {
-                        // et on ajoute le message d'erreur
-                        formattedErrors[index] = {}; 
-                    }
-                    // On ajoute le message d'erreur pour le champ ex: formattedErrors[0].ingredientId = "Veuillez sélectionner un ingrédient"
-                    (formattedErrors[index][key as keyof CompositionFormErrorType] as unknown as string) = err.message;
+
+            validationResult.error.errors.forEach((err) => { // Pour chaque erreur dans le tableau d'erreurs
+                const index = err.path[0] as number; // Récupère l'index de l'erreur
+                const key = err.path[1] as keyof CompositionFormErrorType; // Récupère le champ concerné
+
+                if (!formattedErrors[index]) { // Si l'index n'existe pas
+                    formattedErrors[index] = {}; // Initialise l'objet si besoin
                 }
+
+                formattedErrors[index][key] = err.message; // Ajoute le message d'erreur
             });
         
             setError(formattedErrors); // Met à jour les erreurs pour chaque index
@@ -103,22 +103,13 @@ const CreateComposition: React.FC<CreateCompositionProps>= ({
             return;
         }
         
+        if (!csrfToken) {
+            console.error("CSRF token invalide");
+            return;
+        }
+
         try {
-            if (!csrfToken) {
-                console.error("CSRF token invalide");
-                return;
-            }
-            const response = await fetch("/api/compositions", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "X-CSRF-Token": csrfToken,
-            },
-            body: JSON.stringify(form),
-            });
-            if (!response.ok) throw new Error("Erreur lors de la création des compositions");
-    
-            const createdCompositions: CompositionType[] = await response.json(); // Récupérer les compositions insérées
+            const createdCompositions = await createCompositionAPI(form, csrfToken);
             onSubmit(createdCompositions); // Ajout à la liste parent
             
             toast("Compositions créées avec succès");

@@ -6,6 +6,7 @@ import { dateToString } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import DeleteProfile from "../_component/DeleteProfile";
 import ResetPasswordForm from "../_component/ResetPasswordForm";
+import { fetchUserProfileAPI } from "@/lib/services/user_service";
 
 const ProfilePage = () => {
     // _________________________ ETATS _________________________
@@ -18,11 +19,9 @@ const ProfilePage = () => {
     useEffect(() => {
         const fetchUser = async () => {
             try {
-                const response = await fetch("/api/profile");
-                if (!response.ok) throw new Error("Utilisateur non trouvé");
-                
-                const data: UserType = await response.json();
-                setUser(data);
+                fetchUserProfileAPI().then((data) => 
+                    setUser(data)
+            );
             } catch (error) {
                 console.error("Erreur lors de la récupération de l'utilisateur :", error);
                 setError("Impossible de charger le profil.");
