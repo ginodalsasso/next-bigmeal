@@ -13,7 +13,7 @@ import { CreateMealProps } from "@/lib/types/props_interfaces";
 import { ucFirst } from "@/lib/utils";
 import FormErrorMessage from "@/components/forms/FormErrorMessage";
 import { useCsrfToken } from "@/app/hooks/useCsrfToken";
-import { getCategoriesMeal } from "@/lib/data_fetcher";
+import { getCategoriesMeal } from "@/lib/services/data_fetcher";
 
 const CreateMeal: React.FC<CreateMealProps> = ({ onMealCreated, onClose }) => {
     // _________________________ HOOKS _________________________

@@ -8,7 +8,7 @@ import { ucFirst } from "@/lib/utils";
 import FormErrorMessage from "@/components/forms/FormErrorMessage";
 import { toast } from "sonner";
 import { useCsrfToken } from "@/app/hooks/useCsrfToken";
-import { getCategoriesMeal } from "@/lib/data_fetcher";
+import { getCategoriesMeal } from "@/lib/services/data_fetcher";
 
 // _________________________ COMPOSANT _________________________
 const UpdateMeal: React.FC<UpdateMealProps> = ({

@@ -3,6 +3,7 @@
 import { useCsrfToken } from "@/app/hooks/useCsrfToken";
 import DeleteItem from "@/components/layout/DeleteItemDialog";
 import { Button } from "@/components/ui/button";
+import { fetchShoppingListAPI, markShoppingListAsExpiredAPI, toggleItemCheckedAPI } from "@/lib/services/shopping_list_service";
 import { ShoppingListType } from "@/lib/types/schemas_interfaces";
 import { dateToString } from "@/lib/utils";
 import { Separator } from "@radix-ui/react-separator";
@@ -16,13 +17,11 @@ const ShoppingListPage = () => {
     const [shoppingList, setShoppingList] = useState<ShoppingListType | null>(null);
     const [loading, setLoading] = useState(true);
 
+
     useEffect(() => {
         const fetchShoppingList = async () => {
             try {
-                const response = await fetch("/api/shopping-list");
-                if (!response.ok) throw new Error("Failed to fetch shoppingList");
-
-                const data: ShoppingListType = await response.json();
+                const data: ShoppingListType = await fetchShoppingListAPI();
                 setShoppingList(data);
             } catch (error) {
                 console.error("Error fetching shoppingList:", error);
@@ -55,17 +54,7 @@ const ShoppingListPage = () => {
                     return item;
                 })
             });
-
-            // Appel API pour sauvegarder l'état
-            const response = await fetch("/api/shopping-list", {
-                method: "PUT",
-                headers: { 
-                    "Content-Type": "application/json",
-                    "X-CSRF-Token": csrfToken,
-                },
-                body: JSON.stringify({ id, isChecked: newCheckedState }),
-            });
-            if (!response.ok) throw new Error("Failed to update item");
+            await toggleItemCheckedAPI(id, newCheckedState, csrfToken);
 
         } catch (error) {
             console.error("Erreur lors de la modification:", error);
@@ -81,15 +70,7 @@ const ShoppingListPage = () => {
                 return;
             }
             try {
-                const response = await fetch(`/api/shopping-list`, {
-                    method: "PUT",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "X-CSRF-Token": csrfToken,
-                    },
-                    body: JSON.stringify({ id: shoppingList.id, isExpired: true }),
-                });
-                if (!response.ok) throw new Error("Failed to mark shopping list as expired");
+                await markShoppingListAsExpiredAPI(shoppingList.id, csrfToken);
 
                 toast.success("La liste de courses a été marquée comme terminée !");
                 router.push('/'); // Redirection vers la page d'accueil

@@ -1,5 +1,5 @@
 import MealItem from "../_components/MealItem";
-import { getMeal } from "@/lib/data_fetcher";
+import { getMeal } from "@/lib/services/data_fetcher";
 
 export default async function MealDetailPage({ params }: { params: { mealName: string } }) {
     // Récupère le nom du repas dans les paramètres de la requête

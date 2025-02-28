@@ -11,7 +11,7 @@ import { translatedSeason, ucFirst } from "@/lib/utils";
 import FormErrorMessage from "@/components/forms/FormErrorMessage";
 import { toast } from "sonner";
 import { useCsrfToken } from "@/app/hooks/useCsrfToken";
-import { getCategoriesIngredient } from "@/lib/data_fetcher";
+import { getCategoriesIngredient } from "@/lib/services/data_fetcher";
 
 const UpdateIngredient: React.FC<UpdateIngredientProps> = ({
     ingredient,

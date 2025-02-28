@@ -12,7 +12,7 @@ import { translatedSeason, ucFirst } from "@/lib/utils";
 import { CreateIngredientProps } from "@/lib/types/props_interfaces";
 import FormErrorMessage from "@/components/forms/FormErrorMessage";
 import { useCsrfToken } from "@/app/hooks/useCsrfToken";
-import { getCategoriesIngredient } from "@/lib/data_fetcher";
+import { getCategoriesIngredient } from "@/lib/services/data_fetcher";
 
 // _________________________ COMPOSANT _________________________
 const CreateIngredient: React.FC<CreateIngredientProps> = ({

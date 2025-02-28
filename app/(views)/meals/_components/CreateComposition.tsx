@@ -14,7 +14,7 @@ import { translatedUnit } from "@/lib/utils";
 import { CreateCompositionProps } from "@/lib/types/props_interfaces";
 import FormErrorMessage from "@/components/forms/FormErrorMessage";
 import { useCsrfToken } from "@/app/hooks/useCsrfToken";
-import { getIngredients } from "@/lib/data_fetcher";
+import { getIngredients } from "@/lib/services/data_fetcher";
 
 const CreateComposition: React.FC<CreateCompositionProps>= ({
     mealId,
