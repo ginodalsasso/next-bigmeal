@@ -11,6 +11,7 @@ import { translatedSeason, ucFirst } from "@/lib/utils";
 import FormErrorMessage from "@/components/forms/FormErrorMessage";
 import { toast } from "sonner";
 import { useCsrfToken } from "@/app/hooks/useCsrfToken";
+import { getCategoriesIngredient } from "@/lib/data_fetcher";
 
 const UpdateIngredient: React.FC<UpdateIngredientProps> = ({
     ingredient,
@@ -40,17 +41,17 @@ const UpdateIngredient: React.FC<UpdateIngredientProps> = ({
     useEffect(() => {
         const fetchCategories = async () => {
             try {
-                const response = await fetch("/api/categories-ingredient");
-                if (!response.ok) throw new Error("Erreur lors de la récupération des catégories");
-                
-                const data: CategoryIngredientType[] = await response.json();
-                setCategories(data);
+                const data: CategoryIngredientType[] = await getCategoriesIngredient();
+                setCategories(data); 
+
             } catch (error) {
                 console.error("[FETCH_CATEGORIES_ERROR]", error);
+                setError({ general: "Erreur lors de la récupération des catégories." });
             }
         };
+
         fetchCategories();
-    }, []);
+    }, [setError]);
 
     // Gère la soumission et l'update de l'ingrédient
     const handleSubmit = async (e: React.FormEvent) => {

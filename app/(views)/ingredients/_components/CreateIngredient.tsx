@@ -12,6 +12,7 @@ import { translatedSeason, ucFirst } from "@/lib/utils";
 import { CreateIngredientProps } from "@/lib/types/props_interfaces";
 import FormErrorMessage from "@/components/forms/FormErrorMessage";
 import { useCsrfToken } from "@/app/hooks/useCsrfToken";
+import { getCategoriesIngredient } from "@/lib/data_fetcher";
 
 // _________________________ COMPOSANT _________________________
 const CreateIngredient: React.FC<CreateIngredientProps> = ({
@@ -41,21 +42,21 @@ const CreateIngredient: React.FC<CreateIngredientProps> = ({
 
     // _________________________ LOGIQUE _________________________
     // Appel API pour récupérer les catégories d'ingrédients
-    useEffect(() => {
-        const fetchCategories = async () => {
-            try {
-                const response = await fetch("/api/categories-ingredient");
-                if (!response.ok) throw new Error("Erreur lors de la récupération des categories-ingredient");
-                
-                const data: CategoryIngredientType[] = await response.json();
-                setCategories(data);
-            } catch (error) {
-                console.error("[FETCH_CATEGORIES_ERROR]", error);
-                setError({ general: "Erreur lors de la récupération des catégories." });
-            }
-        };
-        fetchCategories();
-    }, [setError]);
+        useEffect(() => {
+            const fetchCategories = async () => {
+                try {
+                    const data: CategoryIngredientType[] = await getCategoriesIngredient();
+                    setCategories(data); 
+    
+                } catch (error) {
+                    console.error("[FETCH_CATEGORIES_ERROR]", error);
+                    setError({ general: "Erreur lors de la récupération des catégories." });
+                }
+            };
+    
+            fetchCategories();
+        }, [setError]);
+
 
 
     // Gestion de la soumission du formulaire

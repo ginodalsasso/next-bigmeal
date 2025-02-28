@@ -8,6 +8,7 @@ import { ucFirst } from "@/lib/utils";
 import FormErrorMessage from "@/components/forms/FormErrorMessage";
 import { toast } from "sonner";
 import { useCsrfToken } from "@/app/hooks/useCsrfToken";
+import { getCategoriesMeal } from "@/lib/data_fetcher";
 
 // _________________________ COMPOSANT _________________________
 const UpdateMeal: React.FC<UpdateMealProps> = ({
@@ -37,18 +38,18 @@ const UpdateMeal: React.FC<UpdateMealProps> = ({
     useEffect(() => {
         const fetchCategories = async () => {
             try {
-                const response = await fetch("/api/categories-meal");
-                if (!response.ok) throw new Error("Erreur lors de la récupération des catégories.");
-                
-                const data: CategoryMealType[] = await response.json();
-                setCategories(data);
+                const data: CategoryMealType[] = await getCategoriesMeal();
+                setCategories(data); 
+
             } catch (error) {
                 console.error("[FETCH_CATEGORIES_ERROR]", error);
                 setError({ general: "Erreur lors de la récupération des catégories." });
             }
         };
+
         fetchCategories();
     }, [setError]);
+        
 
     // Gestion des changements de champs
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
