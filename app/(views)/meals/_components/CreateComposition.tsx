@@ -14,6 +14,7 @@ import { translatedUnit } from "@/lib/utils";
 import { CreateCompositionProps } from "@/lib/types/props_interfaces";
 import FormErrorMessage from "@/components/forms/FormErrorMessage";
 import { useCsrfToken } from "@/app/hooks/useCsrfToken";
+import { getIngredients } from "@/lib/data_fetcher";
 
 const CreateComposition: React.FC<CreateCompositionProps>= ({
     mealId,
@@ -42,15 +43,14 @@ const CreateComposition: React.FC<CreateCompositionProps>= ({
     useEffect(() => {
         const fetchIngredients = async () => {
             try {
-                const response = await fetch("/api/ingredients");
-                if (!response.ok) throw new Error("Erreur lors de la récupération des ingrédients");
+                const data: IngredientType[] = await getIngredients(); 
+                setIngredients(data); 
 
-                const data: IngredientType[] = await response.json();
-                setIngredients(data);
             } catch (error) {
                 console.error("[FETCH_INGREDIENTS_ERROR]", error);
             }
         };
+
         fetchIngredients();
     }, []);
 

@@ -22,7 +22,7 @@ export async function getCategoriesMeal() {
 
 export async function getIngredients() {
     try {
-        const response = await fetch(`${process.env.API_URL}/api/ingredients`, { cache: "no-store" });
+        const response = await fetch(`/api/ingredients`, { cache: "no-store" });
         if (!response.ok) throw new Error("Erreur lors de la récupération des ingrédients.");
         return response.json();
     } catch (error) {
