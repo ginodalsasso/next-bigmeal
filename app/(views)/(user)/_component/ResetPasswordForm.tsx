@@ -1,12 +1,22 @@
-import { useCsrfToken } from "@/app/hooks/useCsrfToken";
-import { useFormValidation } from "@/app/hooks/useFormValidation";
-import FormErrorMessage from "@/components/forms/FormErrorMessage";
-import { Button } from "@/components/ui/button";
-import { ResetPasswordConstraints } from "@/lib/constraints/forms_constraints";
-import { resetPasswordAPI } from "@/lib/services/user_service";
+// Bibliothèques tierces
 import React from "react";
 import { toast } from "sonner";
 
+// Hooks personnalisés
+import { useCsrfToken } from "@/app/hooks/useCsrfToken";
+import { useFormValidation } from "@/app/hooks/useFormValidation";
+
+// Composants UI
+import { Button } from "@/components/ui/button";
+import FormErrorMessage from "@/components/forms/FormErrorMessage";
+
+// Contraintes
+import { ResetPasswordConstraints } from "@/lib/constraints/forms_constraints";
+
+// Services
+import { resetPasswordAPI } from "@/lib/services/user_service";
+
+// _________________________ COMPONENT _________________________
 const ResetPasswordForm = ({ onBackToProfile }: { onBackToProfile: () => void }) => {
 
     // _________________________ ETATS _________________________

@@ -1,14 +1,24 @@
 "use client";
 
+// Bibliothèques tierces
 import React, { useState } from "react";
+
+// Types et interfaces
 import { CategoryIngredientType } from "@/lib/types/schemas_interfaces";
-import UpdateCategory from "../_components/UpdateCategory";
+
+// Composants UI
 import ItemView from "@/components/layout/ItemView";
 import EditItemDrawer from "@/components/layout/EditItemDrawer";
 import DeleteItem from "@/components/layout/DeleteItemDialog";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import IsAdmin from "@/components/isAdmin";
+
+// Composants spécifiques
+import UpdateCategory from "../_components/UpdateCategory";
 import CreateCategory from "../_components/CreateCategory";
+
+// Composants d'autorisation
+import IsAdmin from "@/components/isAdmin";
+
 
 // _________________________ COMPOSANT _________________________
 export default function CategoryIngredientList({ fetchedCategories }: { fetchedCategories: CategoryIngredientType[] }) {

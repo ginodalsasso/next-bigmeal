@@ -1,19 +1,33 @@
 "use client";
 
+// Bibliothèques tierces
 import React, { useEffect, useState } from "react";
+import { toast } from "sonner";
+
+// Types et énumérations
 import { Season } from "@/lib/types/enums";
 import { CategoryIngredientType, IngredientType } from "@/lib/types/schemas_interfaces";
 import { IngredientFormType } from "@/lib/types/forms_interfaces";
+import { CreateIngredientProps } from "@/lib/types/props_interfaces";
+
+// Contraintes et validation
 import { ingredientConstraints } from "@/lib/constraints/forms_constraints";
 import { useFormValidation } from "@/app/hooks/useFormValidation";
-import { toast } from "sonner";
-import { Button } from "@/components/ui/button";
-import { translatedSeason, ucFirst } from "@/lib/utils";
-import { CreateIngredientProps } from "@/lib/types/props_interfaces";
-import FormErrorMessage from "@/components/forms/FormErrorMessage";
+
+// Hooks personnalisés
 import { useCsrfToken } from "@/app/hooks/useCsrfToken";
+
+// Utils
+import { translatedSeason, ucFirst } from "@/lib/utils";
+
+// Composants UI
+import { Button } from "@/components/ui/button";
+import FormErrorMessage from "@/components/forms/FormErrorMessage";
+
+// Services
 import { getCategoriesIngredient } from "@/lib/services/data_fetcher";
 import { createIngredientAPI } from "@/lib/services/ingredients_service";
+
 
 // _________________________ COMPOSANT _________________________
 const CreateIngredient: React.FC<CreateIngredientProps> = ({

@@ -1,20 +1,32 @@
 "use client";
 
+// Bibliothèques tierces
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
+// Hooks personnalisés
 import { useFormValidation } from "@/app/hooks/useFormValidation";
+import { useCsrfToken } from "@/app/hooks/useCsrfToken";
+
+// Types
 import { CategoryMealType, MealType } from "@/lib/types/schemas_interfaces";
 import { MealFormType } from "@/lib/types/forms_interfaces";
+import { CreateMealProps } from "@/lib/types/props_interfaces";
+
+// Contraintes et validation
 import { mealConstraints } from "@/lib/constraints/forms_constraints";
 
-import { toast } from "sonner";
-import { Button } from "@/components/ui/button";
-import { CreateMealProps } from "@/lib/types/props_interfaces";
+// Utils
 import { ucFirst } from "@/lib/utils";
+
+// Composants UI
+import { Button } from "@/components/ui/button";
 import FormErrorMessage from "@/components/forms/FormErrorMessage";
-import { useCsrfToken } from "@/app/hooks/useCsrfToken";
+
+// Services
 import { getCategoriesMeal } from "@/lib/services/data_fetcher";
 import { createMealAPI } from "@/lib/services/meal_service";
+
 
 const CreateMeal: React.FC<CreateMealProps> = ({ onMealCreated, onClose }) => {
     // _________________________ HOOKS _________________________

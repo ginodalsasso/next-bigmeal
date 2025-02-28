@@ -1,12 +1,19 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
-import { resetForgottenPasswordAPI, verifyResetTokenAPI } from '@/lib/services/user_service';
-import { ForgotUserPasswordFormType } from '@/lib/types/forms_interfaces';
-import { useParams } from 'next/navigation';
-import { useRouter } from 'next/navigation';
+// Bibliothèques tierces
 import React, { useEffect, useState } from 'react';
+import { useParams, useRouter } from 'next/navigation';
 import { toast } from 'sonner';
+
+// Composants UI
+import { Button } from '@/components/ui/button';
+
+// Types
+import { ForgotUserPasswordFormType } from '@/lib/types/forms_interfaces';
+
+// Services
+import { resetForgottenPasswordAPI, verifyResetTokenAPI } from '@/lib/services/user_service';
+
 
 const ResetPasswordPage = () => {
     const { token } = useParams(); 

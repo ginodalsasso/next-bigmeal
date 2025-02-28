@@ -1,12 +1,20 @@
 "use client";
 
+// Bibliothèques tierces
 import React, { useEffect, useState } from "react";
+
+// Types et utils
 import { UserType } from "@/lib/types/schemas_interfaces";
 import { dateToString } from "@/lib/utils";
+
+// Composants UI
 import { Button } from "@/components/ui/button";
 import DeleteProfile from "../_component/DeleteProfile";
 import ResetPasswordForm from "../_component/ResetPasswordForm";
+
+// Services
 import { fetchUserProfileAPI } from "@/lib/services/user_service";
+
 
 const ProfilePage = () => {
     // _________________________ ETATS _________________________

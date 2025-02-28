@@ -1,15 +1,29 @@
+// Bibliothèques tierces
 import { useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
+
+// Hooks personnalisés
+import { useFormValidation } from "@/app/hooks/useFormValidation";
+import { useCsrfToken } from "@/app/hooks/useCsrfToken";
+
+// Types
 import { CategoryMealType } from "@/lib/types/schemas_interfaces";
 import { UpdateMealProps } from "@/lib/types/props_interfaces";
-import { useFormValidation } from "@/app/hooks/useFormValidation";
+
+// Contraintes et validation
 import { mealConstraints } from "@/lib/constraints/forms_constraints";
+
+// Utils
 import { ucFirst } from "@/lib/utils";
+
+// Composants UI
+import { Button } from "@/components/ui/button";
 import FormErrorMessage from "@/components/forms/FormErrorMessage";
-import { toast } from "sonner";
-import { useCsrfToken } from "@/app/hooks/useCsrfToken";
+
+// Services
 import { getCategoriesMeal } from "@/lib/services/data_fetcher";
 import { updateMealAPI } from "@/lib/services/meal_service";
+
 
 // _________________________ COMPOSANT _________________________
 const UpdateMeal: React.FC<UpdateMealProps> = ({

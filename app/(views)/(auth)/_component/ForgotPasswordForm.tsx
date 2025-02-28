@@ -1,10 +1,18 @@
-import { useFormValidation } from "@/app/hooks/useFormValidation";
-import FormErrorMessage from "@/components/forms/FormErrorMessage";
-import { Button } from "@/components/ui/button";
-import { ForgotPasswordConstraints } from "@/lib/constraints/forms_constraints";
-import { sendForgotPasswordEmailAPI } from "@/lib/services/auth_service";
+// Bibliothèques tierces
 import React, { useState } from "react";
 import { toast } from "sonner";
+
+// Hooks personnalisés
+import { useFormValidation } from "@/app/hooks/useFormValidation";
+
+// Composants UI
+import FormErrorMessage from "@/components/forms/FormErrorMessage";
+import { Button } from "@/components/ui/button";
+
+// Contraintes et services
+import { ForgotPasswordConstraints } from "@/lib/constraints/forms_constraints";
+import { sendForgotPasswordEmailAPI } from "@/lib/services/auth_service";
+
 
 
 const ForgotPasswordForm = ({ onBackToLogin }: { onBackToLogin: () => void }) => {

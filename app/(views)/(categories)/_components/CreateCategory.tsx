@@ -1,13 +1,24 @@
+// Bibliothèques tierces
 import React, { useState } from "react";
+import { toast } from "sonner";
+
+// Hooks personnalisés
 import { useFormValidation } from "@/app/hooks/useFormValidation";
-import { categoriesConstraints } from "@/lib/constraints/forms_constraints";
+import { useCsrfToken } from "@/app/hooks/useCsrfToken";
+
+// Composants UI
 import { Button } from "@/components/ui/button";
 import FormErrorMessage from "@/components/forms/FormErrorMessage";
-import { toast } from "sonner";
-import { useCsrfToken } from "@/app/hooks/useCsrfToken";
-import { CreateCategoryProps } from "@/lib/types/props_interfaces";
+
+// Contraintes et services
+import { categoriesConstraints } from "@/lib/constraints/forms_constraints";
 import { createCategoryAPI } from "@/lib/services/categories_service";
 
+// Types et interfaces
+import { CreateCategoryProps } from "@/lib/types/props_interfaces";
+
+
+// _________________________ TYPE _________________________
 type CategoryFormType = { name: string };
 
 

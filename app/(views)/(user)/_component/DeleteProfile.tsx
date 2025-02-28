@@ -1,10 +1,18 @@
 "use client";
 
+// Bibliothèques tierces
 import React, { useState } from "react";
+
+// Composants UI
 import { AlertDialog, AlertDialogTrigger, AlertDialogContent, AlertDialogHeader, AlertDialogFooter, AlertDialogTitle, AlertDialogDescription } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
+
+// Hooks personnalisés
 import { useCsrfToken } from "@/app/hooks/useCsrfToken";
+
+// Services
 import { deleteProfileAPI } from "@/lib/services/user_service";
+
 
 interface DeleteProfileProps {
     userId: string;

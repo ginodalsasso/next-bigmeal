@@ -1,8 +1,14 @@
 "use client";
 
+// Bibliothèques tierces
 import React, { useEffect, useState, use } from "react";
+
+// Types
 import { IngredientType } from "@/lib/types/schemas_interfaces";
+
+// Services
 import { fetchIngredientAPI } from "@/lib/services/ingredients_service";
+
 
 const IngredientDetailPage = 
     ({ 

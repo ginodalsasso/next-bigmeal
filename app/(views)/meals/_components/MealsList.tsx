@@ -1,23 +1,20 @@
 'use client';
 
+// Bibliothèques tierces
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import add from "@/public/img/add.svg";
+import { toast } from "sonner";
+
+// Types
 import { MealType } from "@/lib/types/schemas_interfaces";
 
+// Images
+import add from "@/public/img/add.svg";
+
+// Composants
 import ItemView from "@/components/layout/ItemView";
 import EditItem from "@/components/layout/EditItemDrawer";
 import DeleteItem from "@/components/layout/DeleteItemDialog";
-
-import {
-    Dialog,
-    DialogContent,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-} from "@/components/ui/dialog";
-import { toast } from "sonner";
-import { Button } from "@/components/ui/button";
 import CreateMeal from "./CreateMeal";
 import UpdateMeal from "./UpdateMeal";
 import CreateComposition from "./CreateComposition";
@@ -25,8 +22,15 @@ import AddToShoppingListForm from "@/components/forms/AddToShoppingListForm";
 import IsAdmin from "@/components/isAdmin";
 import IsUser from "@/components/isUser";
 import SearchBar from "@/components/layout/Searchbar";
-import { CATEGORIES_MEALS } from "@/lib/constants/ui_constants";
 import FilterCheckboxes from "@/components/layout/FilterItems";
+
+// Composants UI
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+
+// Constantes
+import { CATEGORIES_MEALS } from "@/lib/constants/ui_constants";
+
 
 // _________________________ COMPOSANT _________________________
 export default function MealsList( {fetchedMeals}: { fetchedMeals: MealType[] }) {

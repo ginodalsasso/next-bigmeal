@@ -1,13 +1,21 @@
 "use client";
 
-import { signIn } from "next-auth/react";
-import { Button } from "@/components/ui/button";
-import { LoginConstraints } from "@/lib/constraints/forms_constraints";
-import FormErrorMessage from "@/components/forms/FormErrorMessage";
-import { useFormValidation } from "@/app/hooks/useFormValidation";
-import { useRouter } from "next/navigation";
+// Bibliothèques tierces
 import { useState } from "react";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
+
+// Hooks personnalisés
+import { useFormValidation } from "@/app/hooks/useFormValidation";
+
+// Composants UI
+import { Button } from "@/components/ui/button";
+import FormErrorMessage from "@/components/forms/FormErrorMessage";
 import ForgotPasswordForm from "../_component/ForgotPasswordForm";
+
+// Contraintes
+import { LoginConstraints } from "@/lib/constraints/forms_constraints";
+
 
 export default function LoginPage() {
     

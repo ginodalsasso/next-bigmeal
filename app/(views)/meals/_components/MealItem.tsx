@@ -1,23 +1,29 @@
 "use client";
 
+// Bibliothèques tierces
 import React, { useState } from "react";
+import Image from "next/image";
+
+// Types
 import { CompositionType, MealType } from "@/lib/types/schemas_interfaces";
+
+// Utils
 import { translatedUnit, ucFirst } from "@/lib/utils";
+
+// Composants
 import CreateComposition from "../_components/CreateComposition";
 import UpdateComposition from "../_components/UpdateComposition";
-import {
-    Dialog,
-    DialogContent,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-} from "@/components/ui/dialog";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import Image from "next/image";
-import { Button } from "@/components/ui/button";
-import add from "@/public/img/add.svg";
 import IsAdmin from "@/components/isAdmin";
 import DeleteItem from "@/components/layout/DeleteItemDialog";
+
+// Composants UI
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Button } from "@/components/ui/button";
+
+// Images
+import add from "@/public/img/add.svg";
+
 
 // _________________________ COMPOSANT _________________________
 export default function MealItem( {fetchedMeal}: { fetchedMeal: MealType }) {

@@ -1,15 +1,27 @@
 'use client';
 
-import { useCsrfToken } from "@/app/hooks/useCsrfToken";
-import DeleteItem from "@/components/layout/DeleteItemDialog";
-import { Button } from "@/components/ui/button";
-import { fetchShoppingListAPI, markShoppingListAsExpiredAPI, toggleItemCheckedAPI } from "@/lib/services/shopping_list_service";
-import { ShoppingListType } from "@/lib/types/schemas_interfaces";
-import { dateToString } from "@/lib/utils";
-import { Separator } from "@radix-ui/react-separator";
-import { useRouter } from "next/navigation";
+// Bibliothèques tierces
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+
+// Hooks personnalisés
+import { useCsrfToken } from "@/app/hooks/useCsrfToken";
+
+// Composants UI
+import { Button } from "@/components/ui/button";
+import DeleteItem from "@/components/layout/DeleteItemDialog";
+import { Separator } from "@radix-ui/react-separator";
+
+// Types
+import { ShoppingListType } from "@/lib/types/schemas_interfaces";
+
+// Utils
+import { dateToString } from "@/lib/utils";
+
+// Services
+import {  fetchShoppingListAPI, markShoppingListAsExpiredAPI, toggleItemCheckedAPI } from "@/lib/services/shopping_list_service";
+
 
 const ShoppingListPage = () => {
     const router = useRouter(); 

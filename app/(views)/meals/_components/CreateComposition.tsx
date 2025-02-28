@@ -1,21 +1,32 @@
 "use client";
 
+// Bibliothèques tierces
 import React, { useEffect, useState } from "react";
+import { toast } from "sonner";
 
+// Types et énumérations
 import { CompositionFormErrorType, CompositionFormType } from "@/lib/types/forms_interfaces";
 import { CompositionType, IngredientType } from "@/lib/types/schemas_interfaces";
+import { IngredientUnit } from "@/lib/types/enums";
+import { CreateCompositionProps } from "@/lib/types/props_interfaces";
+
+// Contraintes et validation
 import { newCompositionConstraints } from "@/lib/constraints/forms_constraints";
 
-
-import { toast } from "sonner";
-import { Button } from "@/components/ui/button";
-import { IngredientUnit } from "@/lib/types/enums";
-import { translatedUnit } from "@/lib/utils";
-import { CreateCompositionProps } from "@/lib/types/props_interfaces";
-import FormErrorMessage from "@/components/forms/FormErrorMessage";
+// Hooks personnalisés
 import { useCsrfToken } from "@/app/hooks/useCsrfToken";
+
+// Utils
+import { translatedUnit } from "@/lib/utils";
+
+// Composants UI
+import { Button } from "@/components/ui/button";
+import FormErrorMessage from "@/components/forms/FormErrorMessage";
+
+// Services
 import { getIngredients } from "@/lib/services/data_fetcher";
 import { createCompositionAPI } from "@/lib/services/composition_service";
+
 
 const CreateComposition: React.FC<CreateCompositionProps>= ({
     mealId,

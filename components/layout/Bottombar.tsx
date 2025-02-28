@@ -10,23 +10,6 @@ import IsUser from "../isUser";
 const Bottombar = () => {
     const [active, setActive] = useState(""); // État de la navigation active
 
-    // const [cartItems, setCartItems] = useState(0); // État pour le nombre d'articles
-
-    // useEffect(() => {
-    //     const fetchCart = async () => {
-    //         const response = await fetch("/api/shopping-list/shopping-list-items");
-    //         const data = await response.json();
-    //         if (data.totalCartQuantity) {
-    //             setCartItems(data.totalCartQuantity);
-    //         } else {
-    //             setCartItems(0);
-    //         }
-
-    //     };
-    //     fetchCart();
-    // }, []);
-// Définition des liens avec chemins des SVG
-
     const links = [
         { icon: "/img/home.svg", url: "/", alt: "Accueil"},
         { icon: "/img/user.svg", url: "/profile", alt: "Profil" },

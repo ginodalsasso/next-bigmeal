@@ -1,23 +1,19 @@
 'use client';
 
+// Bibliothèques tierces
 import React, { useState } from "react";
 import Image from "next/image";
+
+// Images
 import add from "@/public/img/add.svg";
+
+// Types
 import { IngredientType } from "@/lib/types/schemas_interfaces";
 
+// Composants
 import ItemView from "@/components/layout/ItemView";
 import CreateIngredient from "./CreateIngredient";
 import UpdateIngredient from "./UpdateIngredient";
-
-import {
-    Dialog,
-    DialogContent,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-} from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { reversedTranslatedSeason, translatedSeason } from "@/lib/utils";
 import AddToShoppingListForm from "@/components/forms/AddToShoppingListForm";
 import EditItem from "@/components/layout/EditItemDrawer";
 import DeleteItem from "@/components/layout/DeleteItemDialog";
@@ -25,7 +21,17 @@ import IsAdmin from "@/components/isAdmin";
 import IsUser from "@/components/isUser";
 import SearchBar from "@/components/layout/Searchbar";
 import FilterItems from "@/components/layout/FilterItems";
+
+// Composants UI
+import {  Dialog, DialogContent, DialogHeader,  DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+
+// Utils
+import { reversedTranslatedSeason, translatedSeason } from "@/lib/utils";
+
+// Constantes
 import { CATEGORIES_INGREDIENTS, SEASONS } from "@/lib/constants/ui_constants";
+
 
 
 // _________________________ COMPOSANT _________________________

@@ -1,14 +1,21 @@
 "use client";
 
+// Bibliothèques tierces
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+
+// Hooks personnalisés
 import { useFormValidation } from "@/app/hooks/useFormValidation";
-import FormErrorMessage from "@/components/forms/FormErrorMessage";
+
+// Composants UI
 import { Button } from "@/components/ui/button";
+import FormErrorMessage from "@/components/forms/FormErrorMessage";
+
+// Contraintes et services
 import { RegisterConstraints } from "@/lib/constraints/forms_constraints";
 import { registerUserAPI } from "@/lib/services/auth_service";
 
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { toast } from "sonner";
 
 export default function RegisterPage() {
 

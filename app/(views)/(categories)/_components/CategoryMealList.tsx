@@ -1,14 +1,23 @@
 'use client';
 
+// Bibliothèques tierces
 import React, { useState } from "react";
+
+// Types et interfaces
 import { CategoryMealType } from "@/lib/types/schemas_interfaces";
-import UpdateCategory from "./UpdateCategory";
+
+// Composants UI
 import ItemView from "@/components/layout/ItemView";
 import EditItemDrawer from "@/components/layout/EditItemDrawer";
 import DeleteItem from "@/components/layout/DeleteItemDialog";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import IsAdmin from "@/components/isAdmin";
+
+// Composants spécifiques
+import UpdateCategory from "./UpdateCategory";
 import CreateCategory from "./CreateCategory";
+
+// Composants d'autorisation
+import IsAdmin from "@/components/isAdmin";
 
 
 // _________________________ COMPOSANT _________________________

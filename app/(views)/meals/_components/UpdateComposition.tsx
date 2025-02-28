@@ -1,19 +1,32 @@
 "use client";
 
+// Bibliothèques tierces
 import { useState } from "react";
-import { CompositionType } from "@/lib/types/schemas_interfaces";
 import { toast } from "sonner";
-import { Button } from "@/components/ui/button";
-import { IngredientUnit } from "@/lib/types/enums";
-import { translatedUnit } from "@/lib/utils";
 
+// Types et énumérations
+import { CompositionType } from "@/lib/types/schemas_interfaces";
+import { IngredientUnit } from "@/lib/types/enums";
+import { UpdateCompositionProps } from "@/lib/types/props_interfaces";
+import { UpdateCompositionFormType } from "@/lib/types/forms_interfaces";
+
+// Contraintes et validation
 import { updateCompositionConstraints } from "@/lib/constraints/forms_constraints";
 import { useFormValidation } from "@/app/hooks/useFormValidation";
-import { UpdateCompositionProps } from "@/lib/types/props_interfaces";
-import FormErrorMessage from "@/components/forms/FormErrorMessage";
-import { UpdateCompositionFormType } from "@/lib/types/forms_interfaces";
+
+// Hooks personnalisés
 import { useCsrfToken } from "@/app/hooks/useCsrfToken";
+
+// Utils
+import { translatedUnit } from "@/lib/utils";
+
+// Composants UI
+import { Button } from "@/components/ui/button";
+import FormErrorMessage from "@/components/forms/FormErrorMessage";
+
+// Services
 import { updateCompositionAPI } from "@/lib/services/composition_service";
+
 
 // _________________________ COMPOSANT _________________________
 const UpdateComposition: React.FC<UpdateCompositionProps> = ({
