@@ -1,13 +1,13 @@
+// Composant listant les repas
 import MealsList from "./_components/MealsList";
 
-async function getMeals() {
-    const response = await fetch(`${process.env.API_URL}/api/meals`, { cache: "no-store" });
-    if (!response.ok) throw new Error("Erreur lors de la récupération des repas.");
-    return response.json();
-}
+// Service de récupération des repas
+import { getMeals } from "@/lib/services/data_fetcher";
+
 
 export default async function MealPage() {
     const meals = await getMeals();
     
+    // _________________________ RENDU __________________
     return <MealsList fetchedMeals={meals} />;
 }

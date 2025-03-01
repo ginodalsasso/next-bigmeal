@@ -2,7 +2,7 @@ import { db } from "@/lib/db";
 import { NextRequest, NextResponse } from "next/server";
 import { CompositionFormType } from "@/lib/types/forms_interfaces";
 import { idConstraints, newCompositionConstraints, updateCompositionConstraints } from "@/lib/constraints/forms_constraints";
-import { verifyCSRFToken } from "@/lib/security/csrf";
+import { verifyCSRFToken } from "@/lib/security/verifyCsrfToken";
 import { getAdminSession, getUserSession } from "@/lib/security/getSession";
 
 

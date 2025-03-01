@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { categoriesConstraints, idConstraints } from "@/lib/constraints/forms_constraints";
 import { z } from "zod";
-import { verifyCSRFToken } from "@/lib/security/csrf";
+import { verifyCSRFToken } from "@/lib/security/verifyCsrfToken";
 import { getAdminSession } from "@/lib/security/getSession";
 
 

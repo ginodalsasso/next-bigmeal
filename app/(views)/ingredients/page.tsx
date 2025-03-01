@@ -1,13 +1,13 @@
+// Composant de liste des ingrédients
 import IngredientsList from "./_components/IngredientsList";
 
-async function getIngredients() {
-    const response = await fetch(`${process.env.API_URL}/api/ingredients`, { cache: "no-store" });
-    if (!response.ok) throw new Error("Erreur lors de la récupération des ingrédients.");
-    return response.json();
-}
+// Service de récupération des ingrédients
+import { getIngredients } from "@/lib/services/data_fetcher";
+
 
 export default async function IngredientPage() {
     const ingredients = await getIngredients();
     
+    // _________________________ RENDU _________________________
     return <IngredientsList fetchedIngredients={ingredients} />;
 }

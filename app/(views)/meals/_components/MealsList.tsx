@@ -1,23 +1,20 @@
 'use client';
 
+// Bibliothèques tierces
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import add from "@/public/img/add.svg";
+import { toast } from "sonner";
+
+// Types
 import { MealType } from "@/lib/types/schemas_interfaces";
 
+// Images
+import add from "@/public/img/add.svg";
+
+// Composants
 import ItemView from "@/components/layout/ItemView";
 import EditItem from "@/components/layout/EditItemDrawer";
 import DeleteItem from "@/components/layout/DeleteItemDialog";
-
-import {
-    Dialog,
-    DialogContent,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-} from "@/components/ui/dialog";
-import { toast } from "sonner";
-import { Button } from "@/components/ui/button";
 import CreateMeal from "./CreateMeal";
 import UpdateMeal from "./UpdateMeal";
 import CreateComposition from "./CreateComposition";
@@ -25,15 +22,20 @@ import AddToShoppingListForm from "@/components/forms/AddToShoppingListForm";
 import IsAdmin from "@/components/isAdmin";
 import IsUser from "@/components/isUser";
 import SearchBar from "@/components/layout/Searchbar";
-import { CATEGORIES_MEALS } from "@/lib/constants/constants";
-import FilterCheckboxes from "@/components/layout/FilterCheckboxes";
-import { useCsrfToken } from "@/app/hooks/useCsrfToken";
+import FilterCheckboxes from "@/components/layout/FilterItems";
+
+// Composants UI
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+
+// Constantes
+import { CATEGORIES_MEALS } from "@/lib/constants/ui_constants";
+
 
 // _________________________ COMPOSANT _________________________
 export default function MealsList( {fetchedMeals}: { fetchedMeals: MealType[] }) {
-    // _________________________ ETATS _________________________
-    const csrfToken = useCsrfToken();
     
+    // _________________________ ETATS _________________________
     const [meals, setMeals] = useState<MealType[]>(fetchedMeals);
 
     const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
@@ -43,8 +45,6 @@ export default function MealsList( {fetchedMeals}: { fetchedMeals: MealType[] })
     const [searchQuery, setSearchQuery] = useState<string>(""); 
     const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
     
-    const [error, setError] = useState<string | null>(null);
-
     // _________________________ CRUD _________________________
     // Réinitialiser l'étape à createMeal lorsque le dialogue est fermé
     useEffect(() => {
@@ -69,6 +69,7 @@ export default function MealsList( {fetchedMeals}: { fetchedMeals: MealType[] })
         setCreatedMealId(null); // Réinitialiser l'ID du repas créé
     };
 
+    // Suppression d'un repas dans le state après suppression API
     const updateMeal = async (updatedMeal: MealType): Promise<void> => {
         setMeals((prevMeals) =>
             prevMeals.map((meal) => (meal.id === updatedMeal.id ? updatedMeal : meal))
@@ -76,32 +77,12 @@ export default function MealsList( {fetchedMeals}: { fetchedMeals: MealType[] })
         toast("Repas mis à jour avec succès");
     }
 
-    // Appel API pour supprimer un repas
-    const deleteMeal = async (id: string) => {
-        if (!csrfToken) {
-            console.error("CSRF token invalide");
-            return;
-        }
-        try {
-            const response = await fetch("/api/meals", {
-                method: "DELETE",
-                headers: { 
-                    "Content-Type": "application/json",
-                    "X-CSRF-Token": csrfToken, 
-                },
-                body: JSON.stringify({ id }),
-            });
-            if (!response.ok) throw new Error("Failed to delete meal");
 
-            // Supprimer le repas du state
-            setMeals((prev) => prev.filter((meal) => meal.id !== id));
-            
-            toast("Repas supprimé avec succès");
-        } catch (error) {
-            console.error("[DELETE_MEAL_ERROR]", error);
-            setError("Erreur lors de la suppression.");
-        }
+    // Suppression d'un repas dans le state après suppression API
+    const handleMealDeleted = (id: string) => {
+        setMeals((prev) => prev.filter((meal) => meal.id !== id));
     };
+
 
     // _________________________ FILTRAGE _________________________
     const filterOptions = CATEGORIES_MEALS; // Options de filtre
@@ -126,7 +107,6 @@ export default function MealsList( {fetchedMeals}: { fetchedMeals: MealType[] })
         
 
     // _________________________ RENDU _________________________
-    if (error) return <div>{error}</div>;
     if (!meals) return <div>Repas introuvables.</div>;
 
     return (
@@ -144,12 +124,16 @@ export default function MealsList( {fetchedMeals}: { fetchedMeals: MealType[] })
                         <DialogContent>
                             <DialogHeader>
                                 <DialogTitle>
+
+                                    {/* Titre du dialogue en fonction de l'étape */}
                                     {currentStep === "createMeal"
                                         ? "Ajouter un repas"
                                         : currentStep === "createComposition"
                                         ? "Ajouter une composition"
                                         : "Choisir une étape"}
                                 </DialogTitle>
+
+                                {/* Contenu du dialogue en fonction de l'étape */}
                                 {currentStep === "createMeal" && (
                                     <CreateMeal
                                         onMealCreated={addMeal}
@@ -180,14 +164,17 @@ export default function MealsList( {fetchedMeals}: { fetchedMeals: MealType[] })
                         </DialogContent>
                     </Dialog>
                 </IsUser>
+
                 {/* Barre de recherche */}
                 <SearchBar onSearch={(query) => setSearchQuery(query)} />
             </div>
+
             {/* Filtres */}
             <FilterCheckboxes 
                 options={filterOptions} 
                 onFilterChange={setSelectedFilters} 
             />
+
             {/* Liste des repas */}
             <div className="cards-wrapper">
                 <div className="cards-list">
@@ -201,6 +188,7 @@ export default function MealsList( {fetchedMeals}: { fetchedMeals: MealType[] })
                                 }}
                                 linkToDetails={`/meals/${meal.name}`}
                             />
+
                             <IsAdmin>
                                 <div className="flex w-full gap-2">
                                     {/* Édition du repas */}
@@ -215,11 +203,14 @@ export default function MealsList( {fetchedMeals}: { fetchedMeals: MealType[] })
                                     />
                                     {/* Suppression du repas */}
                                     <DeleteItem
-                                        onDelete={() => deleteMeal(meal.id)}
-                                        isDeleting={false}
+                                        apiUrl="/api/meals"
+                                        id={meal.id}
+                                        onSubmit={handleMealDeleted}
                                     />
                                 </div>
                             </IsAdmin>
+                            
+                            {/* Ajouter le repas à la liste de courses */}
                             <AddToShoppingListForm type="meal" id={meal.name} />
                         </div>
                     ))}

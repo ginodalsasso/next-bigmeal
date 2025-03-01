@@ -1,17 +1,32 @@
+// Bibliothèques tierces
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
+
+// Types et énumérations
 import { Season } from "@/lib/types/enums";
-import { CategoryIngredientType, IngredientType } from "@/lib/types/schemas_interfaces";
+import { CategoryIngredientType } from "@/lib/types/schemas_interfaces";
 import { UpdateIngredientProps } from "@/lib/types/props_interfaces";
 import { IngredientFormType } from "@/lib/types/forms_interfaces";
-import { ingredientConstraints } from "@/lib/constraints/forms_constraints";
 
-import { Button } from "@/components/ui/button";
+// Contraintes et validation
+import { ingredientConstraints } from "@/lib/constraints/forms_constraints";
 import { useFormValidation } from "@/app/hooks/useFormValidation";
-import { translatedSeason, ucFirst } from "@/lib/utils";
-import FormErrorMessage from "@/components/forms/FormErrorMessage";
-import { toast } from "sonner";
+
+// Hooks personnalisés
 import { useCsrfToken } from "@/app/hooks/useCsrfToken";
 
+// Utils
+import { translatedSeason, ucFirst } from "@/lib/utils";
+
+// Composants UI
+import { Button } from "@/components/ui/button";
+import FormErrorMessage from "@/components/forms/FormErrorMessage";
+
+// Services
+import { getCategoriesIngredient } from "@/lib/services/data_fetcher";
+import { updateIngredientAPI } from "@/lib/services/ingredients_service";
+
+// _________________________ COMPONENT _________________________
 const UpdateIngredient: React.FC<UpdateIngredientProps> = ({
     ingredient,
     onSubmit,
@@ -40,17 +55,17 @@ const UpdateIngredient: React.FC<UpdateIngredientProps> = ({
     useEffect(() => {
         const fetchCategories = async () => {
             try {
-                const response = await fetch("/api/categories-ingredient");
-                if (!response.ok) throw new Error("Erreur lors de la récupération des catégories");
-                
-                const data: CategoryIngredientType[] = await response.json();
-                setCategories(data);
+                const data: CategoryIngredientType[] = await getCategoriesIngredient();
+                setCategories(data); 
+
             } catch (error) {
                 console.error("[FETCH_CATEGORIES_ERROR]", error);
+                setError({ general: "Erreur lors de la récupération des catégories." });
             }
         };
+
         fetchCategories();
-    }, []);
+    }, [setError]);
 
     // Gère la soumission et l'update de l'ingrédient
     const handleSubmit = async (e: React.FormEvent) => {
@@ -64,25 +79,14 @@ const UpdateIngredient: React.FC<UpdateIngredientProps> = ({
             return;
         }
 
-        try {
-            // Récupérer le CSRF Token
-            if (!csrfToken) {
-                console.error("CSRF token invalide");
-                return;
-            }
-    
-            // Appel API pour mettre à jour l'ingrédient
-            const response = await fetch("/api/ingredients", {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-CSRF-Token": csrfToken,
-                },
-                body: JSON.stringify(form),
-            });
-            if (!response.ok) throw new Error("Échec de la mise à jour de l'ingrédient");
+        // Récupérer le CSRF Token
+        if (!csrfToken) {
+            console.error("CSRF token invalide");
+            return;
+        }
 
-            const updatedIngredient: IngredientType = await response.json();
+        try {
+            const updatedIngredient = await updateIngredientAPI(form, csrfToken);
 
             onSubmit(updatedIngredient);
             toast("Ingrédient modifié avec succès");

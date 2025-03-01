@@ -31,7 +31,7 @@ export async function POST(req: NextRequest) {
     );
 
 
-    const resetLink = `${process.env.BASE_URL}/reset-password/${generatedToken}`;
+    const resetLink = `${process.env.API_URL}/reset-password/${generatedToken}`;
 
     // Paramètres de l'email
     const mailOptions = {
@@ -44,7 +44,8 @@ export async function POST(req: NextRequest) {
     // Envoi de l'email
     try {
         await transporter.sendMail(mailOptions);
-        return new Response('Email envoyé', { status: 200 });
+        return new Response(JSON.stringify({
+            message: 'Email envoyé'}), { status: 200 });
     } catch (error) {
         console.error('[EMAIL_ERROR]', error);
         return new Response(JSON.stringify({ 

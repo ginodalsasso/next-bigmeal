@@ -1,47 +1,48 @@
 'use client';
 
+// Bibliothèques tierces
 import React, { useState } from "react";
 import Image from "next/image";
+
+// Images
 import add from "@/public/img/add.svg";
+
+// Types
 import { IngredientType } from "@/lib/types/schemas_interfaces";
 
+// Composants
 import ItemView from "@/components/layout/ItemView";
 import CreateIngredient from "./CreateIngredient";
 import UpdateIngredient from "./UpdateIngredient";
-
-import {
-    Dialog,
-    DialogContent,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-} from "@/components/ui/dialog";
-import { toast } from "sonner";
-import { Button } from "@/components/ui/button";
-import { reversedTranslatedSeason, translatedSeason } from "@/lib/utils";
 import AddToShoppingListForm from "@/components/forms/AddToShoppingListForm";
 import EditItem from "@/components/layout/EditItemDrawer";
 import DeleteItem from "@/components/layout/DeleteItemDialog";
 import IsAdmin from "@/components/isAdmin";
 import IsUser from "@/components/isUser";
 import SearchBar from "@/components/layout/Searchbar";
-import FilterCheckboxes from "@/components/layout/FilterCheckboxes";
-import { CATEGORIES_INGREDIENTS, SEASONS } from "@/lib/constants/constants";
-import { useCsrfToken } from "@/app/hooks/useCsrfToken";
+import FilterItems from "@/components/layout/FilterItems";
+
+// Composants UI
+import {  Dialog, DialogContent, DialogHeader,  DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+
+// Utils
+import { reversedTranslatedSeason, translatedSeason } from "@/lib/utils";
+
+// Constantes
+import { CATEGORIES_INGREDIENTS, SEASONS } from "@/lib/constants/ui_constants";
+
 
 
 // _________________________ COMPOSANT _________________________
 export default function IngredientList({ fetchedIngredients }: { fetchedIngredients: IngredientType[] }) {
     
+    
     // _________________________ ETATS _________________________
-    const csrfToken = useCsrfToken();
     const [ingredients, setIngredients] = useState<IngredientType[]>(fetchedIngredients);
     const [searchQuery, setSearchQuery] = useState<string>("");
     const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
-
-
     const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
-    const [error, setError] = useState<string | null>(null);
 
 
     // _________________________ CRUD _________________________
@@ -62,33 +63,11 @@ export default function IngredientList({ fetchedIngredients }: { fetchedIngredie
         );
     };
 
-
-    // Appel API pour supprimer un ingrédient
-    const deleteIngredient = async (id: string) => {
-        if (!csrfToken) {
-            console.error("CSRF token invalide");
-            return;
-        }
-        try {
-            const response = await fetch("/api/ingredients", {
-                method: "DELETE",
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-CSRF-Token": csrfToken,
-                },
-                body: JSON.stringify({ id }),
-            });
-            if (!response.ok) throw new Error("Erreur lors de la suppression de l'ingrédient");
-
-            setIngredients((prev) => 
-                prev.filter((ingredient) => ingredient.id !== id)
-            );
-            
-            toast("Ingrédient supprimé avec succès");
-        } catch (error) {
-            console.error("[DELETE_INGREDIENT_ERROR]", error);
-            setError("Erreur lors de la suppression.");
-        }
+    // Suppression d'une catégorie dans le state après suppression API
+    const handleIngredientDeleted = (id: string) => {
+        setIngredients((prev) => 
+            prev.filter((ingredient) => ingredient.id !== id)
+        );
     };
 
     // _________________________ FILTRAGE _________________________
@@ -116,7 +95,6 @@ export default function IngredientList({ fetchedIngredients }: { fetchedIngredie
     
 
     // _________________________ RENDU _________________________
-    if (error) return <div>{error}</div>;
     if (!ingredients) return <div>Ingrédients introuvables.</div>;
 
     return (
@@ -152,11 +130,13 @@ export default function IngredientList({ fetchedIngredients }: { fetchedIngredie
                 {/* Barre de recherche */}
                 <SearchBar onSearch={(query) => setSearchQuery(query)} />
             </div>
+            
             {/* Filtres */}
-            <FilterCheckboxes 
+            <FilterItems 
                 options={filterOptions} 
                 onFilterChange={setSelectedFilters} 
             />
+
             {/* Liste des ingrédients */}
             <div className="cards-wrapper">
                 <div className="cards-list">
@@ -184,7 +164,11 @@ export default function IngredientList({ fetchedIngredients }: { fetchedIngredie
                                             />
                                         )}
                                     />
-                                    <DeleteItem onDelete={() => deleteIngredient(ingredient.id)} isDeleting={false} />
+                                    <DeleteItem
+                                        apiUrl="/api/categories-meal"
+                                        id={ingredient.id}
+                                        onSubmit={handleIngredientDeleted}
+                                    />
                                 </div>
                             </IsAdmin>
                             {/* Ajouter l'ingrédient à la liste de courses */}

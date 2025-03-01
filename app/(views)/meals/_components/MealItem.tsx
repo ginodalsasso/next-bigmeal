@@ -1,31 +1,35 @@
 "use client";
 
+// Bibliothèques tierces
 import React, { useState } from "react";
+import Image from "next/image";
+
+// Types
 import { CompositionType, MealType } from "@/lib/types/schemas_interfaces";
+
+// Utils
 import { translatedUnit, ucFirst } from "@/lib/utils";
+
+// Composants
 import CreateComposition from "../_components/CreateComposition";
 import UpdateComposition from "../_components/UpdateComposition";
-import {
-    Dialog,
-    DialogContent,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-} from "@/components/ui/dialog";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import Image from "next/image";
-import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
-import add from "@/public/img/add.svg";
 import IsAdmin from "@/components/isAdmin";
-import { getCsrfToken } from "next-auth/react";
+import DeleteItem from "@/components/layout/DeleteItemDialog";
+
+// Composants UI
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Button } from "@/components/ui/button";
+
+// Images
+import add from "@/public/img/add.svg";
+
 
 // _________________________ COMPOSANT _________________________
 export default function MealItem( {fetchedMeal}: { fetchedMeal: MealType }) {
 
     // _________________________ ETATS _________________________
     const [meal, setMeal] = useState<MealType>(fetchedMeal);
-    const [error, setError] = useState<string | null>(null);
     const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
     const [isPopoverOpen, setIsPopoverOpen] = useState<string | null>(null);
 
@@ -48,40 +52,23 @@ export default function MealItem( {fetchedMeal}: { fetchedMeal: MealType }) {
         });
     };
     
-    
-    const deleteComposition = async (id: string) => {
-        const csrfToken = await getCsrfToken();
-        try {
-            const response = await fetch("/api/compositions", {
-                method: "DELETE",
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-CSRF-Token": csrfToken,
-                },
-                body: JSON.stringify({ id }),
-            });
-            if (!response.ok) throw new Error("Failed to delete composition");
-
-            setMeal((prevMeal) => {
-                if (!prevMeal) return prevMeal;
-                return {
-                    ...prevMeal,
-                    compositions: prevMeal.compositions.filter(
-                        (composition) => composition.id !== id
-                    ),
-                };
-            });
-            
-            toast("Composition supprimée avec succès");
-        } catch (error) {
-            console.error("Erreur lors de la suppression:", error);
-            setError("Erreur lors de la suppression.");
-        }
+    // Suppression d'un repas dans le state après suppression API
+    const deleteComposition = (id: string) => {
+        setMeal((prevMeal) => {
+            if (!prevMeal) return prevMeal; // Vérifie si prevMeal est nul ou non défini.
+            return {
+                ...prevMeal, // Copie des propriétés existantes
+                compositions: prevMeal.compositions.filter(
+                    // Retourne toutes les compositions sauf celle avec l'ID correspondant
+                    (composition) => composition.id !== id
+                ),
+            };
+        });
     };
+
 
     
     // _________________________ RENDU _________________________
-    if (error) return <div>{error}</div>;
     if (!meal) return <div>Repas introuvable.</div>;
 
     return (
@@ -148,12 +135,11 @@ export default function MealItem( {fetchedMeal}: { fetchedMeal: MealType }) {
                                             />
                                         </PopoverContent>
                                     </Popover>
-                                    <Button
-                                        variant="delete"
-                                        onClick={() => deleteComposition(composition.id)}
-                                    >
-                                        Supprimer
-                                    </Button>
+                                    <DeleteItem
+                                        apiUrl="/api/compositions"
+                                        id={composition.id}
+                                        onSubmit={deleteComposition}
+                                    />
                                 </IsAdmin>
                             </div>
                         </div>

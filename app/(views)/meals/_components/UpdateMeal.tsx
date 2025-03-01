@@ -1,13 +1,29 @@
+// Bibliothèques tierces
 import { useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
+
+// Hooks personnalisés
+import { useFormValidation } from "@/app/hooks/useFormValidation";
+import { useCsrfToken } from "@/app/hooks/useCsrfToken";
+
+// Types
 import { CategoryMealType } from "@/lib/types/schemas_interfaces";
 import { UpdateMealProps } from "@/lib/types/props_interfaces";
-import { useFormValidation } from "@/app/hooks/useFormValidation";
+
+// Contraintes et validation
 import { mealConstraints } from "@/lib/constraints/forms_constraints";
+
+// Utils
 import { ucFirst } from "@/lib/utils";
+
+// Composants UI
+import { Button } from "@/components/ui/button";
 import FormErrorMessage from "@/components/forms/FormErrorMessage";
-import { toast } from "sonner";
-import { useCsrfToken } from "@/app/hooks/useCsrfToken";
+
+// Services
+import { getCategoriesMeal } from "@/lib/services/data_fetcher";
+import { updateMealAPI } from "@/lib/services/meal_service";
+
 
 // _________________________ COMPOSANT _________________________
 const UpdateMeal: React.FC<UpdateMealProps> = ({
@@ -37,18 +53,18 @@ const UpdateMeal: React.FC<UpdateMealProps> = ({
     useEffect(() => {
         const fetchCategories = async () => {
             try {
-                const response = await fetch("/api/categories-meal");
-                if (!response.ok) throw new Error("Erreur lors de la récupération des catégories.");
-                
-                const data: CategoryMealType[] = await response.json();
-                setCategories(data);
+                const data: CategoryMealType[] = await getCategoriesMeal();
+                setCategories(data); 
+
             } catch (error) {
                 console.error("[FETCH_CATEGORIES_ERROR]", error);
                 setError({ general: "Erreur lors de la récupération des catégories." });
             }
         };
+
         fetchCategories();
     }, [setError]);
+        
 
     // Gestion des changements de champs
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -64,27 +80,14 @@ const UpdateMeal: React.FC<UpdateMealProps> = ({
         if (!validate(form)) return;
         setIsLoading(true);
 
-        try {
-            if (!csrfToken) {
-                console.error("CSRF token invalide");
-                return;
-            }
-            const response = await fetch("/api/meals", {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-CSRF-Token": csrfToken,
-                },
-                body: JSON.stringify({
-                    id: meal.id,
-                    name: form.name,
-                    categoryMealId: form.categoryMealId,
-                    description: form.description,
-                }),
-            });
-            if (!response.ok) throw new Error("Échec de la mise à jour du repas.");
+        if (!csrfToken) {
+            console.error("CSRF token invalide");
+            return;
+        }
 
-            const updatedMeal = await response.json();
+        try {
+            const updatedMeal = await updateMealAPI(form, csrfToken);
+            
             onSubmit(updatedMeal);
             toast("Repas mis à jour avec succès");
             onClose();
@@ -96,6 +99,8 @@ const UpdateMeal: React.FC<UpdateMealProps> = ({
         }
     };
 
+
+    // _________________________ RENDU _________________________
     return (
         <form onSubmit={handleSubmit} className="space-y-2">
             <input

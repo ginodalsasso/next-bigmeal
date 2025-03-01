@@ -1,31 +1,44 @@
 'use client';
 
-import DeleteItem from "@/components/layout/DeleteItemDialog";
-import { Button } from "@/components/ui/button";
-import { ShoppingListType } from "@/lib/types/schemas_interfaces";
-import { dateToString } from "@/lib/utils";
-import { Separator } from "@radix-ui/react-separator";
-import { getCsrfToken } from "next-auth/react";
-import { useRouter } from "next/navigation";
+// Bibliothèques tierces
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
+// Hooks personnalisés
+import { useCsrfToken } from "@/app/hooks/useCsrfToken";
+
+// Composants UI
+import { Button } from "@/components/ui/button";
+import DeleteItem from "@/components/layout/DeleteItemDialog";
+import { Separator } from "@radix-ui/react-separator";
+
+// Types
+import { ShoppingListType } from "@/lib/types/schemas_interfaces";
+
+// Utils
+import { dateToString } from "@/lib/utils";
+
+// Services
+import {  fetchShoppingListAPI, markShoppingListAsExpiredAPI, toggleItemCheckedAPI } from "@/lib/services/shopping_list_service";
+
+
+// _________________________ COMPONENT _________________________
 const ShoppingListPage = () => {
     const router = useRouter(); 
+    const csrfToken = useCsrfToken();
     const [shoppingList, setShoppingList] = useState<ShoppingListType | null>(null);
     const [loading, setLoading] = useState(true);
 
+
+    // _________________________ LOGIQUE _________________________
     useEffect(() => {
         const fetchShoppingList = async () => {
             try {
-                const response = await fetch("/api/shopping-list");
-                if (!response.ok) throw new Error("Failed to fetch shoppingList");
-
-                const data: ShoppingListType = await response.json();
+                const data: ShoppingListType = await fetchShoppingListAPI();
                 setShoppingList(data);
             } catch (error) {
                 console.error("Error fetching shoppingList:", error);
-                toast.error("Impossible de charger les listes de courses.");
             } finally {
                 setLoading(false);
             }
@@ -36,8 +49,11 @@ const ShoppingListPage = () => {
     
     // Transformer un item en coché ou non
     const toggleItemChecked = async (id: string, currentChecked: boolean) => {
-        const csrfToken = await getCsrfToken();
         try {
+            if (!csrfToken) {
+                console.error("CSRF token invalide");
+                return;
+            }
             // Calcul de l'état cible (inversion de l'état actuel)
             const newCheckedState = !currentChecked;
 
@@ -51,17 +67,7 @@ const ShoppingListPage = () => {
                     return item;
                 })
             });
-
-            // Appel API pour sauvegarder l'état
-            const response = await fetch("/api/shopping-list", {
-                method: "PUT",
-                headers: { 
-                    "Content-Type": "application/json",
-                    "X-CSRF-Token": csrfToken,
-                },
-                body: JSON.stringify({ id, isChecked: newCheckedState }),
-            });
-            if (!response.ok) throw new Error("Failed to update item");
+            await toggleItemCheckedAPI(id, newCheckedState, csrfToken);
 
         } catch (error) {
             console.error("Erreur lors de la modification:", error);
@@ -69,19 +75,15 @@ const ShoppingListPage = () => {
         }
     };
 
+    // Marquer la liste de courses comme terminée
     const markShoppingListAsExpired = async () => {
-        const csrfToken = await getCsrfToken();
         if (shoppingList) {
+            if (!csrfToken) {
+                console.error("CSRF token invalide");
+                return;
+            }
             try {
-                const response = await fetch(`/api/shopping-list`, {
-                    method: "PUT",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "X-CSRF-Token": csrfToken,
-                    },
-                    body: JSON.stringify({ id: shoppingList.id, isExpired: true }),
-                });
-                if (!response.ok) throw new Error("Failed to mark shopping list as expired");
+                await markShoppingListAsExpiredAPI(shoppingList.id, csrfToken);
 
                 toast.success("La liste de courses a été marquée comme terminée !");
                 router.push('/'); // Redirection vers la page d'accueil
@@ -92,6 +94,7 @@ const ShoppingListPage = () => {
         }
     };
 
+    // Vérifier si tous les ingrédients sont cochés
     const setShoppingListExpired = async () => {
         if (shoppingList) {
             // Vérifier si la liste de courses correspond à l'ID
@@ -109,67 +112,29 @@ const ShoppingListPage = () => {
                 }
             }
         }
-        toast.error("Liste introuvable.");
         return false;
     };
 
-    // Appel API pour supprimer un item du panier
-    const deleteItem = async (id: string) => {
-        const csrfToken = await getCsrfToken();
-        try {
-            const response = await fetch("/api/shopping-list", {
-                method: "DELETE",
-                headers: { 
-                    "Content-Type": "application/json",
-                    "X-CSRF-Token": csrfToken, 
-                },
-                body: JSON.stringify({ id }),
-            });
-            if (!response.ok) throw new Error("Failed to delete item from shoppingList");
 
-            // Supprimer le repas du state
-            setShoppingList((prev) => prev && {
-                ...prev,
-                items: prev.items.filter((item) => item.id !== id)
-            });
-
-            toast("Article supprimé avec succès");
-        } catch (error) {
-            console.error("Erreur lors de la suppression:", error);
-            toast.error("Impossible de supprimer l'élément.");
-        }
+    // Suppression d'un ingrédient dans le state après suppression API
+    const handleIngredientDeleted = (ingredientId: string) => {
+        setShoppingList((prev) => prev && {
+            ...prev,
+            items: prev.items.filter((item) => item.id !== ingredientId)
+        });
     };
 
-    // Appel API pour supprimer un repas du panier
-    const deleteMeal = async (mealId: string) => {
-        const csrfToken = await getCsrfToken();
-        try {
-            const response = await fetch("/api/shopping-list", {
-                method: "DELETE",
-                headers: { 
-                    "Content-Type": "application/json",
-                    "X-CSRF-Token": csrfToken, 
-                },
-                body: JSON.stringify({ mealId }),
-            });
-            if (!response.ok) throw new Error("Failed to delete meal from shoppingList");
-
-            // Supprimer le repas du state
-            setShoppingList((prev) => prev && {
-                ...prev,
-                items: prev.items.filter((item) => item.mealId !== mealId)
-            });
-
-            toast("Repas supprimé avec succès");
-        } catch (error) {
-            console.error("Erreur lors de la suppression:", error);
-            toast.error("Impossible de supprimer le repas.");
-        }
-    };
+    // Suppression d'un repas dans le state après suppression API
+    const handleMealDeleted = (mealId: string) => {
+        setShoppingList((prev) => prev && {
+            ...prev,
+            items: prev.items.filter((item) => item.mealId !== mealId)
+        });
+    }
 
 
+    // _________________________ RENDU _________________________
     if (loading) return <div>Loading...</div>;
-    // if (error) return <div>{error}</div>;
     if (!shoppingList) return <div>Aucune liste de courses.</div>;
 
     const ingredientsAlone = shoppingList?.items.filter(item => !item.mealId);
@@ -200,7 +165,11 @@ const ShoppingListPage = () => {
                                         {item.quantity} {item.ingredient?.name || "Ingrédient non défini"}
                                     </span>
                                 </div>
-                                <DeleteItem onDelete={() => deleteItem(item.id)} isDeleting={false} />
+                                <DeleteItem
+                                    apiUrl="/api/shopping-list/item"
+                                    id={item.id}
+                                    onSubmit={handleIngredientDeleted}
+                                />                            
                             </div>
                             <Separator className="my-2 h-px bg-neutral-800" />
                         </div>
@@ -212,6 +181,7 @@ const ShoppingListPage = () => {
             {ingredientsByMeal && ingredientsByMeal.length > 0 && (
                 <div className="mb-8 border border-neutral-500 p-4">
                     <h2 className="text-center text-2xl">Repas</h2>
+                    {/* Parcourt les repas et les ingrédients associés */}
                     {Array.from(new Set(ingredientsByMeal.map(item => item.mealId))) // Extraire des IDs de repas uniques
                         .map(mealId => { // Parcourt chaque ID de repas unique
                             const mealItems = ingredientsByMeal.filter(item => item.mealId === mealId); //Filtre les ingrédients qui appartiennent à ce repas (mealId)
@@ -222,8 +192,11 @@ const ShoppingListPage = () => {
                                     <h3 className="text-lg font-bold">
                                         {mealName}
                                     </h3>
-                                    <DeleteItem onDelete={() => deleteMeal(mealId)} isDeleting={false} />
-                                </div>
+                                    <DeleteItem
+                                        apiUrl="/api/shopping-list/meal"
+                                        id={mealId}
+                                        onSubmit={handleMealDeleted}
+                                    />                                </div>
                                 <Separator className="my-2 h-px bg-neutral-800" />
                                 {mealItems.map((item) => (
                                     <div key={item.id}>

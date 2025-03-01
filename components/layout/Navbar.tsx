@@ -5,7 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import openMenu from "@/public/img/openMenu.svg";
 import closeMenu from "@/public/img/closeMenu.svg";
-import { links } from "@/lib/constants/constants";
+import { links } from "@/lib/constants/ui_constants";
 import { ucFirst } from "@/lib/utils";
 import IsUser from "../isUser";
 import { signOut } from "next-auth/react";
