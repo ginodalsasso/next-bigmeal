@@ -28,7 +28,7 @@ const ResetPasswordForm = ({ onBackToProfile }: { onBackToProfile: () => void })
     );
 
     // _________________________ LOGIQUE _________________________
-    const handleChangedPassword = async (event: React.FormEvent<HTMLFormElement>) => {
+    const handleResetPassword = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const formData = new FormData(event.currentTarget);
 
@@ -64,7 +64,7 @@ const ResetPasswordForm = ({ onBackToProfile }: { onBackToProfile: () => void })
     // _________________________ RENDU _________________________
     return (
         <div>
-            <form className="mb-2" onSubmit={handleChangedPassword}>
+            <form className="mb-2" onSubmit={handleResetPassword}>
                 <FormErrorMessage message={error?.general} />
 
                 <label htmlFor="password">Votre mot de passe actuel</label>

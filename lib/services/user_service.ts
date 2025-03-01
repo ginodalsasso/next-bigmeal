@@ -4,7 +4,13 @@ import API_ROUTES from "../constants/api_routes";
 
 export async function fetchUserProfileAPI() {
     try {
-        const response = await fetch("/api/profile");
+        const response = await fetch( API_ROUTES.user.profile,
+            { method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                }
+            }
+        );
         if (!response.ok) {
             throw new Error("Utilisateur non trouvé");
         }

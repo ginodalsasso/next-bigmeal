@@ -19,6 +19,7 @@ export async function GET() {
                         items: {
                             include: {
                                 ingredient: true,
+                                meal: true,
                             },
                         },
                     },
@@ -59,6 +60,10 @@ export async function PUT(req: NextRequest) {
         const body = await req.json();
         const { password, newPassword, confirmNewPassword } = body;
 
+        if (!password || !newPassword || !confirmNewPassword) {
+            return new NextResponse("Tous les champs sont requis", { status: 400 });
+        }
+        
         if (newPassword !== confirmNewPassword) {
             return new NextResponse("Les mots de passe ne correspondent pas", { status: 400 });
         }

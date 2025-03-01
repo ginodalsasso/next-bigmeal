@@ -39,7 +39,6 @@ const ShoppingListPage = () => {
                 setShoppingList(data);
             } catch (error) {
                 console.error("Error fetching shoppingList:", error);
-                toast.error("Impossible de charger les listes de courses.");
             } finally {
                 setLoading(false);
             }
@@ -113,7 +112,6 @@ const ShoppingListPage = () => {
                 }
             }
         }
-        toast.error("Liste introuvable.");
         return false;
     };
 

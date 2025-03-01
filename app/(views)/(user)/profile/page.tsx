@@ -14,6 +14,7 @@ import ResetPasswordForm from "../_component/ResetPasswordForm";
 
 // Services
 import { fetchUserProfileAPI } from "@/lib/services/user_service";
+import ShoppingLists from "../_component/ShoppingLists";
 
 
 // _________________________ COMPONENT _________________________
@@ -61,32 +62,7 @@ const ProfilePage = () => {
                         <p>Role: {user.role}</p>
                         <p>Compte créé le: {dateToString(user.createdAt)}</p>
 
-                        <h2 className="mt-6 text-xl font-semibold">Liste de courses</h2>
-                        {user.shoppingList && user.shoppingList.length > 0 ? (
-                            user.shoppingList.map((list) => (
-                                <div key={list.id}>
-                                    <details>
-                                        <summary className="flex cursor-pointer">
-                                            <h3>Liste de courses du {dateToString(list.createdAt)}</h3>
-                                        </summary>
-                                        <div>
-                                            {list.comment && <p>Commentaire: {list.comment}</p>}
-                                            <ul>
-                                                {list.items.map((item) => (
-                                                    <li key={item.id}>
-                                                        <span>
-                                                            {item.quantity} {item.ingredient?.name || "Ingrédient inconnu"}
-                                                        </span>
-                                                    </li>
-                                                ))}
-                                            </ul>
-                                        </div>
-                                    </details>
-                                </div>
-                            ))
-                        ) : (
-                            <p>Aucune liste de courses enregistrée.</p>
-                        )}
+                        <ShoppingLists shoppingLists={user.shoppingList} />
 
                         {/* Bouton pour passer à la modification du mot de passe */}
                         <Button onClick={() => setIsChangedPassword(true)}>Changer mon mot de passe</Button>
