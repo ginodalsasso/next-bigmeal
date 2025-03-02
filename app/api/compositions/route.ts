@@ -34,6 +34,23 @@ export async function POST(req: NextRequest) {
             );
         }
 
+        // Compter les compositions existantes pour vérifier si un ingrédient est déjà présent
+        const existingCompositions = await db.composition.count({
+            where: {
+                mealId: body[0].mealId,
+                ingredientId: { in: body.map(composition => composition.ingredientId) } // Vérifie si un ingrédient est déjà dans ce repas
+            }
+        });
+
+        if (existingCompositions > 0) {
+            return new Response(JSON.stringify({ 
+                message: 'Un ou plusieurs ingrédients sont déjà présents dans ce repas' 
+            }), {
+                status: 400,
+                headers: { 'Content-Type': 'application/json' }
+            });
+        }
+
         // Créer les compositions en base de données
         await db.composition.createMany({
             data: body.map((comp) => ({

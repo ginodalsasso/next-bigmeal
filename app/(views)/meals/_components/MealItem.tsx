@@ -15,16 +15,17 @@ import CreateComposition from "../_components/CreateComposition";
 import UpdateComposition from "../_components/UpdateComposition";
 import IsAdmin from "@/components/isAdmin";
 import DeleteItem from "@/components/layout/DeleteItemDialog";
+import EditItem from "@/components/layout/EditItemDrawer";
 
 // Composants UI
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 
 // Images
 import add from "@/public/img/add.svg";
+
+// Constantes
 import API_ROUTES from "@/lib/constants/api_routes";
-import EditItem from "@/components/layout/EditItemDrawer";
 
 
 // _________________________ COMPOSANT _________________________
@@ -33,7 +34,6 @@ export default function MealItem( {fetchedMeal}: { fetchedMeal: MealType }) {
     // _________________________ ETATS _________________________
     const [meal, setMeal] = useState<MealType>(fetchedMeal);
     const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
-    const [isPopoverOpen, setIsPopoverOpen] = useState<string | null>(null);
 
     // _________________________ CRUD _________________________
     const updateComposition = (updatedComposition: CompositionType) => {

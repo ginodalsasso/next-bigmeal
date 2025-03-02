@@ -40,7 +40,7 @@ const CreateComposition: React.FC<CreateCompositionProps>= ({
     const [ingredients, setIngredients] = useState<IngredientType[]>([]); // Liste des ingrédients disponibles
 
     const [isLoading, setIsLoading] = useState<boolean>(false); // Indique si l'action est en cours
-    const [error, setError] = useState<Record<number, CompositionFormErrorType>>({});
+    const [error, setError] = useState<{general: string} & Record<number, CompositionFormErrorType>>({ general: "" });
     const [form, setForm] = useState<CompositionFormType[]>([
         {
             ingredientId: "",
@@ -89,7 +89,7 @@ const CreateComposition: React.FC<CreateCompositionProps>= ({
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsLoading(true);
-        setError({});
+        setError({ general: "" });
 
         // Validation du formulaire
         const validationResult = newCompositionConstraints.safeParse(form);
@@ -109,7 +109,7 @@ const CreateComposition: React.FC<CreateCompositionProps>= ({
                 formattedErrors[index][key] = err.message; // Ajoute le message d'erreur
             });
         
-            setError(formattedErrors); // Met à jour les erreurs pour chaque index
+            setError({ general: "", ...formattedErrors }); // Met à jour les erreurs pour chaque index
             setIsLoading(false);
             return;
         }
@@ -127,7 +127,7 @@ const CreateComposition: React.FC<CreateCompositionProps>= ({
             onClose(); // Fermer le dialogue
         } catch (error) {
             console.error("[CREATE_COMPOSITION_ERROR]", error);
-            toast.error("Erreur lors de l'ajout des compositions");
+            setError({ general: "Erreur lors de l'ajout des compositions" });
         } finally {
             setIsLoading(false);
         }
@@ -136,6 +136,8 @@ const CreateComposition: React.FC<CreateCompositionProps>= ({
     // _________________________ RENDU _________________________
     return (
         <form className="flex flex-col gap-5 p-5" onSubmit={handleSubmit}>
+            <FormErrorMessage message={error.general} />
+
             {form.map((composition, index) => (
                 <div key={index} className="flex flex-col gap-3 border-b pb-4">
                     {/* Sélection de l'ingrédient */}
@@ -155,7 +157,11 @@ const CreateComposition: React.FC<CreateCompositionProps>= ({
                     >
                         <option value="">-- Choisir un ingrédient --</option>
                         {ingredients.map((ingredient) => (
-                            <option key={ingredient.id} value={ingredient.id}>
+                            <option 
+                                key={ingredient.id} 
+                                value={ingredient.id}
+                                disabled= {form.some((comp) => comp.ingredientId === ingredient.id)}
+                            >
                                 {ingredient.name}
                             </option>
                         ))}
