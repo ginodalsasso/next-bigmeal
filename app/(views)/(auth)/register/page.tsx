@@ -50,7 +50,7 @@ export default function RegisterPage() {
             toast("Compte créé avec succès !");
         } catch (error) {
             console.error("[REGISTER_ERROR]", error);
-            setError({ general: "Impossible de s'incrire. Veuillez réessayer plus tard." });
+            setError({ general: "Erreur interne du serveur, veuillez réessayer plus tard." });
         } finally {
             setIsLoading(false);
         }

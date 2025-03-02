@@ -42,16 +42,15 @@ export async function POST(req: NextRequest) {
             }
         });
 
+        // Si un ou plusieurs ingrédients sont déjà présents, retourner une erreur
         if (existingCompositions > 0) {
-            return new Response(JSON.stringify({ 
-                message: 'Un ou plusieurs ingrédients sont déjà présents dans ce repas' 
-            }), {
-                status: 400,
-                headers: { 'Content-Type': 'application/json' }
-            });
+            return NextResponse.json(
+                { error: "Un ou plusieurs ingrédients sont déjà présents dans ce repas." },
+                { status: 400 }
+            );
         }
 
-        // Créer les compositions en base de données
+        // Créer les compositions en base de données (s'il y en a plusieurs)
         await db.composition.createMany({
             data: body.map((comp) => ({
                 ingredientId: comp.ingredientId,
