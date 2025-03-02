@@ -1,10 +1,12 @@
 
 // Bibliothèques tierces
-import React from "react";
+import React, { useState } from "react";
 
 // Types et utils
 import { ShoppingListType } from "@/lib/types/schemas_interfaces";
 import { dateToString } from "@/lib/utils";
+import DeleteItem from "@/components/layout/DeleteItemDialog";
+import API_ROUTES from "@/lib/constants/api_routes";
 
 // _________________________ TYPE _________________________
 interface ShoppingListsProps {
@@ -14,12 +16,18 @@ interface ShoppingListsProps {
 // _________________________ COMPONENT _________________________
 const ShoppingLists: React.FC<ShoppingListsProps> = ({ shoppingLists }) => {
 
+    const [lists, setLists] = useState<ShoppingListType[]>(shoppingLists);
+
+    // Fonction pour supprimer une liste de courses
+    const handleShoppingListDeleted = (id: string) => {
+        setLists((prev) => prev.filter((list) => list.id !== id));
+    };
 
     return (
         <div>
             <h2 className="mt-6 text-xl font-semibold">Liste de courses</h2>
-            {shoppingLists.length > 0 ? (
-                shoppingLists.map((list) => {
+            {lists.length > 0 ? (
+                lists.map((list) => {
 
                     // Extraire les repas uniques pour cette liste spécifique
                     const meals = Array.from( // Création d'un tableau à partir d'un objet itérable
@@ -68,6 +76,11 @@ const ShoppingLists: React.FC<ShoppingListsProps> = ({ shoppingLists }) => {
                                 </div>
                             </details>
 
+                            <DeleteItem
+                                apiUrl={API_ROUTES.shoppingList}
+                                id={list.id}
+                                onSubmit={handleShoppingListDeleted}
+                            />
                         </div>
                     );
                 })

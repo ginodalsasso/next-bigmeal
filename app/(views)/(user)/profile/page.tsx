@@ -21,7 +21,6 @@ import ShoppingLists from "../_component/ShoppingLists";
 const ProfilePage = () => {
 
     // _________________________ ETATS _________________________
-    const csrfToken = useCsrfToken();
     const [user, setUser] = useState<UserType | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string>("");

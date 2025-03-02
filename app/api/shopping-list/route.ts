@@ -1,4 +1,4 @@
-import { isCheckedShoppingListConstraints, ShoppingListConstraints } from "@/lib/constraints/forms_constraints";
+import { idConstraints, isCheckedShoppingListConstraints, ShoppingListConstraints } from "@/lib/constraints/forms_constraints";
 import { verifyCSRFToken } from "@/lib/security/verifyCsrfToken";
 import { getUser } from "@/lib/dal";
 import { db } from "@/lib/db";
@@ -192,6 +192,40 @@ export async function PUT(req: NextRequest) {
         }
     } catch (error) {
         console.error("[UPDATE_ERROR]", error);
+        return new Response(JSON.stringify({ 
+            message: 'Erreur serveur, veuillez réessayer plus tard' 
+        }), { 
+            status: 500,
+            headers: { 'Content-Type': 'application/json' }
+        });
+    }
+}
+
+
+export async function DELETE(req: NextRequest) {
+    try {
+        const { error } = await getUserSession();
+        if (error) return error;
+        
+        const csrfTokenVerified = await verifyCSRFToken(req);
+        if (!csrfTokenVerified) {
+            return new NextResponse("CSRF Token is missing or invalid", { status: 403 });
+        }
+
+        const body = await req.json();
+
+        const validationResult = idConstraints.safeParse({ id: body.id });
+        if (!validationResult.success) {
+            return NextResponse.json(
+                { error: validationResult.error.format() },
+                { status: 400 }
+            );
+        }
+
+        await db.shoppingList.delete({ where: { id: body.id } });
+        return NextResponse.json({ message: "Liste supprimée" }, {status: 200});
+    } catch (error) {
+        console.error("[DELETE_ERROR]", error);
         return new Response(JSON.stringify({ 
             message: 'Erreur serveur, veuillez réessayer plus tard' 
         }), { 
