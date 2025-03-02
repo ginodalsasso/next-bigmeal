@@ -1,20 +1,36 @@
 "use client";
 
+// Bibliothèques tierces
 import { useEffect, useState } from "react";
-
-import { useFormValidation } from "@/app/hooks/useFormValidation";
-import { CategoryMealType, MealType } from "@/lib/types/schemas_interfaces";
-import { MealFormType } from "@/lib/types/forms_interfaces";
-import { mealConstraints } from "@/lib/constraints/forms_constraints";
-
 import { toast } from "sonner";
-import { Button } from "@/components/ui/button";
-import { CreateMealProps } from "@/lib/types/props_interfaces";
-import { ucFirst } from "@/lib/utils";
-import FormErrorMessage from "@/components/forms/FormErrorMessage";
+
+// Hooks personnalisés
+import { useFormValidation } from "@/app/hooks/useFormValidation";
 import { useCsrfToken } from "@/app/hooks/useCsrfToken";
 
+// Types
+import { CategoryMealType, MealType } from "@/lib/types/schemas_interfaces";
+import { MealFormType } from "@/lib/types/forms_interfaces";
+import { CreateMealProps } from "@/lib/types/props_interfaces";
+
+// Contraintes et validation
+import { mealConstraints } from "@/lib/constraints/forms_constraints";
+
+// Utils
+import { ucFirst } from "@/lib/utils";
+
+// Composants UI
+import { Button } from "@/components/ui/button";
+import FormErrorMessage from "@/components/forms/FormErrorMessage";
+
+// Services
+import { getCategoriesMeal } from "@/lib/services/data_fetcher";
+import { createMealAPI } from "@/lib/services/meal_service";
+
+
+// _________________________ COMPONENT _________________________
 const CreateMeal: React.FC<CreateMealProps> = ({ onMealCreated, onClose }) => {
+    
     // _________________________ HOOKS _________________________
     const csrfToken = useCsrfToken();
     const [categories, setCategories] = useState<CategoryMealType[]>([]);
@@ -37,19 +53,18 @@ const CreateMeal: React.FC<CreateMealProps> = ({ onMealCreated, onClose }) => {
     useEffect(() => {
         const fetchCategories = async () => {
             try {
-                const response = await fetch("/api/categories-meal");
-                if (!response.ok) throw new Error("Erreur lors de la récupération des categories-repas");
+                const data: CategoryMealType[] = await getCategoriesMeal();
+                setCategories(data); 
 
-                const data: CategoryMealType[] = await response.json();
-                setCategories(data);
             } catch (error) {
                 console.error("[FETCH_CATEGORIES_ERROR]", error);
                 setError({ general: "Erreur lors de la récupération des catégories." });
             }
         };
+
         fetchCategories();
     }, [setError]);
-
+    
 
     // Gestion de la soumission du formulaire de création de repas
     const handleSubmit = async (e: React.FormEvent) => {
@@ -63,26 +78,14 @@ const CreateMeal: React.FC<CreateMealProps> = ({ onMealCreated, onClose }) => {
             return;
         }
     
-        try {
-            // Récupérer le CSRF Token
-            if (!csrfToken) {
-                console.error("CSRF token invalide");
-                return;
-            }    
-    
-            const response = await fetch("/api/meals", {
-                method: "POST",
-                headers: { 
-                    "Content-Type": "application/json",
-                    "X-CSRF-Token": csrfToken,
-                },
-                body: JSON.stringify(form),
-            });
-    
-            if (!response.ok) throw new Error("Erreur lors de la création du repas");
-    
-            const createdMeal: MealType = await response.json();
-    
+        // Récupérer le CSRF Token
+        if (!csrfToken) {
+            console.error("CSRF token invalide");
+            return;
+        }
+        
+        try { 
+            const createdMeal = await createMealAPI(form, csrfToken);
             // Mettre à jour l’état parent avec le nouveau repas
             onMealCreated(createdMeal);
             toast("Repas créé avec succès");

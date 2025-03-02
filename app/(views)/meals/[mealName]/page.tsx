@@ -1,14 +1,14 @@
+// Composant affichant un repas
 import MealItem from "../_components/MealItem";
 
-async function getMeal(mealName: string) {
-    const response = await fetch(`${process.env.API_URL}/api/meals/${mealName}`, { cache: "no-store" });
-    if (!response.ok) throw new Error("Erreur lors de la récupération du repas.");
-    return response.json();
-}
+// Service de récupération d'un repas
+import { getMeal } from "@/lib/services/data_fetcher";
+
 
 export default async function MealDetailPage({ params }: { params: { mealName: string } }) {
     // Récupère le nom du repas dans les paramètres de la requête
     const meal = await getMeal(params.mealName);
     
+    // _________________________ RENDU _________________________
     return <MealItem fetchedMeal={meal} />;
 }

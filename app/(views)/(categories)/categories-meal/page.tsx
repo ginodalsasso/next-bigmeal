@@ -1,13 +1,13 @@
+// Composant des catégories de repas
 import CategoryMealList from "../_components/CategoryMealList";
+// Service de récupération des catégories de repas
+import { getCategoriesMeal } from "@/lib/services/data_fetcher";
 
-async function getCategories() {
-    const response = await fetch(`${process.env.API_URL}/api/categories-meal`, { cache: "no-store" });
-    if (!response.ok) throw new Error("Erreur lors de la récupération des catégories.");
-    return response.json();
-}
 
 export default async function CategoryMealPage() {
-    const categoryMeal = await getCategories();
+    const categoryMeal = await getCategoriesMeal();
     
+    
+    // _________________________ RENDU _________________________
     return <CategoryMealList fetchedCategories={categoryMeal} />;
 }

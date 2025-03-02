@@ -1,35 +1,59 @@
+// Bibliothèques tierces
 import { useState } from "react";
+import { toast } from "sonner";
+
+// Hooks personnalisés
 import { useFormValidation } from "@/app/hooks/useFormValidation";
-import { categoriesConstraints } from "@/lib/constraints/forms_constraints";
+import { useCsrfToken } from "@/app/hooks/useCsrfToken";
+
+// Composants UI
 import { Button } from "@/components/ui/button";
-import { UpdateCategoryProps } from "@/lib/types/props_interfaces";
 import FormErrorMessage from "@/components/forms/FormErrorMessage";
 
-type CategoryFormType = { name: string }; // Définir le type du formulaire
+// Contraintes et services
+import { categoriesConstraints } from "@/lib/constraints/forms_constraints";
+import { updateCategoryAPI } from "@/lib/services/categories_service";
 
-// _________________________ COMPOSANT _________________________
-const UpdateCategory: React.FC<UpdateCategoryProps> = ({
-    initialName,
+
+type CategoryFormType = { name: string };
+
+interface UpdateCategoryProps<T> {
+    apiUrl: string; // URL de l'API (ex: "/api/categories-meal" ou "/api/categories-ingredient")
+    category: T; // La catégorie à mettre à jour
+    onSubmit: (updatedCategory: T) => void; // Callback après mise à jour
+    onCancel: () => void;
+}
+
+// _________________________ COMPONENT _________________________
+const UpdateCategory = <T extends { id: string; name: string }>({
+    apiUrl,
+    category,
     onSubmit,
-    onCancel,
-    isLoading: parentLoading,
-}) => {
-    // _________________________ ETATS _________________________
-    const [name, setName] = useState<string>(initialName);
-    const [isLoading, setIsLoading] = useState<boolean>(false);
+    onCancel
+}: UpdateCategoryProps<T>) => {
 
-    // Hook de validation
+    // _________________________ ETATS _________________________
+    const [name, setName] = useState(category.name);
+    const [isLoading, setIsLoading] = useState(false);
+    const csrfToken = useCsrfToken();
+
     const { error, setError, validate } = useFormValidation<CategoryFormType>(
         categoriesConstraints,
-        ["name"] // Champs à valider
+        ["name"]
     );
 
     // _________________________ LOGIQUE _________________________
-    // Gestion de la soumission du formulaire d'édition de catégorie
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsLoading(true);
-        setError(null); // Réinitialise les erreurs existantes
+        setError(null);
+
+        if (!csrfToken) {
+            console.error("CSRF token invalide");
+            setError({ general: "Problème de sécurité, veuillez réessayer." });
+            setIsLoading(false);
+            return;
+        }
 
         if (!validate({ name })) {
             setIsLoading(false);
@@ -37,7 +61,11 @@ const UpdateCategory: React.FC<UpdateCategoryProps> = ({
         }
 
         try {
-            await onSubmit(name);
+            const updatedCategory = updateCategoryAPI(category.id, name, csrfToken, apiUrl);
+            
+            onSubmit(await updatedCategory);
+            toast("Catégorie mise à jour avec succès");
+            onCancel(); // Fermer la modale ou le formulaire après succès
         } catch (error) {
             console.error("[UPDATE_CATEGORY_ERROR]", error);
             setError({ general: "Erreur lors de la mise à jour de la catégorie." });
@@ -57,27 +85,16 @@ const UpdateCategory: React.FC<UpdateCategoryProps> = ({
                 onChange={(e) => setName(e.target.value)}
                 placeholder="Nouveau nom"
                 className="input-text-select"
-                disabled={isLoading || parentLoading}
+                disabled={isLoading}
             />
             <FormErrorMessage message={error?.name} />
-            
+
             <div className="flex gap-2">
-                <Button
-                    type="button"
-                    onClick={onCancel}
-                    variant="secondary"
-                    className="w-full"
-                    disabled={isLoading || parentLoading}
-                >
+                <Button type="button" onClick={onCancel} variant="secondary" className="w-full" disabled={isLoading}>
                     Annuler
                 </Button>
-                <Button
-                    type="submit"
-                    variant="success"
-                    className="w-full"
-                    disabled={isLoading || parentLoading}
-                >
-                    {isLoading || parentLoading ? "En cours..." : "Valider"}
+                <Button type="submit" variant="success" className="w-full" disabled={isLoading}>
+                    {isLoading ? "En cours..." : "Valider"}
                 </Button>
             </div>
         </form>

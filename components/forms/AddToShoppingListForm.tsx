@@ -7,9 +7,11 @@ import Image from "next/image";
 import add from "@/public/img/add.svg";
 import { AddIngredientToShoppingListFormType } from '@/lib/types/forms_interfaces';
 import { Button } from '../ui/button';
-import { getCsrfToken } from 'next-auth/react';
 import FormErrorMessage from './FormErrorMessage';
 import { useFormValidation } from '@/app/hooks/useFormValidation';
+import { useCsrfToken } from '@/app/hooks/useCsrfToken';
+import { getMeal } from '@/lib/services/data_fetcher';
+import { createShoppingListIngredientAPI, createShoppingListMealAPI } from '@/lib/services/shopping_list_service';
 
 interface AddToShoppingListFormProps {
     type: 'meal' | 'ingredient'; // Détermine le type d'ajout
@@ -21,6 +23,8 @@ const AddToShoppingListForm: React.FC<AddToShoppingListFormProps> = ({ type, id 
     const [quantity, setQuantity] = useState<AddIngredientToShoppingListFormType>({ quantity: 1 });
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
+    const csrfToken = useCsrfToken();
+
     // Utilisation du hook de validation
     const { error, setError, validate } = useFormValidation<AddIngredientToShoppingListFormType>(
         ShoppingListConstraints,
@@ -31,61 +35,47 @@ const AddToShoppingListForm: React.FC<AddToShoppingListFormProps> = ({ type, id 
         e.preventDefault();
         setIsLoading(true);
         setError({});
-        const csrfToken = await getCsrfToken();
         try {
             switch (type) {
                 case 'meal': {
                     // Récupérer les ingrédients du repas
-                    const response = await fetch(`/api/meals/${id}`);
-                    if (!response.ok) throw new Error('Erreur lors de la récupération des ingrédients du repas');
-
-                    const meal = await response.json();
+                    const meal =  await getMeal(id);
 
                     // Ajouter chaque ingrédient du repas à la liste de courses
                     for (const composition of meal.compositions) {
+
+                        if (!csrfToken) {
+                            console.error("CSRF token invalide");
+                            setError({ general: "Problème de sécurité, veuillez réessayer." });
+                            return;
+                        }
+
                         if (!composition.ingredient?.id) {
                             console.error("Invalid ingredient in composition:", composition);
                             continue;
                         }
                 
-                        await fetch('/api/shopping-list', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                "X-CSRF-Token": csrfToken,
-                            },
-                            body: JSON.stringify({
-                                ingredientId: composition.ingredient.id,
-                                quantity: composition.quantity,
-                                mealId: meal.id,
-                            }),
-                        });
+                        await createShoppingListMealAPI(composition.ingredient.id, composition.quantity, meal.id, csrfToken);
                     }
                     toast('Les ingrédients du repas ont été ajoutés à la liste de courses');
                     break;
                 }
 
                 case 'ingredient': {
+                    if (!csrfToken) {
+                        console.error("CSRF token invalide");
+                        setError({ general: "Problème de sécurité, veuillez réessayer." });
+                        return;
+                    }
+                    
                     // Valider la quantité
                     if(!validate(quantity)) {
                         setIsLoading(false);
                         return;
                     }
 
-                    // Ajouter un ingrédient individuel
-                    const response = await fetch('/api/shopping-list', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            "X-CSRF-Token": csrfToken,
-                        },
-                        body: JSON.stringify({
-                            ingredientId: id,
-                            quantity: quantity.quantity,
-                        }),
-                    });
-                    if (!response.ok)  throw new Error('Erreur lors de l\'ajout de l\'ingrédient à la liste de courses');
-
+                    await createShoppingListIngredientAPI(id, quantity.quantity, csrfToken);
+                    
                     toast('Ingrédient ajouté à la liste de courses avec succès');
                     break;
                 }
