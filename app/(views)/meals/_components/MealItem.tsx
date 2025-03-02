@@ -23,6 +23,8 @@ import { Button } from "@/components/ui/button";
 
 // Images
 import add from "@/public/img/add.svg";
+import API_ROUTES from "@/lib/constants/api_routes";
+import EditItem from "@/components/layout/EditItemDrawer";
 
 
 // _________________________ COMPOSANT _________________________
@@ -117,26 +119,19 @@ export default function MealItem( {fetchedMeal}: { fetchedMeal: MealType }) {
                                 <p>{composition.quantity}</p>
                                 <p>{translatedUnit(composition.unit)}</p>
                                 <IsAdmin>
-                                    {/* Popover pour l'édition */}
-                                    <Popover 
-                                        open={isPopoverOpen === composition.id}
-                                        onOpenChange={(open) => {
-                                            setIsPopoverOpen(open ? composition.id : null);
-                                        }}
-                                    >
-                                        <PopoverTrigger asChild>
-                                            <Button variant="edit">Modifier</Button>
-                                        </PopoverTrigger>
-                                        <PopoverContent>
+                                    {/* Drawer pour l'édition */}
+                                    <EditItem
+                                        renderEditForm={(onClose) => (
                                             <UpdateComposition
                                                 initialComposition={composition}                                
                                                 onCompositionUpdated={updateComposition}
-                                                onClose={() => setIsPopoverOpen(null)}
+                                                onClose={onClose}
                                             />
-                                        </PopoverContent>
-                                    </Popover>
+                                        )}
+                                    />
+
                                     <DeleteItem
-                                        apiUrl="/api/compositions"
+                                        apiUrl={API_ROUTES.compositions}
                                         id={composition.id}
                                         onSubmit={deleteComposition}
                                     />
