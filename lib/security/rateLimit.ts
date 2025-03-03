@@ -18,7 +18,7 @@ const getClientIp = (req: NextRequest): string => {
     return req.headers.get("x-real-ip") || "unknown";
 };
 
-const rateLimit = (req: NextRequest, limit: number, interval: number): NextResponse | null => {
+const rateLimit = (req: NextRequest, limit: number, interval: number): void => {
     const ip = getClientIp(req);
 
     if (!requests.has(ip)) {
@@ -34,11 +34,11 @@ const rateLimit = (req: NextRequest, limit: number, interval: number): NextRespo
     data.count += 1;
 
     if (data.count > limit) {
-        return NextResponse.json({ message: "Trop de requêtes. Réessayez plus tard." }, { status: 429 });
+        throw new Error("Trop de requêtes. Réessayez plus tard.");
     }
 
     requests.set(ip, data);
-    return null;
+    // return null;
 };
 
 export default rateLimit;

@@ -9,11 +9,7 @@ const INTERVAL = 60 * 60 * 1000; // Intervalle en millisecondes (1 heure)
 
 export async function POST(req: NextRequest) {
     // Appliquer la limitation de débit
-    const rateLimitResponse = rateLimit(req, LIMIT, INTERVAL);
-    // Si la limite de débit est atteinte, renvoyer la réponse
-    if (rateLimitResponse) {
-        return rateLimitResponse;
-    }
+    rateLimit(req, LIMIT, INTERVAL);
 
     try {
 

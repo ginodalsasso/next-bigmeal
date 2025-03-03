@@ -7,8 +7,13 @@ import { compare } from "bcryptjs";
 import { getUserByEmail } from "./dal";
 import GoogleProvider from "next-auth/providers/google";
 import GitHubProvider from "next-auth/providers/github";
+import rateLimit from "./security/rateLimit";
+import { NextRequest } from "next/server";
 
 const prisma = new PrismaClient();
+
+const LIMIT = 5; // Nombre maximal de requêtes
+const INTERVAL = 60 * 60 * 1000; // Intervalle en millisecondes (1 heure)
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
     adapter: PrismaAdapter(prisma),
@@ -22,8 +27,11 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                 password: { label: "Password", type: "password" },
             },
             // Fonction pour vérifier les identifiants
-            authorize: async (credentials) => {
+            authorize: async (credentials, req) => {
                 try {
+                    // Appliquer la limitation de débit
+                    rateLimit(req as NextRequest, LIMIT, INTERVAL);
+
                     const { email, password } =
                         await LoginConstraints.parseAsync(credentials);
 
