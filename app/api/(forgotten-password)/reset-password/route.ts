@@ -1,8 +1,8 @@
 import { db } from '@/lib/db';
 import jwt from 'jsonwebtoken';
 import { NextRequest } from 'next/server';
-import nodemailer from 'nodemailer';
 import bcrypt from 'bcryptjs';
+import { sendEmail } from '@/lib/services/email_service';
 
 
 export async function POST(req: NextRequest) {
@@ -14,15 +14,7 @@ export async function POST(req: NextRequest) {
         return new Response('Veuillez fournir un email', { status: 400 });
     }
 
-    // Configuration de nodemailer pour envoyer un email
-    const transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-            user: process.env.EMAIL_USER,
-            pass: process.env.EMAIL_PASS,
-        },
-    });
-
+    
     const secret = process.env.JWT_SECRET || 'default_secret';
     const generatedToken = jwt.sign(
         { email: recipient },
@@ -30,30 +22,18 @@ export async function POST(req: NextRequest) {
         { expiresIn: '1h' }
     );
 
-
     const resetLink = `${process.env.API_URL}/reset-password/${generatedToken}`;
 
-    // Paramètres de l'email
-    const mailOptions = {
-        from: process.env.EMAIL_USER,
-        to: recipient,
-        subject: 'Réinitialisation de votre mot de passe',
-        text: `Cliquez sur le lien suivant pour réinitialiser votre mot de passe : ${resetLink}`,
-    };
+    const emailResult = await sendEmail(
+        recipient,
+        'Réinitialisation de votre mot de passe',
+        `Cliquez sur le lien suivant pour réinitialiser votre mot de passe : ${resetLink}`
+    );
 
-    // Envoi de l'email
-    try {
-        await transporter.sendMail(mailOptions);
-        return new Response(JSON.stringify({
-            message: 'Email envoyé'}), { status: 200 });
-    } catch (error) {
-        console.error('[EMAIL_ERROR]', error);
-        return new Response(JSON.stringify({ 
-            message: 'Erreur serveur, veuillez réessayer plus tard' 
-        }), { 
-            status: 500,
-            headers: { 'Content-Type': 'application/json' }
-        });
+    if (emailResult.status === 200) {
+        return new Response(JSON.stringify({ message: emailResult.message }), { status: 200 });
+    } else {
+        return new Response(JSON.stringify({ message: emailResult.message }), { status: emailResult.status });
     }
 }
 

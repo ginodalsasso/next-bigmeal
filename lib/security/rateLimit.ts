@@ -1,6 +1,5 @@
 // lib/security/rateLimit.ts
-import { NextRequest, NextResponse } from 'next/server';
-import { json } from 'stream/consumers';
+import { NextRequest } from 'next/server';
 
 type RequestData = {
     count: number;

@@ -41,6 +41,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                         throw new Error("Invalid credentials");
                     }
 
+                    // if (!user.emailVerified) {
+                    //     throw new Error("Email not verified");
+                    // }
+
                     const isValid = await compare(password, user.password);
                     if (!isValid) {
                         throw new Error("Invalid credentials");
