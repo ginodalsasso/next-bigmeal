@@ -110,6 +110,7 @@ export interface UserType {
     password: string;
     createdAt: Date;
     role: string;
+    emailVerified: Date;
 
     // Relation One-to-Many 
     shoppingList: ShoppingListType[];

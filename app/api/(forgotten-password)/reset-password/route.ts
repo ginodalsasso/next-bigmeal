@@ -27,7 +27,8 @@ export async function POST(req: NextRequest) {
     const emailResult = await sendEmail(
         recipient,
         'Réinitialisation de votre mot de passe',
-        `Cliquez sur le lien suivant pour réinitialiser votre mot de passe : ${resetLink}`
+        `Cliquez sur le lien suivant pour réinitialiser votre mot de passe : ${resetLink}`,
+        'Un email de réinitialisation de mot de passe a été envoyé'
     );
 
     if (emailResult.status === 200) {

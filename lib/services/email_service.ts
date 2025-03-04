@@ -1,6 +1,6 @@
 import nodemailer from 'nodemailer';
 
-export async function sendEmail(recipient: string, subject: string, text: string): Promise<{ message: string, status: number }> {
+export async function sendEmail(recipient: string, subject: string, text: string, successMessage: string): Promise<{ message: string, status: number }> {
     
     // Configuration de nodemailer pour envoyer un email
     const transporter = nodemailer.createTransport({
@@ -23,7 +23,7 @@ export async function sendEmail(recipient: string, subject: string, text: string
     try {
         await transporter.sendMail(mailOptions);
         return {
-            message: 'Email envoyé',
+            message: successMessage,
             status: 200
         }
     } catch (error) {

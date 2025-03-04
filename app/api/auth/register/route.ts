@@ -1,8 +1,12 @@
 import { RegisterConstraints } from "@/lib/constraints/forms_constraints";
 import { db } from "@/lib/db";
 import rateLimit from "@/lib/security/rateLimit";
+import { sendEmail } from "@/lib/services/email_service";
 import { hash } from "bcryptjs";
 import { NextRequest, NextResponse } from "next/server";
+import jwt from 'jsonwebtoken';
+import { date } from "zod";
+
 
 const LIMIT = 5; // Nombre maximal de requêtes
 const INTERVAL = 60 * 60 * 1000; // Intervalle en millisecondes (1 heure)
@@ -45,6 +49,34 @@ export async function POST(req: NextRequest) {
                 password: hashedPassword,
             },
         });
+
+        if (!user.email) {
+            return NextResponse.json(
+                { message: "Erreur lors de la création de l'utilisateur." },
+                { status: 500 }
+            );
+        }
+
+        const secret = process.env.JWT_SECRET || 'default_secret';
+        const generatedToken = jwt.sign(
+            { email: user.email },
+            secret
+        );
+        const resetLink = `${process.env.API_URL}/api/register/confirm-email/${generatedToken}`;
+
+
+        const emailResult = await sendEmail(
+            user.email,
+            "Confirmation d'inscription", // Sujet de l'email
+            `Veuillez confirmer votre inscription en cliquant sur ce lien: ${resetLink}`, // Corps de l'email
+            "Un email de confirmation vous a été envoyé." // Message de succès
+        );
+
+        if (emailResult.status === 200) {
+            return NextResponse.json({ message: emailResult.message }, { status: 200 });
+        } else {
+            return NextResponse.json({ message: emailResult.message }, { status: emailResult.status });
+        }
 
         return NextResponse.json(user, { status: 201 });
     } catch (error) {
