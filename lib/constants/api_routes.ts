@@ -17,6 +17,10 @@ const resetPasswordRoutes = {
     resetPassword: `${BASE_URL}/reset-password`,
 };
 
+const confirmEmailRoutes = {
+    confirmEmail: `${BASE_URL}/auth/register/confirm-email`,
+};
+
 const categoriesRoutes = {
     ingredient: `${BASE_URL}/categories-ingredient`,
     meal: `${BASE_URL}/categories-meal`,
@@ -32,6 +36,7 @@ const API_ROUTES = {
     auth: authRoutes,
     user: userRoutes,
     resetPassword: resetPasswordRoutes,
+    confirmEmail: confirmEmailRoutes,
     categories: categoriesRoutes,
     compositions: compositionsRoute,
     ingredients: ingredientsRoute,

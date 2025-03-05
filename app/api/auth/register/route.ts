@@ -62,7 +62,7 @@ export async function POST(req: NextRequest) {
             { email: user.email },
             secret
         );
-        const resetLink = `${process.env.API_URL}/api/register/confirm-email/${generatedToken}`;
+        const resetLink = `${process.env.API_URL}/register/confirm-email/${generatedToken}`;
 
 
         const emailResult = await sendEmail(

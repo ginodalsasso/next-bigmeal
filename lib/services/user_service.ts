@@ -105,3 +105,19 @@ export async function resetForgottenPasswordAPI(token: string | string[], passwo
     }
 }
 
+export async function confirmEmailAPI(token: string | string[]) {
+    try {
+        const response = await fetch( API_ROUTES.confirmEmail.confirmEmail, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ token }),
+        });
+
+        return response;
+    } catch (error) {
+        console.error("[API_ERROR] confirmEmailAPI", error);
+        throw error;
+    }
+}
