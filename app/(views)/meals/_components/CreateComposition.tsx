@@ -6,7 +6,7 @@ import { toast } from "sonner";
 
 // Types et énumérations
 import { CompositionFormErrorType, CompositionFormType } from "@/lib/types/forms_interfaces";
-import { CompositionType, IngredientType } from "@/lib/types/schemas_interfaces";
+import { IngredientType } from "@/lib/types/schemas_interfaces";
 import { IngredientUnit } from "@/lib/types/enums";
 import { CreateCompositionProps } from "@/lib/types/props_interfaces";
 
@@ -32,7 +32,6 @@ import { createCompositionAPI } from "@/lib/services/composition_service";
 const CreateComposition: React.FC<CreateCompositionProps>= ({
     mealId,
     onSubmit,
-    onClose,
 }) => {
 
     // _________________________ HOOKS _________________________
@@ -124,7 +123,6 @@ const CreateComposition: React.FC<CreateCompositionProps>= ({
             onSubmit(createdCompositions); // Ajout à la liste parent
             
             toast("Compositions créées avec succès");
-            onClose(); // Fermer le dialogue
         } catch (error) {
             console.error("[CREATE_COMPOSITION_ERROR]", error);
             setError({ general: "Erreur lors de l'ajout des compositions" });

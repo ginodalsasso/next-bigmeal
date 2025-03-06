@@ -16,7 +16,6 @@ export interface UpdateIngredientProps {
 
 export interface CreateMealProps {
     onMealCreated: (meal: MealType) => void, // Fonction pour ajouter le repas à la liste parent
-    onClose: () => void // Fonction pour fermer le dialogue
 }
 
 // FORMULAIRE DE MISE A JOUR DE MEAL
@@ -46,7 +45,6 @@ export interface UpdateCategoryProps {
 export interface CreateCompositionProps {
     mealId: string; // ID du repas parent de la composition
     onSubmit: (composition: CompositionType[]) => void; // Callback pour ajouter la composition
-    onClose: () => void; // Callback pour fermer le dialogue
 }
 
 export interface UpdateCompositionProps {
