@@ -6,7 +6,7 @@ import { toast } from "sonner";
 
 // Types et énumérations
 import { Season } from "@/lib/types/enums";
-import { CategoryIngredientType, IngredientType } from "@/lib/types/schemas_interfaces";
+import { CategoryIngredientType } from "@/lib/types/schemas_interfaces";
 import { IngredientFormType } from "@/lib/types/forms_interfaces";
 import { CreateIngredientProps } from "@/lib/types/props_interfaces";
 

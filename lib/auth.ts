@@ -3,12 +3,12 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
 import { PrismaClient } from "@prisma/client";
 import Credentials from "next-auth/providers/credentials";
 import { LoginConstraints } from "./constraints/forms_constraints";
-import { compare } from "bcryptjs";
 import { getUserByEmail } from "./dal";
 import GoogleProvider from "next-auth/providers/google";
 import GitHubProvider from "next-auth/providers/github";
 import rateLimit from "./security/rateLimit";
 import { NextRequest } from "next/server";
+import { verifyPassword } from "./services/auth_service";
 
 const prisma = new PrismaClient();
 
@@ -45,7 +45,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                         throw new Error("Email not verified");
                     }
 
-                    const isValid = await compare(password, user.password);
+                    const isValid = await verifyPassword(password, user.password);
                     if (!isValid) {
                         throw new Error("Invalid credentials");
                     }
