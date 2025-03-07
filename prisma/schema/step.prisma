@@ -1,0 +1,13 @@
+
+model Step {
+    id            String  @id @default(auto()) @map("_id") @db.ObjectId
+
+    preparationId String  @db.ObjectId 
+    preparation   Preparation @relation(fields: [preparationId], references: [id], onDelete: Cascade)
+
+    stepNumber    Int 
+    description   String 
+    imageUrl      String? 
+
+    @@index([preparationId])
+}

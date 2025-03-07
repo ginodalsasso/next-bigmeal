@@ -9,6 +9,7 @@ model Meal {
 
     compositions      Composition[]
     shoppingListItems ShoppingListItem[]
+    preparations  Preparation[] 
 
     @@index([categoryMealId])
 }

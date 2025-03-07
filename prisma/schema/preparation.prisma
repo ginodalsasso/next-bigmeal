@@ -1,0 +1,13 @@
+model Preparation {
+    id         String    @id @default(auto()) @map("_id") @db.ObjectId
+    
+    mealId     String    @db.ObjectId
+    meal       Meal      @relation(fields: [mealId], references: [id], onDelete: Cascade)
+
+    prepTime   Int       @default(0) // Temps de préparation en minutes
+    cookTime   Int? // Temps de cuisson en minutes
+
+    steps      Step[]
+
+    @@index([mealId])
+}
