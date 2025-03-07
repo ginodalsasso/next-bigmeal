@@ -5,7 +5,6 @@ import { sendEmail } from "@/lib/services/email_service";
 import { hash } from "bcryptjs";
 import { NextRequest, NextResponse } from "next/server";
 import jwt from 'jsonwebtoken';
-import { date } from "zod";
 
 
 const LIMIT = 5; // Nombre maximal de requêtes

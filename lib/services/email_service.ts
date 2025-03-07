@@ -26,7 +26,7 @@ export async function sendEmail(recipient: string, subject: string, text: string
             message: successMessage,
             status: 200
         }
-    } catch (error) {
+    } catch {
         return {
             message: 'Erreur lors de l\'envoi de l\'email',
             status: 500
