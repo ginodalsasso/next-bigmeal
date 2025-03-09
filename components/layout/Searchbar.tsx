@@ -1,5 +1,7 @@
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
+import React from "react";
+import { set } from "zod";
 
 // _________________________ TYPES _________________________
 interface SearchResult {
@@ -29,7 +31,6 @@ const SearchBar: React.FC = () => {
                 const response = await fetch(`/api/search?query=${query}`, { 
                     method: "GET",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ query })
                 });
 
                 if (!response.ok) {
@@ -48,9 +49,18 @@ const SearchBar: React.FC = () => {
         return () => clearTimeout(timeout); // annule le délai si la recherche est relancée avant la fin du délai
     }, [query]); // relance la recherche à chaque changement de la valeur de query
 
-    const handleResult = () => {
-        router.push(`/search-results?query=${query}`);
+
+    const handleResult = () =>  {
+        const url = `/search-results?query=${query}`;
+        router.push(url);
+        setQuery("");
     };
+
+    const handleItemResult = (item: SearchResult) => {
+        const url = `/search-results?query=${item.name}`;
+        router.push(url);
+        setQuery("");
+    }
 
 
     // _________________________ RENDU _________________________
@@ -59,18 +69,19 @@ const SearchBar: React.FC = () => {
             <input
                 type="text"
                 name="search"
-                className="w-full border p-2 text-black focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full border p-2 text-black focus:outline-none focus:ring-white"
                 placeholder="Rechercher un plat ou un ingrédient..."
                 value={query}
-                onChange={(e) => setQuery(e.target.value)}
+                onChange={(e) => setQuery(e.target.value as string || "")}
             />
-            {loading && <p className="mt-2 text-gray-500">Chargement...</p>}
+            {loading && <p className="mt-2">Chargement...</p>}
             {results.length > 0 && (
                 <ul className="absolute w-full overflow-hidden border shadow-md">
                     {results.map((item) => (
                         <li
                             key={item.id}
                             className="cursor-pointer border-b p-2 last:border-b-0"
+                            onClick={() => handleItemResult(item)}
                         >
                             {item.name}
                         </li>

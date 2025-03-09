@@ -20,12 +20,16 @@ export async function GET(req: NextRequest) {
     try {
         const meals = await db.meal.findMany({
             where: { name: { contains: query, mode: "insensitive" } }, // Insensible à la casse
-            select: { id: true, name: true },
+            include: { 
+                categoryMeal: true
+            },
         });
 
         const ingredients = await db.ingredient.findMany({
             where: { name: { contains: query, mode: "insensitive" } },
-            select: { id: true, name: true },
+            include : {
+                categoryIngredient: true
+            },
         });
 
         return NextResponse.json([
@@ -33,10 +37,12 @@ export async function GET(req: NextRequest) {
             ...meals.map((meal) => ({
                 id: meal.id,
                 name: meal.name,
+                category: meal.categoryMeal?.name,
             })),
             ...ingredients.map((ingredient) => ({
                 id: ingredient.id,
                 name: ingredient.name,
+                category: ingredient.categoryIngredient?.name,
             })),
         ]);
     } catch (error) {

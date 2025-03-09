@@ -1,6 +1,8 @@
 'use client';
 
+import AddToShoppingListForm from "@/components/forms/AddToShoppingListForm";
 import ItemView from "@/components/layout/ItemView";
+import { CATEGORIES_MEALS_TOLOWER } from "@/lib/constants/ui_constants";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -9,7 +11,8 @@ import { useEffect, useState } from "react";
 interface SearchResult {
     id: number;
     name: string;
-    description: string;
+    description?: string;
+    category: string;
 }
 
 // _________________________ COMPONENT _________________________
@@ -39,6 +42,7 @@ const SearchResultsPage: React.FC = () => {
 
                 const data = await response.json();
                 setResults(data);
+                console.table(data);
             } catch (error) {
                 console.error("Error fetching search results", error);
             }
@@ -57,16 +61,22 @@ const SearchResultsPage: React.FC = () => {
         <div className="p-4">
             <h1 className="text-2xl font-bold">Résultats pour {query}</h1>
             {results.map((result) => (
-                <div key={result.id} className="border-b p-2">
-                    {/* <h2 className="text-xl font-semibold">{result.name}</h2> */}
-                    {/* <p className="text-gray-700">{result.description}</p> */}
+                <div key={result.id} className="card">
                     <ItemView
                         title={result.name}
                         details={{
-                            // category: meal.categoryMeal?.name || "Non spécifié",
-                            // description: meal.description,
+                            category: result.category,
                         }}
-                        // linkToDetails={`/meals/${meal.name}`}
+                         // Si la catégorie fais partie de la constante CATEGORIES_MEALS_TOLOWER, le lien pointe vers /meals/nom-du-plat
+                        linkToDetails={`
+                            /${CATEGORIES_MEALS_TOLOWER.includes(result.category) ? "meals" : "ingredients"}/${result.name}`
+                        }
+                    />
+
+                    <AddToShoppingListForm 
+                        // Si la catégorie fais partie de la constante CATEGORIES_MEALS_TOLOWER, le type est "meal", sinon "ingredient"
+                        type={CATEGORIES_MEALS_TOLOWER.includes(result.category) ? "meal" : "ingredient"} 
+                        id={result.name} 
                     />
                 </div>
             ))}
