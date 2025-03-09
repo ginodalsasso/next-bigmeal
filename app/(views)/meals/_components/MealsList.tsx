@@ -19,7 +19,7 @@ import UpdateMeal from "./UpdateMeal";
 import AddToShoppingListForm from "@/components/forms/AddToShoppingListForm";
 import IsAdmin from "@/components/isAdmin";
 import IsUser from "@/components/isUser";
-import SearchBar from "@/components/layout/Searchbar";
+import SearchBar from "@/components/layout/FilterSearchbar";
 import FilterCheckboxes from "@/components/layout/FilterItems";
 
 // Composants UI

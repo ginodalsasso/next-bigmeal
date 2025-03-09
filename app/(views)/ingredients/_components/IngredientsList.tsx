@@ -19,7 +19,7 @@ import EditItem from "@/components/layout/EditItemDrawer";
 import DeleteItem from "@/components/layout/DeleteItemDialog";
 import IsAdmin from "@/components/isAdmin";
 import IsUser from "@/components/isUser";
-import SearchBar from "@/components/layout/Searchbar";
+import SearchBar from "@/components/layout/FilterSearchbar";
 import FilterItems from "@/components/layout/FilterItems";
 
 // Composants UI
