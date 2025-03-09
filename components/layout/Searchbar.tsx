@@ -1,7 +1,6 @@
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import React from "react";
-import { set } from "zod";
 
 // _________________________ TYPES _________________________
 interface SearchResult {
@@ -52,7 +51,7 @@ const SearchBar: React.FC = () => {
 
     const handleResult = () =>  {
         const url = `/search-results?query=${query}`;
-        router.push(url);
+        router.push(url, );
         setQuery("");
     };
 

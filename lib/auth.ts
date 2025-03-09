@@ -8,7 +8,7 @@ import GoogleProvider from "next-auth/providers/google";
 import GitHubProvider from "next-auth/providers/github";
 import rateLimit from "./security/rateLimit";
 import { NextRequest } from "next/server";
-import { verifyPassword } from "./services/auth_service";
+import API_ROUTES from "./constants/api_routes";
 
 const prisma = new PrismaClient();
 
@@ -44,11 +44,21 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                     if (!user.emailVerified) {
                         throw new Error("Email not verified");
                     }
-
-                    const isValid = await verifyPassword(password, user.password);
+                    const response = await fetch(`${API_ROUTES.auth.verifyPassword}`, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            inputPassword: password,
+                            hashedPassword: user.password,
+                        }),
+                    });
+                    
+                    const { isValid } = await response.json();
                     if (!isValid) {
                         throw new Error("Invalid credentials");
                     }
+                    
+                    
 
                     return {
                         ...user,

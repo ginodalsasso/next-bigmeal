@@ -77,7 +77,6 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ message: emailResult.message }, { status: emailResult.status });
         }
 
-        return NextResponse.json(user, { status: 201 });
     } catch (error) {
         console.error("[REGISTER_ERROR]", error);
         return NextResponse.json(
