@@ -9,7 +9,7 @@ import { useFormValidation } from "@/app/hooks/useFormValidation";
 import { useCsrfToken } from "@/app/hooks/useCsrfToken";
 
 // Types
-import { CategoryMealType, MealType } from "@/lib/types/schemas_interfaces";
+import { CategoryMealType } from "@/lib/types/schemas_interfaces";
 import { MealFormType } from "@/lib/types/forms_interfaces";
 import { CreateMealProps } from "@/lib/types/props_interfaces";
 

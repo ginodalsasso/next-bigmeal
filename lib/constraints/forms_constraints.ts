@@ -155,3 +155,11 @@ export const isCheckedShoppingListConstraints = z.object({
     id: z.string(),
     isChecked: z.boolean(),
 });
+
+
+export const searchConstraints = z.object({
+    query: z
+        .string()
+        .min(3, "La recherche doit comporter au moins 3 caractères")
+        .max(100, "La recherche doit comporter au maximum 100 caractères"),
+});
