@@ -1,4 +1,5 @@
 import API_ROUTES from "../constants/api_routes";
+import { MealType } from "../types/schemas_interfaces";
 
 export async function getCategoriesIngredient() {
     try {
@@ -44,7 +45,7 @@ export async function getMeals() {
     }
 }
 
-export async function getMeal(mealName: string) {
+export async function getMeal(mealName: string): Promise<MealType> {
     try {
         const response = await fetch(`${API_ROUTES.meals}/${mealName}`, { cache: "no-store" });
         if (!response.ok) throw new Error("Erreur lors de la récupération du repas.");
