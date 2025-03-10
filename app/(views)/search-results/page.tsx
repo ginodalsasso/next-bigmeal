@@ -69,14 +69,14 @@ const SearchResultsPage: React.FC = () => {
                         }}
                          // Si la catégorie fais partie de la constante CATEGORIES_MEALS_TOLOWER, le lien pointe vers /meals/nom-du-plat
                         linkToDetails={`
-                            /${CATEGORIES_MEALS_TOLOWER.includes(result.category) ? "meals" : "ingredients"}/${result.name}`
-                        }
+                            /${CATEGORIES_MEALS_TOLOWER.includes(result.category) ? "meals" : "ingredients"}/${result.name}
+                        `}
                     />
 
                     <AddToShoppingListForm 
                         // Si la catégorie fais partie de la constante CATEGORIES_MEALS_TOLOWER, le type est "meal", sinon "ingredient"
                         type={CATEGORIES_MEALS_TOLOWER.includes(result.category) ? "meal" : "ingredient"} 
-                        id={result.name} 
+                        id={CATEGORIES_MEALS_TOLOWER.includes(result.category) ? result.name : result.id.toString()} 
                     />
                 </div>
             ))}

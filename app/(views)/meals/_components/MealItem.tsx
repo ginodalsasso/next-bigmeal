@@ -99,7 +99,6 @@ export default function MealItem( {fetchedMeal}: { fetchedMeal: MealType }) {
                                         });
                                         setIsDialogOpen(false);
                                     }}
-                                    onClose={() => setIsDialogOpen(false)}
                                 />
                             </DialogHeader>
                         </DialogContent>
