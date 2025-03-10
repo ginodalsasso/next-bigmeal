@@ -2,7 +2,7 @@ import { RegisterConstraints } from "@/lib/constraints/forms_constraints";
 import { db } from "@/lib/db";
 import rateLimit from "@/lib/security/rateLimit";
 import { sendEmail } from "@/lib/services/email_service";
-import { hash } from "bcryptjs";
+import { hash } from "argon2";
 import { NextRequest, NextResponse } from "next/server";
 import jwt from 'jsonwebtoken';
 
@@ -41,7 +41,7 @@ export async function POST(req: NextRequest) {
         }
 
         // Hasher le mot de passe et créer l'utilisateur
-        const hashedPassword = await hash(password, 12);
+        const hashedPassword = await hash(password);
         const user = await db.user.create({
             data: {
                 email: email,

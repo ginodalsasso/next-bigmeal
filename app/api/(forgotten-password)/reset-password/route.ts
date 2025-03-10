@@ -1,7 +1,7 @@
 import { db } from '@/lib/db';
 import jwt from 'jsonwebtoken';
 import { NextRequest } from 'next/server';
-import bcrypt from 'bcryptjs';
+import { hash } from 'argon2';
 import { sendEmail } from '@/lib/services/email_service';
 
 
@@ -101,7 +101,7 @@ export async function PUT(req: NextRequest) {
             }
 
             // Hash du mot de passe 
-            const hashedPassword = await bcrypt.hash(password, 12);
+            const hashedPassword = await hash(password);
 
             // Mise à jour du mot de passe
             await db.user.update({

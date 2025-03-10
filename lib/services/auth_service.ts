@@ -1,4 +1,3 @@
-import { compare } from "bcryptjs";
 import API_ROUTES from "../constants/api_routes";
 
 export async function registerUserAPI(email: string, password: string) {
@@ -39,8 +38,4 @@ export async function sendForgotPasswordEmailAPI(email: string) {
         console.error("[API_ERROR] sendForgotPasswordEmail", error);
         throw error;
     }
-}
-
-export async function verifyPassword(password: string, hash: string): Promise<boolean> {
-    return await compare(password, hash);
 }
