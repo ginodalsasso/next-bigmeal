@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { getUserSession } from "@/lib/security/getSession";
-import bcrypt from "bcryptjs";
+import { hash, verify } from "argon2";
 import { verifyCSRFToken } from "@/lib/security/verifyCsrfToken";
 import { idConstraints } from "@/lib/constraints/forms_constraints";
 
@@ -87,7 +87,7 @@ export async function PUT(req: NextRequest) {
                 { status: 400, headers: { "Content-Type": "application/json" } }
             );
         }
-        const isPasswordValid = await bcrypt.compare(password, user.password);
+        const isPasswordValid = await verify(password, user.password);
         if (!isPasswordValid) {
             return new Response(
                 JSON.stringify({ message: "Mot de passe actuel incorrect" }),
@@ -96,7 +96,7 @@ export async function PUT(req: NextRequest) {
         }
 
         // Hash du nouveau mot de passe
-        const hashedPassword = await bcrypt.hash(newPassword, 12);
+        const hashedPassword = await hash(newPassword);
 
         // Mise à jour du mot de passe
         await db.user.update({
