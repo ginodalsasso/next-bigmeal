@@ -35,6 +35,9 @@ export default function MealItem( {fetchedMeal}: { fetchedMeal: MealType }) {
     const [meal, setMeal] = useState<MealType>(fetchedMeal);
     const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
 
+    console.table(meal);
+    console.table(meal.preparations);
+    console.table(meal.preparations[0].steps);
     // _________________________ CRUD _________________________
     const updateComposition = (updatedComposition: CompositionType) => {
         setMeal((prevMeal) => {
@@ -141,6 +144,29 @@ export default function MealItem( {fetchedMeal}: { fetchedMeal: MealType }) {
                 ) : (
                     <p className="text-gray-500">Aucun ingrédient disponible pour ce repas.</p>
                 )}
+            </div>
+            <div>
+                <p className="mt-6">Préparation :</p>
+                <ul>
+                    {Array.isArray(meal.preparations) && meal.preparations.length > 0 ? (
+                        meal.preparations.map((preparation) => (
+                            <li key={preparation.id}>
+                                <p>Temps de préparation: {preparation.prepTime}</p>
+                                <p>Temps de cuisson: {preparation.cookTime}</p>
+
+                                <ul>
+                                    {preparation.steps.map((step) => (
+                                        <li key={step.id}>
+                                            {step.stepNumber}.{step.description}
+                                        </li>
+                                    ))}
+                                </ul>
+                            </li>
+                        ))
+                    ) : (
+                        <p className="text-gray-500">Aucune préparation disponible pour ce repas.</p>
+                    )}
+                </ul>
             </div>
         </div>
     );

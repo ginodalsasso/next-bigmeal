@@ -22,6 +22,11 @@ export async function GET ( req: NextRequest, { params }: Props){
                         ingredient: true,
                     },
                 },
+                preparations: {
+                    include: {
+                        steps: true,
+                    },
+                }
             },
         });
 

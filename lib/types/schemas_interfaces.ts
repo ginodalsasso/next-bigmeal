@@ -53,6 +53,7 @@ export interface MealType {
 
     // Relation One-to-Many 
     compositions: CompositionType[];
+    preparations: PreparationType[];
 
     // Relation One-to-Many
     shoppingListItems: ShoppingListType[];
@@ -70,6 +71,29 @@ export interface CompositionType {
     // Relations
     ingredient: IngredientType; // Référence à l'ingrédient associé
     meal: MealType; // Référence au repas associé
+}
+
+export interface PreparationType {
+    id: string;
+    mealId: string; // Clé étrangère
+    // Relation Many-to-One
+    meal: MealType;
+
+    prepTime: number;
+    cookTime?: number;
+
+    steps: StepType[];
+
+}
+
+export interface StepType {
+    id: string;
+    preparationId: string; // Clé étrangère
+    preparation: PreparationType;
+
+    stepNumber: number;
+    description: string;
+    imageUrl?: string;
 }
 
 
