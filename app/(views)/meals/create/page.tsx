@@ -5,7 +5,7 @@ import React, { useState } from "react";
 
 // Composants
 import CreateMeal from "../_components/CreateMeal";
-import CreateComposition from "../_components/CreateComposition";
+import CreateComposition from "../_components/(composition)/CreateComposition";
 import { Button } from "@/components/ui/button";
 
 // Types

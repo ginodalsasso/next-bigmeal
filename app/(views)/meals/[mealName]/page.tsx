@@ -4,16 +4,21 @@ import MealItem from "../_components/MealItem";
 // Service de récupération d'un repas
 import { getMeal } from "@/lib/services/data_fetcher";
 
+type MealDetailPageProps = {
+    params: {
+        mealName: string;
+    };
+};
 
-export default async function MealDetailPage({ params }: { params: { mealName: string } }) {
+export default async function MealDetailPage({ params }: MealDetailPageProps) {
     // Récupère le nom du repas dans les paramètres de la requête
-    const mealName = params.mealName;
+    const { mealName } = params;
 
     if (!mealName) {
         return <div>Erreur : Aucun nom de repas fourni.</div>;
     }
 
-    const meal = await getMeal(mealName);
+    const meal = await getMeal(mealName); 
 
     if (!meal) {
         return <div>Repas introuvable.</div>;

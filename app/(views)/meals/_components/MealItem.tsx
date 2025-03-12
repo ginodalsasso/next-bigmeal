@@ -7,15 +7,9 @@ import Image from "next/image";
 // Types
 import { CompositionType, MealType } from "@/lib/types/schemas_interfaces";
 
-// Utils
-import { translatedUnit, ucFirst } from "@/lib/utils";
-
 // Composants
-import CreateComposition from "../_components/CreateComposition";
-import UpdateComposition from "../_components/UpdateComposition";
+import CreateComposition from "./(composition)/CreateComposition";
 import IsAdmin from "@/components/isAdmin";
-import DeleteItem from "@/components/layout/DeleteItemDialog";
-import EditItem from "@/components/layout/EditItemDrawer";
 
 // Composants UI
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
@@ -25,7 +19,9 @@ import { Button } from "@/components/ui/button";
 import add from "@/public/img/add.svg";
 
 // Constantes
-import API_ROUTES from "@/lib/constants/api_routes";
+import CompositionItem from "./(composition)/CompositionItem";
+import PreparationItem from "./(preparation)/PreparationItem";
+import { ucFirst } from "@/lib/utils";
 
 
 // _________________________ COMPOSANT _________________________
@@ -35,9 +31,6 @@ export default function MealItem( {fetchedMeal}: { fetchedMeal: MealType }) {
     const [meal, setMeal] = useState<MealType>(fetchedMeal);
     const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
 
-    console.table(meal);
-    console.table(meal.preparations);
-    console.table(meal.preparations[0].steps);
     // _________________________ CRUD _________________________
     const updateComposition = (updatedComposition: CompositionType) => {
         setMeal((prevMeal) => {
@@ -110,36 +103,14 @@ export default function MealItem( {fetchedMeal}: { fetchedMeal: MealType }) {
             </IsAdmin>
 
             <div className="mt-6">
-                {Array.isArray(meal.compositions) && meal.compositions.length > 0 ? (
+                {meal.compositions.length > 0 ? (
                     meal.compositions.map((composition) => (
-                        <div
+                        <CompositionItem
                             key={composition.id}
-                            className="flex items-center justify-between border-b py-2"
-                        >
-                            <p className="font-medium">{ucFirst(composition.ingredient?.name || "Ingrédient inconnu")}</p>
-                            <div className="flex items-center gap-1">
-                                <p>{composition.quantity}</p>
-                                <p>{translatedUnit(composition.unit)}</p>
-                                <IsAdmin>
-                                    {/* Drawer pour l'édition */}
-                                    <EditItem
-                                        renderEditForm={(onClose) => (
-                                            <UpdateComposition
-                                                initialComposition={composition}                                
-                                                onCompositionUpdated={updateComposition}
-                                                onClose={onClose}
-                                            />
-                                        )}
-                                    />
-
-                                    <DeleteItem
-                                        apiUrl={API_ROUTES.compositions}
-                                        id={composition.id}
-                                        onSubmit={deleteComposition}
-                                    />
-                                </IsAdmin>
-                            </div>
-                        </div>
+                            composition={composition}
+                            onUpdate={updateComposition}
+                            onDelete={deleteComposition}
+                        />
                     ))
                 ) : (
                     <p className="text-gray-500">Aucun ingrédient disponible pour ce repas.</p>
@@ -148,20 +119,12 @@ export default function MealItem( {fetchedMeal}: { fetchedMeal: MealType }) {
             <div>
                 <p className="mt-6">Préparation :</p>
                 <ul>
-                    {Array.isArray(meal.preparations) && meal.preparations.length > 0 ? (
+                    {meal.preparations.length > 0 ? (
                         meal.preparations.map((preparation) => (
-                            <li key={preparation.id}>
-                                <p>Temps de préparation: {preparation.prepTime}</p>
-                                <p>Temps de cuisson: {preparation.cookTime}</p>
-
-                                <ul>
-                                    {preparation.steps.map((step) => (
-                                        <li key={step.id}>
-                                            {step.stepNumber}.{step.description}
-                                        </li>
-                                    ))}
-                                </ul>
-                            </li>
+                            <PreparationItem 
+                                key={preparation.id} 
+                                preparation={preparation} 
+                            />
                         ))
                     ) : (
                         <p className="text-gray-500">Aucune préparation disponible pour ce repas.</p>
