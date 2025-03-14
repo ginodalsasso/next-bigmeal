@@ -29,6 +29,7 @@ const categoriesRoutes = {
 };
 
 const compositionsRoute = `${BASE_URL}/compositions`;
+const preparationRoute = `${BASE_URL}/preparation`;
 const ingredientsRoute = `${BASE_URL}/ingredients`;
 const mealsRoute = `${BASE_URL}/meals`;
 const shoppingListRoute = `${BASE_URL}/shopping-list`;
@@ -41,6 +42,7 @@ const API_ROUTES = {
     confirmEmail: confirmEmailRoutes,
     categories: categoriesRoutes,
     compositions: compositionsRoute,
+    preparation: preparationRoute,
     ingredients: ingredientsRoute,
     meals: mealsRoute,
     shoppingList: shoppingListRoute,

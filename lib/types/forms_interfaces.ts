@@ -60,6 +60,13 @@ export interface CompositionFormErrorType {
 }
 
 
+export interface PreparationFormType {
+    mealId: string;
+    prepTime?: number;
+    cookTime?: number;
+}
+
+
 export interface UpdateCompositionFormType {
     id: string;
     quantity: number

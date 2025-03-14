@@ -58,8 +58,8 @@ export const updateCompositionConstraints = z.object({
 
 export const newCompositionConstraints = z.array(
     z.object({
-        ingredientId: z.string(),
         mealId: z.string(),
+        ingredientId: z.string(),
         quantity: z
             .number({ message: "La quantité doit être un nombre" })
             .min(0.1, "La quantité doit être supérieure à 0")
@@ -70,6 +70,16 @@ export const newCompositionConstraints = z.array(
         }),
     })
 );
+
+export const newPreparationConstraints = z.object({
+    mealId: z.string(),
+    prepTime: z
+        .number()
+        .optional(),
+    cookTime: z
+        .number()
+        .optional()
+});
 
 export const RegisterConstraints = z.object({
     email: z

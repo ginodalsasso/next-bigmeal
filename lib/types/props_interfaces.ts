@@ -1,4 +1,4 @@
-import { CompositionType, IngredientType, MealType } from "./schemas_interfaces";
+import { CompositionType, IngredientType, MealType, PreparationType } from "./schemas_interfaces";
 
 
 export interface CreateIngredientProps { 
@@ -25,6 +25,10 @@ export interface UpdateMealProps {
     onClose: () => void // Fonction pour fermer le dialogue
 }
 
+export interface CreatePreparationProps {
+    mealId: string; // ID du repas parent de la préparation
+    onSubmit: (preparation: PreparationType) => void, 
+}
 
 export interface CreateCategoryProps<T> { 
     apiUrl: string; // URL API dynamique

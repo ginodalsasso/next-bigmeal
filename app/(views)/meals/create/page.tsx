@@ -10,13 +10,14 @@ import { Button } from "@/components/ui/button";
 
 // Types
 import { MealType } from "@/lib/types/schemas_interfaces";
+import CreatePreparation from "../_components/(preparation)/CreatePreparation";
 
 // _________________________ COMPONENT _________________________
 const CreateMealPage = () => {
 
     // _________________________ ETATS _________________________
     const [createdMealId, setCreatedMealId] = useState<string | null>(null);
-    const [currentStep, setCurrentStep] = useState<"createMeal" | "createComposition">("createMeal");
+    const [currentStep, setCurrentStep] = useState<"createMeal" | "createComposition" | "createPreparation">("createMeal");
 
     // Callback pour la création de repas
     const handleMealCreated = (meal: MealType) => {
@@ -26,6 +27,11 @@ const CreateMealPage = () => {
 
     // Callback pour la création de composition
     const handleCompositionCreated = () => {
+        setCurrentStep("createPreparation");
+    };
+
+    // Callback pour la création de préparation
+    const handlePreparationCreated = () => {
         setCreatedMealId(null);
         setCurrentStep("createMeal");
     };
@@ -41,6 +47,12 @@ const CreateMealPage = () => {
             {currentStep === "createComposition" && createdMealId && (
                 <CreateComposition mealId={createdMealId} onSubmit={handleCompositionCreated} />
             )}
+
+            {currentStep === "createPreparation" && createdMealId && (
+                <CreatePreparation mealId={createdMealId} onSubmit={handlePreparationCreated} />
+            )}
+
+
             
             {createdMealId && (
                 <div className="flex justify-center mt-4">
