@@ -66,6 +66,13 @@ export interface PreparationFormType {
     cookTime?: number;
 }
 
+export interface StepFormType {
+    preparationId: string;
+    stepNumber: number;
+    description: string;
+    imageUrl?: string;
+}
+
 
 export interface UpdateCompositionFormType {
     id: string;

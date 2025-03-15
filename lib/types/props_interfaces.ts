@@ -1,4 +1,4 @@
-import { CompositionType, IngredientType, MealType, PreparationType } from "./schemas_interfaces";
+import { CompositionType, IngredientType, MealType, PreparationType, StepType } from "./schemas_interfaces";
 
 
 export interface CreateIngredientProps { 
@@ -28,6 +28,11 @@ export interface UpdateMealProps {
 export interface CreatePreparationProps {
     mealId: string; // ID du repas parent de la préparation
     onSubmit: (preparation: PreparationType) => void, 
+}
+
+export interface CreateStepProps {
+    preparationId: string; // ID de la préparation parent du pas
+    onSubmit: (step: StepType) => void, 
 }
 
 export interface CreateCategoryProps<T> { 

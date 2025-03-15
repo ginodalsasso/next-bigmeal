@@ -6,18 +6,25 @@ import React, { useState } from "react";
 // Composants
 import CreateMeal from "../_components/CreateMeal";
 import CreateComposition from "../_components/(composition)/CreateComposition";
+import CreatePreparation from "../_components/(preparation)/CreatePreparation";
+import CreateStep from "../_components/(preparation)/(step)/CreateStep";
 import { Button } from "@/components/ui/button";
 
 // Types
-import { MealType } from "@/lib/types/schemas_interfaces";
-import CreatePreparation from "../_components/(preparation)/CreatePreparation";
+import { MealType, PreparationType } from "@/lib/types/schemas_interfaces";
 
 // _________________________ COMPONENT _________________________
 const CreateMealPage = () => {
 
     // _________________________ ETATS _________________________
     const [createdMealId, setCreatedMealId] = useState<string | null>(null);
-    const [currentStep, setCurrentStep] = useState<"createMeal" | "createComposition" | "createPreparation">("createMeal");
+    const [createdPreparationId, setCreatedPreparationId] = useState<string | null>(null);
+    const [currentStep, setCurrentStep] = useState<
+        "createMeal" |
+        "createComposition" | 
+        "createPreparation" | 
+        "createStep"
+    >("createMeal");
 
     // Callback pour la création de repas
     const handleMealCreated = (meal: MealType) => {
@@ -31,10 +38,16 @@ const CreateMealPage = () => {
     };
 
     // Callback pour la création de préparation
-    const handlePreparationCreated = () => {
-        setCreatedMealId(null);
-        setCurrentStep("createMeal");
+    const handlePreparationCreated = (preparation: PreparationType) => {
+        setCreatedPreparationId(preparation.id);
+        setCurrentStep("createStep");
     };
+    
+    const handleStepCreated = () => {
+        setCreatedMealId(null);
+        setCreatedPreparationId(null);
+        setCurrentStep("createMeal");
+    }
 
 
     // _________________________ RENDU _________________________
@@ -50,6 +63,10 @@ const CreateMealPage = () => {
 
             {currentStep === "createPreparation" && createdMealId && (
                 <CreatePreparation mealId={createdMealId} onSubmit={handlePreparationCreated} />
+            )}
+
+            {currentStep === "createStep" && createdMealId && createdPreparationId && (
+                <CreateStep preparationId={createdPreparationId} onSubmit={handleStepCreated} />
             )}
 
 

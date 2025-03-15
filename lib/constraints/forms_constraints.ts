@@ -75,11 +75,29 @@ export const newPreparationConstraints = z.object({
     mealId: z.string(),
     prepTime: z
         .number()
+        .max(1000, "Le temps de préparation doit être inférieur à 1000 minutes")
         .optional(),
     cookTime: z
         .number()
+        .max(1000, "Le temps de cuisson doit être inférieur à 1000 minutes")
         .optional()
 });
+
+export const newStepConstraints = z.object({
+    preparationId: z.string(),
+    stepNumber: z
+        .number()
+        .min(1, "Le numéro du pas doit être supérieur à 0")
+        .max(100, "Le numéro du pas doit être inférieur à 100"),
+    description: z
+        .string()
+        .min(3, "La description doit comporter au moins 3 caractères")
+        .max(2000, "La description doit comporter au maximum 2000 caractères"),
+    imageUrl: z
+        .string()
+        .max(256, "L'url de l'image doit comporter au maximum 256 caractères")
+        .optional(),
+}); 
 
 export const RegisterConstraints = z.object({
     email: z

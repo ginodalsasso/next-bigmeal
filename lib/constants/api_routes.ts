@@ -30,6 +30,7 @@ const categoriesRoutes = {
 
 const compositionsRoute = `${BASE_URL}/compositions`;
 const preparationRoute = `${BASE_URL}/preparation`;
+const stepRoute = `${BASE_URL}/step`;
 const ingredientsRoute = `${BASE_URL}/ingredients`;
 const mealsRoute = `${BASE_URL}/meals`;
 const shoppingListRoute = `${BASE_URL}/shopping-list`;
@@ -43,6 +44,7 @@ const API_ROUTES = {
     categories: categoriesRoutes,
     compositions: compositionsRoute,
     preparation: preparationRoute,
+    step: stepRoute,
     ingredients: ingredientsRoute,
     meals: mealsRoute,
     shoppingList: shoppingListRoute,
