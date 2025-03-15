@@ -35,7 +35,6 @@ export async function POST(req: NextRequest) {
                 cookTime,
             },
         });
-        console.log(newPreparation);
         return NextResponse.json(newPreparation, {status: 201});
 
     } catch (error) {

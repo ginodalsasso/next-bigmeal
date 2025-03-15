@@ -35,8 +35,8 @@ const CreatePreparation: React.FC<CreatePreparationProps> = ({
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [form, setForm] = useState<PreparationFormType>({
         mealId,
-        prepTime: 0,
-        cookTime: 0,
+        prepTime: undefined,
+        cookTime: undefined,
     });
 
     // Hook de validation
@@ -89,7 +89,7 @@ const CreatePreparation: React.FC<CreatePreparationProps> = ({
             </label>
             <input
                 type="number"
-                value={form.prepTime}
+                value={form.prepTime || ""}
                 onChange={(e) => setForm({ ...form, prepTime: parseInt(e.target.value) })}
                 className="input-text-select"
                 required
@@ -102,7 +102,7 @@ const CreatePreparation: React.FC<CreatePreparationProps> = ({
             </label>
             <input
                 type="number"
-                value={form.cookTime}
+                value={form.cookTime || ""}
                 onChange={(e) => setForm({ ...form, cookTime: parseInt(e.target.value) })}
                 className="input-text-select"
                 required

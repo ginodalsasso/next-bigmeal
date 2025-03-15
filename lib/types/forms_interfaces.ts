@@ -73,6 +73,13 @@ export interface StepFormType {
     imageUrl?: string;
 }
 
+export interface StepFormErrorType {
+    general?: string;
+    stepNumber?: string;
+    description?: string;
+    imageUrl?: string;
+}
+
 
 export interface UpdateCompositionFormType {
     id: string;

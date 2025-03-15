@@ -5,7 +5,7 @@ model Step {
     preparationId String  @db.ObjectId 
     preparation   Preparation @relation(fields: [preparationId], references: [id], onDelete: Cascade)
 
-    stepNumber    Int 
+    stepNumber    Int @unique
     description   String 
     imageUrl      String? 
 
