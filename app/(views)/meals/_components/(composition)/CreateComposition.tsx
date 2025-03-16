@@ -26,6 +26,7 @@ import FormErrorMessage from "@/components/forms/FormErrorMessage";
 // Services
 import { getIngredients } from "@/lib/services/data_fetcher";
 import { createCompositionAPI } from "@/lib/services/composition_service";
+import Image from "next/image";
 
 
 // _________________________ COMPONENT _________________________
@@ -131,104 +132,128 @@ const CreateComposition: React.FC<CreateCompositionProps>= ({
         }
     };
 
+    // Vérifie si le formulaire est invalide
+    const isFormInvalid = form.some(comp => !comp.ingredientId || !comp.quantity || !comp.unit) || isLoading;
+
+
     // _________________________ RENDU _________________________
     return (
-        <form className="flex flex-col gap-5 p-5" onSubmit={handleSubmit}>
+        <form className="flex flex-col gap-5" onSubmit={handleSubmit}>
             <FormErrorMessage message={error.general} />
 
             {form.map((composition, index) => (
-                <div key={index} className="flex flex-col gap-3 border-b pb-4">
-                    {/* Sélection de l'ingrédient */}
-                    <select
-                        value={composition.ingredientId}
-                        onChange={(e) =>
-                            setForm((prev) =>
-                                prev.map((comp, i) => 
-                                    i === index // Si c'est la ligne en cours, mettre à jour l'ingrédient   
-                                        ? { ...comp, ingredientId: e.target.value } // ...comp = copie de la ligne
-                                        : comp // Sinon, ne rien changer
+                <div key={index} className="flex gap-3 border-b pb-4">
+                    <div>
+                        {/* Sélection de l'ingrédient */}
+                        <label htmlFor="ingredient">Ingrédient</label>
+                        <select
+                            value={composition.ingredientId}
+                            onChange={(e) =>
+                                setForm((prev) =>
+                                    prev.map((comp, i) => 
+                                        i === index // Si c'est la ligne en cours, mettre à jour l'ingrédient   
+                                            ? { ...comp, ingredientId: e.target.value } // ...comp = copie de la ligne
+                                            : comp // Sinon, ne rien changer
+                                    )
                                 )
-                            )
-                        }
-                        className="input-text-select"
-                        required
-                    >
-                        <option value="">-- Choisir un ingrédient --</option>
-                        {ingredients.map((ingredient) => (
-                            <option 
-                                key={ingredient.id} 
-                                value={ingredient.id}
-                                disabled= {form.some((comp) => comp.ingredientId === ingredient.id)}
-                            >
-                                {ingredient.name}
-                            </option>
-                        ))}
-                    </select>
-                    <FormErrorMessage message={error[index]?.ingredientId} />
-
-                    {/* Champ pour la quantité */}
-                    <input
-                        type="number"
-                        step="0.1"
-                        placeholder="Quantité"
-                        value={composition.quantity || ""}
-                        onChange={(e) =>
-                            setForm((prev) =>
-                                prev.map((comp, i) =>
-                                    i === index // Si c'est la ligne en cours, mettre à jour la quantité
+                            }
+                            className="input-text-select"
+                            required
+                        >
+                            <option value="">-- Choisir un ingrédient --</option>
+                            {ingredients.map((ingredient) => (
+                                <option 
+                                    key={ingredient.id} 
+                                    value={ingredient.id}
+                                    disabled= {form.some((comp) => comp.ingredientId === ingredient.id)}
+                                >
+                                    {ingredient.name}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+                    <div>
+                        {/* Champ pour la quantité */}
+                        <label htmlFor="quantity">Quantité</label>
+                        <input
+                            id="quantity"
+                            type="number"
+                            step="0.1"
+                            placeholder="Quantité"
+                            value={composition.quantity || ""}
+                            onChange={(e) =>
+                                setForm((prev) =>
+                                    prev.map((comp, i) =>
+                                        i === index // Si c'est la ligne en cours, mettre à jour la quantité
                                         ? { ...comp, quantity: parseFloat(e.target.value) } // ...comp = copie de la ligne
                                         : comp // Sinon, ne rien changer
+                                    )
                                 )
-                            )
-                        }
-                        className="input-text-select"
-                        required
-                    />
-                    <FormErrorMessage message={error[index]?.quantity} />
-
-                    {/* Sélection de l'unité */}
-                    <select
-                        value={composition.unit}
-                        onChange={(e) =>
-                            setForm((prev) =>
-                                prev.map((comp, i) =>
-                                    i === index // Si c'est la ligne en cours, mettre à jour l'unité
+                            }
+                            className="input-text-select"
+                            required
+                        />
+                    </div>
+                    
+                    <div>
+                        {/* Sélection de l'unité */}
+                        <label htmlFor="unit">Unité</label>
+                        <select
+                            id="unit"
+                            value={composition.unit}
+                            onChange={(e) =>
+                                setForm((prev) =>
+                                    prev.map((comp, i) =>
+                                        i === index // Si c'est la ligne en cours, mettre à jour l'unité
                                         ? { ...comp, unit: e.target.value as IngredientUnit } // ...comp = copie de la ligne
                                         : comp // Sinon, ne rien changer
-                                )
-                            )
-                        }
-                        className="input-text-select"
-                        required
-                    >
-                        <option value="">-- Choisir une unité --</option>
-                        {Object.values(IngredientUnit).map((unit) => (
-                            <option key={unit} value={unit}>
-                                {translatedUnit(unit)}
-                            </option>
-                        ))}
-                    </select>
+                                        )
+                                    )
+                                }
+                            className="input-text-select"
+                            required
+                        >
+                            <option value="">-- Choisir une unité --</option>
+                            {Object.values(IngredientUnit).map((unit) => (
+                                <option key={unit} value={unit}>
+                                    {translatedUnit(unit)}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+                    {/* Bouton pour supprimer une ligne */}
+                    <Button 
+                        variant="delete" 
+                        className="w-auto self-end" 
+                        title="Supprimer" 
+                        onClick={() => removeLine(index)}
+                        disabled={form.length === 1}>
+                        <Image src={"/img/trash.svg"} width={18} height={18} alt="Icône de suppression" />
+                    </Button>   
+                    
+                    {/* Messages d'erreur pour chaque champ */}
+                    <FormErrorMessage message={error[index]?.ingredientId} />
+                    <FormErrorMessage message={error[index]?.quantity} />
                     <FormErrorMessage message={error[index]?.unit} />
 
-                    {/* Bouton pour supprimer une ligne */}
-                    <Button
-                        variant="destructive"
-                        onClick={() => removeLine(index)}
-                        disabled={form.length === 1}
-                    >
-                        Supprimer
-                    </Button>
                 </div>
             ))}
 
             {/* Bouton pour ajouter une nouvelle ligne */}
-            <Button variant="secondary" type="button" onClick={addNewLine}>
-                Ajouter un ingrédient
+            <Button 
+                variant="default" 
+                type="button" 
+                onClick={addNewLine} 
+                disabled= {isFormInvalid}
+            >
+                Ajouter une autre composition
             </Button>
-
-            {/* Bouton de soumission */}
-            <Button type="submit" variant="success" disabled={isLoading || form.length === 0}>
-                {isLoading ? "Ajout en cours..." : "Ajouter"}
+            <Button 
+                type="submit" 
+                variant="success" 
+                disabled= {isFormInvalid}
+            >
+                {isLoading ? "Création du repas en cours..." : "Suivant"}
             </Button>
         </form>
     );

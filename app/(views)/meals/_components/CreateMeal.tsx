@@ -3,6 +3,7 @@
 // Bibliothèques tierces
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 // Hooks personnalisés
 import { useFormValidation } from "@/app/hooks/useFormValidation";
@@ -33,6 +34,8 @@ const CreateMeal: React.FC<CreateMealProps> = ({ onMealCreated }) => {
     
     // _________________________ HOOKS _________________________
     const csrfToken = useCsrfToken();
+    const router = useRouter();
+
     const [categories, setCategories] = useState<CategoryMealType[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -101,52 +104,78 @@ const CreateMeal: React.FC<CreateMealProps> = ({ onMealCreated }) => {
 
     // _________________________ RENDU _________________________
     return (
-        <form className="flex flex-col gap-5 p-5" onSubmit={handleSubmit}>
+        <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
             <FormErrorMessage message={error?.general} />
 
-            {/* Champ pour le nom du repas */}
-            <input
-                type="text"
-                placeholder="Nom du repas"
-                value={form.name}
-                onChange={(e) => setForm({ ...form, name: e.target.value })}
-                className="input-text-select"
-                required
-            />
-            <FormErrorMessage message={error?.name} />
+            <div>
+                {/* Champ pour le nom du repas */}
+                <label htmlFor="meal-name">
+                    Nom du repas
+                </label>
+                <input
+                    id="meal-name"
+                    type="text"
+                    placeholder="Carbonara"
+                    value={form.name}
+                    onChange={(e) => setForm({ ...form, name: e.target.value })}
+                    className="input-text-select"
+                    required
+                />
+                <FormErrorMessage message={error?.name} />
+            </div>
 
-            {/* Text area pour la description */}
-            <textarea
-                placeholder="Description du repas"
-                value={form.description ?? ""}
-                onChange={(e) => setForm({ ...form, description: e.target.value })}
-                className="input-text-select"
-            />
-            <FormErrorMessage message={error?.description} />
+            <div>
+                {/* Text area pour la description */}
+                <label htmlFor="meal-description">
+                    Description du repas (optionnelle)
+                </label>
+                <textarea
+                    id="meal-description"
+                    placeholder="Quelque chose à ajouter ?"
+                    value={form.description ?? ""}
+                    onChange={(e) => setForm({ ...form, description: e.target.value })}
+                    className="input-text-select"
+                />
+                <FormErrorMessage message={error?.description} />
+            </div>
 
             {/* Sélection pour la catégorie */}
-            <select
-                value={form.categoryMealId}
-                onChange={(e) => setForm({ ...form, categoryMealId: e.target.value })}
-                className="input-text-select"
-                required
-            >
-                <option value="">-- Choisir une catégorie --</option>
-                {categories.map((categorie) => (
-                    <option key={categorie.id} value={categorie.id}>
-                        {ucFirst(categorie.name)}
-                    </option>
-                ))}
-            </select>
-            <FormErrorMessage message={error?.categoryMealId} />
+            <div>
+                <label htmlFor="categoryMealId">
+                    Catégorie du repas
+                </label>
+                <div className="flex  gap-4">
+                    {categories.map((categorie) => (
+                        <button
+                            id="categoryMealId"
+                            key={categorie.id}
+                            type="button"
+                            className={`cursor-pointer border px-4 py-2 hover:bg-white hover:text-black ${
+                                form.categoryMealId === categorie.id
+                                    ? "bg-white text-black"
+                                    : ""
+                            }`}
+                            onClick={() => setForm({ ...form, categoryMealId: categorie.id })}
+                        >
+                            {ucFirst(categorie.name)}
+                        </button>
+                    ))}
+                </div>
+                <FormErrorMessage message={error?.categoryMealId} />
+            </div>
 
             {/* Bouton de soumission */}
-            <div className="flex flex-col-reverse gap-2 lg:justify-end">
-                <Button variant="cancel">
+            <div className="mt-4 flex flex-col-reverse gap-2">
+                <Button 
+                    variant="cancel" 
+                    onClick={() => router.push("/meals")}
+                >
                     Revenir en arrière
                 </Button>
-                <Button type="submit" variant="success" disabled={isLoading}>
-                    {isLoading ? "Ajout en cours..." : "Ajouter"}
+                <Button type="submit" variant="success" disabled={
+                    !form.name || !form.categoryMealId || isLoading}
+                >
+                    {isLoading ? "Création du repas en cours..." : "Suivant"}
                 </Button>
             </div>
         </form>

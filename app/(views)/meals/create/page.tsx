@@ -26,6 +26,15 @@ const CreateMealPage = () => {
         "createStep"
     >("createMeal");
 
+    const progress = {
+        createMeal: "25%",
+        createComposition: "50%",
+        createPreparation: "75%",
+        createStep: "100%",
+    }[currentStep]; // Récupère la valeur de la clé correspondant à currentStep
+    
+
+
     // Callback pour la création de repas
     const handleMealCreated = (meal: MealType) => {
         setCreatedMealId(meal.id);
@@ -49,10 +58,37 @@ const CreateMealPage = () => {
         setCurrentStep("createMeal");
     }
 
+    const goBack = () => {
+        const steps = ["createMeal", "createComposition", "createPreparation", "createStep"];
+        const currentIndex = steps.indexOf(currentStep);
+        
+        if (currentIndex > 0) {
+            setCurrentStep(steps[currentIndex - 1] as "createMeal" | "createComposition" | "createPreparation" | "createStep");
+        }
+    };
+    
 
     // _________________________ RENDU _________________________
     return (
-        <div className="p-5 max-w-2xl mx-auto">
+        <div className="max-w-2xl mx-auto">
+
+            <div>
+                <h1 className="text-2xl font-bold">Nouveau repas</h1>
+                <p className="text-gray-300 mt-2">
+                    Créez un nouveau repas en ajoutant des compositions, des préparations et des étapes.
+                </p>
+
+            </div>
+
+            {/* Progress Bar */}
+            <div className="w-full h-2 bg-gray-200 my-4">
+                <div
+                    className="h-2 bg-blue-500 transition-all"
+                    style={{ width: progress }}
+                />
+            </div>
+            
+            {/* Etapes */}
             {currentStep === "createMeal" && (
                 <CreateMeal onMealCreated={handleMealCreated} />
             )}
@@ -70,10 +106,19 @@ const CreateMealPage = () => {
             )}
 
 
+
+
             
+            {currentStep !== "createMeal" && (
+                <Button className="w-full mt-2" variant="cancel" type="button" onClick={goBack}>
+                    Revenir en arrière
+                </Button>
+
+            )}
             {createdMealId && (
-                <div className="flex justify-center mt-4">
-                    <Button onClick={() => setCurrentStep("createMeal")} variant="secondary">
+                
+                <div className="flex justify-end mt-4">
+                    <Button variant="ghost" onClick={() => setCurrentStep("createMeal")}>
                         Ajouter un autre repas
                     </Button>
                 </div>

@@ -93,4 +93,3 @@ export const countTotalQuantities = (shoppingList: ShoppingListType[]): number =
     return total
     ;
 };
-
