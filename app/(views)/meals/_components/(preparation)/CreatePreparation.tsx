@@ -82,40 +82,45 @@ const CreatePreparation: React.FC<CreatePreparationProps> = ({
 
     // _________________________ RENDU _________________________
     return (
-        <form className="flex flex-col gap-5 p-5" onSubmit={handleSubmit}>
-            {/* Champ pour le temps de préparation du plat */}
-            <label htmlFor="prepTime">
-                Temps de préparation (en minutes)
-            </label>
-            <input
-                type="number"
-                value={form.prepTime || ""}
-                onChange={(e) => setForm({ ...form, prepTime: parseInt(e.target.value) })}
-                className="input-text-select"
-                required
-            />
-            <FormErrorMessage message={error?.prepTime} />
+        <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
+            <div className="flex gap-4">
+                {/* Champ pour le temps de préparation du plat */}
+                <div>
+                    <label htmlFor="prepTime">
+                        Temps de préparation en minutes (optionnel)
+                    </label>
+                    <input
+                        id="prepTime"
+                        type="number"
+                        placeholder="60"
+                        value={form.prepTime || ""}
+                        onChange={(e) => setForm({ ...form, prepTime: parseInt(e.target.value) })}
+                        className="input-text-select"
+                    />
+                </div>
 
-            {/* Champ pour le temps de cuisson du plat */}
-            <label htmlFor="cookTime">
-                Temps de cuisson (en minutes)
-            </label>
-            <input
-                type="number"
-                value={form.cookTime || ""}
-                onChange={(e) => setForm({ ...form, cookTime: parseInt(e.target.value) })}
-                className="input-text-select"
-                required
-            />
+                {/* Champ pour le temps de cuisson du plat */}
+                <div>
+                    <label htmlFor="cookTime">
+                        Temps de cuisson en minutes (optionnel)
+                    </label>
+                    <input
+                        id="cookTime"
+                        type="number"
+                        placeholder="30"
+                        value={form.cookTime || ""}
+                        onChange={(e) => setForm({ ...form, cookTime: parseInt(e.target.value) })}
+                        className="input-text-select"
+                    />
+                </div>
+            </div>
+            <FormErrorMessage message={error?.prepTime} />
             <FormErrorMessage message={error?.cookTime} />
 
             {/* Bouton de soumission */}
             <div className="flex flex-col-reverse gap-2 lg:justify-end">
-                <Button variant="cancel">
-                    Annuler
-                </Button>
                 <Button type="submit" variant="success" disabled={isLoading}>
-                    {isLoading ? "Ajout en cours..." : "Ajouter"}
+                    {isLoading ? "Création de la préparation en cours..." : "Suivant"}
                 </Button>
             </div>
         </form>

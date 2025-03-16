@@ -26,6 +26,7 @@ const CreateMealPage = () => {
         "createStep"
     >("createMeal");
 
+    // Barre de progression en fonction de l'étape actuelle
     const progress = {
         createMeal: "25%",
         createComposition: "50%",

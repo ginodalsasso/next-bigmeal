@@ -253,7 +253,7 @@ const CreateComposition: React.FC<CreateCompositionProps>= ({
                 variant="success" 
                 disabled= {isFormInvalid}
             >
-                {isLoading ? "Création du repas en cours..." : "Suivant"}
+                {isLoading ? "Création de la composition en cours..." : "Suivant"}
             </Button>
         </form>
     );
