@@ -82,11 +82,12 @@ const CreateMealPage = () => {
             </div>
 
             {/* Progress Bar */}
-            <div className="w-full h-2 bg-gray-200 my-4">
+            <div className="w-full h-2 bg-gray-200 my-8">
                 <div
                     className="h-2 bg-blue-500 transition-all"
                     style={{ width: progress }}
                 />
+                <p className="text-center text-sm mt-1">{ progress }</p>
             </div>
             
             {/* Etapes */}

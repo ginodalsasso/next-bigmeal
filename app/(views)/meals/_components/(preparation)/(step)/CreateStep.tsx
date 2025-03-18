@@ -117,26 +117,31 @@ const CreatePreparation: React.FC<CreateStepProps> = ({ preparationId, onSubmit 
             <FormErrorMessage message={error.general} />
 
             {form.map((step, index) => (
-                <div key={index} className="flex gap-3 border-b pb-4">
+                <div key={index} className="flex flex-col gap-3 border-b pb-4">
                     {/* Champ pour le numéro de l'étape */}
-                    <div>    
-                        <label htmlFor="stepNumber">
-                            Numéro de l&apos;étape
-                        </label>
-                        <input
-                            type="number"
-                            value={step.stepNumber}
-                            className="input-text-select"
-                            readOnly
-                        />
+                    <div className="flex items-center justify-between">    
+                        <strong>Étape {step.stepNumber}</strong>
+
+                    {/* Bouton pour supprimer une ligne */}
+                    <Button 
+                        variant="delete" 
+                        className="w-auto self-end" 
+                        title="Supprimer" 
+                        onClick={() => removeLine(index)}
+                        disabled={form.length === 1}>
+                        <Image src={"/img/trash.svg"} width={18} height={18} alt="Icône de suppression" />
+                    </Button>   
                     </div>
 
                     {/* Champ pour la description de l'étape */}
                     <div>
                         <label htmlFor="description">
-                            Description de l&apos;étape
+                            Description
                         </label>
                         <textarea
+                            name="description"
+                            id="description"
+                            placeholder="Ajouter les condiments..."
                             value={step.description}
                             onChange={(e) =>
                                 setForm((prev) => // 
@@ -153,15 +158,6 @@ const CreatePreparation: React.FC<CreateStepProps> = ({ preparationId, onSubmit 
                     <FormErrorMessage message={error[index]?.stepNumber} />
                     <FormErrorMessage message={error[index]?.description} />
 
-                    {/* Bouton pour supprimer une ligne */}
-                    <Button 
-                        variant="delete" 
-                        className="w-auto self-end" 
-                        title="Supprimer" 
-                        onClick={() => removeLine(index)}
-                        disabled={form.length === 1}>
-                        <Image src={"/img/trash.svg"} width={18} height={18} alt="Icône de suppression" />
-                    </Button>   
                 </div>
             ))}
 
