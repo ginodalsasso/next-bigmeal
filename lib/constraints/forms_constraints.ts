@@ -83,6 +83,11 @@ export const newPreparationConstraints = z.object({
         .optional()
 });
 
+// Omission de mealId pour la mise à jour de la préparation, extend=ajout de id
+export const updatePreparationConstraints = newPreparationConstraints.omit({ mealId: true }).extend({
+    id: z.string(), 
+});
+
 export const newStepConstraints = z.array(
     z.object({
         preparationId: z.string(),

@@ -5,7 +5,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 
 // Types
-import { CompositionType, MealType } from "@/lib/types/schemas_interfaces";
+import { CompositionType, MealType, PreparationType } from "@/lib/types/schemas_interfaces";
 
 // Composants
 import CreateComposition from "./(composition)/CreateComposition";
@@ -61,6 +61,18 @@ export default function MealItem( {fetchedMeal}: { fetchedMeal: MealType }) {
                     (composition) => composition.id !== id
                 ),
             };
+        });
+    };
+
+    const updatePreparation = async (updatedPreparation: PreparationType) => {
+        setMeal((prevMeal) => {
+            if (!prevMeal) return prevMeal;
+            const updatedPreparations = prevMeal.preparations.map((preparation) =>
+                preparation.id === updatedPreparation.id
+                    ? { ...preparation, ...updatedPreparation }
+                    : preparation
+            );
+            return { ...prevMeal, preparations: updatedPreparations };
         });
     };
 
@@ -124,6 +136,7 @@ export default function MealItem( {fetchedMeal}: { fetchedMeal: MealType }) {
                             <PreparationItem 
                                 key={preparation.id} 
                                 preparation={preparation} 
+                                onUpdate={updatePreparation}
                             />
                         ))
                     ) : (

@@ -30,6 +30,12 @@ export interface CreatePreparationProps {
     onSubmit: (preparation: PreparationType) => void, 
 }
 
+export interface UpdatePreparationProps {
+    preparation: PreparationType; // Préparation à mettre à jour
+    onSubmit: (updatedPreparation: PreparationType) => Promise<void>; // Fonction pour mettre à jour la préparation
+    onClose: () => void; // Fonction pour fermer le Popover
+}
+
 export interface CreateStepProps {
     preparationId: string; // ID de la préparation parent du pas
     onSubmit: (step: StepType) => void, 
