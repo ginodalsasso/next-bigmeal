@@ -76,6 +76,18 @@ export default function MealItem( {fetchedMeal}: { fetchedMeal: MealType }) {
         });
     };
 
+    const deletePreparation = (id: string) => {
+        setMeal((prevMeal) => {
+            if (!prevMeal) return prevMeal;
+            return {
+                ...prevMeal,
+                preparations: prevMeal.preparations.filter(
+                    (preparation) => preparation.id !== id
+                ),
+            };
+        });
+    }
+
 
     
     // _________________________ RENDU _________________________
@@ -137,6 +149,7 @@ export default function MealItem( {fetchedMeal}: { fetchedMeal: MealType }) {
                                 key={preparation.id} 
                                 preparation={preparation} 
                                 onUpdate={updatePreparation}
+                                onDelete={deletePreparation}
                             />
                         ))
                     ) : (

@@ -5,12 +5,13 @@ import { PreparationType } from "@/lib/types/schemas_interfaces";
 import IsAdmin from "@/components/isAdmin";
 import EditItem from "@/components/layout/EditItemDrawer";
 import UpdatePreparation from "./UpdatePreparation";
+import DeleteItem from "@/components/layout/DeleteItemDialog";
 
 // _________________________ COMPOSANT _________________________
-const PreparationItem = ({  preparation, onUpdate }: { //onDelete
+const PreparationItem = ({  preparation, onUpdate, onDelete }: {
     preparation: PreparationType 
     onUpdate: (updatedPreparation: PreparationType) => Promise<void>; 
-    // onDelete: (id: string) => void; 
+    onDelete: (id: string) => void; 
 }) => {
 
     // _________________________ RENDU _________________________
@@ -39,7 +40,7 @@ const PreparationItem = ({  preparation, onUpdate }: { //onDelete
                             />
                         )}
                     />
-                    {/* <DeleteItem apiUrl="/api/preparation" id={preparation.id} onSubmit={onDelete} /> */}
+                    <DeleteItem apiUrl="/api/preparation" id={preparation.id} onSubmit={onDelete} />
                 </IsAdmin>
             </div>
         </>
