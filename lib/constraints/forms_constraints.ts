@@ -106,6 +106,22 @@ export const newStepConstraints = z.array(
     })
 );
 
+export const updateStepConstraints = z.object({
+    id: z.string(),
+    stepNumber: z
+        .number()
+        .min(1, "Le numéro du pas doit être supérieur à 0")
+        .max(100, "Le numéro du pas doit être inférieur à 100"),
+    description: z
+        .string()
+        .min(3, "La description doit comporter au moins 3 caractères")
+        .max(2000, "La description doit comporter au maximum 2000 caractères"),
+    imageUrl: z
+        .string()
+        .max(256, "L'url de l'image doit comporter au maximum 256 caractères")
+        .optional(),
+});
+
 export const RegisterConstraints = z.object({
     email: z
         .string()

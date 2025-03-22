@@ -5,44 +5,41 @@ import { useState } from "react";
 import { toast } from "sonner";
 
 // Types et énumérations
-import { CompositionType } from "@/lib/types/schemas_interfaces";
-import { IngredientUnit } from "@/lib/types/enums";
-import { UpdateCompositionProps } from "@/lib/types/props_interfaces";
-import { UpdateCompositionFormType } from "@/lib/types/forms_interfaces";
+import { StepType } from "@/lib/types/schemas_interfaces";
+import { UpdateStepProps } from "@/lib/types/props_interfaces";
+import { StepFormType } from "@/lib/types/forms_interfaces";
 
 // Contraintes et validation
-import { updateCompositionConstraints } from "@/lib/constraints/forms_constraints";
+import { updateStepConstraints } from "@/lib/constraints/forms_constraints";
 import { useFormValidation } from "@/app/hooks/useFormValidation";
 
 // Hooks personnalisés
 import { useCsrfToken } from "@/app/hooks/useCsrfToken";
 
-// Utils
-import { translatedUnit } from "@/lib/utils";
 
 // Composants UI
 import { Button } from "@/components/ui/button";
 import FormErrorMessage from "@/components/forms/FormErrorMessage";
 
 // Services
-import { updateCompositionAPI } from "@/lib/services/composition_service";
+import { updateStepAPI } from "@/lib/services/step_service";
 
 
 // _________________________ COMPOSANT _________________________
-const UpdateComposition: React.FC<UpdateCompositionProps> = ({
-    initialComposition,
+const UpdateStep: React.FC<UpdateStepProps> = ({
+    initialStep,
     onSubmit,
     onClose,
 }) => {
     // _________________________ HOOKS _________________________
     const csrfToken = useCsrfToken();
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [composition, setComposition] = useState<CompositionType>(initialComposition);
+    const [step, setStep] = useState<StepType>(initialStep);
 
     // Hook de validation
-    const { error, setError, validate  } = useFormValidation<UpdateCompositionFormType>(
-        updateCompositionConstraints,
-        ["quantity", "unit"]
+    const { error, setError, validate  } = useFormValidation<StepFormType>(
+        updateStepConstraints,
+        ["description"]
     );
 
     // _________________________ LOGIQUE _________________________
@@ -50,7 +47,7 @@ const UpdateComposition: React.FC<UpdateCompositionProps> = ({
         e.preventDefault();
 
         // Validation des données avec le hook
-        if (!validate(composition)) {
+        if (!validate(step)) {
             return;
         }
 
@@ -62,15 +59,15 @@ const UpdateComposition: React.FC<UpdateCompositionProps> = ({
         }
         
         try {
-            const updatedComposition = await updateCompositionAPI(composition, csrfToken);
+            const updatedStep = await updateStepAPI(step, csrfToken);
             // Mettre à jour l'état parent via le callback
-            onSubmit(updatedComposition);
+            onSubmit(updatedStep);
 
-            toast.success("Composition mise à jour avec succès !");
+            toast.success("Etape mise à jour avec succès !");
             onClose(); // Fermer le Popover après la mise à jour
         } catch (error) {
-            console.error("[UPDATE_COMPOSITION_ERROR]", error);
-            setError({ general: "Erreur lors de la mise à jour de la composition." });
+            console.error("[UPDATE_STEP_ERROR]", error);
+            setError({ general: "Erreur lors de la mise à jour de l'étape." });
         } finally {
             setIsLoading(false);
         }
@@ -82,39 +79,22 @@ const UpdateComposition: React.FC<UpdateCompositionProps> = ({
             <FormErrorMessage message={error?.general} />
             
             <div className="flex flex-col gap-3 border-b pb-4">
-                {/* Champ pour la quantité */}
-                <input
-                    type="number"
-                    step="0.1"
-                    placeholder="Quantité"
-                    value={composition.quantity || ""}
+                {/* Champ pour la description de l'étape */}
+                <label className="text-sm font-semibold" htmlFor="description">
+                    Description de l&apos;étape
+                </label>
+                <textarea
+                    placeholder="Ajouter les condiments..."
+                    value={step.description}
                     onChange={(e) =>
-                        setComposition({ ...composition, quantity: parseFloat(e.target.value) })
+                        setStep({ ...step, description: e.target.value })
                     }
                     className="input-text-select"
                     required
                     disabled={isLoading}
                 />
-                <FormErrorMessage message={error?.quantity} />
+                <FormErrorMessage message={error?.description} />
 
-                {/* Sélecteur pour l'unité */}
-                <select
-                    value={composition.unit}
-                    onChange={(e) =>
-                        setComposition({ ...composition, unit: e.target.value as IngredientUnit })
-                    }
-                    className="input-text-select"
-                    required
-                    disabled={isLoading}
-                >
-                    <option value="">-- Choisir une unité --</option>
-                    {Object.values(IngredientUnit).map((unit) => (
-                        <option key={unit} value={unit}>
-                            {translatedUnit(unit)}
-                        </option>
-                    ))}
-                </select>
-                <FormErrorMessage message={error?.unit} />
             </div>
 
             <div className="flex gap-2">
@@ -139,4 +119,4 @@ const UpdateComposition: React.FC<UpdateCompositionProps> = ({
     );
 };
 
-export default UpdateComposition;
+export default UpdateStep;

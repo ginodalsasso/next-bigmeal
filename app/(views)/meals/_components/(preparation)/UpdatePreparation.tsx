@@ -28,7 +28,7 @@ type UpdatePreparationFormType = Omit<PreparationFormType, "mealId">;
 
 // _________________________ COMPOSANT _________________________
 const UpdatePreparation: React.FC<UpdatePreparationProps> = ({
-    preparation,
+    initialPreparation: preparation,
     onSubmit,
     onClose
 }) => {

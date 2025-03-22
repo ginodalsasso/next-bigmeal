@@ -1,4 +1,4 @@
-import { newStepConstraints } from "@/lib/constraints/forms_constraints";
+import { newStepConstraints, updateStepConstraints } from "@/lib/constraints/forms_constraints";
 import { db } from "@/lib/db";
 import { getUserSession } from "@/lib/security/getSession";
 import { verifyCSRFToken } from "@/lib/security/verifyCsrfToken";
@@ -71,6 +71,52 @@ export async function POST(req: NextRequest) {
         return NextResponse.json(insertedSteps, { status: 201 });
     } catch (error) {
         console.error("[CREATE_PREPARATION_STEPS_ERROR]", error);
+        return new Response(JSON.stringify({ 
+            message: 'Erreur serveur, veuillez réessayer plus tard' 
+        }), { 
+            status: 500,
+            headers: { 'Content-Type': 'application/json' }
+        });
+    }
+}
+
+
+export async function PUT(req: NextRequest) {
+    try {
+        const { error } = await getUserSession();
+        if (error) return error;
+
+        const csrfTokenVerified = await verifyCSRFToken(req);
+        if (!csrfTokenVerified) {
+            return new NextResponse("CSRF Token is missing or invalid", { status: 403 });
+        }
+
+        const body = await req.json();
+
+        const { id, stepNumber, description, imageUrl } = body;
+
+        const validationResult = updateStepConstraints.safeParse(body);
+        
+        if (!validationResult.success) {
+            return NextResponse.json(
+                { error: validationResult.error.format() },
+                { status: 400 }
+            );
+        }
+
+
+        const updatedStep = await db.step.update({
+            where: { id },
+            data: {
+                stepNumber: stepNumber,
+                description: description,
+                imageUrl: imageUrl || ""
+            }
+        });
+
+        return NextResponse.json(updatedStep, { status: 200 });
+    } catch (error) {
+        console.error("[UPDATE_PREPARATION_STEPS_ERROR]", error);
         return new Response(JSON.stringify({ 
             message: 'Erreur serveur, veuillez réessayer plus tard' 
         }), { 

@@ -31,7 +31,7 @@ export interface CreatePreparationProps {
 }
 
 export interface UpdatePreparationProps {
-    preparation: PreparationType; // Préparation à mettre à jour
+    initialPreparation: PreparationType; // Préparation à mettre à jour
     onSubmit: (updatedPreparation: PreparationType) => Promise<void>; // Fonction pour mettre à jour la préparation
     onClose: () => void; // Fonction pour fermer le Popover
 }
@@ -39,6 +39,12 @@ export interface UpdatePreparationProps {
 export interface CreateStepProps {
     preparationId: string; // ID de la préparation parent du pas
     onSubmit: (step: StepType) => void, 
+}
+
+export interface UpdateStepProps {
+    initialStep: StepType;
+    onSubmit: (updatedStep: StepType) => void; // Fonction pour mettre à jour l'étape
+    onClose: () => void; // Fonction pour fermer le Popover
 }
 
 export interface CreateCategoryProps<T> { 
@@ -64,6 +70,6 @@ export interface CreateCompositionProps {
 
 export interface UpdateCompositionProps {
     initialComposition: CompositionType;
-    onCompositionUpdated: (updatedComposition: CompositionType) => void; // Fonction pour mettre à jour la composition dans l'état parent
+    onSubmit: (updatedComposition: CompositionType) => void; // Fonction pour mettre à jour la composition dans l'état parent
     onClose: () => void; // Fonction pour fermer le Popover
 }

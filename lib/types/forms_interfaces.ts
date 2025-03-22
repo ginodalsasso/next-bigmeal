@@ -62,13 +62,13 @@ export interface CompositionFormErrorType {
 
 export interface PreparationFormType {
     mealId: string;
-    id: string;
+    id?: string;
     prepTime?: number;
     cookTime?: number;
 }
 
 export interface StepFormType {
-    preparationId: string;
+    preparationId?: string;
     stepNumber: number;
     description: string;
     imageUrl?: string;

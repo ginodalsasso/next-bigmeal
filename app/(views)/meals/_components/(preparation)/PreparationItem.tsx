@@ -1,18 +1,35 @@
 "use client";
 
-import React from "react";
-import { PreparationType } from "@/lib/types/schemas_interfaces";
+import React, { useState } from "react";
+import { PreparationType, StepType } from "@/lib/types/schemas_interfaces";
 import IsAdmin from "@/components/isAdmin";
 import EditItem from "@/components/layout/EditItemDrawer";
 import UpdatePreparation from "./UpdatePreparation";
 import DeleteItem from "@/components/layout/DeleteItemDialog";
+import StepItem from "./(step)/StepItem";
 
 // _________________________ COMPOSANT _________________________
-const PreparationItem = ({  preparation, onUpdate, onDelete }: {
-    preparation: PreparationType 
+const PreparationItem = ({ fetchedPreparation, onUpdate, onDelete }: {
+    fetchedPreparation: PreparationType 
     onUpdate: (updatedPreparation: PreparationType) => Promise<void>; 
     onDelete: (id: string) => void; 
 }) => {
+
+    const [preparation, setPreparation] = useState<PreparationType>(fetchedPreparation);
+
+    const updateStep = (updatedStep: StepType) => {
+        setPreparation((prevPreparation) => { 
+            if (!prevPreparation) return prevPreparation;
+
+            const updatedSteps = prevPreparation.steps.map((step) =>
+                step.id === updatedStep.id
+                    ? { ...step, ...updatedStep }
+                    : step
+            );
+
+            return { ...prevPreparation, steps: updatedSteps };
+        });
+    }
 
     // _________________________ RENDU _________________________
     return (
@@ -23,7 +40,12 @@ const PreparationItem = ({  preparation, onUpdate, onDelete }: {
                 <ul>
                     {preparation.steps.map((step) => (
                         <li key={step.id}>
-                            {step.stepNumber}. {step.description}
+                            <StepItem
+                                key={step.id}
+                                step={step}
+                                onUpdate={updateStep}
+                                onDelete={onDelete}
+                            />
                         </li>
                     ))}
                 </ul>
@@ -34,7 +56,7 @@ const PreparationItem = ({  preparation, onUpdate, onDelete }: {
                     <EditItem
                         renderEditForm={(onClose) => (
                             <UpdatePreparation
-                                preparation={preparation}
+                                initialPreparation={preparation}
                                 onSubmit={onUpdate}
                                 onClose={onClose}
                             />

@@ -27,7 +27,7 @@ const CompositionItem = ({ composition, onUpdate, onDelete }: {
                         renderEditForm={(onClose) => (
                             <UpdateComposition
                                 initialComposition={composition}
-                                onCompositionUpdated={onUpdate}
+                                onSubmit={onUpdate}
                                 onClose={onClose}
                             />
                         )}

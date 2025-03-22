@@ -147,7 +147,7 @@ export default function MealItem( {fetchedMeal}: { fetchedMeal: MealType }) {
                         meal.preparations.map((preparation) => (
                             <PreparationItem 
                                 key={preparation.id} 
-                                preparation={preparation} 
+                                fetchedPreparation={preparation} 
                                 onUpdate={updatePreparation}
                                 onDelete={deletePreparation}
                             />
