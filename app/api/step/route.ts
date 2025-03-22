@@ -139,7 +139,39 @@ export async function DELETE(req: NextRequest) {
 
         const { id } = await req.json();
 
+        // Récupérer l'étape à supprimer
+        const stepToDelete = await db.step.findUnique({
+            where: { id },
+            select: { 
+                stepNumber: true, // Récupérer le numéro de l'étape pour réindexer les étapes suivantes
+                preparationId: true // Récupérer l'ID de la préparation pour filtrer les étapes à réindexer
+            }
+        });
+
+        if (!stepToDelete) {
+            return NextResponse.json(
+                { error: "Étape non trouvée" },
+                { status: 404 }
+            );
+        }
+
+        const { stepNumber, preparationId } = stepToDelete;
+
         await db.step.delete({ where: { id } });
+
+        // Réindexer les étapes suivantes
+        await db.step.updateMany({
+            where: {
+                preparationId: preparationId,
+                // Récupérer les étapes dont le numéro est supérieur à celui de l'étape supprimée
+                stepNumber: { gt: stepNumber } // gt = greater than (supérieur à)
+            },
+            data: {
+                stepNumber: {
+                    decrement: 1 // Décrémenter le numéro de l'étape
+                }
+            }
+        });
 
         return new NextResponse(null, { status: 204 });
     } catch (error) {
