@@ -5,14 +5,13 @@ import MealItem from "../_components/MealItem";
 import { getMeal } from "@/lib/services/data_fetcher";
 
 type MealDetailPageProps = {
-    params: {
-        mealName: string;
-    };
+    params: Promise<{ mealName: string }>
 };
+
 
 export default async function MealDetailPage({ params }: MealDetailPageProps) {
     // Récupère le nom du repas dans les paramètres de la requête
-    const { mealName } = params;
+    const { mealName } = await params;
 
     if (!mealName) {
         return <div>Erreur : Aucun nom de repas fourni.</div>;

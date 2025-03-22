@@ -44,12 +44,29 @@ const PreparationItem = ({ fetchedPreparation, onUpdate, onDelete }: {
     // _________________________ RENDU _________________________
     return (
         <>
-            <li>
-                <p>Temps de préparation: {preparation.prepTime}</p>
-                <p>Temps de cuisson: {preparation.cookTime}</p>
+            <div className="flex items-center justify-between">
+                <div>
+                    <p>Temps de préparation: {preparation.prepTime}</p>
+                    <p>Temps de cuisson: {preparation.cookTime}</p>
+                </div>
+                <div>
+                    <IsAdmin>
+                        <EditItem
+                            renderEditForm={(onClose) => (
+                                <UpdatePreparation
+                                    initialPreparation={preparation}
+                                    onSubmit={onUpdate}
+                                    onClose={onClose}
+                                />
+                            )}
+                        />
+                        <DeleteItem apiUrl="/api/preparation" id={preparation.id} onSubmit={onDelete} />
+                    </IsAdmin>
+                </div>
+            </div>
                 <ul>
                     {preparation.steps.map((step) => (
-                        <li key={step.id}>
+                        <li key={step.id} className="flex items-center justify-between border-b py-2 ">
                             <StepItem
                                 key={step.id}
                                 step={step}
@@ -59,22 +76,6 @@ const PreparationItem = ({ fetchedPreparation, onUpdate, onDelete }: {
                         </li>
                     ))}
                 </ul>
-            </li>
-            <div>
-
-                <IsAdmin>
-                    <EditItem
-                        renderEditForm={(onClose) => (
-                            <UpdatePreparation
-                                initialPreparation={preparation}
-                                onSubmit={onUpdate}
-                                onClose={onClose}
-                            />
-                        )}
-                    />
-                    <DeleteItem apiUrl="/api/preparation" id={preparation.id} onSubmit={onDelete} />
-                </IsAdmin>
-            </div>
         </>
     );
 }
