@@ -125,3 +125,30 @@ export async function PUT(req: NextRequest) {
         });
     }
 }
+
+
+export async function DELETE(req: NextRequest) {
+    try {
+        const { error } = await getUserSession();
+        if (error) return error;
+
+        const csrfTokenVerified = await verifyCSRFToken(req);
+        if (!csrfTokenVerified) {
+            return new NextResponse("CSRF Token is missing or invalid", { status: 403 });
+        }
+
+        const { id } = await req.json();
+
+        await db.step.delete({ where: { id } });
+
+        return new NextResponse(null, { status: 204 });
+    } catch (error) {
+        console.error("[DELETE_PREPARATION_STEPS_ERROR]", error);
+        return new Response(JSON.stringify({ 
+            message: 'Erreur serveur, veuillez réessayer plus tard' 
+        }), { 
+            status: 500,
+            headers: { 'Content-Type': 'application/json' }
+        });
+    }
+}

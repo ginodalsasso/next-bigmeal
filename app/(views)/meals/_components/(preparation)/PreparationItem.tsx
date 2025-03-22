@@ -31,6 +31,16 @@ const PreparationItem = ({ fetchedPreparation, onUpdate, onDelete }: {
         });
     }
 
+    const deleteStep = (id: string) => {
+        setPreparation((prevPreparation) => {
+            if (!prevPreparation) return prevPreparation;
+            return {
+                ...prevPreparation,
+                steps: prevPreparation.steps.filter((step) => step.id !== id)
+            };
+        });
+    }
+
     // _________________________ RENDU _________________________
     return (
         <>
@@ -44,7 +54,7 @@ const PreparationItem = ({ fetchedPreparation, onUpdate, onDelete }: {
                                 key={step.id}
                                 step={step}
                                 onUpdate={updateStep}
-                                onDelete={onDelete}
+                                onDelete={deleteStep}
                             />
                         </li>
                     ))}
