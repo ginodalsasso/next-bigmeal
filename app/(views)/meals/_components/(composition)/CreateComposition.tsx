@@ -22,6 +22,7 @@ import { translatedUnit } from "@/lib/utils";
 // Composants UI
 import { Button } from "@/components/ui/button";
 import FormErrorMessage from "@/components/forms/FormErrorMessage";
+import { IngredientSearchInput } from "@/components/forms/IngredientSearchInput";
 
 // Services
 import { getIngredients } from "@/lib/services/data_fetcher";
@@ -143,35 +144,17 @@ const CreateComposition: React.FC<CreateCompositionProps>= ({
 
             {form.map((composition, index) => (
                 <div key={index} className="flex gap-3 border-b pb-4">
-                    <div>
-                        {/* Sélection de l'ingrédient */}
-                        <label htmlFor="ingredient">Ingrédient</label>
-                        <select
-                            value={composition.ingredientId}
-                            onChange={(e) =>
-                                setForm((prev) =>
-                                    prev.map((comp, i) => 
-                                        i === index // Si c'est la ligne en cours, mettre à jour l'ingrédient   
-                                            ? { ...comp, ingredientId: e.target.value } // ...comp = copie de la ligne
-                                            : comp // Sinon, ne rien changer
-                                    )
+                    {/* Sélection de l'ingrédient */}
+                    <IngredientSearchInput
+                        value={ingredients.find(i => i.id === composition.ingredientId)?.name || ""}
+                        onSelect={(ingredient) =>
+                            setForm((prev) =>
+                                prev.map((comp, i) =>
+                                    i === index ? { ...comp, ingredientId: ingredient.id } : comp
                                 )
-                            }
-                            className="input-text-select"
-                            required
-                        >
-                            <option value="">-- Choisir un ingrédient --</option>
-                            {ingredients.map((ingredient) => (
-                                <option 
-                                    key={ingredient.id} 
-                                    value={ingredient.id}
-                                    disabled= {form.some((comp) => comp.ingredientId === ingredient.id)}
-                                >
-                                    {ingredient.name}
-                                </option>
-                            ))}
-                        </select>
-                    </div>
+                            )
+                        }
+                    />
                     <div>
                         {/* Champ pour la quantité */}
                         <label htmlFor="quantity">Quantité</label>
