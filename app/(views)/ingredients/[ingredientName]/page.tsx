@@ -11,12 +11,7 @@ import { fetchIngredientAPI } from "@/lib/services/ingredients_service";
 
 
 // _________________________ COMPONENT _________________________
-const IngredientDetailPage = 
-    ({ 
-        params 
-    }: { 
-        params: Promise<{ ingredientName: string }> 
-    }) => {
+const IngredientDetailPage = ({ params }: { params: Promise<{ ingredientName: string }> }) => {
 
     const { ingredientName } = use(params);
 

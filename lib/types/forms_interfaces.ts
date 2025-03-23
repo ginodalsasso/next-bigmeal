@@ -19,6 +19,7 @@ export interface IngredientFormErrorType {
     categoryIngredientId?: string;
 }
 
+
 // ____________ MEALS
 export interface MealFormType {
     name: string;
@@ -34,14 +35,6 @@ export interface MealFormErrorType {
     categoryMealId?: string;
 }
 
-// export interface UpdateMealFormType {
-//     id: string;
-//     newName: string;
-//     newDescription?: string | null;
-//     newCategoryMealId: string;
-// }
-
-
 
 // ____________ COMPOSITION
 export interface CompositionFormType {
@@ -49,6 +42,12 @@ export interface CompositionFormType {
     mealId: string;
     quantity: number;
     unit: IngredientUnit;
+}
+
+export interface UpdateCompositionFormType {
+    id: string;
+    quantity: number;
+    unit?: IngredientUnit;
 }
 
 // FORMULAIRE D'ERREUR COMPOSITION
@@ -60,20 +59,22 @@ export interface CompositionFormErrorType {
 }
 
 
+// ____________ PREPARATION & ÉTAPES
 export interface PreparationFormType {
     mealId: string;
-    id?: string;
+    id: string;
     prepTime?: number;
     cookTime?: number;
 }
 
 export interface StepFormType {
-    preparationId?: string;
+    preparationId: string;
     stepNumber: number;
     description: string;
     imageUrl?: string;
 }
 
+// FORMULAIRE D'ERREUR STEP
 export interface StepFormErrorType {
     general?: string;
     stepNumber?: string;
@@ -82,21 +83,11 @@ export interface StepFormErrorType {
 }
 
 
-export interface UpdateCompositionFormType {
-    id: string;
-    quantity: number
-    unit?: IngredientUnit;
-}
-
-
-
 // ____________ CATEGORIES
 // FORMULAIRE D'ERREUR CATEGORY
 export interface CategoryFormErrorType {
     name?: string;
 }
-
-
 
 
 // ____________ USER    

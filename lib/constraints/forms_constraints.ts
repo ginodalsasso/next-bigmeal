@@ -15,6 +15,7 @@ export const categoriesConstraints = z.object({
         .toLowerCase(),
 });
 
+
 export const ingredientConstraints = z.object({
     id: z.string(),
     name: z
@@ -26,6 +27,7 @@ export const ingredientConstraints = z.object({
     season: z.nativeEnum(Season).nullable(),
     categoryIngredientId: z.string().min(1, "Une catégorie est obligatoire"),
 });
+
 
 export const mealConstraints = z.object({
     name: z
@@ -44,17 +46,6 @@ export const mealConstraints = z.object({
     categoryMealId: z.string().min(1, "Une catégorie est obligatoire"),
 });
 
-export const updateCompositionConstraints = z.object({
-    id: z.string(),
-    quantity: z
-        .number({ message: "La quantité doit être un nombre" })
-        .min(0.1, "La quantité doit être supérieure à 0")
-        .max(1000, "La quantité doit être inférieure à 1000")
-        .positive("La quantité doit être un nombre positif."),
-    unit: z.nativeEnum(IngredientUnit, {
-        message: "Veuillez sélectionner une unité",
-    }),
-});
 
 export const newCompositionConstraints = z.array(
     z.object({
@@ -71,15 +62,31 @@ export const newCompositionConstraints = z.array(
     })
 );
 
+export const updateCompositionConstraints = z.object({
+    id: z.string(),
+    quantity: z
+        .number({ message: "La quantité doit être un nombre" })
+        .min(0.1, "La quantité doit être supérieure à 0")
+        .max(1000, "La quantité doit être inférieure à 1000")
+        .positive("La quantité doit être un nombre positif."),
+    unit: z.nativeEnum(IngredientUnit, {
+        message: "Veuillez sélectionner une unité",
+    }),
+});
+
+
+
 export const preparationConstraints = z.object({
     mealId: z.string(),
     prepTime: z
         .number()
         .max(1000, "Le temps de préparation doit être inférieur à 1000 minutes")
+        .positive("La quantité doit être un nombre positif.")
         .optional(),
     cookTime: z
         .number()
         .max(1000, "Le temps de cuisson doit être inférieur à 1000 minutes")
+        .positive("La quantité doit être un nombre positif.")
         .optional()
 });
 
@@ -88,13 +95,15 @@ export const updatePreparationConstraints = preparationConstraints.omit({ mealId
     id: z.string(), 
 });
 
+
 export const newStepConstraints = z.array(
     z.object({
         preparationId: z.string(),
         stepNumber: z
             .number()
             .min(1, "Le numéro du pas doit être supérieur à 0")
-            .max(100, "Le numéro du pas doit être inférieur à 100"),
+            .max(100, "Le numéro du pas doit être inférieur à 100")
+            .positive("Le numéro du pas doit être un nombre positif."),
         description: z
             .string()
             .min(3, "La description doit comporter au moins 3 caractères")
@@ -108,10 +117,12 @@ export const newStepConstraints = z.array(
 
 export const updateStepConstraints = z.object({
     id: z.string(),
+    preparationId: z.string(),
     stepNumber: z
         .number()
         .min(1, "Le numéro du pas doit être supérieur à 0")
-        .max(100, "Le numéro du pas doit être inférieur à 100"),
+        .max(100, "Le numéro du pas doit être inférieur à 100")
+        .positive("Le numéro du pas doit être un nombre positif."),
     description: z
         .string()
         .min(3, "La description doit comporter au moins 3 caractères")
@@ -122,6 +133,32 @@ export const updateStepConstraints = z.object({
         .optional(),
 });
 
+
+
+
+export const ShoppingListConstraints = z.object({
+    quantity: z
+        .number({ message: "La quantité doit être un nombre" })
+        .min(0.1, "La quantité doit être supérieure à 0")
+        .max(10000, "La quantité doit être inférieure à 10000")
+        .positive("La quantité doit être un nombre positif."),
+});
+
+export const isCheckedShoppingListConstraints = z.object({
+    id: z.string(),
+    isChecked: z.boolean(),
+});
+
+
+export const searchConstraints = z.object({
+    query: z
+        .string()
+        .min(3, "La recherche doit comporter au moins 3 caractères")
+        .max(100, "La recherche doit comporter au maximum 100 caractères"),
+});
+
+
+// _________________________ CONTRAINTES UTILISATEUR _________________________
 export const RegisterConstraints = z.object({
     email: z
         .string()
@@ -192,25 +229,3 @@ export const ResetPasswordConstraints = z.object({
     
 });
 
-
-
-export const ShoppingListConstraints = z.object({
-    quantity: z
-        .number({ message: "La quantité doit être un nombre" })
-        .min(0.1, "La quantité doit être supérieure à 0")
-        .max(10000, "La quantité doit être inférieure à 10000")
-        .positive("La quantité doit être un nombre positif."),
-});
-
-export const isCheckedShoppingListConstraints = z.object({
-    id: z.string(),
-    isChecked: z.boolean(),
-});
-
-
-export const searchConstraints = z.object({
-    query: z
-        .string()
-        .min(3, "La recherche doit comporter au moins 3 caractères")
-        .max(100, "La recherche doit comporter au maximum 100 caractères"),
-});

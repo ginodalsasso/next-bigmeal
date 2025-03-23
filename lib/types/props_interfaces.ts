@@ -1,9 +1,28 @@
 import { CompositionType, IngredientType, MealType, PreparationType, StepType } from "./schemas_interfaces";
 
 
+// PROPS DES FORMULAIRES
+
+
+// ____________ CATEGORIES
+export interface CreateCategoryProps<T> { 
+    apiUrl: string; // URL API dynamique
+    onSubmit: (newCategory: T) => void;
+}
+
+// FORMULAIRE DE MISE A JOUR DE CATEGORIES
+export interface UpdateCategoryProps<T> {
+    apiUrl: string; // URL de l'API (ex: "/api/categories-meal" ou "/api/categories-ingredient")
+    category: T; // La catégorie à mettre à jour
+    onSubmit: (updatedCategory: T) => void; // Callback après mise à jour
+    onCancel: () => void;
+}
+
+
+// ____________ INGREDIENTS
 export interface CreateIngredientProps { 
-    onSubmit: (ingredient: IngredientType) => void, 
-    onClose: () => void 
+    onSubmit: (ingredient: IngredientType) => void;
+    onClose: () => void;
 }
 
 // FORMULAIRE DE MISE A JOUR D'INGREDIENT
@@ -14,20 +33,29 @@ export interface UpdateIngredientProps {
 }
 
 
+// ____________ MEALS
 export interface CreateMealProps {
-    onSubmit: (meal: MealType) => void, // Fonction pour ajouter le repas à la liste parent
+    onSubmit: (meal: MealType) => void; // Fonction pour ajouter le repas à la liste parent
 }
 
 // FORMULAIRE DE MISE A JOUR DE MEAL
 export interface UpdateMealProps {
-    meal : MealType, // Repas à mettre à jour
-    onSubmit: (meal: MealType) => Promise<void>, // Fonction pour mettre à jour le repas
-    onClose: () => void // Fonction pour fermer le dialogue
+    meal: MealType; // Repas à mettre à jour
+    onSubmit: (meal: MealType) => Promise<void>; // Fonction pour mettre à jour le repas
+    onClose: () => void; // Fonction pour fermer le dialogue
+}
+
+
+// ____________ PREPARATIONS
+export interface PreparationItemProps {
+    fetchedPreparation: PreparationType 
+    onUpdate: (updatedPreparation: PreparationType) => Promise<void>; 
+    onDelete: (id: string) => void; 
 }
 
 export interface CreatePreparationProps {
     mealId: string; // ID du repas parent de la préparation
-    onSubmit: (preparation: PreparationType) => void, 
+    onSubmit: (preparation: PreparationType) => void;
 }
 
 export interface UpdatePreparationProps {
@@ -36,9 +64,17 @@ export interface UpdatePreparationProps {
     onClose: () => void; // Fonction pour fermer le Popover
 }
 
+
+// ____________ STEPS
+export interface StepItemProps {
+    step: StepType; 
+    onUpdate: (updatedStep: StepType) => void; 
+    onDelete: (id: string) => void; 
+}
+
 export interface CreateStepProps {
-    preparationId: string; // ID de la préparation parent du pas
-    onSubmit: (step: StepType) => void, 
+    preparationId: string; // ID de la préparation parent de l'étape
+    onSubmit: (step: StepType) => void;
 }
 
 export interface UpdateStepProps {
@@ -47,19 +83,12 @@ export interface UpdateStepProps {
     onClose: () => void; // Fonction pour fermer le Popover
 }
 
-export interface CreateCategoryProps<T> { 
-    apiUrl: string; // URL API dynamique
-    onSubmit: (newCategory: T) => void; 
-}
 
-
-// FORMULAIRE DE MISE A JOUR DE CATEGORIES
-export interface UpdateCategoryProps {
-    initialName: string;
-    onSubmit: (newName: string) => Promise<void>;
-    onCancel: () => void;
-    isLoading: boolean;
-    error: string | null;
+// ____________ COMPOSITIONS
+export interface CompositionItemProps {
+    composition: CompositionType; 
+    onUpdate: (updatedComposition: CompositionType) => void; 
+    onDelete: (id: string) => void; 
 }
 
 

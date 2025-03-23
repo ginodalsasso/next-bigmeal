@@ -45,37 +45,3 @@ export const getUser = cache(async () => {
         return null;
     }
 });
-
-
-// // Récupérer le panier de l'utilisateur
-// export const getUserCart = cache(async () => {
-
-//     const session = await verifySession();
-//     if (!session) return null;
-
-//     try {
-//         // Grouper les articles du panier par liste de courses et calculer la somme des quantités
-//         const groupedItems = await db.shoppingListItem.groupBy({
-//             where: {
-//                 shoppingList: {
-//                     userId: session.userId,
-//                     isExpired: false,
-//                 },
-//             },
-//             by: ["shoppingListId"],
-//             _count : true,
-//             // _sum: { id : true, quantity: true },
-//         });
-
-//         // Extraire la quantité totale si des articles existent
-//         const totalCartQuantity = groupedItems.length > 0
-//             ? groupedItems[0]._count || null // groupedItems[0] contient la première liste de courses
-//             : null;
-
-//         return totalCartQuantity;
-
-//     } catch (error) {
-//         console.error("Failed to fetch cart", error);
-//         return null;
-//     }
-// });

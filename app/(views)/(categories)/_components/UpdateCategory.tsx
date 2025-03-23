@@ -13,16 +13,11 @@ import FormErrorMessage from "@/components/forms/FormErrorMessage";
 // Contraintes et services
 import { categoriesConstraints } from "@/lib/constraints/forms_constraints";
 import { updateCategoryAPI } from "@/lib/services/categories_service";
+import { UpdateCategoryProps } from "@/lib/types/props_interfaces";
 
 
 type CategoryFormType = { name: string };
 
-interface UpdateCategoryProps<T> {
-    apiUrl: string; // URL de l'API (ex: "/api/categories-meal" ou "/api/categories-ingredient")
-    category: T; // La catégorie à mettre à jour
-    onSubmit: (updatedCategory: T) => void; // Callback après mise à jour
-    onCancel: () => void;
-}
 
 // _________________________ COMPONENT _________________________
 const UpdateCategory = <T extends { id: string; name: string }>({

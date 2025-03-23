@@ -20,9 +20,10 @@ interface DeleteProfileProps {
 
 // _________________________ COMPONENT _________________________
 const DeleteProfile: React.FC<DeleteProfileProps> = ({ userId }) => {
+
+    const csrfToken = useCsrfToken();
     const [isDeleting, setIsDeleting] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    const csrfToken = useCsrfToken();
 
 
     // _________________________ LOGIQUE _________________________

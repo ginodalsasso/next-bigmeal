@@ -7,13 +7,10 @@ import EditItem from "@/components/layout/EditItemDrawer";
 import UpdatePreparation from "./UpdatePreparation";
 import DeleteItem from "@/components/layout/DeleteItemDialog";
 import StepItem from "./(step)/StepItem";
+import { PreparationItemProps } from "@/lib/types/props_interfaces";
 
 // _________________________ COMPOSANT _________________________
-const PreparationItem = ({ fetchedPreparation, onUpdate, onDelete }: {
-    fetchedPreparation: PreparationType 
-    onUpdate: (updatedPreparation: PreparationType) => Promise<void>; 
-    onDelete: (id: string) => void; 
-}) => {
+const PreparationItem = ({ fetchedPreparation, onUpdate, onDelete }: PreparationItemProps) => {
 
     const [preparation, setPreparation] = useState<PreparationType>(fetchedPreparation);
 
