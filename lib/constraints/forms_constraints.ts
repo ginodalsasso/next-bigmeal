@@ -71,7 +71,7 @@ export const newCompositionConstraints = z.array(
     })
 );
 
-export const newPreparationConstraints = z.object({
+export const preparationConstraints = z.object({
     mealId: z.string(),
     prepTime: z
         .number()
@@ -84,7 +84,7 @@ export const newPreparationConstraints = z.object({
 });
 
 // Omission de mealId pour la mise à jour de la préparation, extend=ajout de id
-export const updatePreparationConstraints = newPreparationConstraints.omit({ mealId: true }).extend({
+export const updatePreparationConstraints = preparationConstraints.omit({ mealId: true }).extend({
     id: z.string(), 
 });
 

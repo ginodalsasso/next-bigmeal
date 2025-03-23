@@ -9,7 +9,7 @@ import { PreparationFormType } from "@/lib/types/forms_interfaces";
 import { CreatePreparationProps } from "@/lib/types/props_interfaces";
 
 // Contraintes et validation
-import { newPreparationConstraints } from "@/lib/constraints/forms_constraints";
+import { preparationConstraints } from "@/lib/constraints/forms_constraints";
 import { useFormValidation } from "@/app/hooks/useFormValidation";
 
 // Hooks personnalisés
@@ -32,6 +32,7 @@ const CreatePreparation: React.FC<CreatePreparationProps> = ({
 }) => {
     // _________________________ HOOKS _________________________
     const csrfToken = useCsrfToken();
+    
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [form, setForm] = useState<PreparationFormType>({
         mealId,
@@ -41,7 +42,7 @@ const CreatePreparation: React.FC<CreatePreparationProps> = ({
 
     // Hook de validation
     const { error, setError, validate } = useFormValidation<PreparationFormType>(
-        newPreparationConstraints,
+        preparationConstraints,
         [
             "prepTime", 
             "cookTime", 

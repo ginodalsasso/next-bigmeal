@@ -15,7 +15,7 @@ export interface UpdateIngredientProps {
 
 
 export interface CreateMealProps {
-    onMealCreated: (meal: MealType) => void, // Fonction pour ajouter le repas à la liste parent
+    onSubmit: (meal: MealType) => void, // Fonction pour ajouter le repas à la liste parent
 }
 
 // FORMULAIRE DE MISE A JOUR DE MEAL

@@ -23,7 +23,11 @@ import { createStepAPI } from "@/lib/services/step_service";
 import Image from "next/image";
 
 // _________________________ COMPOSANT _________________________
-const CreatePreparation: React.FC<CreateStepProps> = ({ preparationId, onSubmit }) => {
+const CreatePreparation: React.FC<CreateStepProps> = ({ 
+    preparationId, 
+    onSubmit 
+}) => {
+
     // _________________________ HOOKS _________________________
     const csrfToken = useCsrfToken();
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -162,12 +166,20 @@ const CreatePreparation: React.FC<CreateStepProps> = ({ preparationId, onSubmit 
             ))}
 
             {/* Bouton pour ajouter une nouvelle ligne */}
-            <Button variant="secondary" type="button" onClick={addNewLine}>
+            <Button 
+                variant="secondary" 
+                type="button" 
+                onClick={addNewLine}
+            >
                 Ajouter une étape
             </Button>
 
             {/* Bouton de soumission */}
-            <Button type="submit" variant="success" disabled={isLoading || form.length === 0}>
+            <Button 
+                type="submit" 
+                variant="success" 
+                disabled={isLoading || form.length === 0}
+            >
                 {isLoading ? "Ajout en cours..." : "Ajouter"}
             </Button>
         </form>

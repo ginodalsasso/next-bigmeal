@@ -30,7 +30,7 @@ import { createMealAPI } from "@/lib/services/meal_service";
 
 
 // _________________________ COMPONENT _________________________
-const CreateMeal: React.FC<CreateMealProps> = ({ onMealCreated }) => {
+const CreateMeal: React.FC<CreateMealProps> = ({ onSubmit }) => {
     
     // _________________________ HOOKS _________________________
     const csrfToken = useCsrfToken();
@@ -90,9 +90,9 @@ const CreateMeal: React.FC<CreateMealProps> = ({ onMealCreated }) => {
         try { 
             const createdMeal = await createMealAPI(form, csrfToken);
             // Mettre à jour l’état parent avec le nouveau repas
-            onMealCreated(createdMeal);
+            onSubmit(createdMeal);
+
             toast("Repas créé avec succès");
-    
         } catch (error) {
             console.error("[CREATE_MEAL_ERROR]", error);
             setError({ general: "Erreur lors de la création du repas." });

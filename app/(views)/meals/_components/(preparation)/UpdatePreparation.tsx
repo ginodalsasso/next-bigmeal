@@ -35,6 +35,7 @@ const UpdatePreparation: React.FC<UpdatePreparationProps> = ({
     // _________________________ HOOKS _________________________
     const csrfToken = useCsrfToken();
     const [isLoading, setIsLoading] = useState<boolean>(false);
+
     const [form, setForm] = useState<UpdatePreparationFormType>({
         id: preparation.id,
         prepTime: preparation.prepTime || undefined,
@@ -74,6 +75,7 @@ const UpdatePreparation: React.FC<UpdatePreparationProps> = ({
         }
         try {
             const updatedPreparation = await updatePreparationAPI(form, csrfToken);
+            
             onSubmit(updatedPreparation);
             toast("Préparation mise à jour avec succès");
             onClose();

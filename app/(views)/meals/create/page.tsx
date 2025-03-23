@@ -92,7 +92,7 @@ const CreateMealPage = () => {
             
             {/* Etapes */}
             {currentStep === "createMeal" && (
-                <CreateMeal onMealCreated={handleMealCreated} />
+                <CreateMeal onSubmit={handleMealCreated} />
             )}
             
             {currentStep === "createComposition" && createdMealId && (

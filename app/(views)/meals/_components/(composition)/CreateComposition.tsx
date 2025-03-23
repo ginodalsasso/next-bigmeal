@@ -37,10 +37,8 @@ const CreateComposition: React.FC<CreateCompositionProps>= ({
 
     // _________________________ HOOKS _________________________
     const csrfToken = useCsrfToken();
-    const [ingredients, setIngredients] = useState<IngredientType[]>([]); // Liste des ingrédients disponibles
-
     const [isLoading, setIsLoading] = useState<boolean>(false); // Indique si l'action est en cours
-    const [error, setError] = useState<{general: string} & Record<number, CompositionFormErrorType>>({ general: "" });
+    const [ingredients, setIngredients] = useState<IngredientType[]>([]); // Liste des ingrédients disponibles
     const [form, setForm] = useState<CompositionFormType[]>([
         {
             ingredientId: "",
@@ -49,6 +47,8 @@ const CreateComposition: React.FC<CreateCompositionProps>= ({
             unit: IngredientUnit.GRAM,
         },
     ]);
+
+    const [error, setError] = useState<{general: string} & Record<number, CompositionFormErrorType>>({ general: "" });
 
 
     // _________________________ LOGIQUE _________________________

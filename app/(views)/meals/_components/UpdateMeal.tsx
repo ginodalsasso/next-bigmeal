@@ -34,6 +34,7 @@ const UpdateMeal: React.FC<UpdateMealProps> = ({
     // _________________________ ÉTATS _________________________
     const csrfToken = useCsrfToken();
     const [isLoading, setIsLoading] = useState<boolean>(false);
+
     const [form, setForm] = useState({
         name: meal.name,
         categoryMealId: meal.categoryMeal?.id || "",
@@ -77,8 +78,12 @@ const UpdateMeal: React.FC<UpdateMealProps> = ({
     // Soumission du formulaire
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (!validate(form)) return;
-        setIsLoading(true);
+
+        // Valider les données du formulaire
+        if (!validate(form)) {
+            setIsLoading(false);
+            return;
+        }
 
         if (!csrfToken) {
             console.error("CSRF token invalide");
