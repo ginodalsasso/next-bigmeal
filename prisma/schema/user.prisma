@@ -1,3 +1,10 @@
+enum Status {
+    PENDING @map("PENDING")
+    APPROVED @map("APPROVED")
+    REJECTED @map("REJECTED")
+    BLOCKED @map("BLOCKED")
+}
+
 model User {
     id            String          @id @default(auto()) @map("_id") @db.ObjectId
     name          String?
@@ -6,6 +13,7 @@ model User {
     password      String?
     image         String?
     role          String?            @default("USER")
+    status        Status             @default(PENDING)
     shoppingList ShoppingList[]
 
     accounts      Account[]

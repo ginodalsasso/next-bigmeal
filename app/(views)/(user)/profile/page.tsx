@@ -15,6 +15,8 @@ import ResetPasswordForm from "../_component/ResetPasswordForm";
 // Services
 import { fetchUserProfileAPI } from "@/lib/services/user_service";
 import ShoppingLists from "../_component/ShoppingLists";
+import Link from "next/link";
+import IsAdmin from "@/components/isAdmin";
 
 
 // _________________________ COMPONENT _________________________
@@ -61,6 +63,10 @@ const ProfilePage = () => {
                         <h1 className="text-2xl font-bold">{user.email}</h1>
                         <p>Role: {user.role}</p>
                         <p>Compte créé le: {dateToString(user.createdAt)}</p>
+
+                        <IsAdmin>
+                            <Link href="/dashboard">Dashboard</Link>
+                        </IsAdmin>
 
                         <ShoppingLists shoppingLists={user.shoppingList} />
 

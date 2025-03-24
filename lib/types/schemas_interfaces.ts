@@ -1,4 +1,4 @@
-import { IngredientUnit, Season } from './enums.ts';
+import { IngredientUnit, Season, UserStatus } from './enums.ts';
 
 
 // TYPES SCHEMA
@@ -134,6 +134,7 @@ export interface UserType {
     password: string;
     createdAt: Date;
     role: string;
+    status: UserStatus;
     emailVerified: Date;
 
     // Relation One-to-Many 
