@@ -38,12 +38,17 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                     const user = await getUserByEmail(email);
 
                     if (!user || !user.password) {
-                        throw new Error("Invalid credentials");
+                        throw new Error("INVALID_CREDENTIALS");
                     }
 
                     if (!user.emailVerified) {
-                        throw new Error("Email not verified");
+                        throw new Error("EMAIL_NOT_VERIFIED");
                     }
+
+                    if (user.status === "PENDING" || user.status === "REJECTED") {
+                        throw new Error("ACCOUNT_NOT_ACTIVE");
+                    }
+
                     const response = await fetch(`${API_ROUTES.auth.verifyPassword}`, {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
@@ -55,9 +60,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                     
                     const { isValid } = await response.json();
                     if (!isValid) {
-                        throw new Error("Invalid credentials");
+                        throw new Error("Identifiants incorrects");
                     }
-                    
                     
 
                     return {
@@ -66,7 +70,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                     }
                 } catch (error) {
                     console.error("Authentication error:", error);
-                    return null;
+                    throw new Error((error as Error).message || "UNKNOWN_ERROR");
+                    ;
                 }
             },
         }),
