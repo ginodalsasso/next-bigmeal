@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { Season, IngredientUnit } from "../types/enums";
+import { Season, IngredientUnit, UserStatus } from "../types/enums";
 
 // _________________________ CONTRAINTES DE VALIDATION _________________________
 
@@ -229,3 +229,7 @@ export const ResetPasswordConstraints = z.object({
     
 });
 
+export const UpdateUserStatusConstraints = z.object({
+    userId: z.string(),
+    status: z.nativeEnum(UserStatus),
+});                                                     

@@ -64,9 +64,9 @@ export default function CategoryMealList({ fetchedCategories }: { fetchedCategor
             <Table>
                 <TableHeader>
                     <TableRow>
-                        <TableHead><span className="text-lg font-bold">Noms</span></TableHead>
+                        <TableHead><span className="table-head">Noms</span></TableHead>
                         <IsAdmin>
-                            <TableHead><span className="text-lg font-bold">Actions</span></TableHead>
+                            <TableHead><span className="table-head">Actions</span></TableHead>
                         </IsAdmin>
                     </TableRow>
                 </TableHeader>

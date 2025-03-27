@@ -1,23 +1,41 @@
 import { UserType } from "@/lib/types/schemas_interfaces";
+import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import UpdateUserStatus from "./UpdateUserStatus";
 
-export default function UserList({ fetchedUsers }: { fetchedUsers: UserType[] }) {
-    if (!fetchedUsers) {
-        return <div>Chargement des utilisateurs...</div>;
-    }
-    
+export default function UserTable({
+    fetchedUsers,
+}: {
+    fetchedUsers: UserType[];
+}) {
+
     return (
-        <div>
-            <h2>Liste des utilisateurs</h2>
-            <ul>
-                {fetchedUsers.map(user => (
-                    <li key={user.id}>
-                        {user.email}
-                        {user.role}
-                        {user.status}
-                        {new Date(user.createdAt).toLocaleDateString()}
-                    </li>
-                ))}
-            </ul>
+        <div className="my-6">
+            <h2 className="text-xl font-bold mb-4">Liste des utilisateurs</h2>
+            <Table>
+                <TableCaption>
+                    Liste des utilisateurs enregistrés dans l&apos;application
+                </TableCaption>
+                <TableHeader>
+                    <TableRow>
+                        <TableHead>Email</TableHead>
+                        <TableHead>Rôle</TableHead>
+                        <TableHead>Status</TableHead>
+                        <TableHead>Date de création</TableHead>
+                    </TableRow>
+                </TableHeader>
+                <TableBody>
+                    {fetchedUsers.map((user) => (
+                        <TableRow key={user.id}>
+                            <TableCell>{user.email}</TableCell>
+                            <TableCell>{user.role}</TableCell>
+                            <TableCell>
+                                <UpdateUserStatus userId={user.id} currentStatus={user.status} />
+                            </TableCell>
+                            <TableCell>{new Date(user.createdAt).toLocaleDateString()}</TableCell>
+                        </TableRow>
+                    ))}
+                </TableBody>
+            </Table>
         </div>
     );
 }
