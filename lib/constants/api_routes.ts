@@ -11,6 +11,7 @@ const authRoutes = {
 
 const userRoutes = {
     profile: `${BASE_URL}/profile`,
+    user: `${BASE_URL}/user`,
 };
 
 const resetPasswordRoutes = {

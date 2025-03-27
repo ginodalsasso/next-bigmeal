@@ -1,4 +1,4 @@
-import { newPreparationConstraints, updatePreparationConstraints } from "@/lib/constraints/forms_constraints";
+import { preparationConstraints, updatePreparationConstraints } from "@/lib/constraints/forms_constraints";
 import { db } from "@/lib/db";
 import { getUserSession } from "@/lib/security/getSession";
 import { verifyCSRFToken } from "@/lib/security/verifyCsrfToken";
@@ -18,7 +18,7 @@ export async function POST(req: NextRequest) {
         const body = await req.json();
         const { mealId, prepTime, cookTime } = body;
         
-        const validationResult = newPreparationConstraints.safeParse(body);
+        const validationResult = preparationConstraints.safeParse(body);
         
         if (!validationResult.success) {
             return NextResponse.json(

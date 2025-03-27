@@ -54,3 +54,15 @@ export async function getMeal(mealName: string) {
         throw new Error("Impossible de récupérer le repas.");
     }
 }
+
+
+export async function getUsers() {
+    try {
+        const response = await fetch(API_ROUTES.user.user, { cache: "no-store" });
+        if (!response.ok) throw new Error("Erreur lors de la récupération des utilisateurs.");
+        return response.json();
+    } catch (error) {
+        console.error(error);
+        throw new Error("Impossible de récupérer les utilisateurs.");
+    }
+}
