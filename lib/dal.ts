@@ -27,6 +27,7 @@ export const getUser = cache(async () => {
                 id: true, // Retourner seulement les colonnes nécessaires
                 email: true,
                 role: true,
+                status: true,
                 shoppingList: {
                     where: {
                         isExpired: false, // Filtrer les listes de courses non expirées

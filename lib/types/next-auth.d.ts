@@ -4,6 +4,7 @@ import NextAuth from "next-auth";
 declare module "next-auth" {
     interface User {
         role?: string;
+        status?: UserStatus;
     }
 
     interface Session {
@@ -11,11 +12,13 @@ declare module "next-auth" {
             id: string;
             email: string;
             role: string;
+            status: UserStatus;
         };
     }
 
     interface JWT {
         id: string;
         role: string;
+        status: UserStatus;
     }
 }

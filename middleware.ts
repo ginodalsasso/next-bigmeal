@@ -1,5 +1,8 @@
 import { NextResponse } from "next/server";
-import { auth } from "@/lib/auth";
+import { NextRequest } from "next/server";
+import { getToken } from "next-auth/jwt";
+
+const SECRET = process.env.AUTH_SECRET as string; // Clé secrète utilisée pour récupérer le jeton JWT
 
 // Routes protégées statiques
 const protectedRoutes = [
@@ -14,50 +17,64 @@ const protectedRoutes = [
 const dynamicRoutePatterns = [
     /^\/ingredients\/[a-zA-Z0-9-]+$/,
     /^\/meals\/[a-zA-Z0-9-]+$/,
-    /^\/=[a-zA-Z0-9-]+$/,
-    /^\/reset-token\/=[a-zA-Z0-9-]+$/,
+    /^\/reset-token\/[a-zA-Z0-9-]+$/,
 ];
 
-// Routes publiques
+// Routes publiques accessibles sans authentification
 const publicRoutes = ["/login", "/register", "/"];
 
-export default auth((req) => {
-    const { nextUrl } = req;
-    const path = nextUrl.pathname;
-    const isLoggedIn = !!req.auth;
+export async function middleware(req: NextRequest) {
+    const { nextUrl } = req; // L'URL de la requête en cours
+    const path = nextUrl.pathname; // Le chemin de la requête ex: `/ingredients`
 
-    // Vérifie si la route actuelle est protégée
-    const isProtectedRoute = 
-        protectedRoutes.some(route => path.startsWith(route)) || 
-        dynamicRoutePatterns.some(pattern => pattern.test(path));
+    // Récupération du token JWT
+    const token = await getToken({ req, secret: SECRET });
 
-    // Vérifie si la route actuelle est publique
-    const isPublicRoute = publicRoutes.includes(path);
+    const isLoggedIn = !!token; // Détermine si l'utilisateur est connecté avec un token valide
+    const userStatus = token?.status; // Récupère le statut de l'utilisateur s'il est connecté
 
-    // Redirection pour les routes protégées si non connecté
+    // Autoriser les routes publiques
+    // Si l'utilisateur tente d'accéder à une route publique, autoriser l'accès
+    if (publicRoutes.includes(path)) {
+        return NextResponse.next();
+    }
+
+    // Vérification des routes protégées
+    // Une route est considérée comme protégée si elle figure dans la liste des `protectedRoutes` 
+    // ou si elle correspond à l'un des patterns dynamiques définis
+    const isProtectedRoute =
+        protectedRoutes.some((route) => path.startsWith(route)) || // Routes statiques protégées
+        dynamicRoutePatterns.some((pattern) => pattern.test(path)); // Routes dynamiques protégées
+
+    // Gestion des utilisateurs non approuvés
+    // Redirige les utilisateurs connectés mais n'ayant pas le statut "APPROVED" vers la page `/login`
+    if (isLoggedIn && userStatus !== "APPROVED") {
+        const redirectUrl = new URL("/login", nextUrl.origin); // Redirection vers la page de login
+        return NextResponse.redirect(redirectUrl); 
+    }
+
+    // Gestion des utilisateurs non connectés
+    // Si une route est protégée, mais que l'utilisateur n'est pas connecté, redirige vers `/login` en conservant l'URL demandée
     if (isProtectedRoute && !isLoggedIn) {
-        const redirectUrl = new URL("/login", nextUrl.origin);
-        // redirection vers la page demandée après connexion
-        redirectUrl.searchParams.set("callbackUrl", encodeURIComponent(path));
+        const redirectUrl = new URL("/login", nextUrl.origin); // Redirection vers la page de login
+        redirectUrl.searchParams.set("callbackUrl", encodeURIComponent(path)); // Ajoute l'URL demandée comme paramètre de callback
         return NextResponse.redirect(redirectUrl);
     }
 
-    // Redirection des pages publiques vers la page d'accueil si connecté
-    if (isPublicRoute && isLoggedIn && path !== "/") {
-        return NextResponse.redirect(new URL("/", nextUrl.origin));
-    }
-
-    // Ajoute les en-têtes de sécurité
+    // Ajout des en-têtes de sécurité
     const response = NextResponse.next();
-    response.headers.set("X-Content-Type-Options", "nosniff");
-    response.headers.set("X-Frame-Options", "DENY");
-    response.headers.set("Strict-Transport-Security", "max-age=63072000; includeSubDomains; preload");
-    response.headers.set("X-XSS-Protection", "1; mode=block");
+    response.headers.set("X-Content-Type-Options", "nosniff"); // Empêche le navigateur de deviner le type MIME
+    response.headers.set("X-Frame-Options", "DENY"); // Empêche l'intégration du site dans un iframe (protection contre le clickjacking)
+    // response.headers.set(
+    //     "Strict-Transport-Security", // Forcer l'utilisation de HTTPS
+    //     "max-age=63072000; includeSubDomains; preload" // 2 ans pour les sous-domaines + preload HSTS dans les navigateurs compatibles
+    // );
+    response.headers.set("X-XSS-Protection", "1; mode=block"); // Active la protection contre certaines attaques XSS dans les navigateurs compatibles
 
     return response;
-});
-
+}
 
 export const config = {
+    // Empêche d'appliquer le middleware sur les fichiers statiques, les requêtes API, les images ou tout fichier au format `.png`
     matcher: ["/((?!api|_next/static|_next/image|.*\\.png$).*)"],
 };

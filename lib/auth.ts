@@ -45,10 +45,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                         throw new Error("EMAIL_NOT_VERIFIED");
                     }
 
-                    if (user.status === "PENDING" || user.status === "REJECTED") {
-                        throw new Error("ACCOUNT_NOT_ACTIVE");
-                    }
-
                     const response = await fetch(`${API_ROUTES.auth.verifyPassword}`, {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
@@ -62,11 +58,11 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                     if (!isValid) {
                         throw new Error("Identifiants incorrects");
                     }
-                    
 
                     return {
                         ...user,
                         role: user.role ?? "USER", // Rôle par défaut
+                        status: user.status ?? "PENDING", // Statut par défaut
                     }
                 } catch (error) {
                     console.error("Authentication error:", error);
@@ -87,9 +83,11 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     callbacks: {
         // Ajout du rôle utilisateur au token JWT
         async jwt({ token, user }) {
+            // Si l'utilisateur est connecté, ajoutez son rôle et son statut au token
             if (user) {
                 token.id = user.id;
                 token.role = user.role;
+                token.status = user.status;
             }
             return token;
         },
@@ -99,6 +97,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             if (session.user) {
                 session.user.id = token.id as string;
                 session.user.role = token.role as string; 
+                session.user.status = token.status as string;
             }
             return session;
         },
