@@ -7,7 +7,7 @@ import Sidebar from "@/components/layout/Sidebar";
 import Bottombar from "@/components/layout/Bottombar";
 import { SessionProvider }  from "next-auth/react";
 import { CsrfTokenProvider } from "./hooks/useCsrfToken";
-import SearchBar from "@/components/layout/Searchbar";
+import SearchBar from "@/components/layout/SearchBar";
 
 export default function RootLayout({
     children,

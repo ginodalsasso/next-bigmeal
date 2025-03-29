@@ -15,10 +15,6 @@ export default function Home() {
         }
     }, [session, status, router]);
 
-    if (status === "loading") {
-        return <p>Loading...</p>; 
-    }
-
     return (
         <div>
             <h1>Home</h1>
