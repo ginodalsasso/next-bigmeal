@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import openMenu from "@/public/img/openMenu.svg";
@@ -10,10 +10,27 @@ import { ucFirst } from "@/lib/utils";
 import IsUser from "../isUser";
 import { signOut } from "next-auth/react";
 import IsNotAuthenticated from "../isNotAuthenticated";
+import SearchBar from "./SearchBar";
 
 const Navbar = () => {
     const [toggle, setToggle] = useState(false); // État du menu mobile
+    const [toggleSearch, setToggleSearch] = useState(false); // État de la barre de recherche
+
+    const searchContainerRef = useRef<HTMLDivElement>(null); // Référence au conteneur de recherche
     
+    useEffect(() => {
+        // Si la recherche n'est pas visible, pas besoin d'ajouter l'écouteur
+        if (!toggleSearch) return;
+        
+        // Ferme la recherche si le clic est en dehors du conteneur
+        const handleClickOutside = (e: MouseEvent) => 
+            searchContainerRef.current?.contains(e.target as Node) || setToggleSearch(false); // Si le clic est en dehors du conteneur, on ferme la recherche
+        
+        document.addEventListener('mousedown', handleClickOutside);
+        // Nettoyage de l'écouteur d'événements lorsque le composant est démonté ou que toggleSearch change
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, [toggleSearch]);
+
     return (
         <nav className="w-full max-w-7xl p-4">
             <div className="flex items-center justify-between ">
@@ -26,6 +43,15 @@ const Navbar = () => {
                 <ul className="hidden list-none flex-row items-center gap-6 lg:flex">
                     {/* Si l'utilisateur est connecté */}
                     <IsUser>
+                        <li className="nav-links-desktop align-icon">                         
+                            <Image
+                                src={"/img/search.svg"}
+                                width={18}
+                                height={18}
+                                alt="Search"
+                                onClick={() => setToggleSearch(!toggleSearch)}
+                            />
+                        </li>
                         <li className="nav-links-desktop align-icon">
                             <Link
                                 href="/profile"
@@ -158,6 +184,14 @@ const Navbar = () => {
                     </div>
                 </div>
             </div>
+            {/* Afficher le composant SearchBar si toggleSearch est true */}
+            {toggleSearch && (
+                <div className="fixed left-0 top-0  z-10 flex h-screen w-full items-center justify-center bg-zinc-950 bg-opacity-50 backdrop-blur-sm">
+                    <div ref={searchContainerRef}>
+                        <SearchBar onSearch={() => setToggleSearch(false)} />
+                    </div>
+                </div>
+            )}
         </nav>
     );
 };

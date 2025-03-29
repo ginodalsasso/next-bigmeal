@@ -8,8 +8,12 @@ interface SearchResult {
     name: string;
 }
 
-// _________________________ COMPONENT _________________________
-const SearchBar: React.FC = () => {
+interface SearchBarProps {
+    onSearch?: () => void; // Callback pour gérer la recherche
+}
+    
+    // _________________________ COMPONENT _________________________
+    const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
 
     // _________________________ ETATS _________________________
     const [query, setQuery] = useState("");
@@ -49,17 +53,23 @@ const SearchBar: React.FC = () => {
     }, [query]); // relance la recherche à chaque changement de la valeur de query
 
 
-    const handleResult = () =>  {
+    const handleResult = () => {
         const url = `/search-results?query=${query}`;
-        router.push(url, );
+        router.push(url);
         setQuery("");
+        if (onSearch) {
+            onSearch();
+        }
     };
 
     const handleItemResult = (item: SearchResult) => {
         const url = `/search-results?query=${item.name}`;
         router.push(url);
         setQuery("");
-    }
+        if (onSearch) {
+            onSearch();
+        }
+    };
 
 
     // _________________________ RENDU _________________________
@@ -89,7 +99,7 @@ const SearchBar: React.FC = () => {
             )}
             {query.length >= 3 && results.length > 0 && (
                 <button
-                    className="mt-10"
+                    className="mb-20"
                     onClick={handleResult}
                 >
                     Voir tous les résultats

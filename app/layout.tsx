@@ -6,7 +6,6 @@ import { Toaster } from "sonner";
 import Sidebar from "@/components/layout/Sidebar";
 import Bottombar from "@/components/layout/Bottombar";
 import { SessionProvider }  from "next-auth/react";
-import SearchBar from "@/components/layout/SearchBar";
 
 export default function RootLayout({
     children,
@@ -24,7 +23,6 @@ export default function RootLayout({
                 <body className="flex min-h-screen flex-col">
                     <header className="flex justify-center border-b border-neutral-500 bg-neutral-900">
                         <Navbar />
-                        <SearchBar />
                     </header>
                     <div className="flex">
                         <aside className="hidden border-r border-neutral-500 lg:block">
