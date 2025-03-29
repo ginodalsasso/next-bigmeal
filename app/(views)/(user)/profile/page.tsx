@@ -23,7 +23,7 @@ import IsAdmin from "@/components/isAdmin";
 const ProfilePage = () => {
 
     // _________________________ ETATS _________________________
-    const [user, setUser] = useState<UserType | null>(null);
+    const [user, setUser] = useState<UserType>();
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string>("");
     const [isChangedPassword, setIsChangedPassword] = useState<boolean>(false); // Affichage conditionnel des formulaires
@@ -50,6 +50,7 @@ const ProfilePage = () => {
     if (loading) return <div>Chargement...</div>;
     if (error) return <div className="text-red-500">{error}</div>;
     if (!user) return <div>Utilisateur introuvable.</div>;
+
 
 
     return (

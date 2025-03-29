@@ -2,7 +2,13 @@ import { NextResponse } from "next/server";
 import { NextRequest } from "next/server";
 import { getToken } from "next-auth/jwt";
 
+const isProduction = process.env.NODE_ENV === "production"; // Vérifie si l'environnement est en production
+
 const SECRET = process.env.AUTH_SECRET as string; // Clé secrète utilisée pour récupérer le jeton JWT
+
+if (!SECRET) {
+    throw new Error("AUTH_SECRET is not defined");
+}
 
 // Routes protégées statiques
 const protectedRoutes = [
@@ -26,7 +32,7 @@ const publicRoutes = ["/login", "/register", "/"];
 export async function middleware(req: NextRequest) {
     const { nextUrl } = req; // L'URL de la requête en cours
     const path = nextUrl.pathname; // Le chemin de la requête ex: `/ingredients`
-
+    
     // Récupération du token JWT
     const token = await getToken({ req, secret: SECRET });
 
@@ -61,16 +67,27 @@ export async function middleware(req: NextRequest) {
         return NextResponse.redirect(redirectUrl);
     }
 
-    // Ajout des en-têtes de sécurité
+    // Génération aléatoire d'un nonce
+    const nonce = crypto.randomUUID(); 
+
+    const cspOptions = `
+        default-src 'self'; 
+        script-src 'self' 'nonce-${nonce}'; 
+        style-src 'self'; 
+        img-src 'self' data:; 
+        connect-src 'self'; 
+        font-src 'self' data:;
+    `;
+
+    const ContentSecurityPolicy = isProduction ? cspOptions : "";
+
     const response = NextResponse.next();
     response.headers.set("X-Content-Type-Options", "nosniff"); // Empêche le navigateur de deviner le type MIME
     response.headers.set("X-Frame-Options", "DENY"); // Empêche l'intégration du site dans un iframe (protection contre le clickjacking)
-    // response.headers.set(
-    //     "Strict-Transport-Security", // Forcer l'utilisation de HTTPS
-    //     "max-age=63072000; includeSubDomains; preload" // 2 ans pour les sous-domaines + preload HSTS dans les navigateurs compatibles
-    // );
+    response.headers.set("Referrer-Policy", "no-referrer-when-downgrade"); // Politique de référent pour éviter de divulguer des informations sensibles ex: l'URL de la page précédente
     response.headers.set("X-XSS-Protection", "1; mode=block"); // Active la protection contre certaines attaques XSS dans les navigateurs compatibles
-
+    response.headers.set("Content-Security-Policy", ContentSecurityPolicy);
+    
     return response;
 }
 
