@@ -5,9 +5,6 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
-// Hooks personnalisés
-import { useCsrfToken } from "@/app/hooks/useCsrfToken";
-
 // Composants UI
 import { Button } from "@/components/ui/button";
 import DeleteItem from "@/components/layout/DeleteItemDialog";
@@ -21,12 +18,12 @@ import { dateToString } from "@/lib/utils";
 
 // Services
 import {  fetchShoppingListAPI, markShoppingListAsExpiredAPI, toggleItemCheckedAPI } from "@/lib/services/shopping_list_service";
+import { getCsrfToken } from "next-auth/react";
 
 
 // _________________________ COMPONENT _________________________
 const ShoppingListPage = () => {
     const router = useRouter(); 
-    const csrfToken = useCsrfToken();
     const [shoppingList, setShoppingList] = useState<ShoppingListType | null>(null);
     const [loading, setLoading] = useState(true);
 
@@ -50,6 +47,7 @@ const ShoppingListPage = () => {
     // Transformer un item en coché ou non
     const toggleItemChecked = async (id: string, currentChecked: boolean) => {
         try {
+            const csrfToken = await getCsrfToken();
             if (!csrfToken) {
                 console.error("CSRF token invalide");
                 return;
@@ -78,6 +76,7 @@ const ShoppingListPage = () => {
     // Marquer la liste de courses comme terminée
     const markShoppingListAsExpired = async () => {
         if (shoppingList) {
+            const csrfToken = await getCsrfToken();
             if (!csrfToken) {
                 console.error("CSRF token invalide");
                 return;
