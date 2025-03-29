@@ -12,15 +12,11 @@ import { CreatePreparationProps } from "@/lib/types/props_interfaces";
 import { preparationConstraints } from "@/lib/constraints/forms_constraints";
 import { useFormValidation } from "@/app/hooks/useFormValidation";
 
-// Hooks personnalisés
-import { useCsrfToken } from "@/app/hooks/useCsrfToken";
-
-// Utils
-
 // Composants UI
 import { Button } from "@/components/ui/button";
 import FormErrorMessage from "@/components/forms/FormErrorMessage";
 import { createPreparationAPI } from "@/lib/services/preparation_service";
+import { getCsrfToken } from "next-auth/react";
 
 // Services
 
@@ -31,7 +27,6 @@ const CreatePreparation: React.FC<CreatePreparationProps> = ({
     onSubmit,
 }) => {
     // _________________________ HOOKS _________________________
-    const csrfToken = useCsrfToken();
     
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [form, setForm] = useState<PreparationFormType>({
@@ -63,7 +58,8 @@ const CreatePreparation: React.FC<CreatePreparationProps> = ({
             return;
         }
 
-        // Créer l'ingrédient avec les données du formulaire
+        const csrfToken = await getCsrfToken();
+    
         if (!csrfToken) {
             console.error("CSRF token invalide");
             return;

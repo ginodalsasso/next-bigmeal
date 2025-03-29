@@ -4,7 +4,6 @@ import { toast } from "sonner";
 
 // Hooks personnalisés
 import { useFormValidation } from "@/app/hooks/useFormValidation";
-import { useCsrfToken } from "@/app/hooks/useCsrfToken";
 
 // Types
 import { CategoryMealType } from "@/lib/types/schemas_interfaces";
@@ -23,6 +22,7 @@ import FormErrorMessage from "@/components/forms/FormErrorMessage";
 // Services
 import { getCategoriesMeal } from "@/lib/services/data_fetcher";
 import { updateMealAPI } from "@/lib/services/meal_service";
+import { getCsrfToken } from "next-auth/react";
 
 
 // _________________________ COMPOSANT _________________________
@@ -32,7 +32,6 @@ const UpdateMeal: React.FC<UpdateMealProps> = ({
     onClose
 }) => {
     // _________________________ ÉTATS _________________________
-    const csrfToken = useCsrfToken();
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const [form, setForm] = useState({
@@ -84,7 +83,7 @@ const UpdateMeal: React.FC<UpdateMealProps> = ({
             setIsLoading(false);
             return;
         }
-
+        const csrfToken = await getCsrfToken();
         if (!csrfToken) {
             console.error("CSRF token invalide");
             return;

@@ -9,9 +9,9 @@ import { AddIngredientToShoppingListFormType } from '@/lib/types/forms_interface
 import { Button } from '../ui/button';
 import FormErrorMessage from './FormErrorMessage';
 import { useFormValidation } from '@/app/hooks/useFormValidation';
-import { useCsrfToken } from '@/app/hooks/useCsrfToken';
 import { getMeal } from '@/lib/services/data_fetcher';
 import { createShoppingListIngredientAPI, createShoppingListMealAPI } from '@/lib/services/shopping_list_service';
+import { getCsrfToken } from 'next-auth/react';
 
 interface AddToShoppingListFormProps {
     type: 'meal' | 'ingredient'; // Détermine le type d'ajout
@@ -22,19 +22,20 @@ const AddToShoppingListForm: React.FC<AddToShoppingListFormProps> = ({ type, id 
 
     const [quantity, setQuantity] = useState<AddIngredientToShoppingListFormType>({ quantity: 1 });
     const [isLoading, setIsLoading] = useState<boolean>(false);
-
-    const csrfToken = useCsrfToken();
-
+    
+    // const csrfToken = useCsrfToken();
+    
     // Utilisation du hook de validation
     const { error, setError, validate } = useFormValidation<AddIngredientToShoppingListFormType>(
         ShoppingListConstraints,
         ["quantity"] // Liste des champs à valider
     );
-
+    
     const handleAddToShoppingList = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsLoading(true);
         setError({});
+        const csrfToken = await getCsrfToken();
         try {
             switch (type) {
                 case 'meal': {
@@ -62,6 +63,7 @@ const AddToShoppingListForm: React.FC<AddToShoppingListFormProps> = ({ type, id 
                 }
 
                 case 'ingredient': {
+
                     if (!csrfToken) {
                         console.error("CSRF token invalide");
                         setError({ general: "Problème de sécurité, veuillez réessayer." });

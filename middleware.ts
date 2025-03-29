@@ -87,7 +87,7 @@ export async function middleware(req: NextRequest) {
     response.headers.set("Referrer-Policy", "no-referrer-when-downgrade"); // Politique de référent pour éviter de divulguer des informations sensibles ex: l'URL de la page précédente
     response.headers.set("X-XSS-Protection", "1; mode=block"); // Active la protection contre certaines attaques XSS dans les navigateurs compatibles
     response.headers.set("Content-Security-Policy", ContentSecurityPolicy);
-    
+
     return response;
 }
 

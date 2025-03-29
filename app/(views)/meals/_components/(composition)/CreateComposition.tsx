@@ -13,9 +13,6 @@ import { CreateCompositionProps } from "@/lib/types/props_interfaces";
 // Contraintes et validation
 import { newCompositionConstraints } from "@/lib/constraints/forms_constraints";
 
-// Hooks personnalisés
-import { useCsrfToken } from "@/app/hooks/useCsrfToken";
-
 // Utils
 import { translatedUnit } from "@/lib/utils";
 
@@ -28,6 +25,7 @@ import { IngredientSearchInput } from "@/components/forms/IngredientSearchInput"
 import { getIngredients } from "@/lib/services/data_fetcher";
 import { createCompositionAPI } from "@/lib/services/composition_service";
 import Image from "next/image";
+import { getCsrfToken } from "next-auth/react";
 
 
 // _________________________ COMPONENT _________________________
@@ -37,7 +35,6 @@ const CreateComposition: React.FC<CreateCompositionProps>= ({
 }) => {
 
     // _________________________ HOOKS _________________________
-    const csrfToken = useCsrfToken();
     const [isLoading, setIsLoading] = useState<boolean>(false); // Indique si l'action est en cours
     const [ingredients, setIngredients] = useState<IngredientType[]>([]); // Liste des ingrédients disponibles
     const [form, setForm] = useState<CompositionFormType[]>([
@@ -114,7 +111,8 @@ const CreateComposition: React.FC<CreateCompositionProps>= ({
             setIsLoading(false);
             return;
         }
-        
+
+        const csrfToken = await getCsrfToken();
         if (!csrfToken) {
             console.error("CSRF token invalide");
             return;

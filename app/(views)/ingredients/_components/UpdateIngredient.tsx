@@ -12,9 +12,6 @@ import { IngredientFormType } from "@/lib/types/forms_interfaces";
 import { ingredientConstraints } from "@/lib/constraints/forms_constraints";
 import { useFormValidation } from "@/app/hooks/useFormValidation";
 
-// Hooks personnalisés
-import { useCsrfToken } from "@/app/hooks/useCsrfToken";
-
 // Utils
 import { translatedSeason, ucFirst } from "@/lib/utils";
 
@@ -25,6 +22,7 @@ import FormErrorMessage from "@/components/forms/FormErrorMessage";
 // Services
 import { getCategoriesIngredient } from "@/lib/services/data_fetcher";
 import { updateIngredientAPI } from "@/lib/services/ingredients_service";
+import { getCsrfToken } from "next-auth/react";
 
 // _________________________ COMPONENT _________________________
 const UpdateIngredient: React.FC<UpdateIngredientProps> = ({
@@ -33,7 +31,6 @@ const UpdateIngredient: React.FC<UpdateIngredientProps> = ({
     onCancel,
 }) => {
     // _________________________ ETATS _________________________
-    const csrfToken = useCsrfToken();
     const [form, setForm] = useState<IngredientFormType>({
         id: ingredient.id,
         name: ingredient.name,
@@ -80,6 +77,7 @@ const UpdateIngredient: React.FC<UpdateIngredientProps> = ({
         }
 
         // Récupérer le CSRF Token
+        const csrfToken = await getCsrfToken();
         if (!csrfToken) {
             console.error("CSRF token invalide");
             return;

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { UserStatus } from "@/lib/types/enums";
 import { updateUserStatusAPI } from "@/lib/services/user_service";
-import { useCsrfToken } from "@/app/hooks/useCsrfToken";
+import { getCsrfToken } from "next-auth/react";
 
 interface UpdateUserStatusProps {
     userId: string; 
@@ -11,13 +11,13 @@ interface UpdateUserStatusProps {
 }
 
 export default function UpdateUserStatus({ userId, currentStatus }: UpdateUserStatusProps) {
-    const csrfToken = useCsrfToken(); 
     const [status, setStatus] = useState<UserStatus>(currentStatus); 
     const [loading, setLoading] = useState(false);
 
     const handleStatusChange = async (newStatus: UserStatus) => {
         setLoading(true);
 
+        const csrfToken = await getCsrfToken();
         if (!csrfToken) {
             console.error("CSRF token invalide");
             return;

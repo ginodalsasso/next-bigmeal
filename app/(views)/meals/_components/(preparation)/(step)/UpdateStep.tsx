@@ -13,16 +13,13 @@ import { StepFormType } from "@/lib/types/forms_interfaces";
 import { updateStepConstraints } from "@/lib/constraints/forms_constraints";
 import { useFormValidation } from "@/app/hooks/useFormValidation";
 
-// Hooks personnalisés
-import { useCsrfToken } from "@/app/hooks/useCsrfToken";
-
-
 // Composants UI
 import { Button } from "@/components/ui/button";
 import FormErrorMessage from "@/components/forms/FormErrorMessage";
 
 // Services
 import { updateStepAPI } from "@/lib/services/step_service";
+import { getCsrfToken } from "next-auth/react";
 
 
 // _________________________ COMPOSANT _________________________
@@ -32,7 +29,6 @@ const UpdateStep: React.FC<UpdateStepProps> = ({
     onClose,
 }) => {
     // _________________________ HOOKS _________________________
-    const csrfToken = useCsrfToken();
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [step, setStep] = useState<StepType>(initialStep);
 
@@ -53,6 +49,7 @@ const UpdateStep: React.FC<UpdateStepProps> = ({
 
         setIsLoading(true);
         
+        const csrfToken = await getCsrfToken();
         if (!csrfToken) {
             console.error("CSRF token invalide");
             return;

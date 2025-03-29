@@ -12,8 +12,6 @@ import { UpdatePreparationProps } from "@/lib/types/props_interfaces";
 import { updatePreparationConstraints } from "@/lib/constraints/forms_constraints";
 import { useFormValidation } from "@/app/hooks/useFormValidation";
 
-// Hooks personnalisés
-import { useCsrfToken } from "@/app/hooks/useCsrfToken";
 
 // Composants UI
 import { Button } from "@/components/ui/button";
@@ -21,6 +19,7 @@ import FormErrorMessage from "@/components/forms/FormErrorMessage";
 
 // Services
 import { updatePreparationAPI } from "@/lib/services/preparation_service";
+import { getCsrfToken } from "next-auth/react";
 
 // _________________________ TYPE _________________________
 type UpdatePreparationFormType = Omit<PreparationFormType, "mealId">;
@@ -33,7 +32,6 @@ const UpdatePreparation: React.FC<UpdatePreparationProps> = ({
     onClose
 }) => {
     // _________________________ HOOKS _________________________
-    const csrfToken = useCsrfToken();
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const [form, setForm] = useState<UpdatePreparationFormType>({
@@ -68,7 +66,8 @@ const UpdatePreparation: React.FC<UpdatePreparationProps> = ({
             setIsLoading(false);
             return;
         }
-
+        
+        const csrfToken = await getCsrfToken();
         if (!csrfToken) {
             console.error("CSRF token invalide");
             return;

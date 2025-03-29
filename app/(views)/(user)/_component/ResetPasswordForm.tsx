@@ -3,7 +3,6 @@ import React from "react";
 import { toast } from "sonner";
 
 // Hooks personnalisés
-import { useCsrfToken } from "@/app/hooks/useCsrfToken";
 import { useFormValidation } from "@/app/hooks/useFormValidation";
 
 // Composants UI
@@ -15,12 +14,12 @@ import { ResetPasswordConstraints } from "@/lib/constraints/forms_constraints";
 
 // Services
 import { resetPasswordAPI } from "@/lib/services/user_service";
+import { getCsrfToken } from "next-auth/react";
 
 // _________________________ COMPONENT _________________________
 const ResetPasswordForm = ({ onBackToProfile }: { onBackToProfile: () => void }) => {
 
     // _________________________ ETATS _________________________
-    const csrfToken = useCsrfToken();
     // Utilisation du hook de validation
     const { error, setError, validate } = useFormValidation(
         ResetPasswordConstraints,
@@ -45,7 +44,8 @@ const ResetPasswordForm = ({ onBackToProfile }: { onBackToProfile: () => void })
             setError({ password: "Les mots de passe ne correspondent pas." });
             return;
         }
-
+        
+        const csrfToken = await getCsrfToken();
         if (!csrfToken) {
             console.error("CSRF token invalide");
             return;

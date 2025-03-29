@@ -7,11 +7,9 @@ import React, { useState } from "react";
 import { AlertDialog, AlertDialogTrigger, AlertDialogContent, AlertDialogHeader, AlertDialogFooter, AlertDialogTitle, AlertDialogDescription } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 
-// Hooks personnalisés
-import { useCsrfToken } from "@/app/hooks/useCsrfToken";
-
 // Services
 import { deleteProfileAPI } from "@/lib/services/user_service";
+import { getCsrfToken } from "next-auth/react";
 
 
 interface DeleteProfileProps {
@@ -21,13 +19,14 @@ interface DeleteProfileProps {
 // _________________________ COMPONENT _________________________
 const DeleteProfile: React.FC<DeleteProfileProps> = ({ userId }) => {
 
-    const csrfToken = useCsrfToken();
     const [isDeleting, setIsDeleting] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
 
     // _________________________ LOGIQUE _________________________
     const handleDelete = async () => {
+
+        const csrfToken = await getCsrfToken();
         if (!csrfToken) {
             console.error("CSRF token invalide");
             return;

@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { AlertDialog, AlertDialogTrigger, AlertDialogContent, AlertDialogHeader, AlertDialogFooter, AlertDialogTitle, AlertDialogDescription } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
-import { useCsrfToken } from "@/app/hooks/useCsrfToken";
 import { toast } from "sonner";
+import { getCsrfToken } from "next-auth/react";
 
 interface DeleteItemProps {
     apiUrl: string; // URL dynamique
@@ -13,16 +13,16 @@ interface DeleteItemProps {
 
 const DeleteItem: React.FC<DeleteItemProps> = ({ apiUrl, id, onSubmit }) => {
     const [isDeleting, setIsDeleting] = useState(false);
-    const csrfToken = useCsrfToken();
-
+    
     const handleDelete = async () => {
+        const csrfToken = await getCsrfToken();
         if (!csrfToken) {
             console.error("CSRF token invalide");
             return;
         }
-
+        
         setIsDeleting(true);
-
+        
         try {
             const response = await fetch(apiUrl, {
                 method: "DELETE",

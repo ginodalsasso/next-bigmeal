@@ -7,7 +7,6 @@ import { useRouter } from "next/navigation";
 
 // Hooks personnalisés
 import { useFormValidation } from "@/app/hooks/useFormValidation";
-import { useCsrfToken } from "@/app/hooks/useCsrfToken";
 
 // Types
 import { CategoryMealType } from "@/lib/types/schemas_interfaces";
@@ -27,13 +26,13 @@ import FormErrorMessage from "@/components/forms/FormErrorMessage";
 // Services
 import { getCategoriesMeal } from "@/lib/services/data_fetcher";
 import { createMealAPI } from "@/lib/services/meal_service";
+import { getCsrfToken } from "next-auth/react";
 
 
 // _________________________ COMPONENT _________________________
 const CreateMeal: React.FC<CreateMealProps> = ({ onSubmit }) => {
     
     // _________________________ HOOKS _________________________
-    const csrfToken = useCsrfToken();
     const router = useRouter();
 
     const [categories, setCategories] = useState<CategoryMealType[]>([]);
@@ -82,6 +81,7 @@ const CreateMeal: React.FC<CreateMealProps> = ({ onSubmit }) => {
         }
     
         // Récupérer le CSRF Token
+        const csrfToken = await getCsrfToken();
         if (!csrfToken) {
             console.error("CSRF token invalide");
             return;

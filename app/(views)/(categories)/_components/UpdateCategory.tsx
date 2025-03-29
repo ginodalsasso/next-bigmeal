@@ -4,7 +4,6 @@ import { toast } from "sonner";
 
 // Hooks personnalisés
 import { useFormValidation } from "@/app/hooks/useFormValidation";
-import { useCsrfToken } from "@/app/hooks/useCsrfToken";
 
 // Composants UI
 import { Button } from "@/components/ui/button";
@@ -14,6 +13,7 @@ import FormErrorMessage from "@/components/forms/FormErrorMessage";
 import { categoriesConstraints } from "@/lib/constraints/forms_constraints";
 import { updateCategoryAPI } from "@/lib/services/categories_service";
 import { UpdateCategoryProps } from "@/lib/types/props_interfaces";
+import { getCsrfToken } from "next-auth/react";
 
 
 type CategoryFormType = { name: string };
@@ -30,7 +30,6 @@ const UpdateCategory = <T extends { id: string; name: string }>({
     // _________________________ ETATS _________________________
     const [name, setName] = useState(category.name);
     const [isLoading, setIsLoading] = useState(false);
-    const csrfToken = useCsrfToken();
 
     const { error, setError, validate } = useFormValidation<CategoryFormType>(
         categoriesConstraints,
@@ -43,6 +42,7 @@ const UpdateCategory = <T extends { id: string; name: string }>({
         setIsLoading(true);
         setError(null);
 
+        const csrfToken = await getCsrfToken();
         if (!csrfToken) {
             console.error("CSRF token invalide");
             setError({ general: "Problème de sécurité, veuillez réessayer." });

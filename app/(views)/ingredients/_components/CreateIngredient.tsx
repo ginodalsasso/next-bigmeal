@@ -14,9 +14,6 @@ import { CreateIngredientProps } from "@/lib/types/props_interfaces";
 import { ingredientConstraints } from "@/lib/constraints/forms_constraints";
 import { useFormValidation } from "@/app/hooks/useFormValidation";
 
-// Hooks personnalisés
-import { useCsrfToken } from "@/app/hooks/useCsrfToken";
-
 // Utils
 import { translatedSeason, ucFirst } from "@/lib/utils";
 
@@ -27,6 +24,7 @@ import FormErrorMessage from "@/components/forms/FormErrorMessage";
 // Services
 import { getCategoriesIngredient } from "@/lib/services/data_fetcher";
 import { createIngredientAPI } from "@/lib/services/ingredients_service";
+import { getCsrfToken } from "next-auth/react";
 
 
 // _________________________ COMPOSANT _________________________
@@ -35,7 +33,6 @@ const CreateIngredient: React.FC<CreateIngredientProps> = ({
     onClose,
 }) => {
     // _________________________ HOOKS _________________________
-    const csrfToken = useCsrfToken();
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [categories, setCategories] = useState<CategoryIngredientType[]>([]);
     const [form, setForm] = useState<IngredientFormType>({
@@ -86,7 +83,7 @@ const CreateIngredient: React.FC<CreateIngredientProps> = ({
             return;
         }
 
-        // Créer l'ingrédient avec les données du formulaire
+        const csrfToken = await getCsrfToken();
         if (!csrfToken) {
             console.error("CSRF token invalide");
             return;

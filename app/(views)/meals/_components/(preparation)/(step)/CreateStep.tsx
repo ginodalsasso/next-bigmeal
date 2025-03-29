@@ -11,9 +11,6 @@ import { CreateStepProps } from "@/lib/types/props_interfaces";
 // Contraintes et validation
 import { newStepConstraints } from "@/lib/constraints/forms_constraints";
 
-// Hooks personnalisés
-import { useCsrfToken } from "@/app/hooks/useCsrfToken";
-
 // Composants UI
 import { Button } from "@/components/ui/button";
 import FormErrorMessage from "@/components/forms/FormErrorMessage";
@@ -21,6 +18,7 @@ import FormErrorMessage from "@/components/forms/FormErrorMessage";
 // Services
 import { createStepAPI } from "@/lib/services/step_service";
 import Image from "next/image";
+import { getCsrfToken } from "next-auth/react";
 
 // _________________________ COMPOSANT _________________________
 const CreatePreparation: React.FC<CreateStepProps> = ({ 
@@ -29,7 +27,7 @@ const CreatePreparation: React.FC<CreateStepProps> = ({
 }) => {
 
     // _________________________ HOOKS _________________________
-    const csrfToken = useCsrfToken();
+
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [form, setForm] = useState<StepFormType[]>([
         {
@@ -97,7 +95,7 @@ const CreatePreparation: React.FC<CreateStepProps> = ({
             setIsLoading(false);
             return;
         }
-
+        const csrfToken = await getCsrfToken();
         if (!csrfToken) {
             console.error("CSRF token invalide");
             return;

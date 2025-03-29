@@ -14,9 +14,6 @@ import { UpdateCompositionFormType } from "@/lib/types/forms_interfaces";
 import { updateCompositionConstraints } from "@/lib/constraints/forms_constraints";
 import { useFormValidation } from "@/app/hooks/useFormValidation";
 
-// Hooks personnalisés
-import { useCsrfToken } from "@/app/hooks/useCsrfToken";
-
 // Utils
 import { translatedUnit } from "@/lib/utils";
 
@@ -26,6 +23,7 @@ import FormErrorMessage from "@/components/forms/FormErrorMessage";
 
 // Services
 import { updateCompositionAPI } from "@/lib/services/composition_service";
+import { getCsrfToken } from "next-auth/react";
 
 
 // _________________________ COMPOSANT _________________________
@@ -35,7 +33,6 @@ const UpdateComposition: React.FC<UpdateCompositionProps> = ({
     onClose,
 }) => {
     // _________________________ HOOKS _________________________
-    const csrfToken = useCsrfToken();
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [composition, setComposition] = useState<CompositionType>(initialComposition);
 
@@ -55,7 +52,8 @@ const UpdateComposition: React.FC<UpdateCompositionProps> = ({
         }
 
         setIsLoading(true);
-        
+
+        const csrfToken = await getCsrfToken();
         if (!csrfToken) {
             console.error("CSRF token invalide");
             return;
