@@ -1,4 +1,5 @@
-// lib/security/rateLimit.ts
+"server only";
+
 import { NextRequest } from 'next/server';
 
 type RequestData = {

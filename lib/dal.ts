@@ -1,4 +1,4 @@
-import "server-only";
+"server-only";
 
 import { cache } from "react";
 import { db } from "./db";

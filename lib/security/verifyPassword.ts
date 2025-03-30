@@ -1,3 +1,5 @@
+"server-only";
+
 import { verify } from "argon2";
 
 export async function verifyPassword ( inputPassword: string,  hashedPassword: string ) {
