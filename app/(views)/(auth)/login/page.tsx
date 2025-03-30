@@ -11,7 +11,7 @@ import { useFormValidation } from "@/app/hooks/useFormValidation";
 // Composants UI
 import { Button } from "@/components/ui/button";
 import FormErrorMessage from "@/components/forms/FormErrorMessage";
-import ForgotPasswordForm from "../_component/ForgotPasswordForm";
+import ForgotPasswordForm from "../_component/ForgotPasswordEmailForm";
 
 // Contraintes
 import { LoginConstraints } from "@/lib/constraints/forms_constraints";
