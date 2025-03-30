@@ -1,6 +1,6 @@
 import { preparationConstraints, updatePreparationConstraints } from "@/lib/constraints/forms_constraints";
 import { db } from "@/lib/db";
-import { getUserSession } from "@/lib/security/getSession";
+import { getAdminSession, getUserSession } from "@/lib/security/getSession";
 import { verifyCSRFToken } from "@/lib/security/verifyCsrfToken";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -51,7 +51,7 @@ export async function POST(req: NextRequest) {
 
 export async function PUT(req: NextRequest) {
     try {
-        const { error } = await getUserSession();
+        const { error } = await getAdminSession();
         if (error) return error;
         
         const csrfTokenVerified = await verifyCSRFToken(req);
@@ -100,7 +100,7 @@ export async function PUT(req: NextRequest) {
 
 export async function DELETE(req: NextRequest) {
     try {
-        const { error } = await getUserSession();
+        const { error } = await getAdminSession();
         if (error) return error;
         
         const csrfTokenVerified = await verifyCSRFToken(req);

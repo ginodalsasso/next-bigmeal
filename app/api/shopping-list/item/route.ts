@@ -9,6 +9,7 @@ export async function DELETE (req: NextRequest) {
     try {
         const { error } = await getUserSession();
         if (error) return error;
+
         
         const csrfTokenVerified = await verifyCSRFToken(req);
         if (!csrfTokenVerified) {
@@ -16,7 +17,7 @@ export async function DELETE (req: NextRequest) {
         }
         
         const body = await req.json();
-
+        
         const validationResult = idConstraints.safeParse({ id: body.id });
         if (!validationResult.success) {
             return NextResponse.json(
@@ -24,6 +25,7 @@ export async function DELETE (req: NextRequest) {
                 { status: 400 }
             );
         }
+
 
         await db.shoppingListItem.delete({ where: { id: body.id } });
         return NextResponse.json({ message: "Article supprimé" }, {status: 200});

@@ -2,7 +2,7 @@ import { db } from "@/lib/db";
 import { NextRequest, NextResponse } from "next/server";
 import { idConstraints, ingredientConstraints } from "@/lib/constraints/forms_constraints";
 import { verifyCSRFToken } from "@/lib/security/verifyCsrfToken";
-import { getAdminSession } from "@/lib/security/getSession";
+import { getAdminSession, getUserSession } from "@/lib/security/getSession";
 
 
 export async function GET() {
@@ -32,7 +32,7 @@ export async function GET() {
 
 export async function POST(req: NextRequest) {
     try {
-        const { error } = await getAdminSession();
+        const { error } = await getUserSession();
         if (error) return error;
         
         const csrfTokenVerified = await verifyCSRFToken(req);

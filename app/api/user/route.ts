@@ -6,7 +6,8 @@ import { NextResponse } from "next/server";
 export async function GET() {
     try {
         // Vérification que l'utilisateur connecté est un administrateur
-        await getAdminSession();
+        const { error } = await getAdminSession();
+        if (error) return error;
 
         // Récupération de tous les utilisateurs
         const users = await db.user.findMany({
@@ -35,8 +36,9 @@ export async function GET() {
 
 export async function PATCH(request: Request) {
     try {
-        await getAdminSession();
-
+        const { error } = await getAdminSession();
+        if (error) return error;
+        
         const { userId, status } = await request.json();
 
         if (!userId || !status) {

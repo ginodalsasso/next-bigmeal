@@ -34,6 +34,7 @@ export async function GET() {
                 { status: 404 }
             );
         }
+
         return NextResponse.json(user, { status: 200 });
     } catch (error) {
         console.error("[FETCH_USER_ERROR]", error);
