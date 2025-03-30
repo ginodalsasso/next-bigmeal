@@ -19,6 +19,7 @@ const ForgotPasswordForm = ({ onBackToLogin }: { onBackToLogin: () => void }) =>
 
     // _________________________ ETATS _________________________
     const [recipient, setRecipient] = useState<{ email: string }>({ email: "" });
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     // Utilisation du hook de validation
     const { error, setError, validate } = useFormValidation(
@@ -28,7 +29,10 @@ const ForgotPasswordForm = ({ onBackToLogin }: { onBackToLogin: () => void }) =>
 
     // _________________________ LOGIQUE _________________________
     // Fonction pour envoyer un email de réinitialisation du mot de passe
-    const forgotPasswordEmail = async () => {
+    const forgotPasswordEmail = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setIsLoading(true);
+
         if (!validate(recipient)){
             setError({ email: "Veuillez saisir un email valide." });
             return;
@@ -40,7 +44,9 @@ const ForgotPasswordForm = ({ onBackToLogin }: { onBackToLogin: () => void }) =>
         } catch (error) {
             console.error("Erreur lors de l'envoi de l'email :", error);
             setError({ general: "Impossible d'envoyer l'email. Veuillez réessayer plus tard." });
-        };
+        } finally {
+            setIsLoading(false);
+        }
     }
 
     return (
@@ -49,23 +55,39 @@ const ForgotPasswordForm = ({ onBackToLogin }: { onBackToLogin: () => void }) =>
             <p className="text-sm text-gray-600">Saisissez votre email pour recevoir un lien de réinitialisation.</p>
 
             <FormErrorMessage message={error?.general} />
+            <form onSubmit={forgotPasswordEmail}>
+                <label 
+                    htmlFor="email" 
+                    className="text-sm font-semibold">
+                        Email
+                </label>
+                <input
+                    name="email"
+                    type="email"
+                    className="input-text-select"
+                    placeholder="email@exemple.com"
+                    value={recipient.email}
+                    onChange={(e) => setRecipient({ email: e.target.value })}
+                />
+                <FormErrorMessage message={error?.email} />
 
-            <input
-                type="email"
-                className="input-text-select"
-                placeholder="Email"
-                value={recipient.email}
-                onChange={(e) => setRecipient({ email: e.target.value })}
-            />
-            <FormErrorMessage message={error?.email} />
+                <Button 
+                    type="submit" 
+                    className="w-full my-2"
+                    disabled={isLoading}
+                    variant={isLoading ? "ghost" : "default"}
+                >
+                    {isLoading ? "Envoi en cours..." : "Envoyer le lien de réinitialisation"}
+                </Button>
+            </form>
 
-            <Button type="button" onClick={forgotPasswordEmail} variant={"edit"}>
-                Envoyer l&apos;email
-            </Button>
-
-            <Button type="button" onClick={onBackToLogin} variant="secondary">
-                Retour à la connexion
-            </Button>
+                <Button 
+                    type="button" 
+                    onClick={onBackToLogin} 
+                    variant="secondary"
+                >
+                    Retour à la connexion
+                </Button>
         </div>
     );
 };

@@ -28,6 +28,7 @@ const ResetPasswordPage = () => {
     });
     const [error, setError] = useState<ForgotUserPasswordFormType>({});
     const [isLoading, setIsLoading] = useState(false);
+    const [isTokenValid, setIsTokenValid] = useState(false); // État pour vérifier la validité du token
 
     useEffect(() => {
         const verifyToken = async () => {
@@ -38,7 +39,7 @@ const ResetPasswordPage = () => {
 
             try {
                 await verifyResetTokenAPI(token);
-                
+                setIsTokenValid(true);
             } catch (error) {
                 console.error('Erreur lors de la vérification du token :', error);
                 setError({ general: 'Token invalide ou expiré' });
@@ -61,14 +62,13 @@ const ResetPasswordPage = () => {
         }
 
         try {
-            if (token) {
-                resetForgottenPasswordAPI(token, formData.password);
+            if (token && isTokenValid) {
+                await resetForgottenPasswordAPI(token, formData.password);
+                toast.success('Mot de passe réinitialisé avec succès !');
+                router.push('/login'); 
             } else {
                 setError({ general: 'Token invalide' });
             }
-            toast.success('Mot de passe réinitialisé avec succès !');
-            router.push('/login');
-
         } catch (error) {
             console.error('Erreur lors de la réinitialisation du mot de passe :', error);
             setError({ general: 'Erreur lors de la réinitialisation du mot de passe' });

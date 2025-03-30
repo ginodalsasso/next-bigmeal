@@ -42,12 +42,25 @@ export async function POST(req: NextRequest) {
 export async function PUT(req: NextRequest) {
 
     try {
-        const body = await req.json();
-        const { token, password } = body;
-        
-        if (!token || !password) {
+        // Extraire le token de l'en-tête d'autorisation
+        const authHeader = req.headers.get('authorization');
+        if (!authHeader || !authHeader.startsWith('Bearer ')) {
             return new Response(JSON.stringify({ 
-                message: 'Veuillez fournir un token et un mot de passe' 
+                message: 'Token d\'autorisation manquant ou invalide' 
+            }), { 
+                status: 401,
+                headers: { 'Content-Type': 'application/json' }
+            });
+        }
+        
+        // Récupérer le token depuis l'en-tête
+        const token = authHeader.substring(7); // Supprime "Bearer " pour obtenir le token
+        const body = await req.json();
+        const { password } = body;
+        
+        if (!password) {
+            return new Response(JSON.stringify({ 
+                message: 'Veuillez fournir un mot de passe' 
             }), { 
                 status: 400,
                 headers: { 'Content-Type': 'application/json' }

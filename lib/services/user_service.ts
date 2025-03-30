@@ -91,8 +91,9 @@ export async function resetForgottenPasswordAPI(token: string | string[], passwo
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}` 
             },
-            body: JSON.stringify({ token, password }),
+            body: JSON.stringify({ password }),
         });
 
         if (!response.ok) {
