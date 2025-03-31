@@ -47,7 +47,7 @@ export default function RegisterPage() {
 
         try {
             await registerUserAPI(formData.email, formData.password);
-            toast("Compte créé avec succès !");
+            toast.success("Compte créé avec succès ! Vous pouvez confirmer votre compte en consultant vos mails.");
         } catch (error) {
             console.error("[REGISTER_ERROR]", error);
             setError({ general: "Erreur interne du serveur, veuillez réessayer plus tard." });
@@ -80,6 +80,10 @@ export default function RegisterPage() {
                             required
                             autoComplete="email"
                             autoFocus
+                            value={formData.email}
+                            onChange={(e) =>
+                                setFormData({ ...formData, email: e.target.value })
+                            }
                         />
                         <FormErrorMessage message={error?.email} />
                     </div>
@@ -96,6 +100,10 @@ export default function RegisterPage() {
                             placeholder="••••••••"
                             required
                             autoComplete="current-password"
+                            value={formData.password}
+                            onChange={(e) =>
+                                setFormData({ ...formData, password: e.target.value })
+                            }
                         />
                         <FormErrorMessage message={error?.password} />
                     </div>
