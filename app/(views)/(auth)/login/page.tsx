@@ -67,7 +67,7 @@ export default function LoginPage() {
             <div className="mx-auto w-full max-w-md bg-white rounded-xl overflow-hidden transition-all duration-300 transform">
                 <div className="px-6 pt-8 pb-10">
                     {/* Affichage conditionnel des formulaires */}
-                    <div className={`transition-all duration-300 ${isForgotPassword ? 'translate-x-0 opacity-100' : '-translate-x-4 opacity-0'}`}>
+                    <div className={`transition-all duration-300 ${isForgotPassword ? 'translate-x-0 opacity-100' : 'translate-x-4 opacity-0'}`}>
                         {isForgotPassword && (
                             <ForgotPasswordForm onBackToLogin={() => setIsForgotPassword(false)} />
                         )}

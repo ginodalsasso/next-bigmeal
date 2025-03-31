@@ -57,49 +57,72 @@ export default function RegisterPage() {
     };
 
     return (
-        <form 
-            className="mx-auto mt-[10%] flex flex-col gap-2 sm:w-[400px]"
-            onSubmit={handleSubmit}
-        >
-            <FormErrorMessage message={error?.general} />
-
-            <label htmlFor="email">Email</label>
-            <input
-                type="text"
-                className="input-text-select "
-                placeholder="email@exemple.com"
-                value={formData.email}
-                onChange={(e) =>
-                    setFormData({ ...formData, email: e.target.value })
-                }
-            />
-            <FormErrorMessage message={error?.email} />
-
-            <label htmlFor="password">Mot de passe</label>
-            <input
-                type="password"
-                className="input-text-select "
-                placeholder="Votre mot de passe"
-                value={formData.password}
-                onChange={(e) =>
-                    setFormData({ ...formData, password: e.target.value })
-                }
-            />
-            <FormErrorMessage message={error?.password} />
-
-            <Button
-                type="submit"
-                disabled={isLoading}
-                variant={isLoading ? "ghost" : "success"}
-            >
-                {isLoading ? "Création en cours..." : "Créer un compte"}
-            </Button>
-            <Button
-                variant="link"
-                onClick={() => router.push("/login")}
-            >
-                Se connecter
-            </Button>
-        </form>
+        <div className="min-h-screen flex items-start justify-center">
+            <div className="mx-auto w-full max-w-md bg-white rounded-xl overflow-hidden transition-all duration-300 transform px-6 pt-8 pb-10">
+                <div className="text-center mb-6">
+                    <h2 className="text-2xl font-bold text-gray-900">Inscription</h2>
+                    <p className="mt-2 text-sm text-gray-600">Entrez vos informations pour créer un compte</p>
+                </div>
+    
+                <FormErrorMessage message={error?.general} />
+    
+                <form className="space-y-4" onSubmit={handleSubmit}>
+                    <div>
+                        <label htmlFor="email" className="block font-medium text-gray-700">
+                            Adresse email
+                        </label>
+                        <input
+                            className="input-text-select mt-1 w-full shadow-sm"
+                            type="email"
+                            id="email"
+                            name="email"
+                            placeholder="email@exemple.com"
+                            required
+                            autoComplete="email"
+                            autoFocus
+                        />
+                        <FormErrorMessage message={error?.email} />
+                    </div>
+    
+                    <div>
+                        <label htmlFor="password" className="block font-medium text-gray-700">
+                            Mot de passe
+                        </label>
+                        <input
+                            className="input-text-select mt-1 w-full"
+                            type="password"
+                            id="password"
+                            name="password"
+                            placeholder="••••••••"
+                            required
+                            autoComplete="current-password"
+                        />
+                        <FormErrorMessage message={error?.password} />
+                    </div>
+    
+                    <Button 
+                        type="submit" 
+                        className="w-full"
+                        disabled={isLoading} 
+                        variant={isLoading ? "ghost" : "success"}
+                    >
+                        {isLoading ? "Création en cours..." : "Créer un compte"}
+                    </Button>
+    
+                    <div className="text-center mt-6">
+                        <p className="text-sm text-gray-600">
+                            Déjà un compte ?{" "}
+                            <Button
+                                variant="link"
+                                onClick={() => router.push("/login")}
+                                className="font-medium text-blue-600 hover:text-blue-500"
+                            >
+                                Se connecter
+                            </Button>
+                        </p>
+                    </div>
+                </form>
+            </div>
+        </div>
     );
-}
+}    
