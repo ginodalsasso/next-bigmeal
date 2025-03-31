@@ -29,7 +29,7 @@ const ForgotPasswordForm = ({ onBackToLogin }: { onBackToLogin: () => void }) =>
 
     // _________________________ LOGIQUE _________________________
     // Fonction pour envoyer un email de réinitialisation du mot de passe
-    const forgotPasswordEmail = async (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsLoading(true);
 
@@ -55,13 +55,15 @@ const ForgotPasswordForm = ({ onBackToLogin }: { onBackToLogin: () => void }) =>
             <p className="text-sm text-gray-600">Saisissez votre email pour recevoir un lien de réinitialisation.</p>
 
             <FormErrorMessage message={error?.general} />
-            <form onSubmit={forgotPasswordEmail}>
+            <form onSubmit={handleSubmit}>
                 <label 
                     htmlFor="email" 
-                    className="text-sm font-semibold">
-                        Email
+                    className="text-sm font-semibold"
+                >
+                    Adresse email
                 </label>
                 <input
+                    id="email"
                     name="email"
                     type="email"
                     className="input-text-select"
@@ -74,10 +76,10 @@ const ForgotPasswordForm = ({ onBackToLogin }: { onBackToLogin: () => void }) =>
                 <Button 
                     type="submit" 
                     className="w-full my-2"
-                    disabled={isLoading}
+                    disabled={isLoading || !recipient.email}
                     variant={isLoading ? "ghost" : "default"}
                 >
-                    {isLoading ? "Envoi en cours..." : "Envoyer le lien de réinitialisation"}
+                    {isLoading ? "Envoi en cours..." : "Envoyer le lien"}
                 </Button>
             </form>
 
