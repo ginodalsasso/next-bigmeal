@@ -75,17 +75,22 @@ const CreateCategory = <T,>({ apiUrl, onSubmit }: CreateCategoryProps<T>) => {
     // _________________________ RENDU _________________________
     return (
         <>
-            <h2 className="mb-2 text-lg font-bold">Nouvelle catégorie:</h2>
             <div className="flex flex-col gap-2">
                 <form onSubmit={handleSubmit} className="space-y-2">
                     <FormErrorMessage message={error?.general} />
-
+                    <label htmlFor="CategoryName" className="mb-2 text-lg font-bold">
+                        Nouvelle catégorie:
+                    </label>
                     <input
+                        className="input-text-select"
                         type="text"
+                        id="CategoryName"
+                        name="CategoryName"
+                        placeholder="Dessert, Plat principal..."
+                        autoComplete="off"
                         value={newCategoryName}
                         onChange={(e) => setNewCategoryName(e.target.value)}
-                        placeholder="Nom de la catégorie"
-                        className="input-text-select"
+                        disabled={isLoading}
                         required
                     />
                     <FormErrorMessage message={error?.name} />

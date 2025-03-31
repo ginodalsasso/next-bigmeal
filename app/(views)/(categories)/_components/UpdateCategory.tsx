@@ -74,13 +74,20 @@ const UpdateCategory = <T extends { id: string; name: string }>({
         <form onSubmit={handleSubmit} className="space-y-2">
             <FormErrorMessage message={error?.general} />
 
+            <label htmlFor="CategoryName" className="mb-2 text-lg font-bold">
+                Nouveau nom de catégorie:
+            </label>
             <input
+                className="input-text-select"
                 type="text"
+                id="CategoryName"
+                name="CategoryName"
+                placeholder="Dessert, Plat principal..."
+                autoComplete="off"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                placeholder="Nouveau nom"
-                className="input-text-select"
                 disabled={isLoading}
+                required
             />
             <FormErrorMessage message={error?.name} />
 
