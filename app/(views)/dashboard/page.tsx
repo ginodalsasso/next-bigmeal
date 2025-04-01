@@ -1,5 +1,5 @@
 import { auth } from "@/lib/auth"; 
-import UserList from "./_component/UserList";
+import UsersList from "./_component/UsersList";
 import { getUsers } from "@/lib/services/data_fetcher";
 import { unauthorized } from 'next/navigation'
 
@@ -18,7 +18,7 @@ export default async function Dashboard() {
         <div>
             <h1>Bienvenue, {session.user.role}</h1>
             <div>
-                <UserList fetchedUsers={users} />
+                <UsersList fetchedUsers={users} />
             </div>
 
         </div>

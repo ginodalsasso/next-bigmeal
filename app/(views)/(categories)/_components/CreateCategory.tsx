@@ -6,8 +6,8 @@ import { toast } from "sonner";
 import { useFormValidation } from "@/app/hooks/useFormValidation";
 
 // Composants UI
-import { Button } from "@/components/ui/button";
 import FormErrorMessage from "@/components/forms/FormErrorMessage";
+import FormSubmitButton from "./FormSubmitButton";
 
 // Contraintes et services
 import { categoriesConstraints } from "@/lib/constraints/forms_constraints";
@@ -32,7 +32,6 @@ const CreateCategory = <T,>({ apiUrl, onSubmit }: CreateCategoryProps<T>) => {
     
     // _________________________ ETATS __________________
     const [newCategoryName, setNewCategoryName] = useState('');
-    const [isLoading, setIsLoading] = useState(false);
 
     const { error, setError, validate } = useFormValidation<CategoryFormType>(
         categoriesConstraints,
@@ -42,19 +41,16 @@ const CreateCategory = <T,>({ apiUrl, onSubmit }: CreateCategoryProps<T>) => {
     // _________________________ LOGIQUE _________________________
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        setIsLoading(true);
         setError(null);
 
         const csrfToken = await getCsrfToken();
         if (!csrfToken) {
             console.error("CSRF token invalide");
             setError({ general: "Problème de sécurité, veuillez réessayer." });
-            setIsLoading(false);
             return;
         }
 
         if (!validate({ name: newCategoryName })) {
-            setIsLoading(false);
             return;
         }
 
@@ -67,8 +63,6 @@ const CreateCategory = <T,>({ apiUrl, onSubmit }: CreateCategoryProps<T>) => {
         } catch (error) {
             console.error("[CREATE_CATEGORY]", error);
             setError({ general: "Erreur lors de l'ajout de la catégorie." });
-        } finally {
-            setIsLoading(false);
         }
     };
 
@@ -90,14 +84,10 @@ const CreateCategory = <T,>({ apiUrl, onSubmit }: CreateCategoryProps<T>) => {
                         autoComplete="off"
                         value={newCategoryName}
                         onChange={(e) => setNewCategoryName(e.target.value)}
-                        disabled={isLoading}
                         required
                     />
                     <FormErrorMessage message={error?.name} />
-
-                    <Button type="submit" variant="success" disabled={isLoading}>
-                        {isLoading ? 'Ajout en cours...' : 'Ajouter'}
-                    </Button>
+                    <FormSubmitButton />
                 </form>
             </div>
         </>
