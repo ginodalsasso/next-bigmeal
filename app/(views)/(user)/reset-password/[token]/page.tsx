@@ -5,14 +5,15 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 
-// Composants UI
-import { Button } from '@/components/ui/button';
-
 // Types
 import { ForgotUserPasswordFormType } from '@/lib/types/forms_interfaces';
 
 // Services
 import { resetForgottenPasswordAPI, verifyResetTokenAPI } from '@/lib/services/user_service';
+import { useFormValidation } from '@/app/hooks/useFormValidation';
+import { NewPasswordConstraints } from '@/lib/constraints/forms_constraints';
+import FormSubmitButton from '@/components/forms/FormSubmitButton';
+import FormErrorMessage from '@/components/forms/FormErrorMessage';
 
 
 // _________________________ COMPONENT _________________________
@@ -21,13 +22,12 @@ const ResetPasswordPage = () => {
     // _________________________ ETATS _________________________
     const { token } = useParams(); 
     const router = useRouter();
+    // Utilisation du hook de validation
+    const { error, setError, validate } = useFormValidation<ForgotUserPasswordFormType>(
+        NewPasswordConstraints,
+        ["password", "confirmPassword"] // Liste des champs à valider
+    );
 
-    const [formData, setFormData] = useState({
-        password: '',
-        confirmPassword: '',
-    });
-    const [error, setError] = useState<ForgotUserPasswordFormType>({});
-    const [isLoading, setIsLoading] = useState(false);
     const [isTokenValid, setIsTokenValid] = useState(false); // État pour vérifier la validité du token
 
     useEffect(() => {
@@ -39,7 +39,6 @@ const ResetPasswordPage = () => {
 
             try {
                 await verifyResetTokenAPI(token);
-                setIsTokenValid(true);
             } catch (error) {
                 console.error('Erreur lors de la vérification du token :', error);
                 setError({ general: 'Token invalide ou expiré' });
@@ -50,30 +49,31 @@ const ResetPasswordPage = () => {
     }, [token]);
 
     
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        setIsLoading(true);
-        setError({});
+    const handleSubmit = async (formData: FormData) => {
+        const password = formData.get('password')?.toString() || '';
+        const confirmPassword = formData.get('confirm-password')?.toString() || '';
 
-        if (formData.password !== formData.confirmPassword) {
+        if (password !== confirmPassword) {
             setError({ confirmPassword: 'Les mots de passe ne correspondent pas' });
-            setIsLoading(false);
+            return;
+        }
+
+        if (!validate({ password, confirmPassword })) {
             return;
         }
 
         try {
-            if (token && isTokenValid) {
-                await resetForgottenPasswordAPI(token, formData.password);
-                toast.success('Mot de passe réinitialisé avec succès !');
-                router.push('/login'); 
-            } else {
+            if (!token) {
                 setError({ general: 'Token invalide' });
+                return;
             }
+            await resetForgottenPasswordAPI(token, password);
+
+            toast.success('Mot de passe réinitialisé avec succès !');
+            router.push('/login');
         } catch (error) {
             console.error('Erreur lors de la réinitialisation du mot de passe :', error);
             setError({ general: 'Erreur lors de la réinitialisation du mot de passe' });
-        } finally {
-            setIsLoading(false);
         }
     };
 
@@ -81,39 +81,43 @@ const ResetPasswordPage = () => {
     // _________________________ RENDU __________________
     return (
         <form
-            onSubmit={handleSubmit}
+            action={handleSubmit}
             className="mx-auto mt-[10%] flex flex-col gap-2 border px-4 py-8 sm:w-[400px]"
         >
             <h1 className="text-2xl font-bold">Réinitialiser le mot de passe</h1>
-            {error.general && <p className="error-form">{error.general}</p>}
+            <FormErrorMessage message={error?.general} />
 
+            <label htmlFor="password" className="mb-2 text-lg font-bold">
+                Nouveau mot de passe
+            </label>
             <input
-                type="password"
-                placeholder="Nouveau mot de passe"
-                value={formData.password}
-                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                 className="input-text-select"
+                type="password"
+                id="password"
+                name="password"
+                placeholder="••••••••"
+                autoComplete="off"
                 required
             />
-            {error.password && <p className="error-form">{error.password}</p>}
+            <FormErrorMessage message={error?.password} />
 
+            <label htmlFor="confirm-password" className="mb-2 text-lg font-bold">
+                Confirmer le mot de passe
+            </label>
             <input
-                type="password"
-                placeholder="Confirmer le mot de passe"
-                value={formData.confirmPassword}
-                onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
                 className="input-text-select"
+                type="password"
+                id="confirm-password"
+                name="confirm-password"
+                placeholder="••••••••"
+                autoComplete="off"
                 required
             />
-            {error.confirmPassword && <p className="error-form">{error.confirmPassword}</p>}
+            <FormErrorMessage message={error?.confirmPassword} />
 
-            <Button
-                type="submit"
-                disabled={isLoading}
-                variant={isLoading ? 'ghost' : 'success'}
-            >
-                {isLoading ? 'Réinitialisation en cours...' : 'Réinitialiser le mot de passe'}
-            </Button>
+            <FormSubmitButton
+                defaultText='Réinitialiser le mot de passe'
+            />
         </form>
     );
 };
