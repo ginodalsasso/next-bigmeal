@@ -83,7 +83,7 @@ export default function CategoryMealList({ fetchedCategories }: { fetchedCategor
                                     <EditItemDrawer
                                         renderEditForm={(onClose) => (
                                             <UpdateCategory<CategoryMealType>
-                                                apiUrl="/api/categories-ingredient"
+                                                apiUrl="/api/categories-meal"
                                                 category={category}
                                                 onSubmit={handleCategoryUpdated}
                                                 onCancel={onClose}

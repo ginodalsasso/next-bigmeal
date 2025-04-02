@@ -7,7 +7,7 @@ import { useFormValidation } from "@/app/hooks/useFormValidation";
 
 // Composants UI
 import FormErrorMessage from "@/components/forms/FormErrorMessage";
-import FormSubmitButton from "./FormSubmitButton";
+import FormSubmitButton from "@/components/forms/FormSubmitButton";
 
 // Contraintes et services
 import { categoriesConstraints } from "@/lib/constraints/forms_constraints";
@@ -31,34 +31,34 @@ const CreateCategory = <T,>({ apiUrl, onSubmit }: CreateCategoryProps<T>) => {
     
     
     // _________________________ ETATS __________________
-    const [newCategoryName, setNewCategoryName] = useState('');
-
     const { error, setError, validate } = useFormValidation<CategoryFormType>(
         categoriesConstraints,
         ["name"]
     );
 
     // _________________________ LOGIQUE _________________________
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        setError(null);
+    // const handleSubmit = async (e: React.FormEvent) => {
+    const handleSubmit = async (formData: FormData) => {
+        const categoryName = formData.get('CategoryName') as string;
 
-        const csrfToken = await getCsrfToken();
-        if (!csrfToken) {
-            console.error("CSRF token invalide");
-            setError({ general: "Problème de sécurité, veuillez réessayer." });
-            return;
-        }
-
-        if (!validate({ name: newCategoryName })) {
+        if (!validate({ name: categoryName })) {
             return;
         }
 
         try {
-            const newCategory = createCategoryAPI(newCategoryName, csrfToken, apiUrl);
+            const csrfToken = await getCsrfToken();
+            if (!csrfToken) {
+            console.error("CSRF token invalide");
+            setError({ general: "Problème de sécurité, veuillez réessayer." });
+            return;
+            }
+            const newCategory = createCategoryAPI(
+                categoryName, 
+                csrfToken, 
+                apiUrl
+            );
 
             onSubmit(await newCategory); 
-            setNewCategoryName('');
             toast("Catégorie créée avec succès");
         } catch (error) {
             console.error("[CREATE_CATEGORY]", error);
@@ -70,7 +70,7 @@ const CreateCategory = <T,>({ apiUrl, onSubmit }: CreateCategoryProps<T>) => {
     return (
         <>
             <div className="flex flex-col gap-2">
-                <form onSubmit={handleSubmit} className="space-y-2">
+                <form action={handleSubmit} className="space-y-2">
                     <FormErrorMessage message={error?.general} />
                     <label htmlFor="CategoryName" className="mb-2 text-lg font-bold">
                         Nouvelle catégorie:
@@ -82,8 +82,6 @@ const CreateCategory = <T,>({ apiUrl, onSubmit }: CreateCategoryProps<T>) => {
                         name="CategoryName"
                         placeholder="Dessert, Plat principal..."
                         autoComplete="off"
-                        value={newCategoryName}
-                        onChange={(e) => setNewCategoryName(e.target.value)}
                         required
                     />
                     <FormErrorMessage message={error?.name} />

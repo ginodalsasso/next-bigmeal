@@ -14,6 +14,7 @@ import { categoriesConstraints } from "@/lib/constraints/forms_constraints";
 import { updateCategoryAPI } from "@/lib/services/categories_service";
 import { UpdateCategoryProps } from "@/lib/types/props_interfaces";
 import { getCsrfToken } from "next-auth/react";
+import FormSubmitButton from "@/components/forms/FormSubmitButton";
 
 
 type CategoryFormType = { name: string };
@@ -28,35 +29,32 @@ const UpdateCategory = <T extends { id: string; name: string }>({
 }: UpdateCategoryProps<T>) => {
 
     // _________________________ ETATS _________________________
-    const [name, setName] = useState(category.name);
-    const [isLoading, setIsLoading] = useState(false);
-
     const { error, setError, validate } = useFormValidation<CategoryFormType>(
         categoriesConstraints,
         ["name"]
     );
 
     // _________________________ LOGIQUE _________________________
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        setIsLoading(true);
-        setError(null);
-
-        const csrfToken = await getCsrfToken();
-        if (!csrfToken) {
-            console.error("CSRF token invalide");
-            setError({ general: "Problème de sécurité, veuillez réessayer." });
-            setIsLoading(false);
+    const handleSubmit = async (formData: FormData) => {
+        const categoryName = formData.get('CategoryName') as string;
+        
+        if (!validate({ name: categoryName })) {
             return;
         }
-
-        if (!validate({ name })) {
-            setIsLoading(false);
-            return;
-        }
-
+        
         try {
-            const updatedCategory = updateCategoryAPI(category.id, name, csrfToken, apiUrl);
+            const csrfToken = await getCsrfToken();
+            if (!csrfToken) {
+                console.error("CSRF token invalide");
+                setError({ general: "Problème de sécurité, veuillez réessayer." });
+                return;
+            }
+            const updatedCategory = updateCategoryAPI(
+                category.id, 
+                categoryName, 
+                csrfToken, 
+                apiUrl
+            );
             
             onSubmit(await updatedCategory);
             toast("Catégorie mise à jour avec succès");
@@ -64,14 +62,12 @@ const UpdateCategory = <T extends { id: string; name: string }>({
         } catch (error) {
             console.error("[UPDATE_CATEGORY_ERROR]", error);
             setError({ general: "Erreur lors de la mise à jour de la catégorie." });
-        } finally {
-            setIsLoading(false);
         }
     };
 
     // _________________________ RENDU _________________________
     return (
-        <form onSubmit={handleSubmit} className="space-y-2">
+        <form action={handleSubmit} className="space-y-2">
             <FormErrorMessage message={error?.general} />
 
             <label htmlFor="CategoryName" className="mb-2 text-lg font-bold">
@@ -84,20 +80,16 @@ const UpdateCategory = <T extends { id: string; name: string }>({
                 name="CategoryName"
                 placeholder="Dessert, Plat principal..."
                 autoComplete="off"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                disabled={isLoading}
+                defaultValue={category.name}
                 required
             />
             <FormErrorMessage message={error?.name} />
 
             <div className="flex gap-2">
-                <Button type="button" onClick={onCancel} variant="secondary" className="w-full" disabled={isLoading}>
+                <Button type="button" onClick={onCancel} variant="secondary" className="w-full">
                     Annuler
                 </Button>
-                <Button type="submit" variant="success" className="w-full" disabled={isLoading}>
-                    {isLoading ? "En cours..." : "Valider"}
-                </Button>
+                <FormSubmitButton />
             </div>
         </form>
     );
