@@ -88,7 +88,7 @@ export async function PUT(req: NextRequest) {
                 { status: 400, headers: { "Content-Type": "application/json" } }
             );
         }
-        const isPasswordValid = await verify(password, user.password);
+        const isPasswordValid = await verify(user.password, password);
         if (!isPasswordValid) {
             return new Response(
                 JSON.stringify({ message: "Mot de passe actuel incorrect" }),

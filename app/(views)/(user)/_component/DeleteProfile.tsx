@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 // Services
 import { deleteProfileAPI } from "@/lib/services/user_service";
 import { getCsrfToken } from "next-auth/react";
+import FormErrorMessage from "@/components/forms/FormErrorMessage";
 
 
 interface DeleteProfileProps {
@@ -26,15 +27,15 @@ const DeleteProfile: React.FC<DeleteProfileProps> = ({ userId }) => {
     // _________________________ LOGIQUE _________________________
     const handleDelete = async () => {
 
-        const csrfToken = await getCsrfToken();
-        if (!csrfToken) {
-            console.error("CSRF token invalide");
-            return;
-        }
         setIsDeleting(true);
         setError(null);
-
+        
         try {
+            const csrfToken = await getCsrfToken();
+            if (!csrfToken) {
+                console.error("CSRF token invalide");
+                return;
+            }
             await deleteProfileAPI(userId, csrfToken);
         } catch (error) {
             console.error("Erreur lors de la suppression du compte :", error);
@@ -61,7 +62,7 @@ const DeleteProfile: React.FC<DeleteProfileProps> = ({ userId }) => {
                             Êtes-vous sûr de vouloir supprimer votre compte ? <br />Cette action est irréversible.
                         </AlertDialogDescription>
                     </AlertDialogHeader>
-                    {error && <p className="text-red-500">{error}</p>}
+                    <FormErrorMessage message={error ?? undefined} />
                     
                     <AlertDialogFooter>
                         <Button onClick={handleDelete} variant="delete" disabled={isDeleting}>

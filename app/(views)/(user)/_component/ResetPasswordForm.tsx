@@ -15,10 +15,10 @@ import { ResetPasswordConstraints } from "@/lib/constraints/forms_constraints";
 // Services
 import { resetPasswordAPI } from "@/lib/services/user_service";
 import { getCsrfToken } from "next-auth/react";
+import FormSubmitButton from "@/components/forms/FormSubmitButton";
 
 // _________________________ COMPONENT _________________________
 const ResetPasswordForm = ({ onBackToProfile }: { onBackToProfile: () => void }) => {
-
     // _________________________ ETATS _________________________
     // Utilisation du hook de validation
     const { error, setError, validate } = useFormValidation(
@@ -27,10 +27,7 @@ const ResetPasswordForm = ({ onBackToProfile }: { onBackToProfile: () => void })
     );
 
     // _________________________ LOGIQUE _________________________
-    const handleResetPassword = async (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-        const formData = new FormData(event.currentTarget);
-
+    const handleResetPassword = async (formData: FormData) => {
         const password = formData.get("password")?.toString() || "";
         const newPassword = formData.get("new-password")?.toString() || "";
         const confirmNewPassword = formData.get("confirm-password")?.toString() || "";
@@ -45,13 +42,19 @@ const ResetPasswordForm = ({ onBackToProfile }: { onBackToProfile: () => void })
             return;
         }
         
-        const csrfToken = await getCsrfToken();
-        if (!csrfToken) {
-            console.error("CSRF token invalide");
-            return;
-        }
         try {
-            await resetPasswordAPI(password, newPassword, confirmNewPassword, csrfToken);
+            const csrfToken = await getCsrfToken();
+            if (!csrfToken) {
+                console.error("CSRF token invalide");
+                return;
+            }
+            await resetPasswordAPI(
+                password, 
+                newPassword, 
+                confirmNewPassword, 
+                csrfToken
+            );
+            
             toast.success("Votre mot de passe a bien été modifié.");
             onBackToProfile();
         } catch (error) {
@@ -64,7 +67,7 @@ const ResetPasswordForm = ({ onBackToProfile }: { onBackToProfile: () => void })
     // _________________________ RENDU _________________________
     return (
         <div>
-            <form className="mb-2" onSubmit={handleResetPassword}>
+            <form className="mb-2" action={handleResetPassword}>
                 <FormErrorMessage message={error?.general} />
 
                 <label htmlFor="password">Votre mot de passe actuel</label>
@@ -73,6 +76,8 @@ const ResetPasswordForm = ({ onBackToProfile }: { onBackToProfile: () => void })
                     type="password"
                     id="password"
                     name="password"
+                    placeholder="••••••••"
+                    autoComplete="current-password"
                     required
                 />
                 <label htmlFor="new-password">Nouveau mot de passe</label>
@@ -81,6 +86,8 @@ const ResetPasswordForm = ({ onBackToProfile }: { onBackToProfile: () => void })
                     type="password"
                     id="new-password"
                     name="new-password"
+                    placeholder="••••••••"
+                    autoComplete="off"
                     required
                 />
                 <label htmlFor="confirm-password">Confirmer votre nouveau mot de passe</label>
@@ -89,11 +96,15 @@ const ResetPasswordForm = ({ onBackToProfile }: { onBackToProfile: () => void })
                     type="password"
                     id="confirm-password"
                     name="confirm-password"
+                    placeholder="••••••••"
+                    autoComplete="off"
                     required
                 />
                 <FormErrorMessage message={error?.password} />
 
-                <Button type="submit">Modifier mon mot de passe</Button>
+                <FormSubmitButton
+                    defaultText="Modifier le mot de passe"
+                />
             </form>
 
             <Button variant="secondary" onClick={onBackToProfile}>
