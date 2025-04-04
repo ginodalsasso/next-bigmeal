@@ -1,5 +1,4 @@
 // Bibliothèques tierces
-import React, { useState } from "react";
 import { toast } from "sonner";
 
 // Hooks personnalisés
@@ -28,8 +27,7 @@ type CategoryFormType = { name: string };
  *           - onSubmit est une fonction qui met à jour la liste des catégories dans le parent 
 **/
 const CreateCategory = <T,>({ apiUrl, onSubmit }: CreateCategoryProps<T>) => {
-    
-    
+    // _________________________ PROPS _________________________
     // _________________________ ETATS __________________
     const { error, setError, validate } = useFormValidation<CategoryFormType>(
         categoriesConstraints,

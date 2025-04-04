@@ -5,9 +5,8 @@ import { IngredientUnit, Season } from './enums';
 
 // ____________ INGREDIENTS
 export interface IngredientFormType {
-    id: string;
     name: string;
-    season: Season | null | undefined;
+    season?: Season | null;
     categoryIngredientId: string;
 }
 

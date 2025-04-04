@@ -17,13 +17,13 @@ export default function UpdateUserStatus({ userId, currentStatus }: UpdateUserSt
     const handleStatusChange = async (newStatus: UserStatus) => {
         setLoading(true);
 
-        const csrfToken = await getCsrfToken();
-        if (!csrfToken) {
-            console.error("CSRF token invalide");
-            return;
-        }
-
+        
         try {
+            const csrfToken = await getCsrfToken();
+            if (!csrfToken) {
+                console.error("CSRF token invalide");
+                return;
+            }
         
             await updateUserStatusAPI(userId, newStatus, csrfToken);
             const updatedStatus = newStatus;

@@ -165,7 +165,7 @@ export default function IngredientList({ fetchedIngredients }: { fetchedIngredie
                                         )}
                                     />
                                     <DeleteItem
-                                        apiUrl="/api/categories-meal"
+                                        apiUrl="/api/ingredients"
                                         id={ingredient.id}
                                         onSubmit={handleIngredientDeleted}
                                     />

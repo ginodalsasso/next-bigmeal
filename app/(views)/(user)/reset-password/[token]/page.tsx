@@ -1,7 +1,7 @@
 'use client';
 
 // Bibliothèques tierces
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 
@@ -28,7 +28,6 @@ const ResetPasswordPage = () => {
         ["password", "confirmPassword"] // Liste des champs à valider
     );
 
-    const [isTokenValid, setIsTokenValid] = useState(false); // État pour vérifier la validité du token
 
     useEffect(() => {
         const verifyToken = async () => {
@@ -46,7 +45,7 @@ const ResetPasswordPage = () => {
         };
 
         verifyToken();
-    }, [token]);
+    }, [token, setError]);
 
     
     const handleSubmit = async (formData: FormData) => {
