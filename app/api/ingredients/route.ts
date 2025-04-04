@@ -84,6 +84,7 @@ export async function PUT(req: NextRequest) {
         }
         
         const body = await req.json();
+        console.log("ICICIICICICICI",body);
         
         // Valider et nettoyer les données
         const validationResult = ingredientConstraints.safeParse(body);

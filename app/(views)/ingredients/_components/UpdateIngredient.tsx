@@ -23,6 +23,7 @@ import FormErrorMessage from "@/components/forms/FormErrorMessage";
 import { getCategoriesIngredient } from "@/lib/services/data_fetcher";
 import { updateIngredientAPI } from "@/lib/services/ingredients_service";
 import { getCsrfToken } from "next-auth/react";
+import FormSubmitButton from "@/components/forms/FormSubmitButton";
 
 // _________________________ COMPONENT _________________________
 const UpdateIngredient: React.FC<UpdateIngredientProps> = ({
@@ -31,20 +32,16 @@ const UpdateIngredient: React.FC<UpdateIngredientProps> = ({
     onCancel,
 }) => {
     // _________________________ ETATS _________________________
-    const [form, setForm] = useState<IngredientFormType>({
-        id: ingredient.id,
-        name: ingredient.name,
-        season: ingredient.season || null,
-        categoryIngredientId: ingredient.categoryIngredient.id,
-    });
-
     const [categories, setCategories] = useState<CategoryIngredientType[]>([]);
-    const [isLoading, setIsLoading] = useState(false);
 
     // Hook de validation
     const { error, setError, validate } = useFormValidation<IngredientFormType>(
         ingredientConstraints,
-        ["name", "season", "categoryIngredientId"]
+        [
+            "name", 
+            "season", 
+            "categoryIngredientId"
+        ]
     );
 
     // _________________________ LOGIQUE _________________________
@@ -65,25 +62,28 @@ const UpdateIngredient: React.FC<UpdateIngredientProps> = ({
     }, [setError]);
 
     // Gère la soumission et l'update de l'ingrédient
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        setIsLoading(true);
-        setError(null); // Réinitialiser les erreurs
+    const handleSubmit = async (formData: FormData) => {
+        // Récupérer les données du formulaire
+        const form: IngredientFormType = {
+            id: ingredient.id,
+            name: formData.get("name") as string,
+            season: formData.get("season") as string === "" ? undefined : (formData.get("season") as Season),
+            categoryIngredientId: formData.get("categoryIngredientId") as string,
+        };
 
         // Valider les données du formulaire
         if (!validate(form)) {
-            setIsLoading(false);
+            console.error("Validation échouée", error, form);
             return;
         }
 
-        // Récupérer le CSRF Token
-        const csrfToken = await getCsrfToken();
-        if (!csrfToken) {
-            console.error("CSRF token invalide");
-            return;
-        }
-
+        
         try {
+            const csrfToken = await getCsrfToken();
+            if (!csrfToken) {
+                console.error("CSRF token invalide");
+                return;
+            }
             const updatedIngredient = await updateIngredientAPI(form, csrfToken);
 
             onSubmit(updatedIngredient);
@@ -92,38 +92,41 @@ const UpdateIngredient: React.FC<UpdateIngredientProps> = ({
         } catch (error) {
             console.error("[UPDATE_INGREDIENT_ERROR]", error);
             setError({ general: "Erreur lors de la mise à jour de l'ingrédient." });
-        } finally {
-            setIsLoading(false);
         }
     };
 
     // _________________________ RENDU _________________________
     return (
-        <form onSubmit={handleSubmit} className="space-y-2 md:w-[50vw]">
+        <form action={handleSubmit} className="space-y-2 md:w-[50vw]">
             <FormErrorMessage message={error?.general} />
 
             {/* Champ pour le nom */}
             <input
-                type="text"
-                value={form.name}
-                onChange={(e) => setForm({ ...form, name: e.target.value })}
-                placeholder="Nouveau nom"
                 className="input-text-select"
-                disabled={isLoading}
+                type="text"
+                id="name"
+                name="name"
+                defaultValue={ingredient.name}
+                placeholder="Nom de l'ingrédient"
+                autoComplete="off"
+                required
             />
             <FormErrorMessage message={error?.name} />
 
             {/* Sélection pour la catégorie */}
             <select
-                value={form.categoryIngredientId}
-                onChange={(e) => setForm({ ...form, categoryIngredientId: e.target.value })}
                 className="input-text-select"
-                disabled={isLoading}
+                name="categoryIngredientId"
+                id="categoryIngredientId"
+                defaultValue={ingredient.categoryIngredientId}
                 required
             >
                 <option value="">-- Choisir une catégorie --</option>
                 {categories.map((category) => (
-                    <option key={category.id} value={category.id}>
+                    <option 
+                        key={category.id} 
+                        value={category.id}
+                        >
                         {ucFirst(category.name)}
                     </option>
                 ))}
@@ -132,17 +135,12 @@ const UpdateIngredient: React.FC<UpdateIngredientProps> = ({
 
             {/* Sélection pour la saison */}
             <select
-                value={form.season || ""}
-                onChange={(e) =>
-                    setForm({
-                        ...form,
-                        season: e.target.value ? (e.target.value as Season) : null,
-                    })
-                }
                 className="input-text-select"
-                disabled={isLoading}
+                name="season"
+                id="season"
+                defaultValue={ingredient.season ?? ""}
             >
-                <option value="">Non spécifié</option>
+                <option value="">-- Choisir une saison --</option>
                 {Object.values(Season).map((season) => (
                     <option key={season} value={season}>
                         {translatedSeason(season)}
@@ -157,16 +155,10 @@ const UpdateIngredient: React.FC<UpdateIngredientProps> = ({
                     type="button"
                     onClick={onCancel}
                     variant="secondary"
-                    disabled={isLoading}
                 >
                     Annuler
                 </Button>
-                <Button 
-                    type="submit" 
-                    variant="success" 
-                    disabled={isLoading}>
-                    {isLoading ? "En cours..." : "Valider"}
-                </Button>
+                <FormSubmitButton />
             </div>
         </form>
     );
