@@ -14,6 +14,11 @@ const PreparationItem = ({ fetchedPreparation, onUpdate, onDelete }: Preparation
 
     const [preparation, setPreparation] = useState<PreparationType>(fetchedPreparation);
 
+    const updatePreparation = async (updatedPreparation: PreparationType) => {
+        setPreparation(updatedPreparation); // Mettre à jour l'état local avec la préparation mise à jour
+        await onUpdate(updatedPreparation); // Appeler onUpdate pour le parent MealItem
+    }
+
     const updateStep = (updatedStep: StepType) => {
         setPreparation((prevPreparation) => { 
             if (!prevPreparation) return prevPreparation;
@@ -52,17 +57,21 @@ const PreparationItem = ({ fetchedPreparation, onUpdate, onDelete }: Preparation
                             renderEditForm={(onClose) => (
                                 <UpdatePreparation
                                     initialPreparation={preparation}
-                                    onSubmit={onUpdate}
+                                    onSubmit={updatePreparation}
                                     onClose={onClose}
                                 />
                             )}
                         />
-                        <DeleteItem apiUrl="/api/preparation" id={preparation.id} onSubmit={onDelete} />
+                        <DeleteItem 
+                            apiUrl="/api/preparation" 
+                            id={preparation.id} 
+                            onSubmit={onDelete} 
+                        />
                     </IsAdmin>
                 </div>
             </div>
                 <ul>
-                    {preparation.steps.map((step) => (
+                    {preparation.steps && preparation.steps.map((step) => (
                         <li key={step.id} className="flex items-center justify-between border-b py-2 ">
                             <StepItem
                                 key={step.id}

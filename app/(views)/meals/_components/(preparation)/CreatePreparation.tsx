@@ -81,9 +81,11 @@ const CreatePreparation: React.FC<CreatePreparationProps> = ({
                     <input
                         className="input-text-select"
                         id="prepTime"
+                        name="prepTime"
                         type="number"
                         placeholder="60"
                         autoComplete="off"
+                        min={0}
                     />
                 </div>
 
@@ -95,9 +97,11 @@ const CreatePreparation: React.FC<CreatePreparationProps> = ({
                     <input
                         className="input-text-select"
                         id="cookTime"
+                        name="cookTime"
                         type="number"
                         placeholder="30"
                         autoComplete="off"
+                        min={0}
                     />
                 </div>
             </div>

@@ -27,6 +27,7 @@ import FormErrorMessage from "@/components/forms/FormErrorMessage";
 import { getCategoriesMeal } from "@/lib/services/data_fetcher";
 import { createMealAPI } from "@/lib/services/meal_service";
 import { getCsrfToken } from "next-auth/react";
+import FormSubmitButton from "@/components/forms/FormSubmitButton";
 
 
 // _________________________ COMPONENT _________________________
@@ -36,13 +37,7 @@ const CreateMeal: React.FC<CreateMealProps> = ({ onSubmit }) => {
     const router = useRouter();
 
     const [categories, setCategories] = useState<CategoryMealType[]>([]);
-    const [isLoading, setIsLoading] = useState<boolean>(false);
-
-    const [form, setForm] = useState<MealFormType>({
-        name: "",
-        description: null,
-        categoryMealId: "",
-    });
+    const [selectedCategory, setSelectedCategory] = useState<string>("");
 
     // Hook de validation
     const { error, setError, validate } = useFormValidation<MealFormType>(
@@ -69,25 +64,30 @@ const CreateMeal: React.FC<CreateMealProps> = ({ onSubmit }) => {
     
 
     // Gestion de la soumission du formulaire de création de repas
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        setIsLoading(true);
-        setError(null); // Réinitialiser les erreurs
+    const handleSubmit = async (formData: FormData) => {
+        // Récupérer les données du formulaire
+        const form = {
+            name: formData.get("mealName") as string,
+            description: formData.get("mealDescription") as string === "" ? undefined : formData.get("mealDescription") as string,
+            categoryMealId: formData.get("categoryMealId") as string,
+        };
+
+        console.log("[FORM]", form);
     
         // Valider les données du formulaire avec le hook
         if (!validate(form)) {
-            setIsLoading(false);
+            console.error("[VALIDATION_ERROR]", error);
             return;
         }
     
-        // Récupérer le CSRF Token
-        const csrfToken = await getCsrfToken();
-        if (!csrfToken) {
-            console.error("CSRF token invalide");
-            return;
-        }
         
         try { 
+            // Récupérer le CSRF Token
+            const csrfToken = await getCsrfToken();
+            if (!csrfToken) {
+                console.error("CSRF token invalide");
+                return;
+            }
             const createdMeal = await createMealAPI(form, csrfToken);
             // Mettre à jour l’état parent avec le nouveau repas
             onSubmit(createdMeal);
@@ -96,29 +96,27 @@ const CreateMeal: React.FC<CreateMealProps> = ({ onSubmit }) => {
         } catch (error) {
             console.error("[CREATE_MEAL_ERROR]", error);
             setError({ general: "Erreur lors de la création du repas." });
-        } finally {
-            setIsLoading(false);
         }
     };
     
 
     // _________________________ RENDU _________________________
     return (
-        <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
+        <form className="flex flex-col gap-4" action={handleSubmit}>
             <FormErrorMessage message={error?.general} />
 
             <div>
                 {/* Champ pour le nom du repas */}
-                <label htmlFor="meal-name">
+                <label htmlFor="mealName">
                     Nom du repas
                 </label>
                 <input
-                    id="meal-name"
-                    type="text"
-                    placeholder="Carbonara"
-                    value={form.name}
-                    onChange={(e) => setForm({ ...form, name: e.target.value })}
                     className="input-text-select"
+                    type="text"
+                    id="mealName"
+                    name="mealName"
+                    placeholder="Carbonara"
+                    autoComplete="off"
                     required
                 />
                 <FormErrorMessage message={error?.name} />
@@ -126,15 +124,15 @@ const CreateMeal: React.FC<CreateMealProps> = ({ onSubmit }) => {
 
             <div>
                 {/* Text area pour la description */}
-                <label htmlFor="meal-description">
+                <label htmlFor="mealDescription">
                     Description du repas (optionnelle)
                 </label>
                 <textarea
-                    id="meal-description"
-                    placeholder="Quelque chose à ajouter ?"
-                    value={form.description ?? ""}
-                    onChange={(e) => setForm({ ...form, description: e.target.value })}
                     className="input-text-select"
+                    id="mealDescription"
+                    name="mealDescription"
+                    placeholder="Quelque chose à ajouter ?"
+                    defaultValue=""
                 />
                 <FormErrorMessage message={error?.description} />
             </div>
@@ -144,21 +142,30 @@ const CreateMeal: React.FC<CreateMealProps> = ({ onSubmit }) => {
                 <label htmlFor="categoryMealId">
                     Catégorie du repas
                 </label>
-                <div className="flex  gap-4">
-                    {categories.map((categorie) => (
-                        <button
-                            id="categoryMealId"
-                            key={categorie.id}
-                            type="button"
-                            className={`cursor-pointer border px-4 py-2 hover:bg-white hover:text-black ${
-                                form.categoryMealId === categorie.id
+                <div className="flex gap-4">
+                    {categories.map((category) => (
+                        <label
+                            key={category.id}
+                            className={`cursor-pointer border px-4 py-2 transition-all ${
+                                selectedCategory === category.id
                                     ? "bg-white text-black"
-                                    : ""
+                                    : "bg-black text-white"
                             }`}
-                            onClick={() => setForm({ ...form, categoryMealId: categorie.id })}
+                            onClick={() => setSelectedCategory(category.id)}
+                            htmlFor={`category-${category.id}`}
                         >
-                            {ucFirst(categorie.name)}
-                        </button>
+                            <input
+                                id={`category-${category.id}`}
+                                type="radio"
+                                name="categoryMealId"
+                                value={category.id}
+                                className="hidden"
+                                checked={selectedCategory === category.id}
+                                onChange={() => setSelectedCategory(category.id)}
+                                required
+                            />
+                            {ucFirst(category.name)}
+                        </label>
                     ))}
                 </div>
                 <FormErrorMessage message={error?.categoryMealId} />
@@ -172,11 +179,7 @@ const CreateMeal: React.FC<CreateMealProps> = ({ onSubmit }) => {
                 >
                     Revenir en arrière
                 </Button>
-                <Button type="submit" variant="success" disabled={
-                    !form.name || !form.categoryMealId || isLoading}
-                >
-                    {isLoading ? "Création du repas en cours..." : "Suivant"}
-                </Button>
+                <FormSubmitButton />
             </div>
         </form>
     );

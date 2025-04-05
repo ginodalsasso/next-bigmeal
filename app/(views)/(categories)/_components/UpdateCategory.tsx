@@ -1,5 +1,4 @@
 // Bibliothèques tierces
-import { useState } from "react";
 import { toast } from "sonner";
 
 // Hooks personnalisés
