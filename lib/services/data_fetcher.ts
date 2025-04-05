@@ -22,9 +22,10 @@ export async function getCategoriesMeal() {
     }
 }
 
-export async function getIngredients() {
+/// Récupérer les ingrédients avec pagination skip = le nombre d'ingrédients à ignorer, take = le nombre d'ingrédients à récupérer
+export async function getIngredients(skip = 0, take = 10) {
     try {
-        const response = await fetch(`${API_ROUTES.ingredients}`, { cache: "no-store" });
+        const response = await fetch(`${API_ROUTES.ingredients}?skip=${skip}&take=${take}`, { cache: "no-store" });
         if (!response.ok) throw new Error("Erreur lors de la récupération des ingrédients.");
         return response.json();
     } catch (error) {

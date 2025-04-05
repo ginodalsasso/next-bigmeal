@@ -5,10 +5,17 @@ import { verifyCSRFToken } from "@/lib/security/verifyCsrfToken";
 import { getAdminSession, getUserSession } from "@/lib/security/getSession";
 
 
-export async function GET() {
+export async function GET(req: NextRequest) {
     try {
+        // Récupérer les paramètres de pagination
+        const url = new URL(req.url); // URL de la requête
+        const skip = parseInt(url.searchParams.get("skip") || "0", 10); // Début
+        const take = parseInt(url.searchParams.get("take") || "5", 10); // Quantité par page: 5
+
         // Récupérer les ingredients
         const ingredients = await db.ingredient.findMany({
+            skip,
+            take,
             orderBy: { 
                 name: 'desc'
             },
@@ -28,7 +35,6 @@ export async function GET() {
         });
     }
 }
-
 
 export async function POST(req: NextRequest) {
     try {
