@@ -5,9 +5,10 @@ model Step {
     preparationId String  @db.ObjectId 
     preparation   Preparation @relation(fields: [preparationId], references: [id], onDelete: Cascade)
 
-    stepNumber    Int @unique
+    stepNumber    Int
     description   String 
     imageUrl      String? 
 
     @@index([preparationId])
-}
+    @@unique([preparationId, stepNumber]) // L'unicité dépend de `preparationId` et `stepNumber`
+} 

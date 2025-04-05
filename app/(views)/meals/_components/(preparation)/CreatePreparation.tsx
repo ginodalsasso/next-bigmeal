@@ -17,9 +17,6 @@ import { createPreparationAPI } from "@/lib/services/preparation_service";
 import { getCsrfToken } from "next-auth/react";
 import FormSubmitButton from "@/components/forms/FormSubmitButton";
 
-// Services
-
-
 // _________________________ COMPOSANT _________________________
 const CreatePreparation: React.FC<CreatePreparationProps> = ({
     mealId,

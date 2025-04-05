@@ -71,7 +71,7 @@ export interface StepFormType {
     preparationId: string;
     stepNumber: number;
     description: string;
-    imageUrl?: string;
+    imageUrl?: string | null;
 }
 
 // FORMULAIRE D'ERREUR STEP
@@ -79,7 +79,7 @@ export interface StepFormErrorType {
     general?: string;
     stepNumber?: string;
     description?: string;
-    imageUrl?: string;
+    imageUrl?: string | null;
 }
 
 

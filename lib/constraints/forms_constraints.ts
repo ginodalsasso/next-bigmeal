@@ -114,7 +114,7 @@ export const newStepConstraints = z.array(
         imageUrl: z
             .string()
             .max(256, "L'url de l'image doit comporter au maximum 256 caractères")
-            .optional(),
+            .nullable(),
     })
 );
 

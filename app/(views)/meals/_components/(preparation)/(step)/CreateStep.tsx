@@ -34,7 +34,7 @@ const CreatePreparation: React.FC<CreateStepProps> = ({
             preparationId,
             stepNumber: 1,
             description: "",
-            imageUrl: undefined,
+            imageUrl: null,
         },
     ]);
     
@@ -95,15 +95,18 @@ const CreatePreparation: React.FC<CreateStepProps> = ({
             setIsLoading(false);
             return;
         }
-        const csrfToken = await getCsrfToken();
-        if (!csrfToken) {
-            console.error("CSRF token invalide");
-            return;
-        }
 
+        
         try {
+            const csrfToken = await getCsrfToken();
+            if (!csrfToken) {
+                console.error("CSRF token invalide");
+                return;
+            }
+
             const createdSteps = await createStepAPI(form, csrfToken);
             onSubmit(createdSteps);
+
             toast("Étapes créées avec succès");
         } catch (error) {
             console.error("[CREATE_STEP_ERROR]", error);

@@ -22,9 +22,7 @@ const AddToShoppingListForm: React.FC<AddToShoppingListFormProps> = ({ type, id 
 
     const [quantity, setQuantity] = useState<AddIngredientToShoppingListFormType>({ quantity: 1 });
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    
-    // const csrfToken = useCsrfToken();
-    
+        
     // Utilisation du hook de validation
     const { error, setError, validate } = useFormValidation<AddIngredientToShoppingListFormType>(
         ShoppingListConstraints,

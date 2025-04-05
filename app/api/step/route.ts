@@ -2,6 +2,7 @@ import { newStepConstraints, updateStepConstraints } from "@/lib/constraints/for
 import { db } from "@/lib/db";
 import { getAdminSession, getUserSession } from "@/lib/security/getSession";
 import { verifyCSRFToken } from "@/lib/security/verifyCsrfToken";
+import { StepFormType } from "@/lib/types/forms_interfaces";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
@@ -14,7 +15,7 @@ export async function POST(req: NextRequest) {
             return new NextResponse("CSRF Token is missing or invalid", { status: 403 });
         }
 
-        const body = await req.json();
+        const body: StepFormType[] = await req.json();
 
         if (!Array.isArray(body)) {
             return NextResponse.json(
@@ -47,7 +48,7 @@ export async function POST(req: NextRequest) {
                 { status: 400 }
             );
         }
-
+        
         // Créer plusieurs étapes en base de données
         await db.step.createMany({
             data: body.map(step => ({
@@ -57,8 +58,7 @@ export async function POST(req: NextRequest) {
                 imageUrl: step.imageUrl || ""
             }))
         });
-
-        // Récupérer les étapes insérées pour les afficher
+        // Récupérer les étapes insérées pour les afficher 
         const insertedSteps = await db.step.findMany({
             where: { 
                 preparationId: body[0].preparationId 
