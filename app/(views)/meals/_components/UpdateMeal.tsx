@@ -23,6 +23,7 @@ import FormErrorMessage from "@/components/forms/FormErrorMessage";
 import { getCategoriesMeal } from "@/lib/services/data_fetcher";
 import { updateMealAPI } from "@/lib/services/meal_service";
 import { getCsrfToken } from "next-auth/react";
+import FormSubmitButton from "@/components/forms/FormSubmitButton";
 
 
 // _________________________ COMPOSANT _________________________
@@ -32,15 +33,8 @@ const UpdateMeal: React.FC<UpdateMealProps> = ({
     onClose
 }) => {
     // _________________________ ÉTATS _________________________
-    const [isLoading, setIsLoading] = useState<boolean>(false);
-
-    const [form, setForm] = useState({
-        name: meal.name,
-        categoryMealId: meal.categoryMeal?.id || "",
-        description: meal.description || "",
-    });
-
     const [categories, setCategories] = useState<CategoryMealType[]>([]);
+    const [selectedCategory, setSelectedCategory] = useState<string>(meal.categoryMealId);
 
     // Hook de validation
     const { error, setError, validate } = useFormValidation(
@@ -66,21 +60,18 @@ const UpdateMeal: React.FC<UpdateMealProps> = ({
     }, [setError]);
         
 
-    // Gestion des changements de champs
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-        setForm((prev) => ({
-            ...prev,
-            [e.target.name]: e.target.value,
-        }));
-    };
-
     // Soumission du formulaire
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
+    const handleSubmit = async (formData: FormData) => {
+        // Récupérer les données du formulaire
+        const form = {
+            id: meal.id,
+            name: formData.get("mealName") as string,
+            description: formData.get("mealDescription") as string === "" ? undefined : formData.get("mealDescription") as string,
+            categoryMealId: formData.get("categoryMealId") as string,
+        };
 
         // Valider les données du formulaire
         if (!validate(form)) {
-            setIsLoading(false);
             return;
         }
         const csrfToken = await getCsrfToken();
@@ -98,50 +89,70 @@ const UpdateMeal: React.FC<UpdateMealProps> = ({
         } catch (error) {
             console.error("[UPDATE_MEAL_ERROR]", error);
             setError({ general: "Erreur lors de la mise à jour." });
-        } finally {
-            setIsLoading(false);
         }
     };
 
 
     // _________________________ RENDU _________________________
     return (
-        <form onSubmit={handleSubmit} className="space-y-2">
+        <form action={handleSubmit} className="space-y-2">
+            <label htmlFor="mealName">
+                Nom du repas
+            </label>
             <input
-                type="text"
-                name="name"
-                value={form.name}
-                onChange={handleChange}
-                placeholder="Nouveau nom"
                 className="input-text-select"
-                disabled={isLoading}
+                type="text"
+                id="mealName"
+                name="mealName"
+                placeholder="Carbonara"
+                defaultValue={meal.name}
+                autoComplete="off"
+                required
             />
             <FormErrorMessage message={error?.name} />
 
-            <select
-                name="categoryMealId"
-                value={form.categoryMealId}
-                onChange={handleChange}
-                className="input-text-select"
-                disabled={isLoading}
-                required
-            >
-                <option value="">-- Choisir une catégorie --</option>
-                {categories.map((categorie) => (
-                    <option key={categorie.id} value={categorie.id}>
-                        {ucFirst(categorie.name)}
-                    </option>
+            {/* Sélection pour la catégorie */}
+            <label htmlFor="categoryMealId">
+                Catégorie du repas
+            </label>
+            <div className="flex gap-4">
+                {categories.map((category) => (
+                    <label
+                        key={category.id}
+                        className={`cursor-pointer border px-4 py-2 transition-all ${
+                            selectedCategory === category.id
+                                ? "bg-white text-black"
+                                : "bg-black text-white"
+                        }`}
+                        onClick={() => setSelectedCategory(category.id)}
+                        htmlFor={`category-${category.id}`}
+                    >
+                        <input
+                            id={`category-${category.id}`}
+                            type="radio"
+                            name="categoryMealId"
+                            value={category.id}
+                            className="hidden"
+                            checked={selectedCategory === category.id}
+                            onChange={() => setSelectedCategory(category.id)}
+                            required
+                        />
+                        {ucFirst(category.name)}
+                    </label>
                 ))}
-            </select>
+            </div>
             <FormErrorMessage message={error?.categoryMealId} />
 
+            {/* Text area pour la description */}
+            <label htmlFor="mealDescription">
+                Description du repas (optionnelle)
+            </label>
             <textarea
-                name="description"
-                placeholder="Description du repas"
-                value={form.description}
-                onChange={handleChange}
                 className="input-text-select"
-                disabled={isLoading}
+                id="mealDescription"
+                name="mealDescription"
+                placeholder="Quelque chose à ajouter ?"
+                defaultValue={meal.description? meal.description : ""}
             />
             <FormErrorMessage message={error?.description} />
 
@@ -150,19 +161,10 @@ const UpdateMeal: React.FC<UpdateMealProps> = ({
                     type="button"
                     onClick={onClose}
                     variant="cancel"
-                    className="w-full"
-                    disabled={isLoading}
                 >
                     Annuler
                 </Button>
-                <Button
-                    type="submit"
-                    variant="success"
-                    className="w-full"
-                    disabled={isLoading}
-                >
-                    {isLoading ? "En cours..." : "Valider"}
-                </Button>
+                <FormSubmitButton />
             </div>
         </form>
     );
