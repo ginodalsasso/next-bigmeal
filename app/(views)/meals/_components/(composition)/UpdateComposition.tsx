@@ -1,11 +1,9 @@
 "use client";
 
 // Bibliothèques tierces
-import { useState } from "react";
 import { toast } from "sonner";
 
 // Types et énumérations
-import { CompositionType } from "@/lib/types/schemas_interfaces";
 import { IngredientUnit } from "@/lib/types/enums";
 import { UpdateCompositionProps } from "@/lib/types/props_interfaces";
 import { UpdateCompositionFormType } from "@/lib/types/forms_interfaces";
@@ -24,6 +22,7 @@ import FormErrorMessage from "@/components/forms/FormErrorMessage";
 // Services
 import { updateCompositionAPI } from "@/lib/services/composition_service";
 import { getCsrfToken } from "next-auth/react";
+import FormSubmitButton from "@/components/forms/FormSubmitButton";
 
 
 // _________________________ COMPOSANT _________________________
@@ -33,8 +32,6 @@ const UpdateComposition: React.FC<UpdateCompositionProps> = ({
     onClose,
 }) => {
     // _________________________ HOOKS _________________________
-    const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [composition, setComposition] = useState<CompositionType>(initialComposition);
 
     // Hook de validation
     const { error, setError, validate  } = useFormValidation<UpdateCompositionFormType>(
@@ -43,24 +40,30 @@ const UpdateComposition: React.FC<UpdateCompositionProps> = ({
     );
 
     // _________________________ LOGIQUE _________________________
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
+    const handleSubmit = async (formData: FormData) => {
+        // Récupérer les données du formulaire
+        const form: UpdateCompositionFormType = {
+            id: initialComposition.id,
+            quantity: formData.get("quantity") ? Number(formData.get("quantity")) : 0, // Valeur par défaut 0 si non spécifiée
+            unit: formData.get("unit") as IngredientUnit,
+        };
 
         // Validation des données avec le hook
-        if (!validate(composition)) {
+        if (!validate(form)) {
             return;
         }
 
-        setIsLoading(true);
-
-        const csrfToken = await getCsrfToken();
-        if (!csrfToken) {
-            console.error("CSRF token invalide");
-            return;
-        }
         
         try {
-            const updatedComposition = await updateCompositionAPI(composition, csrfToken);
+            const csrfToken = await getCsrfToken();
+            if (!csrfToken) {
+                console.error("CSRF token invalide");
+                return;
+            }
+            const updatedComposition = await updateCompositionAPI(
+                form, 
+                csrfToken
+            );
             // Mettre à jour l'état parent via le callback
             onSubmit(updatedComposition);
 
@@ -69,41 +72,41 @@ const UpdateComposition: React.FC<UpdateCompositionProps> = ({
         } catch (error) {
             console.error("[UPDATE_COMPOSITION_ERROR]", error);
             setError({ general: "Erreur lors de la mise à jour de la composition." });
-        } finally {
-            setIsLoading(false);
         }
     };
 
     // _________________________ RENDU _________________________
     return (
-        <form onSubmit={handleSubmit} className="flex flex-col gap-5 p-5">
+        <form action={handleSubmit} className="flex flex-col gap-5 p-5">
             <FormErrorMessage message={error?.general} />
             
             <div className="flex flex-col gap-3 border-b pb-4">
                 {/* Champ pour la quantité */}
+                <label htmlFor="quantity" className="text-sm font-semibold">
+                    Quantité
+                </label>
                 <input
+                    className="input-text-select"
                     type="number"
+                    id="quantity"
+                    name="quantity"
+                    defaultValue={initialComposition.quantity}
                     step="0.1"
                     placeholder="Quantité"
-                    value={composition.quantity || ""}
-                    onChange={(e) =>
-                        setComposition({ ...composition, quantity: parseFloat(e.target.value) })
-                    }
-                    className="input-text-select"
                     required
-                    disabled={isLoading}
                 />
                 <FormErrorMessage message={error?.quantity} />
 
                 {/* Sélecteur pour l'unité */}
+                <label htmlFor="unit" className="text-sm font-semibold">
+                    Unité
+                </label>
                 <select
-                    value={composition.unit}
-                    onChange={(e) =>
-                        setComposition({ ...composition, unit: e.target.value as IngredientUnit })
-                    }
                     className="input-text-select"
+                    id="unit"
+                    name="unit"
+                    defaultValue={initialComposition.unit}
                     required
-                    disabled={isLoading}
                 >
                     <option value="">-- Choisir une unité --</option>
                     {Object.values(IngredientUnit).map((unit) => (
@@ -120,18 +123,10 @@ const UpdateComposition: React.FC<UpdateCompositionProps> = ({
                     variant="secondary"     
                     onClick={onClose} 
                     className="w-full"
-                    disabled={isLoading}
                 >
                     Annuler
                 </Button>
-                <Button 
-                    type="submit" 
-                    variant="success" 
-                    className="w-full"
-                    disabled={isLoading}
-                >
-                    {isLoading ? "Mise à jour en cours..." : "Mettre à jour"}
-                </Button>
+                <FormSubmitButton />
             </div>
         </form>
     );

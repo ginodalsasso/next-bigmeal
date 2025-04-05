@@ -71,8 +71,6 @@ const CreateMeal: React.FC<CreateMealProps> = ({ onSubmit }) => {
             description: formData.get("mealDescription") as string === "" ? undefined : formData.get("mealDescription") as string,
             categoryMealId: formData.get("categoryMealId") as string,
         };
-
-        console.log("[FORM]", form);
     
         // Valider les données du formulaire avec le hook
         if (!validate(form)) {

@@ -112,13 +112,14 @@ const CreateComposition: React.FC<CreateCompositionProps>= ({
             return;
         }
 
-        const csrfToken = await getCsrfToken();
-        if (!csrfToken) {
-            console.error("CSRF token invalide");
-            return;
-        }
-
+        
         try {
+            const csrfToken = await getCsrfToken();
+            if (!csrfToken) {
+                console.error("CSRF token invalide");
+                return;
+            }
+
             const createdCompositions = await createCompositionAPI(form, csrfToken);
             onSubmit(createdCompositions); // Ajout à la liste parent
             
@@ -144,7 +145,7 @@ const CreateComposition: React.FC<CreateCompositionProps>= ({
                 <div key={index} className="flex gap-3 border-b pb-4">
                     {/* Sélection de l'ingrédient */}
                     <IngredientSearchInput
-                        value={ingredients.find(i => i.id === composition.ingredientId)?.name || ""}
+                        value={ingredients.find(ingredient => ingredient.id === composition.ingredientId)?.name || ""}
                         onSelect={(ingredient) =>
                             setForm((prev) =>
                                 prev.map((comp, i) =>
