@@ -24,6 +24,13 @@ export async function POST(req: NextRequest) {
             );
         }
 
+        if (body.length > 20) {
+            return new NextResponse(
+                JSON.stringify({ error: "Vous ne pouvez pas ajouter plus de 20 étapes à la fois." }), {
+                status: 400,
+            });
+        }
+        
         const validationResult = newStepConstraints.safeParse(body);
         
         if (!validationResult.success) {

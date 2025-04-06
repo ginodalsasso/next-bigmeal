@@ -120,7 +120,15 @@ const CreateComposition: React.FC<CreateCompositionProps>= ({
                 return;
             }
 
-            const createdCompositions = await createCompositionAPI(form, csrfToken);
+            const response = await createCompositionAPI(form, csrfToken);
+            if (!response.ok) {
+                const errorData = await response.json();
+                console.error("[CREATE_COMPOSITION_ERROR]", errorData.error);
+                setError({ general: errorData.error });
+                return;
+            }
+
+            const createdCompositions = await response.json();
             onSubmit(createdCompositions); // Ajout à la liste parent
             
             toast("Compositions créées avec succès");

@@ -11,13 +11,7 @@ export async function createCompositionAPI(compositionData: object, csrfToken: s
             body: JSON.stringify(compositionData),
         });
 
-        const data = await response.json();
-
-        if (!response.ok) {
-            throw new Error(data.message || "Erreur inconnue");
-        }
-
-        return data;
+        return response;
     } catch (error) {
         console.error("[API_ERROR] createCompositionAPI", error);
         throw error;

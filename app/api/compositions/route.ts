@@ -25,6 +25,13 @@ export async function POST(req: NextRequest) {
             );
         }
 
+        if (body.length > 20) {
+            return new NextResponse(
+                JSON.stringify({ error: "Vous ne pouvez pas ajouter plus de 20 compositions à la fois." }), {
+                status: 400,
+            });
+        }
+
         const validationResult = newCompositionConstraints.safeParse(body);
 
         if (!validationResult.success) {
@@ -44,10 +51,10 @@ export async function POST(req: NextRequest) {
 
         // Si un ou plusieurs ingrédients sont déjà présents, retourner une erreur
         if (existingCompositions > 0) {
-            return NextResponse.json(
-                { error: "Un ou plusieurs ingrédients sont déjà présents dans ce repas." },
-                { status: 400 }
-            );
+            return new NextResponse(
+                JSON.stringify({ error: "Un ou plusieurs ingrédients sont déjà présents dans ce repas." }), {
+                status: 400,
+            });
         }
 
         // Créer les compositions en base de données (s'il y en a plusieurs)

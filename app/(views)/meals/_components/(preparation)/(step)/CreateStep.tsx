@@ -104,8 +104,17 @@ const CreatePreparation: React.FC<CreateStepProps> = ({
                 return;
             }
 
-            const createdSteps = await createStepAPI(form, csrfToken);
+            const response = await createStepAPI(form, csrfToken);
+            if (!response.ok) {
+                const errorData = await response.json();
+                console.error("[CREATE_STEP_ERROR]", errorData.error);
+                setError({ general: errorData.error });
+                return;
+            }
+            const createdSteps = await response.json();
             onSubmit(createdSteps);
+
+            
 
             toast("Étapes créées avec succès");
         } catch (error) {

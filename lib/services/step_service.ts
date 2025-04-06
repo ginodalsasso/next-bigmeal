@@ -10,12 +10,8 @@ export async function createStepAPI(stepData: object, csrfToken: string) {
             },
             body: JSON.stringify(stepData),
         });
-        const data = await response.json();
-
-        if (!response.ok) {
-            throw new Error(data.message || "Erreur inconnue");
-        }
-        return data;
+        
+        return response;
     } catch (error) {
         console.error("[API_ERROR] createStepAPI", error);
         throw error;
