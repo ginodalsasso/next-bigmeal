@@ -18,4 +18,4 @@ export const CATEGORIES_MEALS_TOLOWER = CATEGORIES_MEALS.map(category => categor
 export const ALL_FILTER_OPTIONS = [...SEASONS, ...CATEGORIES_INGREDIENTS, ...CATEGORIES_MEALS];
 
 // Nombre d'items par page pour la pagination
-export const ITEMS_PER_PAGE = "3";
+export const ITEMS_PER_PAGE = "50";

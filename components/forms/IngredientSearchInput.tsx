@@ -12,7 +12,7 @@ export const IngredientSearchInput = ({ value, onSelect }: IngredientSearchInput
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        if (!query || query.length < 2) {
+        if (!query || query.length < 3) {
             setResults([]);
             return;
         }
@@ -26,11 +26,6 @@ export const IngredientSearchInput = ({ value, onSelect }: IngredientSearchInput
                 });
                 
                 const data = await response.json();
-
-                if (!response.ok) {
-                    throw new Error("Erreur lors de la recherche");
-                };
-
 
                 setResults(data);
             } catch (error) {
@@ -46,12 +41,16 @@ export const IngredientSearchInput = ({ value, onSelect }: IngredientSearchInput
 
     return (
         <div className="relative">
+            <label htmlFor="ingrédient">Ingrédient</label>
             <input
+                className="input-text-select"
                 type="text"
+                id="ingredient"
+                name="ingredient"
+                autoComplete="off"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                placeholder="Rechercher un ingrédient"
-                className="input-text-select"
+                placeholder="Patates, tomates..."
             />
             {loading && <p className="text-sm">Chargement...</p>}
             {results.length > 0 && (

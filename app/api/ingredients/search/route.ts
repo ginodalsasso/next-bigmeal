@@ -8,8 +8,13 @@ export async function GET(req: NextRequest) {
 
     if (!query ) return NextResponse.json([]); // retourne un tableau vide si aucun paramètre "query" n'est fourni
 
+    if (query.length < 2) {
+        return NextResponse.json({
+            message: "La recherche doit contenir au moins 2 caractères."
+        }, { status: 400 });
+    }
+    
     const validatedQuery = searchConstraints.safeParse({ query });
-
     if (!validatedQuery.success) {
         return NextResponse.json({
             message: validatedQuery.error.errors[0].message
