@@ -16,3 +16,6 @@ export const CATEGORIES_MEALS_TOLOWER = CATEGORIES_MEALS.map(category => categor
 
 // Liste combinée pour les cas où on veut toutes les options
 export const ALL_FILTER_OPTIONS = [...SEASONS, ...CATEGORIES_INGREDIENTS, ...CATEGORIES_MEALS];
+
+// Nombre d'items par page pour la pagination
+export const ITEMS_PER_PAGE = "10";
