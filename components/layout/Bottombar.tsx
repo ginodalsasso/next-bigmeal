@@ -1,9 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import React, { useState } from "react";
 import IsUser from "../isUser";
+import { Home, ShoppingCart, UserRound } from "lucide-react";
 
 
 
@@ -11,9 +11,9 @@ const Bottombar = () => {
     const [active, setActive] = useState(""); // État de la navigation active
 
     const links = [
-        { icon: "/img/home.svg", url: "/", alt: "Accueil"},
-        { icon: "/img/user.svg", url: "/profile", alt: "Profil" },
-        { icon: "/img/cart.svg", url: "/shopping-list", alt: "Liste de courses" },
+        { icon: <Home />, url: "/", alt: "Accueil"},
+        { icon: <UserRound />, url: "/profile", alt: "Profil" },
+        { icon: <ShoppingCart /> , url: "/shopping-list", alt: "Liste de courses" },
     ];
 
     return (
@@ -27,21 +27,13 @@ const Bottombar = () => {
                                     href={link.url}
                                     className={`${
                                         active === link.url
-                                            ? "text-blue-500"
-                                            : "text-gray-500"
+                                            ? "text-white"
+                                            : "text-gray-400"
                                     }`}
                                     onClick={() => setActive(link.url)}
                                 >
-                                    <Image
-                                        src={link.icon}
-                                        width={28}
-                                        height={28}
-                                        alt={link.alt}
-                                    />
+                                    {link.icon}
                                 </Link>
-                                {/* {link.url === "/shopping-list" && cartItems > 0 && (
-                                    <span>{cartItems}</span>
-                                )} */}
                             </li>
                         ))}
                     </ul>

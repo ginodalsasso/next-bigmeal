@@ -3,14 +3,13 @@
 import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import openMenu from "@/public/img/openMenu.svg";
-import closeMenu from "@/public/img/closeMenu.svg";
 import { links } from "@/lib/constants/ui_constants";
 import { ucFirst } from "@/lib/utils";
 import IsUser from "../isUser";
 import { signOut } from "next-auth/react";
 import IsNotAuthenticated from "../isNotAuthenticated";
 import SearchBar from "./SearchBar";
+import { LogOut, Menu, Search, UserRound, X } from "lucide-react";
 
 const Navbar = () => {
     const [toggle, setToggle] = useState(false); // État du menu mobile
@@ -44,11 +43,7 @@ const Navbar = () => {
                     {/* Si l'utilisateur est connecté */}
                     <IsUser>
                         <li className="nav-links-desktop align-icon">                         
-                            <Image
-                                src={"/img/search.svg"}
-                                width={18}
-                                height={18}
-                                alt="Search"
+                            <Search
                                 onClick={() => setToggleSearch(!toggleSearch)}
                             />
                         </li>
@@ -58,12 +53,7 @@ const Navbar = () => {
                                 className="nav-links-desktop"
                                 title="Profil"
                             >
-                                <Image
-                                    src={"/img/user.svg"}
-                                    width={18}
-                                    height={18}
-                                    alt="Profil"
-                                />
+                                <UserRound />
                             </Link>
                         </li>
                         <li>
@@ -72,12 +62,7 @@ const Navbar = () => {
                                 onClick={() => signOut()}
                                 title="Déconnexion"
                             > 
-                                <Image
-                                    src={"/img/logout.svg"}
-                                    width={20}
-                                    height={20}
-                                    alt="Déconnexion"
-                                />
+                                <LogOut />
                             </button>
                         </li>
                     </IsUser>
@@ -105,10 +90,7 @@ const Navbar = () => {
 
                 {/* Mobile Navigation */}
                 <div className="lg:hidden">
-                    <Image
-                        src={openMenu}
-                        alt="menu"
-                        width={28}
+                    <Menu
                         onClick={() => setToggle(!toggle)}
                     />
                     <div
@@ -116,9 +98,7 @@ const Navbar = () => {
                             !toggle ? "hidden" : "flex"
                         } absolute right-0 top-0 z-10 flex size-full justify-end bg-black p-6`}
                     >
-                        <Image
-                            src={closeMenu}
-                            alt="menu"
+                        <X
                             className="absolute right-5 top-6"
                             onClick={() => setToggle(!toggle)}
                         />
@@ -151,12 +131,7 @@ const Navbar = () => {
                                         <span>
                                             Déconnexion
                                         </span>
-                                        <Image
-                                            src={"/img/logout.svg"}
-                                            width={20}
-                                            height={20}
-                                            alt="Déconnexion"
-                                        />
+                                        <LogOut />
                                 </button>
                                 </li>
                             </IsUser>

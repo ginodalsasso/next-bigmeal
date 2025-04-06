@@ -17,6 +17,7 @@ import { fetchUserProfileAPI } from "@/lib/services/user_service";
 import ShoppingLists from "../_component/ShoppingLists";
 import Link from "next/link";
 import IsAdmin from "@/components/isAdmin";
+import LoadingSpinner from "@/components/layout/LoadingSpinner";
 
 
 // _________________________ COMPONENT _________________________
@@ -47,7 +48,7 @@ const ProfilePage = () => {
 
 
     // _________________________ RENDU _________________________
-    if (loading) return <div>Chargement...</div>;
+    if (loading) return <LoadingSpinner />;
     if (error) return <div className="text-red-500">{error}</div>;
     if (!user) return <div>Utilisateur introuvable.</div>;
 

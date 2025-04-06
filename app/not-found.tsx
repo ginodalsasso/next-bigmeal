@@ -19,7 +19,7 @@ export default function NotFound() {
                 </p>
 
                 <p className="mt-4 text-center text-white">
-                    Désolé, la page que vous recherchez semble avoir disparu ou n'existe pas.
+                    Désolé, la page que vous recherchez semble avoir disparu ou n&apos;existe pas.
                 </p>
 
                 <div className="mt-8">

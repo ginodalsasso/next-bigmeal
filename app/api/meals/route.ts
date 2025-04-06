@@ -10,7 +10,7 @@ export async function GET(req: NextRequest) {
     try {
         // Récupérer les paramètres de pagination
         const url = new URL(req.url); // URL de la requête
-        const skip = parseInt(url.searchParams.get("skip") || ITEMS_PER_PAGE, 10); // Début
+        const skip = parseInt(url.searchParams.get("skip") || "0", 10); // Début
         const take = parseInt(url.searchParams.get("take") || ITEMS_PER_PAGE, 10); // Quantité par page
 
         // Récupérer les repas
@@ -24,6 +24,8 @@ export async function GET(req: NextRequest) {
                 categoryMeal: true // Inclure la catégorie
             }
         }); 
+
+        console.log("[MEALS]", meals); // Log des repas récupérés
         return NextResponse.json(meals, {status: 200}); 
 
     } catch(error) {
