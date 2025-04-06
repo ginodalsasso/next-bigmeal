@@ -4,16 +4,17 @@ import IngredientsList from "./_components/IngredientsList";
 
 // Service de récupération des ingrédients
 import { getIngredients } from "@/lib/services/data_fetcher";
+import Pagination from "@/components/layout/Pagination";
 
 interface searchParamsProps {
     searchParams: Promise<{ page?: string }> | { page?: string } 
+
 }
 
 export default async function IngredientPage({ searchParams }: searchParamsProps) {
     const params  = await searchParams; // Attendre la résolution de la promesse pour obtenir les paramètres de recherche
     // Récupérer le numéro de page à partir des paramètres de recherche, ou 1 par défaut
     const page = parseInt(params.page  || '1') as number; 
-
     const itemsPerPage = parseInt(ITEMS_PER_PAGE); // Nombre d'items par page pour la pagination
 
     // Paginer avec take=5 ingrédients par page et skip=(page-1)*5 ingrédients
@@ -25,18 +26,10 @@ export default async function IngredientPage({ searchParams }: searchParamsProps
             <IngredientsList fetchedIngredients={ingredients} />
 
             {/* Pagination */}
-            <div className="mt-4 flex justify-between">
-                {page > 1 && ( // Si la page actuelle est supérieure à 1, afficher le bouton de page précédente
-                    <a href={`?page=${page - 1}`}>
-                        Page Précédente
-                    </a>
-                )}
-                {ingredients.length === itemsPerPage && ( // Si le nombre d'ingrédients récupérés est égal à 5, afficher le bouton de page suivante
-                    <a href={`?page=${page + 1}`}>
-                        Page Suivante
-                    </a>
-                )}
-            </div>
+            <Pagination
+                currentPage={page} 
+                hasNextPage={ingredients.length === itemsPerPage} 
+            />
         </div>
     );
 }

@@ -34,9 +34,9 @@ export async function getIngredients(skip = 0, take = 10) {
     }
 }
 
-export async function getMeals() {
+export async function getMeals(skip = 0, take = 10) {
     try {
-        const response = await fetch( API_ROUTES.meals , { cache: "no-store" });
+        const response = await fetch(`${API_ROUTES.meals}?skip=${skip}&take=${take}`, { cache: "no-store" });
         if (!response.ok) throw new Error("Erreur lors de la récupération des repas.");
         return response.json();
     } catch (error) {

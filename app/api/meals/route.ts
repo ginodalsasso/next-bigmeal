@@ -3,12 +3,20 @@ import { NextRequest, NextResponse } from "next/server";
 import { idConstraints, mealConstraints } from "@/lib/constraints/forms_constraints";
 import { verifyCSRFToken } from "@/lib/security/verifyCsrfToken";
 import { getAdminSession, getUserSession } from "@/lib/security/getSession";
+import { ITEMS_PER_PAGE } from "@/lib/constants/ui_constants";
 
 
-export async function GET() {
+export async function GET(req: NextRequest) {
     try {
+        // Récupérer les paramètres de pagination
+        const url = new URL(req.url); // URL de la requête
+        const skip = parseInt(url.searchParams.get("skip") || ITEMS_PER_PAGE, 10); // Début
+        const take = parseInt(url.searchParams.get("take") || ITEMS_PER_PAGE, 10); // Quantité par page
+
         // Récupérer les repas
         const meals = await db.meal.findMany({
+            skip,
+            take,
             orderBy: { 
                 name: 'desc'
             },
