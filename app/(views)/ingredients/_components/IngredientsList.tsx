@@ -23,8 +23,7 @@ import SearchBar from "@/components/layout/FilterSearchbar";
 import FilterItems from "@/components/layout/FilterItems";
 
 // Composants UI
-import {  Dialog, DialogContent, DialogHeader,  DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
+import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerTrigger } from "@/components/ui/drawer";import { Button } from "@/components/ui/button";
 
 // Utils
 import { reversedTranslatedSeason, translatedSeason } from "@/lib/utils";
@@ -42,7 +41,7 @@ export default function IngredientList({ fetchedIngredients }: { fetchedIngredie
     const [ingredients, setIngredients] = useState<IngredientType[]>(fetchedIngredients);
     const [searchQuery, setSearchQuery] = useState<string>("");
     const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
-    const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
+    const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
 
 
     // _________________________ CRUD _________________________
@@ -102,9 +101,9 @@ export default function IngredientList({ fetchedIngredients }: { fetchedIngredie
             {/* Dialogue pour ajouter un ingrédient */}
             <div className="flex flex-col justify-between gap-2 pb-2 md:flex-row-reverse md:items-center">
                 <IsUser>
-                    <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-                        <DialogTrigger asChild>
-                            <Button variant="success" onClick={() => setIsDialogOpen(true)}>
+                    <Drawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
+                        <DrawerTrigger asChild>
+                            <Button variant="success" onClick={() => setIsDrawerOpen(true)}>
                                 <Image
                                     src={add}
                                     alt="Ajouter un ingrédient"
@@ -113,18 +112,18 @@ export default function IngredientList({ fetchedIngredients }: { fetchedIngredie
                                 />
                                     Ajouter un ingrédient
                             </Button>
-                        </DialogTrigger>
-                        <DialogContent>
-                            <DialogHeader>
-                                <DialogTitle className="text-center">Ajouter un ingrédient</DialogTitle>
+                        </DrawerTrigger>
+                        <DrawerContent>
+                            <DrawerHeader>
+                                <DrawerTitle className="text-center">Ajouter un ingrédient</DrawerTitle>
                                 {/* Formulaire de création d'ingrédient */}
                                 <CreateIngredient
                                     onSubmit={addIngredient}
-                                    onClose={() => setIsDialogOpen(false)}
+                                    onClose={() => setIsDrawerOpen(false)}
                                 />
-                            </DialogHeader>
-                        </DialogContent>
-                    </Dialog>
+                            </DrawerHeader>
+                        </DrawerContent>
+                    </Drawer>
                 </IsUser>
 
                 {/* Barre de recherche */}

@@ -2,6 +2,7 @@
 
 // Bibliothèques tierces
 import React, { useEffect, useState } from "react";
+import { signOut } from "next-auth/react";
 
 // Types et utils
 import { UserType } from "@/lib/types/schemas_interfaces";
@@ -18,6 +19,7 @@ import ShoppingLists from "../_component/ShoppingLists";
 import Link from "next/link";
 import IsAdmin from "@/components/isAdmin";
 import LoadingSpinner from "@/components/layout/LoadingSpinner";
+import { LogOut } from "lucide-react";
 
 
 // _________________________ COMPONENT _________________________
@@ -62,21 +64,39 @@ const ProfilePage = () => {
                     <ResetPasswordForm onBackToProfile={() => setIsChangedPassword(false)} />
                 ) : (
                     <div>
-                        <h1 className="text-2xl font-bold">{user.email}</h1>
-                        <p>Role: {user.role}</p>
-                        <p>Compte créé le: {dateToString(user.createdAt)}</p>
+                        <div className="flex items-center justify-between">
+                            <h1 className="text-2xl font-semibold">Mon profil</h1>
+                            <button 
+                                className="align-icon"
 
-                        <IsAdmin>
-                            <Link href="/dashboard">Dashboard</Link>
-                        </IsAdmin>
+                                onClick={() => signOut()}
+                                title="Déconnexion"
+                            >
+                                <LogOut />
+                            </button>
+                        </div>
+                        <section className="my-4 border-y py-4">
+                            <p>Email: {user.email}</p>
+                            <p>Rôle: {user.role}</p>
+                            <p>Compte créé le: {dateToString(user.createdAt)}</p>
+                        </section>
 
                         <ShoppingLists shoppingLists={user.shoppingList} />
 
-                        {/* Bouton pour passer à la modification du mot de passe */}
-                        <Button onClick={() => setIsChangedPassword(true)}>Changer mon mot de passe</Button>
 
-                        {/* Bouton pour supprimer le compte */}
-                        <DeleteProfile userId={user.id} />
+                        <div className="mt-4 flex flex-col gap-4 border-t pt-4">
+                            <IsAdmin>
+                                <Button variant="secondary" className="w-full">
+                                    <Link href="/dashboard">Dashboard</Link>
+                                </Button>
+                            </IsAdmin>
+                            {/* Bouton pour passer à la modification du mot de passe */}
+                            <Button onClick={() => setIsChangedPassword(true)}>Changer mon mot de passe</Button>
+
+                            {/* Bouton pour supprimer le compte */}
+                            <DeleteProfile userId={user.id} />
+                        </div>
+
 
                     </div>
                 )}

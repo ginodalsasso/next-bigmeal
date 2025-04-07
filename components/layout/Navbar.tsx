@@ -112,6 +112,18 @@ const Navbar = () => {
                         />
                         <ul className="flex list-none flex-col items-end justify-center gap-5">
                             <IsUser>
+                                <li>
+                                    <button 
+                                        className="nav-links-mobile align-icon" 
+                                        onClick={() => setToggleSearch(!toggleSearch)}
+                                    >                   
+                                        <span>
+                                            Recherche
+                                        </span>
+                                        <Search />
+                                    </button>
+                                </li>
+
                                 {links.map((link) => (
                                     <li key={link.title} className="nav-links-desktop align-icon">
                                         <Link
