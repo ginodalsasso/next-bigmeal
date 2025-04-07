@@ -2,20 +2,28 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
-import { links } from "@/lib/constants/ui_constants";
 import { ucFirst } from "@/lib/utils";
 import IsUser from "../isUser";
 import { signOut } from "next-auth/react";
 import IsNotAuthenticated from "../isNotAuthenticated";
 import SearchBar from "./SearchBar";
-import { LogOut, Menu, Search, UserRound, X } from "lucide-react";
+import { Carrot, Folder, LogOut, Menu, Search, ShoppingCart, UserRound, Utensils, X } from "lucide-react";
 
 const Navbar = () => {
     const [toggle, setToggle] = useState(false); // État du menu mobile
     const [toggleSearch, setToggleSearch] = useState(false); // État de la barre de recherche
 
     const searchContainerRef = useRef<HTMLDivElement>(null); // Référence au conteneur de recherche
+
+    // Liens de navigation
+    const links = [
+        { icon: <ShoppingCart />, title: "liste de courses", url: "/shopping-list" },
+        { icon: <Carrot />, title: "ingrédients", url: "/ingredients" },
+        { icon: <Utensils />, title: "repas", url: "/meals" },
+        { icon:<Folder />, title: "catégorie ingrédient", url: "/categories-ingredient" },
+        { icon:<Folder />, title: "catégorie repas", url: "/categories-meal" }
+    ];
+
     
     useEffect(() => {
         // Si la recherche n'est pas visible, pas besoin d'ajouter l'écouteur
@@ -113,14 +121,7 @@ const Navbar = () => {
                                             >
                                             {ucFirst(link.title)}
                                         </Link>
-                                        {link.icon && (
-                                            <Image
-                                                src={link.icon}
-                                                width={20}
-                                                height={20}
-                                                alt={link.title}
-                                            />
-                                        )}
+                                        {link.icon && link.icon}
                                     </li>
                                 ))}
                                 <li>
