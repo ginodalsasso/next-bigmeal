@@ -13,7 +13,7 @@ interface SearchBarProps {
 }
     
 // _________________________ COMPONENT _________________________
-const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
+const Search: React.FC<SearchBarProps> = ({ onSearch }) => {
 
     // _________________________ ETATS _________________________
     const [query, setQuery] = useState("");
@@ -130,4 +130,4 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
     );
 };
 
-export default SearchBar;
+export default Search;
