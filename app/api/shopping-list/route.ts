@@ -9,25 +9,48 @@ export async function GET() {
     try {
         const { session } = await getUserSession();
 
-         // Récupérer les listes de courses
         const shoppingList = await db.shoppingList.findFirst({
             where: { 
-            userId: session?.user.id,
+                userId: session?.user.id,
                 isExpired: false
             },
-
             include: {
                 items: {
                     include: {
                         ingredient: true,
                         meal: true
-                    },
-                },
-
+                    }
+                }
             }
         });
-        
-        return NextResponse.json(shoppingList, { status: 200 });
+
+        if (!shoppingList) {
+            return NextResponse.json(null, { status: 200 });
+        }
+
+        // Fusionner les items de la liste de courses ayant le même ingrédient et le même repas
+        const groupedShoppingItems = Object.values(
+            shoppingList.items.reduce((groupedItemsByKey, currentItem) => { // Prends la liste d'items et la réduit à un objet: { clé: item }
+                // Clé unique pour regrouper les items: ingrédient + repas
+                const uniqueKey = `${currentItem.ingredientId}-${currentItem.mealId ?? 'null'}`;
+                console.log("uniqueKey", uniqueKey);
+                // Si cette combinaison ingrédient/repas n'existe pas encore, on ajoute l'item tel quel
+                if (!groupedItemsByKey[uniqueKey]) {
+                    groupedItemsByKey[uniqueKey] = { ...currentItem }; // On copie l'item pour ne pas modifier l'original
+                } else {
+                    // Sinon, on additionne la quantité à celle déjà présente
+                    groupedItemsByKey[uniqueKey].quantity += currentItem.quantity;
+                }
+
+                return groupedItemsByKey;
+            }, {} as Record<string, typeof shoppingList.items[number]>) // Type: Record<clé, valeur>
+        );
+
+        return NextResponse.json(
+            { ...shoppingList, items: groupedShoppingItems },
+            { status: 200 }
+        );
+
     } catch (error) {
         console.error("[FETCH_SHOPPING_LIST_ERROR]", error);
         return new Response(JSON.stringify({ 
@@ -38,6 +61,7 @@ export async function GET() {
         });
     }
 }
+
 
 
 export async function POST(req: NextRequest) {

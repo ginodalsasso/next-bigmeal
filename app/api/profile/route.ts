@@ -12,7 +12,7 @@ export async function GET() {
 
         // Vérification que l'utilisateur connecté correspond au username demandé
         const user = await db.user.findUnique({
-            where: { email: session.user.email },
+            where: { id: session.user.id },
             include: {
                 shoppingList: {
                     include: {
