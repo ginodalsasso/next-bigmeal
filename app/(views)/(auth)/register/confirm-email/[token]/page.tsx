@@ -59,7 +59,7 @@ const ConfirmEmailPage = () => {
                 {status === "success" && (
                     <div className="py-8">
                         <h2 className="mt-4 text-xl font-semibold text-gray-800">Email confirmé</h2>
-                        <p className="mt-2 text-gray-600">Votre compte est en attente de validation par l'administrateur.</p>
+                        <p className="mt-2 text-gray-600">Votre compte est en attente de validation par l&apos;administrateur.</p>
                         <p className="mt-4 text-sm text-gray-500">Vous allez être redirigé automatiquement...</p>
                     </div>
                 )}
