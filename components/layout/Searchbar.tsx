@@ -71,13 +71,13 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
 
     // _________________________ RENDU _________________________
     return (
-        <div className="relative mx-auto w-[500px] max-w-xl shadow-lg">
+        <div className="relative shadow-lg">
             {/* Input de recherche */}
             <div className="relative">
                 <input
                     type="text"
                     name="search"
-                    className="w-full border-2 border-zinc-300 bg-white px-4 py-3 text-base text-black transition-all duration-200 focus:border-zinc-500 focus:outline-none focus:ring-2 focus:ring-zinc-200"
+                    className="border-zinc-300 bg-white px-4 py-3 text-black transition-all duration-200 focus:border-zinc-500 focus:outline-none focus:ring-2 focus:ring-zinc-200"
                     placeholder="Rechercher un plat ou un ingrédient..."
                     value={query}
                     onChange={(e) => setQuery(e.target.value as string || "")}

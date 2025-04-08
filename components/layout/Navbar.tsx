@@ -6,7 +6,7 @@ import { ucFirst } from "@/lib/utils";
 import IsUser from "../isUser";
 import { signOut } from "next-auth/react";
 import IsNotAuthenticated from "../isNotAuthenticated";
-import SearchBar from "./SearchBar";
+import SearchBar from "@/components/layout/SearchBar";
 import { Carrot, Folder, LogOut, Menu, Search, ShoppingCart, UserRound, Utensils, X } from "lucide-react";
 
 const Navbar = () => {
@@ -174,7 +174,7 @@ const Navbar = () => {
             </div>
             {/* Afficher le composant SearchBar si toggleSearch est true */}
             {toggleSearch && (
-                <div className="fixed left-0 top-0  z-10 flex h-screen w-full items-center justify-center bg-zinc-950 bg-opacity-50 backdrop-blur-sm">
+                <div className="fixed left-0 top-0  z-10 flex h-screen w-full items-center justify-center bg-zinc-950/50 p-10 backdrop-blur-sm">
                     <div ref={searchContainerRef}>
                         <SearchBar onSearch={() => setToggleSearch(false)} />
                     </div>
