@@ -6,7 +6,7 @@ import { ucFirst } from "@/lib/utils";
 import IsUser from "../isUser";
 import { signOut } from "next-auth/react";
 import IsNotAuthenticated from "../isNotAuthenticated";
-import SearchBar from "@/components/layout/SearchBar";
+ import SearchBar from "./SearchBar";
 import { Carrot, Folder, LogOut, Menu, Search, ShoppingCart, UserRound, Utensils, X } from "lucide-react";
 
 const Navbar = () => {
