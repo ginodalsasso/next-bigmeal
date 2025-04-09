@@ -85,6 +85,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     callbacks: {
         // Ajout du rôle utilisateur au token JWT
         async jwt({ token, user }) {
+            console.log("JWT Callback auth:", token, user);
+
             // Si l'utilisateur est connecté, ajoutez son rôle et son statut au token
             if (user) {
                 token.id = user.id;
@@ -96,6 +98,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
         // Ajout du rôle utilisateur à la session
         async session({ session, token }) {
+            console.log("Session Callback auth:", session, token);
             if (session.user) {
                 session.user.id = token.id as string;
                 session.user.role = token.role as string; 

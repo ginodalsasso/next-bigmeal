@@ -76,7 +76,9 @@ export async function middleware(req: NextRequest) {
     console.log("userStatus :", userStatus);
     console.log("AUTH_SECRET :", SECRET); 
     console.log("NODE_ENV :", process.env.NODE_ENV);
-    
+    console.log("COOKIES PRESENT :", req.cookies);
+    console.log("TOKEN GENERATED :", await getToken({ req, secret: process.env.AUTH_SECRET }));
+
     // Génération aléatoire d'un nonce
     // const nonce = crypto.randomUUID(); 
 
