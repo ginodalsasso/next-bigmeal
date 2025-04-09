@@ -63,12 +63,20 @@ export async function middleware(req: NextRequest) {
 
     // Gestion des utilisateurs non connectés
     // Si une route est protégée, mais que l'utilisateur n'est pas connecté, redirige vers `/login` en conservant l'URL demandée
-    if (isProtectedRoute && !isLoggedIn) {
-        const redirectUrl = new URL("/login", nextUrl.origin); // Redirection vers la page de login
-        redirectUrl.searchParams.set("callbackUrl", encodeURIComponent(path)); // Ajoute l'URL demandée comme paramètre de callback
-        return NextResponse.redirect(redirectUrl);
-    }
+    // if (isProtectedRoute && !isLoggedIn) {
+    //     const redirectUrl = new URL("/login", nextUrl.origin); // Redirection vers la page de login
+    //     redirectUrl.searchParams.set("callbackUrl", encodeURIComponent(path)); // Ajoute l'URL demandée comme paramètre de callback
+    //     return NextResponse.redirect(redirectUrl);
+    // }
 
+    console.log("TOKEN :", token);
+    console.log("isLoggedIn :", isLoggedIn);
+    console.log("Path accédé :", path);
+    console.log("isProtectedRoute :", isProtectedRoute);
+    console.log("userStatus :", userStatus);
+    console.log("AUTH_SECRET :", SECRET); 
+    console.log("NODE_ENV :", process.env.NODE_ENV);
+    
     // Génération aléatoire d'un nonce
     // const nonce = crypto.randomUUID(); 
 
