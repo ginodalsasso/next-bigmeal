@@ -68,25 +68,25 @@ export async function middleware(req: NextRequest) {
     }
 
     // Génération aléatoire d'un nonce
-    const nonce = crypto.randomUUID(); 
+    // const nonce = crypto.randomUUID(); 
 
-    const cspOptions = `
-        default-src 'self'; 
-        script-src 'self' 'nonce-${nonce}'; 
-        style-src 'self'; 
-        img-src 'self' data:; 
-        connect-src 'self'; 
-        font-src 'self' data:;
-    `;
+    // const cspOptions = `
+    //     default-src 'self'; 
+    //     script-src 'self' 'nonce-${nonce}'; 
+    //     style-src 'self'; 
+    //     img-src 'self' data:; 
+    //     connect-src 'self'; 
+    //     font-src 'self' data:;
+    // `;
 
-    const ContentSecurityPolicy = isProduction ? cspOptions : "";
+    // const ContentSecurityPolicy = isProduction ? cspOptions : "";
 
     const response = NextResponse.next();
     response.headers.set("X-Content-Type-Options", "nosniff"); // Empêche le navigateur de deviner le type MIME
     response.headers.set("X-Frame-Options", "DENY"); // Empêche l'intégration du site dans un iframe (protection contre le clickjacking)
     response.headers.set("Referrer-Policy", "no-referrer-when-downgrade"); // Politique de référent pour éviter de divulguer des informations sensibles ex: l'URL de la page précédente
     response.headers.set("X-XSS-Protection", "1; mode=block"); // Active la protection contre certaines attaques XSS dans les navigateurs compatibles
-    response.headers.set("Content-Security-Policy", ContentSecurityPolicy);
+    // response.headers.set("Content-Security-Policy", ContentSecurityPolicy);
 
     return response;
 }
