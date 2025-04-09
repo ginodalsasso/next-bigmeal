@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { NextRequest } from "next/server";
 import { getToken } from "next-auth/jwt";
 
-const isProduction = process.env.NODE_ENV === "production"; // Vérifie si l'environnement est en production
+// const isProduction = process.env.NODE_ENV === "production"; // Vérifie si l'environnement est en production
 
 const SECRET = process.env.AUTH_SECRET as string; // Clé secrète utilisée pour récupérer le jeton JWT
 
@@ -37,6 +37,8 @@ export async function middleware(req: NextRequest) {
     const token = await getToken({ req, secret: SECRET });
 
     const isLoggedIn = !!token; // Détermine si l'utilisateur est connecté avec un token valide
+    console.log("TOKEN:", token); // Affiche le token dans la console pour le débogage
+    console.log("isLoggedIn:", isLoggedIn); // Affiche si l'utilisateur est connecté ou non
     const userStatus = token?.status; // Récupère le statut de l'utilisateur s'il est connecté
 
     // Autoriser les routes publiques

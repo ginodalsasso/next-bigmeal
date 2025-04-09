@@ -22,7 +22,7 @@ export async function POST(req: NextRequest) {
         { expiresIn: '1h' }
     );
 
-    const resetLink = `${process.env.API_URL}/reset-password/${generatedToken}`;
+    const resetLink = `${process.env.BASE_URL}/reset-password/${generatedToken}`;
 
     const emailResult = await sendEmail(
         recipient,
