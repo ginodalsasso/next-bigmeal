@@ -4,7 +4,7 @@ import AddToShoppingListForm from "@/components/forms/AddToShoppingListForm";
 import ItemView from "@/components/layout/ItemView";
 import { CATEGORIES_MEALS_TOLOWER } from "@/lib/constants/ui_constants";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 
 
 // _________________________ TYPES _________________________
@@ -84,4 +84,14 @@ const SearchResultsPage: React.FC = () => {
     );
 };
 
-export default SearchResultsPage;
+// Ajout d'un composant wrapper avec Suspense pour le chargement de la page
+// Cela permet de gérer le chargement de la page de manière asynchrone
+const SearchResultsPageWrapper: React.FC = () => {
+    return (
+        <Suspense fallback={<p>Chargement de la page...</p>}>
+            <SearchResultsPage />
+        </Suspense>
+    );
+};
+
+export default SearchResultsPageWrapper;

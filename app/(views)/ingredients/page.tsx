@@ -6,16 +6,20 @@ import IngredientsList from "./_components/IngredientsList";
 import { getIngredients } from "@/lib/services/data_fetcher";
 import Pagination from "@/components/layout/Pagination";
 
-interface searchParamsProps {
-    searchParams: Promise<{ page?: string }> | { page?: string } 
+// Forcer le rendu SSR
+export const dynamic = "force-dynamic";
 
+interface searchParamsProps {
+    searchParams: Promise<{ page?: string }> | undefined 
 }
 
-export default async function IngredientPage({ searchParams }: searchParamsProps) {
+export default async function IngredientPage( { searchParams }: searchParamsProps) {
     try {
         const params  = await searchParams; // Attendre la résolution de la promesse pour obtenir les paramètres de recherche
+
         // Récupérer le numéro de page à partir des paramètres de recherche, ou 1 par défaut
-        const page = parseInt(params.page  || '1') as number; 
+        const page = parseInt(params?.page  || '1') as number; 
+
         const itemsPerPage = parseInt(ITEMS_PER_PAGE); // Nombre d'items par page pour la pagination
 
         // Paginer avec take=5 ingrédients par page et skip=(page-1)*5 ingrédients

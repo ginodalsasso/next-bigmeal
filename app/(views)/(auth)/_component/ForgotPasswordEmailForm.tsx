@@ -75,7 +75,7 @@ const ForgotPasswordForm = ({ onBackToLogin }: { onBackToLogin: () => void }) =>
 
                 <Button 
                     type="submit" 
-                    className="w-full my-2"
+                    className="my-2 w-full"
                     disabled={isLoading || !recipient.email}
                     variant={isLoading ? "ghost" : "default"}
                 >

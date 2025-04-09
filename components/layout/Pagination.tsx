@@ -9,7 +9,7 @@ export default function Pagination({ currentPage, hasNextPage }:PaginationProps)
             {currentPage > 1 && (
                 <a 
                     href={`?page=${currentPage - 1}`}
-                    className="px-4 py-2 bg-blue-500 text-white hover:bg-blue-600"
+                    className="bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
                 >
                     Page Précédente
                 </a>
@@ -21,7 +21,7 @@ export default function Pagination({ currentPage, hasNextPage }:PaginationProps)
                     <span className="self-center">Page {currentPage}</span>
                     <a 
                         href={`?page=${currentPage + 1}`}
-                        className="px-4 py-2 bg-blue-500 text-white hover:bg-blue-600"
+                        className="bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
                     >
                         Page Suivante
                     </a>

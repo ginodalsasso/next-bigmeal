@@ -47,11 +47,11 @@ const ConfirmEmailPage = () => {
 
     // _________________________ RENDU _________________________
     return (
-        <div className="flex flex-col items-center justify-center min-h-screen px-4 text-center">
-            <div className="w-full max-w-md p-6 bg-white rounded-lg">
+        <div className="flex min-h-screen flex-col items-center justify-center px-4 text-center">
+            <div className="w-full max-w-md rounded-lg bg-white p-6">
                 {status === "loading" && (
                     <div className="py-8">
-                        <div className="w-10 h-10 mx-auto border-t-2 border-b-2 border-gray-400 rounded-full animate-spin"></div>
+                        <div className="mx-auto size-10 animate-spin rounded-full border-y-2 border-gray-400"></div>
                         <p className="mt-4 text-gray-600">Vérification de votre email...</p>
                     </div>
                 )}

@@ -8,13 +8,13 @@ export default function NotFound() {
     const router = useRouter();
 
     return (
-        <div className="min-h-screen flex items-center justify-center px-4">
-            <div className="max-w-md w-full p-8">
-                <h1 className="text-4xl font-extrabold text-center text-white">
+        <div className="flex min-h-screen items-center justify-center px-4">
+            <div className="w-full max-w-md p-8">
+                <h1 className="text-center text-4xl font-extrabold text-white">
                     404
                 </h1>
 
-                <p className="mt-2 text-2xl font-semibold text-center text-white">
+                <p className="mt-2 text-center text-2xl font-semibold text-white">
                     Page introuvable
                 </p>
 
@@ -26,9 +26,9 @@ export default function NotFound() {
                     <Button
                         onClick={() => router.back()}
                         variant="default"
-                        className="w-full flex items-center justify-center"
+                        className="flex w-full items-center justify-center"
                     >
-                        <ArrowLeft className="h-4 w-4" />
+                        <ArrowLeft className="size-4" />
                         <span>Retour à la page précédente</span>
                     </Button>
                 </div>

@@ -57,9 +57,9 @@ export default function RegisterPage() {
     };
 
     return (
-        <div className="min-h-screen flex items-start justify-center">
-            <div className="mx-auto w-full max-w-md bg-white rounded-xl overflow-hidden transition-all duration-300 transform px-6 pt-8 pb-10">
-                <div className="text-center mb-6">
+        <div className="flex min-h-screen items-start justify-center">
+            <div className="mx-auto w-full max-w-md overflow-hidden rounded-xl bg-white px-6 pb-10 pt-8 transition-all duration-300">
+                <div className="mb-6 text-center">
                     <h2 className="text-2xl font-bold text-gray-900">Inscription</h2>
                     <p className="mt-2 text-sm text-gray-600">Entrez vos informations pour créer un compte</p>
                 </div>
@@ -117,7 +117,7 @@ export default function RegisterPage() {
                         {isLoading ? "Création en cours..." : "Créer un compte"}
                     </Button>
     
-                    <div className="text-center mt-6">
+                    <div className="mt-6 text-center">
                         <p className="text-sm text-gray-600">
                             Déjà un compte ?{" "}
                             <Button

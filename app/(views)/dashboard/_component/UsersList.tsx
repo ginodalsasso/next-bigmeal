@@ -10,7 +10,7 @@ export default function UserTable({
 
     return (
         <div className="my-6">
-            <h2 className="text-xl font-bold mb-4">Liste des utilisateurs</h2>
+            <h2 className="mb-4 text-xl font-bold">Liste des utilisateurs</h2>
             <Table>
                 <TableCaption>
                     Liste des utilisateurs enregistrés dans l&apos;application

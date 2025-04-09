@@ -71,23 +71,23 @@ const CreateMealPage = () => {
 
     // _________________________ RENDU _________________________
     return (
-        <div className="max-w-2xl mx-auto">
+        <div className="mx-auto max-w-2xl">
 
             <div>
                 <h1 className="text-2xl font-bold">Nouveau repas</h1>
-                <p className="text-gray-300 mt-2">
+                <p className="mt-2 text-gray-300">
                     Créez un nouveau repas en ajoutant des compositions, des préparations et des étapes.
                 </p>
 
             </div>
 
             {/* Progress Bar */}
-            <div className="w-full h-2 bg-gray-200 my-8">
+            <div className="my-8 h-2 w-full bg-gray-200">
                 <div
                     className="h-2 bg-blue-500 transition-all"
                     style={{ width: progress }}
                 />
-                <p className="text-center text-sm mt-1">{ progress }</p>
+                <p className="mt-1 text-center text-sm">{ progress }</p>
             </div>
             
             {/* Etapes */}
@@ -112,14 +112,14 @@ const CreateMealPage = () => {
 
             
             {currentStep !== "createMeal" && (
-                <Button className="w-full mt-2" variant="cancel" type="button" onClick={goBack}>
+                <Button className="mt-2 w-full" variant="cancel" type="button" onClick={goBack}>
                     Revenir en arrière
                 </Button>
 
             )}
             {createdMealId && (
                 
-                <div className="flex justify-end mt-4">
+                <div className="mt-4 flex justify-end">
                     <Button variant="ghost" onClick={() => setCurrentStep("createMeal")}>
                         Ajouter un autre repas
                     </Button>
