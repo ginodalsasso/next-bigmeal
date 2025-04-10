@@ -4,11 +4,11 @@ import { getToken } from "next-auth/jwt";
 
 // const isProduction = process.env.NODE_ENV === "production"; // Vérifie si l'environnement est en production
 
-const SECRET = process.env.AUTH_SECRET as string; // Clé secrète utilisée pour récupérer le jeton JWT
+// const SECRET = process.env.AUTH_SECRET as string; // Clé secrète utilisée pour récupérer le jeton JWT
 
-if (!SECRET) {
-    throw new Error("AUTH_SECRET is not defined");
-}
+// if (!SECRET) {
+//     throw new Error("AUTH_SECRET is not defined");
+// }
 
 // Routes protégées statiques
 const protectedRoutes = [
@@ -36,8 +36,9 @@ export async function middleware(req: NextRequest) {
     // Récupération du token JWT
     const token = await getToken({ 
         req, 
-        secret: SECRET, 
-        secureCookie: true 
+        secret: process.env.AUTH_SECRET, 
+        secureCookie: true,
+        cookieName: "next-auth.session-token",
     });
 
     const isLoggedIn = !!token; // Détermine si l'utilisateur est connecté avec un token valide
@@ -78,7 +79,6 @@ export async function middleware(req: NextRequest) {
     console.log("Path accédé :", path);
     console.log("isProtectedRoute :", isProtectedRoute);
     console.log("userStatus :", userStatus);
-    console.log("AUTH_SECRET :", SECRET); 
     console.log("NODE_ENV :", process.env.NODE_ENV);
     console.log("COOKIES PRESENT :", req.cookies);
     console.log("TOKEN GENERATED :", await getToken({ req, secret: process.env.AUTH_SECRET }));
