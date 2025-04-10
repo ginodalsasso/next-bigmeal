@@ -33,12 +33,15 @@ export async function middleware(req: NextRequest) {
     const { nextUrl } = req; // L'URL de la requête en cours
     const path = nextUrl.pathname; // Le chemin de la requête ex: `/ingredients`
     
+
+    const cookieKey = process.env.NODE_ENV === 'production' ? '__Secure-next-auth.session-token' : 'next-auth.session-token';
     // Récupération du token JWT
+
     const token = await getToken({ 
         req, 
         secret: process.env.AUTH_SECRET, 
-        secureCookie: true,
-        cookieName: "next-auth.session-token",
+        salt: cookieKey,
+        cookieName: cookieKey
     });
 
     const isLoggedIn = !!token; // Détermine si l'utilisateur est connecté avec un token valide
