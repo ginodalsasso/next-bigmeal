@@ -34,7 +34,11 @@ export async function middleware(req: NextRequest) {
     const path = nextUrl.pathname; // Le chemin de la requête ex: `/ingredients`
     
     // Récupération du token JWT
-    const token = await getToken({ req, secret: SECRET });
+    const token = await getToken({ 
+        req, 
+        secret: SECRET, 
+        secureCookie: true 
+    });
 
     const isLoggedIn = !!token; // Détermine si l'utilisateur est connecté avec un token valide
     console.log("TOKEN:", token); // Affiche le token dans la console pour le débogage
