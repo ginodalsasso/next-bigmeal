@@ -34,20 +34,23 @@ export async function middleware(req: NextRequest) {
     const path = nextUrl.pathname; // Le chemin de la requête ex: `/ingredients`
     
 
-    const cookieKey = process.env.NODE_ENV === 'production' ? '__Secure-next-auth.session-token' : 'next-auth.session-token';
+    const cookieKey = process.env.NODE_ENV === 'production' ? '__Secure-authjs.session-token' : 'next-auth.session-token';
     // Récupération du token JWT
 
     const token = await getToken({ 
         req, 
         secret: process.env.AUTH_SECRET, 
         salt: cookieKey,
-        cookieName: cookieKey
+        cookieName: cookieKey,
+        raw: true,
     });
 
     const isLoggedIn = !!token; // Détermine si l'utilisateur est connecté avec un token valide
     console.log("TOKEN:", token); // Affiche le token dans la console pour le débogage
     console.log("isLoggedIn:", isLoggedIn); // Affiche si l'utilisateur est connecté ou non
-    const userStatus = token?.status; // Récupère le statut de l'utilisateur s'il est connecté
+    
+    const parsedToken = token ? JSON.parse(token) : null; // Parse le token s'il existe
+    const userStatus = parsedToken?.status; // Récupère le statut de l'utilisateur s'il est connecté
 
     // Autoriser les routes publiques
     // Si l'utilisateur tente d'accéder à une route publique, autoriser l'accès
@@ -84,7 +87,6 @@ export async function middleware(req: NextRequest) {
     console.log("userStatus :", userStatus);
     console.log("NODE_ENV :", process.env.NODE_ENV);
     console.log("COOKIES PRESENT :", req.cookies);
-    console.log("TOKEN GENERATED :", await getToken({ req, secret: process.env.AUTH_SECRET }));
 
     // Génération aléatoire d'un nonce
     // const nonce = crypto.randomUUID(); 
