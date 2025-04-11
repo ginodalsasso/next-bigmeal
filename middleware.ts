@@ -48,10 +48,11 @@ export async function middleware(req: NextRequest) {
     // Récupération du token JWT
     const token = await getToken({
     req,
-    secret: process.env.AUTH_SECRET,
-    secureCookie: process.env.NODE_ENV === "production",
+    secret: process.env.NEXTAUTH_SECRET,
+    raw: true,
+    secureCookie: process.env.NEXTAUTH_SECRET === "production",
     });
-      console.log("AUTH_SECRET:", process.env.AUTH_SECRET); // en prod, ce sera undefined si mal configuré
+      console.log("NEXTAUTH_SECRET:", process.env.NEXTAUTH_SECRET); // en prod, ce sera undefined si mal configuré
 
 
     const isLoggedIn = !!token; // Détermine si l'utilisateur est connecté avec un token valide
@@ -61,8 +62,8 @@ export async function middleware(req: NextRequest) {
     console.log("isLoggedIn :", isLoggedIn);
     console.log("COOKIES PRESENT :", req.cookies);
     
-    // const parsedToken = token ? JSON.parse(token) : null; // Parse le token s'il existe
-    const userStatus = token?.status; // Récupère le statut de l'utilisateur s'il est connecté
+    const parsedToken = token ? JSON.parse(token) : null; // Parse le token s'il existe
+    const userStatus = parsedToken?.status; // Récupère le statut de l'utilisateur s'il est connecté
     console.log("USER STATUS:", userStatus); // Affiche le statut de l'utilisateur dans la console pour le débogage
 
     // Autoriser les routes publiques
