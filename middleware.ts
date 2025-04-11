@@ -49,22 +49,19 @@ export async function middleware(req: NextRequest) {
     const token = await getToken({
     req,
     secret: process.env.NEXTAUTH_SECRET,
-    raw: true,
     secureCookie: process.env.NEXTAUTH_SECRET === "production",
     });
-      console.log("NEXTAUTH_SECRET:", process.env.NEXTAUTH_SECRET); // en prod, ce sera undefined si mal configuré
+    console.log("NEXTAUTH_SECRET:", process.env.NEXTAUTH_SECRET); // en prod, ce sera undefined si mal configuré
 
 
     const isLoggedIn = !!token; // Détermine si l'utilisateur est connecté avec un token valide
-    console.log("TOKEN:", token); // Affiche le token dans la console pour le débogage
-    console.log("isLoggedIn:", isLoggedIn); // Affiche si l'utilisateur est connecté ou non
     console.log("TOKEN :", token);
     console.log("isLoggedIn :", isLoggedIn);
     console.log("COOKIES PRESENT :", req.cookies);
-    
-    const parsedToken = token ? JSON.parse(token) : null; // Parse le token s'il existe
-    const userStatus = parsedToken?.status; // Récupère le statut de l'utilisateur s'il est connecté
-    console.log("USER STATUS:", userStatus); // Affiche le statut de l'utilisateur dans la console pour le débogage
+    console.log("TOKEN keys:", Object.keys(token || {}));
+
+    const userStatus = token?.status;
+    console.log("USER STATUS:", userStatus);
 
     // Autoriser les routes publiques
     // Si l'utilisateur tente d'accéder à une route publique, autoriser l'accès
