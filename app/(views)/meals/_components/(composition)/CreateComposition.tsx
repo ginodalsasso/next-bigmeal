@@ -157,7 +157,9 @@ const CreateComposition: React.FC<CreateCompositionProps>= ({
                         onSelect={(ingredient) =>
                             setForm((prev) =>
                                 prev.map((comp, i) =>
-                                    i === index ? { ...comp, ingredientId: ingredient.id } : comp
+                                    i === index 
+                                    ? { ...comp, ingredientId: ingredient.id } // Mettre à jour l'ingrédient sélectionné
+                                    : comp
                                 )
                             )
                         }

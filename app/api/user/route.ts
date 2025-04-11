@@ -5,10 +5,6 @@ import { NextResponse } from "next/server";
 
 export async function GET() {
     try {
-        // Vérification que l'utilisateur connecté est un administrateur
-        const { error } = await getAdminSession();
-        if (error) return error;
-
         // Récupération de tous les utilisateurs
         const users = await db.user.findMany({
             select: {

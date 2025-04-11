@@ -50,10 +50,8 @@ const ProfilePage = () => {
 
 
     // _________________________ RENDU _________________________
-    if (loading) return <LoadingSpinner />;
+    if (loading || !user) return <LoadingSpinner />;
     if (error) return <div className="text-red-500">{error}</div>;
-    if (!user) return <div>Utilisateur introuvable.</div>;
-
 
 
     return (

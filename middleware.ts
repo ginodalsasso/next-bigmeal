@@ -58,16 +58,9 @@ export async function middleware(req: NextRequest) {
         protectedRoutes.some((route) => path.startsWith(route)) || // Routes statiques protégées
         dynamicRoutePatterns.some((pattern) => pattern.test(path)); // Routes dynamiques protégées
 
-    // Gestion des utilisateurs non approuvés
-    // Redirige les utilisateurs connectés mais n'ayant pas le statut "APPROVED" vers la page `/login`
-    if (isLoggedIn && userStatus !== "APPROVED") {
-        const redirectUrl = new URL("/login", nextUrl.origin); // Redirection vers la page de login
-        return NextResponse.redirect(redirectUrl); 
-    }
-
     // Gestion des utilisateurs non connectés
     // Si une route est protégée, mais que l'utilisateur n'est pas connecté, redirige vers `/login` en conservant l'URL demandée
-    if (isProtectedRoute && !isLoggedIn) {
+    if (isProtectedRoute && !isLoggedIn && userStatus !== "APPROVED") {
         const redirectUrl = new URL("/login", nextUrl.origin); // Redirection vers la page de login
         redirectUrl.searchParams.set("callbackUrl", encodeURIComponent(path)); // Ajoute l'URL demandée comme paramètre de callback
         return NextResponse.redirect(redirectUrl);

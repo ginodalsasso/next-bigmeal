@@ -7,11 +7,14 @@ import { unauthorized } from 'next/navigation'
 export default async function Dashboard() {
     const session = await auth();
     
-    // Récupération des utilisateurs
-    const users = await getUsers();
-
     if(session?.user.role !== "ADMIN") {
         unauthorized();
+    }
+
+    // Récupération des utilisateurs
+    const users = await getUsers();
+    if (!users) {
+        return <div>Erreur lors de la récupération des utilisateurs</div>;
     }
     
     return (
