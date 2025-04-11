@@ -1,6 +1,7 @@
 
 // Si l'API_URL est défini on utilise la valeur, sinon on utilise la valeur par défaut
 const apiBaseUrl = process.env.API_URL;
+console.log("API_URL:", apiBaseUrl);
 
 const BASE_URL = `${apiBaseUrl}/api`;
 
