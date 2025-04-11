@@ -11,20 +11,20 @@ import { getToken } from "next-auth/jwt";
 // }
 
 // Routes protégées statiques
-const protectedRoutes = [
-    "/ingredients",
-    "/meals",
-    "/categories-ingredient",
-    "/categories-meal",
-    "/shopping-list",
-];
+// const protectedRoutes = [
+//     "/ingredients",
+//     "/meals",
+//     "/categories-ingredient",
+//     "/categories-meal",
+//     "/shopping-list",
+// ];
 
-// Patterns pour les routes dynamiques
-const dynamicRoutePatterns = [
-    /^\/ingredients\/[a-zA-Z0-9-]+$/,
-    /^\/meals\/[a-zA-Z0-9-]+$/,
-    /^\/reset-token\/[a-zA-Z0-9-]+$/,
-];
+// // Patterns pour les routes dynamiques
+// const dynamicRoutePatterns = [
+//     /^\/ingredients\/[a-zA-Z0-9-]+$/,
+//     /^\/meals\/[a-zA-Z0-9-]+$/,
+//     /^\/reset-token\/[a-zA-Z0-9-]+$/,
+// ];
 
 // Routes publiques accessibles sans authentification
 const publicRoutes = ["/login", "/register", "/"];
@@ -34,36 +34,49 @@ export async function middleware(req: NextRequest) {
     const path = nextUrl.pathname; // Le chemin de la requête ex: `/ingredients`
     
 
-    const cookieKey = process.env.NODE_ENV === 'production' ? '__Secure-authjs.session-token' : 'next-auth.session-token';
-    // Récupération du token JWT
+    // const cookieKey = process.env.NODE_ENV === 'production' ? '__Secure-authjs.session-token' : 'next-auth.session-token';
+    // // Récupération du token JWT
 
-    const token = await getToken({ 
-        req, 
-        secret: process.env.AUTH_SECRET, 
-        salt: cookieKey,
-        cookieName: cookieKey,
-        raw: true,
+    // const token = await getToken({ 
+    //     req, 
+    //     secret: process.env.AUTH_SECRET, 
+    //     salt: cookieKey,
+    //     cookieName: cookieKey,
+    //     raw: true,
+    // });
+
+    // Récupération du token JWT
+    const token = await getToken({
+    req,
+    secret: process.env.AUTH_SECRET,
+    secureCookie: process.env.NODE_ENV === "production",
     });
+      console.log("AUTH_SECRET:", process.env.AUTH_SECRET); // en prod, ce sera undefined si mal configuré
+
 
     const isLoggedIn = !!token; // Détermine si l'utilisateur est connecté avec un token valide
     console.log("TOKEN:", token); // Affiche le token dans la console pour le débogage
     console.log("isLoggedIn:", isLoggedIn); // Affiche si l'utilisateur est connecté ou non
+    console.log("TOKEN :", token);
+    console.log("isLoggedIn :", isLoggedIn);
+    console.log("COOKIES PRESENT :", req.cookies);
     
-    const parsedToken = token ? JSON.parse(token) : null; // Parse le token s'il existe
-    const userStatus = parsedToken?.status; // Récupère le statut de l'utilisateur s'il est connecté
+    // const parsedToken = token ? JSON.parse(token) : null; // Parse le token s'il existe
+    const userStatus = token?.status; // Récupère le statut de l'utilisateur s'il est connecté
+    console.log("USER STATUS:", userStatus); // Affiche le statut de l'utilisateur dans la console pour le débogage
 
     // Autoriser les routes publiques
     // Si l'utilisateur tente d'accéder à une route publique, autoriser l'accès
     if (publicRoutes.includes(path)) {
         return NextResponse.next();
     }
-
+    
     // Vérification des routes protégées
     // Une route est considérée comme protégée si elle figure dans la liste des `protectedRoutes` 
     // ou si elle correspond à l'un des patterns dynamiques définis
-    const isProtectedRoute =
-        protectedRoutes.some((route) => path.startsWith(route)) || // Routes statiques protégées
-        dynamicRoutePatterns.some((pattern) => pattern.test(path)); // Routes dynamiques protégées
+    // const isProtectedRoute =
+    //     protectedRoutes.some((route) => path.startsWith(route)) || // Routes statiques protégées
+    //     dynamicRoutePatterns.some((pattern) => pattern.test(path)); // Routes dynamiques protégées
 
     // Gestion des utilisateurs non approuvés
     // Redirige les utilisateurs connectés mais n'ayant pas le statut "APPROVED" vers la page `/login`
@@ -80,13 +93,6 @@ export async function middleware(req: NextRequest) {
     //     return NextResponse.redirect(redirectUrl);
     // }
 
-    console.log("TOKEN :", token);
-    console.log("isLoggedIn :", isLoggedIn);
-    console.log("Path accédé :", path);
-    console.log("isProtectedRoute :", isProtectedRoute);
-    console.log("userStatus :", userStatus);
-    console.log("NODE_ENV :", process.env.NODE_ENV);
-    console.log("COOKIES PRESENT :", req.cookies);
 
     // Génération aléatoire d'un nonce
     // const nonce = crypto.randomUUID(); 
