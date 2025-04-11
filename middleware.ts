@@ -34,7 +34,7 @@ export async function middleware(req: NextRequest) {
     const path = nextUrl.pathname; // Le chemin de la requête ex: `/ingredients`
     
 
-    // const cookieKey = process.env.NODE_ENV === 'production' ? '__Secure-authjs.session-token' : 'next-auth.session-token';
+    const cookieKey = process.env.NODE_ENV === 'production' ? '__Secure-authjs.session-token' : 'authjs.session-token';
     // // Récupération du token JWT
 
     // const token = await getToken({ 
@@ -47,18 +47,18 @@ export async function middleware(req: NextRequest) {
 
     // Récupération du token JWT
     const token = await getToken({
-    req,
-    secret: process.env.NEXTAUTH_SECRET,
-    secureCookie: process.env.NEXTAUTH_SECRET === "production",
+        req,
+        secret: process.env.NEXTAUTH_SECRET,
+        secureCookie: process.env.NEXTAUTH_SECRET === "production",
+        salt: cookieKey,
+        cookieName: cookieKey,
+        logger: console,
     });
-    console.log("NEXTAUTH_SECRET:", process.env.NEXTAUTH_SECRET); // en prod, ce sera undefined si mal configuré
-
 
     const isLoggedIn = !!token; // Détermine si l'utilisateur est connecté avec un token valide
     console.log("TOKEN :", token);
     console.log("isLoggedIn :", isLoggedIn);
     console.log("COOKIES PRESENT :", req.cookies);
-    console.log("TOKEN keys:", Object.keys(token || {}));
 
     const userStatus = token?.status;
     console.log("USER STATUS:", userStatus);
