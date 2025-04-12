@@ -192,6 +192,8 @@ export const ForgotPasswordConstraints = z.object({
     email: z
         .string()
         .email()
+        .min(3, "L'email doit comporter au moins 3 caractères")
+        .max(100, "L'email doit comporter au maximum 100 caractères")
         .trim(),
 });
 
@@ -235,4 +237,13 @@ export const ResetPasswordConstraints = z.object({
 export const UpdateUserStatusConstraints = z.object({
     userId: z.string(),
     status: z.nativeEnum(UserStatus),
-});                                                     
+});      
+
+export const ChangeEmailConstraints = z.object({
+    email: z
+        .string()
+        .email()
+        .min(3, "L'email doit comporter au moins 3 caractères")
+        .max(100, "L'email doit comporter au maximum 100 caractères")
+        .trim(),
+});

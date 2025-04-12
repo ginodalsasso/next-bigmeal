@@ -3,7 +3,7 @@ import { db } from "@/lib/db";
 import { getUserSession } from "@/lib/security/getSession";
 import { hash, verify } from "argon2";
 import { verifyCSRFToken } from "@/lib/security/verifyCsrfToken";
-import { idConstraints } from "@/lib/constraints/forms_constraints";
+import { ChangeEmailConstraints, idConstraints } from "@/lib/constraints/forms_constraints";
 
 export async function GET() {
     try {
@@ -117,6 +117,64 @@ export async function PUT(req: NextRequest) {
         );
     }
 }
+
+export async function PATCH(req: NextRequest) {
+    try {
+        const { session, error } = await getUserSession();
+        if (error) return error;
+
+        const csrfTokenVerified = await verifyCSRFToken(req);
+        if (!csrfTokenVerified) {
+            return new NextResponse("CSRF Token is missing or invalid", { status: 403 });
+        }
+
+        const body = await req.json();
+        const { userId, email } = body.userData;        
+
+        const validationResult = ChangeEmailConstraints.safeParse(body);
+        
+        if (!validationResult.success) {
+            return NextResponse.json(
+                { error: validationResult.error.format() },
+                { status: 400 }
+            );
+        }
+        
+        if (session.user.id !== userId) {
+            return new NextResponse("Vous n'avez pas les droits pour cette action", { status: 403 });
+        }
+
+        // Vérifier si l'email existe déjà
+        const existingUser = await db.user.findUnique({
+            where: { email: email }
+        });
+
+        if (existingUser && existingUser.id !== session.user.id) {
+            return new NextResponse(
+                JSON.stringify({ message: "Cet email est déjà utilisé par un autre compte" }),
+                { status: 400, headers: { "Content-Type": "application/json" } }
+            );
+        }
+
+        await db.user.update({
+            where: { id: session.user.id },
+            data: { email: email },
+        });
+
+        return new Response(
+            JSON.stringify({ message: "Email mis à jour avec succès" }),
+            { status: 200 }
+        );
+    } catch (error) {
+        console.error("UPDATE_EMAIL_ERROR", error);
+        return new Response(
+            JSON.stringify({ message: "Erreur serveur, veuillez réessayer plus tard" }),
+            { status: 500, headers: { "Content-Type": "application/json" } }
+        );
+    }
+
+}
+
 
 export async function DELETE(req: NextRequest) {
         try {

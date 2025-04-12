@@ -143,3 +143,23 @@ export async function updateUserStatusAPI(userId: string, status: string, csrfTo
         throw error;
     }
 }
+
+export async function updateEmailAPI(userData: object, csrfToken: string) {
+    try {
+        const response = await fetch( API_ROUTES.user.profile, {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRF-Token": csrfToken
+            },
+            body: JSON.stringify({ userData }),
+        });
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || "Erreur lors de la mise à jour de l'email.");
+        }
+    } catch (error) {
+        console.error("[API_ERROR] updateEmailAPI", error);
+        throw error;
+    }
+}

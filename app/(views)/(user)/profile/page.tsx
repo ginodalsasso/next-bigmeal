@@ -20,6 +20,8 @@ import Link from "next/link";
 import IsAdmin from "@/components/isAdmin";
 import LoadingSpinner from "@/components/layout/LoadingSpinner";
 import { LogOut } from "lucide-react";
+import ChangeEmailForm from "../_component/ChangeEmailForm";
+import { set } from "zod";
 
 
 // _________________________ COMPONENT _________________________
@@ -30,6 +32,7 @@ const ProfilePage = () => {
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string>("");
     const [isChangedPassword, setIsChangedPassword] = useState<boolean>(false); // Affichage conditionnel des formulaires
+    const [isChangedEmail, setIsChangedEmail] = useState<boolean>(false); // Affichage conditionnel des formulaires
 
     // _________________________ LOGIQUE _________________________
     useEffect(() => {
@@ -47,6 +50,13 @@ const ProfilePage = () => {
         };
         fetchUser();
     }, []);
+
+    const updateEmail = async (email: string) => {
+        setUser((prevUser) =>
+            prevUser ? { ...prevUser, email } : prevUser
+        );
+    };
+
 
 
     // _________________________ RENDU _________________________
@@ -74,7 +84,30 @@ const ProfilePage = () => {
                             </button>
                         </div>
                         <section className="my-4 border-y py-4">
-                            <p>Email: {user.email}</p>
+                            {!isChangedEmail ? (
+                                <>
+                                <p>Email: {user.email}</p>
+                                <span 
+                                    onClick={() => setIsChangedEmail(true)} 
+                                    className="cursor-pointer text-blue-500 hover:underline"
+                                >
+                                    Modifier mon email
+                                </span>
+                                </>
+                            ) : (
+                                // Formulaire de modification de l'email
+                                <ChangeEmailForm
+                                    user={user}
+                                    onSubmit={(newEmail) => {
+                                        // Mettre à jour l'utilisateur avec le nouvel email
+                                        setUser((prevUser) => 
+                                            prevUser ? { ...prevUser, email: newEmail } : prevUser
+                                        );
+                                        setIsChangedEmail(false);
+                                    }}
+                                    onBackToProfile={() => setIsChangedEmail(false)}
+                                />
+                            )}
                             <p>Rôle: {user.role}</p>
                             <p>Compte créé le: {dateToString(user.createdAt)}</p>
                         </section>
