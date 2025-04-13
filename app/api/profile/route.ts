@@ -129,9 +129,9 @@ export async function PATCH(req: NextRequest) {
         }
 
         const body = await req.json();
-        const { userId, email } = body.userData;        
-
-        const validationResult = ChangeEmailConstraints.safeParse(body);
+        const { userId, email } = body.userData;
+                
+        const validationResult = ChangeEmailConstraints.safeParse(body.userData);
         
         if (!validationResult.success) {
             return NextResponse.json(

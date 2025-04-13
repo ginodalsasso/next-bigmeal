@@ -21,8 +21,6 @@ import IsAdmin from "@/components/isAdmin";
 import LoadingSpinner from "@/components/layout/LoadingSpinner";
 import { LogOut } from "lucide-react";
 import ChangeEmailForm from "../_component/ChangeEmailForm";
-import { set } from "zod";
-
 
 // _________________________ COMPONENT _________________________
 const ProfilePage = () => {
@@ -51,11 +49,13 @@ const ProfilePage = () => {
         fetchUser();
     }, []);
 
-    const updateEmail = async (email: string) => {
-        setUser((prevUser) =>
-            prevUser ? { ...prevUser, email } : prevUser
+    const updateEmail = (newEmail: string) => {
+        // Mettre à jour l'utilisateur avec le nouvel email
+        setUser((prevUser) => 
+            prevUser ? { ...prevUser, email: newEmail } : prevUser
         );
-    };
+        setIsChangedEmail(false);
+    }
 
 
 
@@ -98,13 +98,7 @@ const ProfilePage = () => {
                                 // Formulaire de modification de l'email
                                 <ChangeEmailForm
                                     user={user}
-                                    onSubmit={(newEmail) => {
-                                        // Mettre à jour l'utilisateur avec le nouvel email
-                                        setUser((prevUser) => 
-                                            prevUser ? { ...prevUser, email: newEmail } : prevUser
-                                        );
-                                        setIsChangedEmail(false);
-                                    }}
+                                    onSubmit={updateEmail}
                                     onBackToProfile={() => setIsChangedEmail(false)}
                                 />
                             )}
