@@ -96,7 +96,6 @@ const CreatePreparation: React.FC<CreateStepProps> = ({
             return;
         }
 
-        
         try {
             const csrfToken = await getCsrfToken();
             if (!csrfToken) {
@@ -113,8 +112,6 @@ const CreatePreparation: React.FC<CreateStepProps> = ({
             }
             const createdSteps = await response.json();
             onSubmit(createdSteps);
-
-            
 
             toast("Étapes créées avec succès");
         } catch (error) {

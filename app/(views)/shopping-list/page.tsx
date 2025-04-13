@@ -142,7 +142,7 @@ const ShoppingListPage = () => {
                         return item;
                     })
                 });
-                
+
                 await updateItemQuantityAPI(id, newQuatity, csrfToken);
             } catch (error) {
                 console.error("Erreur lors de la modification:", error);
@@ -199,9 +199,11 @@ const ShoppingListPage = () => {
                                     >
                                         <Minus />
                                     </button>
+
                                     <span className={item.isChecked ? "line-through" : ""}>
                                         {item.quantity} {item.ingredient?.name || "Ingrédient non défini"}
                                     </span>
+                                    
                                     <button 
                                         onClick={() => updateItemQuantity(item.id, item.quantity + 1)}
                                     >

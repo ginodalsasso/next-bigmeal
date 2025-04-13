@@ -12,9 +12,11 @@ import { Button } from "@/components/ui/button";
 
 // Types
 import { MealType, PreparationType } from "@/lib/types/schemas_interfaces";
+import { useRouter } from "next/navigation";
 
 // _________________________ COMPONENT _________________________
 const CreateMealPage = () => {
+    const router = useRouter()
 
     // _________________________ ETATS _________________________
     const [createdMealId, setCreatedMealId] = useState<string | null>(null);
@@ -56,7 +58,7 @@ const CreateMealPage = () => {
     const handleStepCreated = () => {
         setCreatedMealId(null);
         setCreatedPreparationId(null);
-        setCurrentStep("createMeal");
+        router.push("/meals");
     }
 
     const goBack = () => {
