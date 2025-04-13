@@ -17,8 +17,9 @@ import { ShoppingListType } from "@/lib/types/schemas_interfaces";
 import { dateToString } from "@/lib/utils";
 
 // Services
-import {  fetchShoppingListAPI, markShoppingListAsExpiredAPI, toggleItemCheckedAPI } from "@/lib/services/shopping_list_service";
+import {  fetchShoppingListAPI, markShoppingListAsExpiredAPI, toggleItemCheckedAPI, updateItemQuantityAPI } from "@/lib/services/shopping_list_service";
 import { getCsrfToken } from "next-auth/react";
+import { Minus, Plus } from "lucide-react";
 
 
 // _________________________ COMPONENT _________________________
@@ -123,12 +124,31 @@ const ShoppingListPage = () => {
         });
     };
 
-    // Suppression d'un repas dans le state après suppression API
-    const handleMealDeleted = (mealId: string) => {
-        setShoppingList((prev) => prev && {
-            ...prev,
-            items: prev.items.filter((item) => item.mealId !== mealId)
-        });
+    // Mise à jour de la quantité d'un ingrédient
+    const updateItemQuantity = async (id: string, newQuatity: number) => {
+        if (shoppingList) {
+            const csrfToken = await getCsrfToken();
+            if (!csrfToken) {
+                console.error("CSRF token invalide");
+                return;
+            }
+            try {
+                setShoppingList((prev) => prev && { // Mise à jour optimiste (local)
+                    ...prev,
+                    items: prev.items.map((item) => { // itération sur les items
+                        if (item.id === id) { // Si l'ID correspond, on met à jour la quantité
+                            return { ...item, quantity: newQuatity }; // on retourne l'item avec la nouvelle quantité
+                        }
+                        return item;
+                    })
+                });
+                
+                await updateItemQuantityAPI(id, newQuatity, csrfToken);
+            } catch (error) {
+                console.error("Erreur lors de la modification:", error);
+                toast.error("Impossible de mettre à jour l'élément.");
+            }
+        }
     }
 
 
@@ -172,9 +192,22 @@ const ShoppingListPage = () => {
                                     checked={item.isChecked}
                                     onChange={() => toggleItemChecked(item.id, item.isChecked ?? false)}
                                 />
-                                <span className={item.isChecked ? "line-through" : ""}>
-                                    {item.quantity} {item.ingredient?.name || "Ingrédient non défini"}
-                                </span>
+
+                                <div className="flex items-center">
+                                    <button 
+                                        onClick={() => updateItemQuantity(item.id, item.quantity - 1)}
+                                    >
+                                        <Minus />
+                                    </button>
+                                    <span className={item.isChecked ? "line-through" : ""}>
+                                        {item.quantity} {item.ingredient?.name || "Ingrédient non défini"}
+                                    </span>
+                                    <button 
+                                        onClick={() => updateItemQuantity(item.id, item.quantity + 1)}
+                                    >
+                                        <Plus />
+                                    </button>
+                                </div>
                             </div>
                             <DeleteItem
                                 apiUrl="/api/shopping-list/item"

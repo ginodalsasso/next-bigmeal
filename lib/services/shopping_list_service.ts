@@ -2,7 +2,7 @@ import API_ROUTES from "../constants/api_routes";
 
 export async function fetchShoppingListAPI() {
     try {
-        const response = await fetch( API_ROUTES.shoppingList);
+        const response = await fetch( API_ROUTES.shoppingList.list);
         if (!response.ok) throw new Error("Erreur lors de la récupération de la liste.");
         return response.json();
     } catch (error) {
@@ -13,7 +13,7 @@ export async function fetchShoppingListAPI() {
 
 export async function createShoppingListMealAPI(ingredientId: string, quantity: number , mealId: string, csrfToken: string) {
     try {
-        const response = await fetch( API_ROUTES.shoppingList, {
+        const response = await fetch( API_ROUTES.shoppingList.list, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -35,7 +35,7 @@ export async function createShoppingListMealAPI(ingredientId: string, quantity: 
 
 export async function createShoppingListIngredientAPI(ingredientId: string, quantity: number, csrfToken: string) {
     try {
-        const response = await fetch( API_ROUTES.shoppingList, {
+        const response = await fetch( API_ROUTES.shoppingList.item, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -56,7 +56,7 @@ export async function createShoppingListIngredientAPI(ingredientId: string, quan
 
 export async function toggleItemCheckedAPI(id: string, isChecked: boolean, csrfToken: string) {
     try {
-        const response = await fetch( API_ROUTES.shoppingList, {
+        const response = await fetch( API_ROUTES.shoppingList.list, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
@@ -73,7 +73,7 @@ export async function toggleItemCheckedAPI(id: string, isChecked: boolean, csrfT
 
 export async function markShoppingListAsExpiredAPI(id: string, csrfToken: string) {
     try {
-        const response = await fetch( API_ROUTES.shoppingList, {
+        const response = await fetch( API_ROUTES.shoppingList.list, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
@@ -88,3 +88,19 @@ export async function markShoppingListAsExpiredAPI(id: string, csrfToken: string
     }
 }
 
+export async function updateItemQuantityAPI(id: string, quantity: number, csrfToken: string) {
+    try {
+        const response = await fetch( API_ROUTES.shoppingList.item, {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRF-Token": csrfToken,
+            },
+            body: JSON.stringify({ id, quantity }),
+        });
+        if (!response.ok) throw new Error("Erreur lors de la mise à jour de la quantité.");
+    } catch (error) {
+        console.error("[API_ERROR] updateItemQuantity", error);
+        throw error;
+    }
+}

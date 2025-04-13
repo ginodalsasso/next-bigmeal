@@ -34,7 +34,10 @@ const preparationRoute = `${BASE_URL}/preparation`;
 const stepRoute = `${BASE_URL}/step`;
 const ingredientsRoute = `${BASE_URL}/ingredients`;
 const mealsRoute = `${BASE_URL}/meals`;
-const shoppingListRoute = `${BASE_URL}/shopping-list`;
+const shoppingListRoute = {
+    list: `${BASE_URL}/shopping-list`,
+    item: `${BASE_URL}/shopping-list/item`,
+}
 
 // Export des routes
 const API_ROUTES = {
