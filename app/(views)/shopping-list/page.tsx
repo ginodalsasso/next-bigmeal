@@ -136,88 +136,56 @@ const ShoppingListPage = () => {
     if (loading) return <div>Loading...</div>;
     if (!shoppingList) return <div>Aucune liste de courses.</div>;
 
-    const ingredientsAlone = shoppingList?.items.filter(item => !item.mealId);
-    const ingredientsByMeal = shoppingList?.items.filter(item => item.mealId);
+    const meals = Array.from(new Set(shoppingList.items.map(item => item.meal?.name).filter(Boolean)));
 
     return (
         <div>
             <div className="mb-4 text-right">
                 <p className="text-lg font-bold">Date de création : {dateToString(shoppingList.createdAt)}</p>
-                <p className="text-lg font-bold">{shoppingList?.items?.length} ingrédients à la liste.</p>
+                <p className="text-lg font-bold">{shoppingList.items.length} ingrédients à la liste.</p>
             </div>
+            <h1 className="text-center text-2xl">Liste de courses</h1>
 
-            {/* Affichage des ingrédients seuls */}
-            {ingredientsAlone && ingredientsAlone.length > 0 && (
-                <div className="mb-8 border border-neutral-500 p-4">
-                    <h2 className="text-center text-2xl">Ingrédients seuls</h2>
-                    {ingredientsAlone.map((item) => (
-                        <div key={item.id} >
-                            <div className="flex items-center justify-between">
-                                <div className="flex items-center">
-                                    <input
-                                        type="checkbox"
-                                        className="mr-2 size-4"
-                                        checked={item.isChecked}
-                                        onChange={() => toggleItemChecked(item.id, item.isChecked ?? false)}
-                                    />
-                                    <span className={item.isChecked ? "line-through" : ""}>
-                                        {item.quantity} {item.ingredient?.name || "Ingrédient non défini"}
-                                    </span>
-                                </div>
-                                <DeleteItem
-                                    apiUrl="/api/shopping-list/item"
-                                    id={item.id}
-                                    onSubmit={handleIngredientDeleted}
-                                />                            
+            {/* Affichage des repas */}
+            {meals.length > 0 && (
+                <div>
+                    <h4 className="mb-2 mt-4 text-lg font-semibold">Plats :</h4>
+                    <ul>
+                        {meals.map((meal, index) => (
+                            <li key={index} className="flex justify-between">
+                                {meal}
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+            )}
+
+            {/* Affichage des ingrédients */}
+            <div className="mb-8 border border-neutral-500 p-4">
+                {shoppingList.items.map((item) => (
+                    <div key={item.id}>
+                        <div className="flex items-center justify-between">
+                            <div className="flex items-center">
+                                <input
+                                    type="checkbox"
+                                    className="mr-2 size-4"
+                                    checked={item.isChecked}
+                                    onChange={() => toggleItemChecked(item.id, item.isChecked ?? false)}
+                                />
+                                <span className={item.isChecked ? "line-through" : ""}>
+                                    {item.quantity} {item.ingredient?.name || "Ingrédient non défini"}
+                                </span>
                             </div>
-                            <Separator className="my-2 h-px bg-neutral-800" />
+                            <DeleteItem
+                                apiUrl="/api/shopping-list/item"
+                                id={item.id}
+                                onSubmit={handleIngredientDeleted}
+                            />
                         </div>
-                    ))}
-                </div>
-            )}
-            
-            {/* Affichage des ingrédients par repas */}
-            {ingredientsByMeal && ingredientsByMeal.length > 0 && (
-                <div className="mb-8 border border-neutral-500 p-4">
-                    <h2 className="text-center text-2xl">Repas</h2>
-                    {/* Parcourt les repas et les ingrédients associés */}
-                    {Array.from(new Set(ingredientsByMeal.map(item => item.mealId))) // Extraire des IDs de repas uniques
-                        .map(mealId => { // Parcourt chaque ID de repas unique
-                            const mealItems = ingredientsByMeal.filter(item => item.mealId === mealId); //Filtre les ingrédients qui appartiennent à ce repas (mealId)
-                            const mealName = mealItems[0]?.meal?.name || "Repas non défini"; // Récupère le nom du repas ou affiche "Repas non défini"
-                        return (
-                            <div key={mealId} className="mb-4">
-                                <div className="flex items-center justify-between" >
-                                    <h3 className="text-lg font-bold">
-                                        {mealName}
-                                    </h3>
-                                    <DeleteItem
-                                        apiUrl="/api/shopping-list/meal"
-                                        id={mealId}
-                                        onSubmit={handleMealDeleted}
-                                    />                                </div>
-                                <Separator className="my-2 h-px bg-neutral-800" />
-                                {mealItems.map((item) => (
-                                    <div key={item.id}>
-                                        <div className="my-2 flex items-center">
-                                            <input
-                                                type="checkbox"
-                                                className="mr-2 size-4"
-                                                checked={item.isChecked}
-                                                onChange={() => toggleItemChecked(item.id, item.isChecked ?? false)}
-                                            />
-                                            <span className={item.isChecked ? "line-through" : ""}>
-                                                {item.quantity} {item.ingredient?.name || "Ingrédient non défini"}
-                                            </span>
-                                        </div>
-                                    </div>
-                                ))}
-                                <Separator className="my-4 h-px bg-neutral-800" />
-                            </div>
-                        );
-                    })}
-                </div>
-            )}
+                        <Separator className="my-2 h-px bg-neutral-800" />
+                    </div>
+                ))}
+            </div>
 
             <div className="mt-2 flex justify-end">
                 <Button variant="default" className="w-full" onClick={setShoppingListExpired}>
