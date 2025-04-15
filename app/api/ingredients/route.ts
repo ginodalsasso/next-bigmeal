@@ -4,35 +4,41 @@ import { idConstraints, ingredientConstraints } from "@/lib/constraints/forms_co
 import { verifyCSRFToken } from "@/lib/security/verifyCsrfToken";
 import { getAdminSession, getUserSession } from "@/lib/security/getSession";
 import { ITEMS_PER_PAGE } from "@/lib/constants/ui_constants";
+import { Season } from "@/lib/types/enums";
 
 
 export async function GET(req: NextRequest) {
     try {
-        // Récupérer les paramètres de pagination
-        const url = new URL(req.url); // URL de la requête
-        const skip = parseInt(url.searchParams.get("skip") || ITEMS_PER_PAGE, 10); // Début
-        const take = parseInt(url.searchParams.get("take") || ITEMS_PER_PAGE, 10); // Quantité par page: 5
+        const url = new URL(req.url);
+        const skip = parseInt(url.searchParams.get("skip") || "0", 10); // Valeur par défaut de 0
+        const take = parseInt(url.searchParams.get("take") || ITEMS_PER_PAGE.toString(), 10); // Valeur par défaut de ITEMS_PER_PAGE
 
-        // Récupérer les ingredients
+        const categories = url.searchParams.getAll("categories") || [];
+        const season = url.searchParams.get("season") || '';
+
         const ingredients = await db.ingredient.findMany({
+            where: {
+                ...(categories.length > 0 && {
+                    categoryIngredient: {
+                        name: { in: categories }
+                    }
+                }),
+                ...(season && { season: season as Season }),
+            },
             skip,
             take,
-            orderBy: { 
-                name: 'desc'
-            },
-            include: { 
-                categoryIngredient: true // Inclure la catégorie
-            }
-        }); 
-        return NextResponse.json(ingredients, {status: 200}); 
+            orderBy: { name: 'desc' },
+            include: { categoryIngredient: true }
+        });
 
-    } catch(error) {
-        console.error("[FETCH_INGREDIENTS_ERROR]", error); 
+        return NextResponse.json(ingredients, { status: 200 }); 
+    } catch (error) {
+        console.error("[FETCH_INGREDIENTS_ERROR]", error);
         return new Response(JSON.stringify({ 
             message: 'Erreur serveur, veuillez réessayer plus tard' 
         }), { 
             status: 500,
-            headers: { 'Content-Type': 'application/json' }
+            headers: { 'Content-Type': 'application/json' } 
         });
     }
 }

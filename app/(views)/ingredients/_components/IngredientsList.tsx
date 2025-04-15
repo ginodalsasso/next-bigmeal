@@ -1,9 +1,10 @@
-/* eslint-disable tailwindcss/no-custom-classname */
 'use client';
 
 // Bibliothèques tierces
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+
 
 // Images
 import add from "@/public/img/add.svg";
@@ -39,11 +40,27 @@ export default function IngredientList({ fetchedIngredients }: { fetchedIngredie
     
     
     // _________________________ ETATS _________________________
+    const router = useRouter();
     const [ingredients, setIngredients] = useState<IngredientType[]>(fetchedIngredients);
     const [searchQuery, setSearchQuery] = useState<string>("");
     const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
     const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
 
+    useEffect(() => {
+        const queryParams = new URLSearchParams();
+        if (searchQuery) queryParams.append('search', searchQuery);
+
+        if (selectedFilters.length > 0) {
+            let categories = selectedFilters.filter(filter => CATEGORIES_INGREDIENTS.includes(filter));
+            
+            const seasons = selectedFilters.filter(filter => SEASONS.includes(filter)).map(reversedTranslatedSeason);
+
+            categories.forEach(category => queryParams.append('categories', category.toLowerCase()));
+
+            if (seasons.length > 0) queryParams.append('season', seasons[0]);
+        }
+        router.push(`/ingredients?${queryParams.toString()}`);
+    }, [searchQuery, selectedFilters, router]);
 
     // _________________________ CRUD _________________________
     // Fonction pour ajouter un ingrédient à la liste
@@ -73,25 +90,25 @@ export default function IngredientList({ fetchedIngredients }: { fetchedIngredie
     // _________________________ FILTRAGE _________________________
     const filterOptions = SEASONS.concat(CATEGORIES_INGREDIENTS); // Options de filtres
 
-    // Fonction pour filtrer en fonction de la recherche et des filtres actifs
-    const filteredIngredients = ingredients.filter((ingredient) => {
-        // Vérification du champ de recherche
-        const matchesSearch = ingredient.name.toLowerCase().includes(searchQuery.toLowerCase());
+    // // Fonction pour filtrer en fonction de la recherche et des filtres actifs
+    // const filteredIngredients = ingredients.filter((ingredient) => {
+    //     // Vérification du champ de recherche
+    //     const matchesSearch = ingredient.name.toLowerCase().includes(searchQuery.toLowerCase());
 
-        // Modification des chaines de caractères pour les saisons et catégories
-        const selectedSeasons = selectedFilters.map(filter => reversedTranslatedSeason(filter));
-        const selectedCategory = selectedFilters.map(filter => filter.toLowerCase());
+    //     // Modification des chaines de caractères pour les saisons et catégories
+    //     const selectedSeasons = selectedFilters.map(filter => reversedTranslatedSeason(filter));
+    //     const selectedCategory = selectedFilters.map(filter => filter.toLowerCase());
 
-        // Vérification des filtres actifs
-        const category = ingredient.categoryIngredient?.name || "Non spécifié";
-        const season = ingredient.season;
+    //     // Vérification des filtres actifs
+    //     const category = ingredient.categoryIngredient?.name || "Non spécifié";
+    //     const season = ingredient.season;
         
-        const matchesFilters =
-            selectedFilters.length === 0 || // Aucun filtre => tout est affiché
-            selectedCategory.includes(category) || (season && selectedSeasons.includes(season)); 
+    //     const matchesFilters =
+    //         selectedFilters.length === 0 || // Aucun filtre => tout est affiché
+    //         selectedCategory.includes(category) || (season && selectedSeasons.includes(season)); 
 
-        return matchesSearch && matchesFilters;
-    });
+    //     return matchesSearch && matchesFilters;
+    // });
     
 
     // _________________________ RENDU _________________________
@@ -128,7 +145,7 @@ export default function IngredientList({ fetchedIngredients }: { fetchedIngredie
                 </IsUser>
 
                 {/* Barre de recherche */}
-                <SearchBar onSearch={(query) => setSearchQuery(query)} />
+                {/* <SearchBar onSearch={(query) => setSearchQuery(query)} /> */}
             </div>
             
             {/* Filtres */}
@@ -140,7 +157,7 @@ export default function IngredientList({ fetchedIngredients }: { fetchedIngredie
             {/* Liste des ingrédients */}
             <div className="cards-wrapper">
                 <div className="cards-list">
-                    {filteredIngredients.map((ingredient) => (
+                    {ingredients.map((ingredient) => (
                         <div key={ingredient.id} className="card">
                             <ItemView
                                 title={ingredient.name}

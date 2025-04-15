@@ -10,7 +10,7 @@ import Pagination from "@/components/layout/Pagination";
 export const dynamic = "force-dynamic";
 
 interface searchParamsProps {
-    searchParams: Promise<{ page?: string }> | undefined 
+    searchParams: Promise<{ page?: string; search?: string; categories?: string[]; season?: string }> | undefined
 }
 
 export default async function IngredientPage( { searchParams }: searchParamsProps) {
@@ -20,11 +20,15 @@ export default async function IngredientPage( { searchParams }: searchParamsProp
         // Récupérer le numéro de page à partir des paramètres de recherche, ou 1 par défaut
         const page = parseInt(params?.page  || '1') as number; 
 
+        const categories = params?.categories || [];
+        const season = params?.season || ''; // Récupérer la saison à partir des paramètres de recherche
+
         const itemsPerPage = parseInt(ITEMS_PER_PAGE); // Nombre d'items par page pour la pagination
+
 
         // Paginer avec take=5 ingrédients par page et skip=(page-1)*5 ingrédients
         // getIngredients(skip, take) : skip = le nombre d'ingrédients à ignorer, take = le nombre d'ingrédients à récupérer
-        const ingredients = await getIngredients((page - 1) * itemsPerPage, itemsPerPage); // page - 1 pour ignorer les ingrédients de la page précédente, 5 pour prendre 5 ingrédients
+        const ingredients = await getIngredients((page - 1) * itemsPerPage, itemsPerPage, categories, season); // page - 1 pour ignorer les ingrédients de la page précédente, 5 pour prendre 5 ingrédients
 
         return (
             <div>
@@ -33,7 +37,7 @@ export default async function IngredientPage( { searchParams }: searchParamsProp
                 {/* Pagination */}
                 <Pagination
                     currentPage={page} 
-                    hasNextPage={ingredients.length === itemsPerPage} 
+                    hasNextPage={ingredients.length === itemsPerPage}  
                 />
             </div>
         ); 
