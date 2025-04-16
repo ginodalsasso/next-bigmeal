@@ -5,30 +5,35 @@ import IngredientsList from "./_components/IngredientsList";
 // Service de récupération des ingrédients
 import { getIngredients } from "@/lib/services/data_fetcher";
 import Pagination from "@/components/layout/Pagination";
+import { ensureArray } from "@/lib/utils";
 
 // Forcer le rendu SSR
 export const dynamic = "force-dynamic";
 
 interface searchParamsProps {
-    searchParams: Promise<{ page?: string; search?: string; categories?: string[]; season?: string }> | undefined
+    searchParams: Promise<{ page?: string; search?: string; categories?: string[]; season?: string[] }> | undefined
 }
 
 export default async function IngredientPage( { searchParams }: searchParamsProps) {
     try {
         const params  = await searchParams; // Attendre la résolution de la promesse pour obtenir les paramètres de recherche
 
-        // Récupérer le numéro de page à partir des paramètres de recherche, ou 1 par défaut
-        const page = parseInt(params?.page  || '1') as number; 
-
-        const categories = params?.categories || [];
-        const season = params?.season || ''; // Récupérer la saison à partir des paramètres de recherche
-
-        const itemsPerPage = parseInt(ITEMS_PER_PAGE); // Nombre d'items par page pour la pagination
-
-
+        // Gestion de la pagination
+        const page = parseInt(params?.page || "1", 10);
+        const itemsPerPage = parseInt(ITEMS_PER_PAGE, 10);
+    
+        // Vérifie si les paramètres de recherche existent et s'ils sont des tableaux
+        const categories = ensureArray(params?.categories);
+        const season = ensureArray(params?.season);
+    
         // Paginer avec take=5 ingrédients par page et skip=(page-1)*5 ingrédients
         // getIngredients(skip, take) : skip = le nombre d'ingrédients à ignorer, take = le nombre d'ingrédients à récupérer
-        const ingredients = await getIngredients((page - 1) * itemsPerPage, itemsPerPage, categories, season); // page - 1 pour ignorer les ingrédients de la page précédente, 5 pour prendre 5 ingrédients
+        const ingredients = await getIngredients(
+            (page - 1) * itemsPerPage, // page - 1 pour ignorer les ingrédients de la page précédente, 5 pour prendre 5 ingrédients
+            itemsPerPage,  
+            categories, 
+            season
+        ); 
 
         return (
             <div>

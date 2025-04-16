@@ -93,3 +93,13 @@ export const countTotalQuantities = (shoppingList: ShoppingListType[]): number =
     return total
     ;
 };
+
+// Fonction utilitaire pour s'assurer que la valeur est un tableau
+// et pour gérer les valeurs nulles ou indéfinies
+export function ensureArray<T>(value: T | T[] | null | undefined): T[] {
+    if (Array.isArray(value)) {
+        return value;
+    }
+    // Si la valeur est nulle ou indéfinie, on retourne un tableau vide
+    return value ? [value] : [];
+}

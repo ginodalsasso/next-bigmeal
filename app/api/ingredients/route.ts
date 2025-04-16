@@ -10,20 +10,28 @@ import { Season } from "@/lib/types/enums";
 export async function GET(req: NextRequest) {
     try {
         const url = new URL(req.url);
-        const skip = parseInt(url.searchParams.get("skip") || "0", 10); // Valeur par défaut de 0
-        const take = parseInt(url.searchParams.get("take") || ITEMS_PER_PAGE.toString(), 10); // Valeur par défaut de ITEMS_PER_PAGE
+        // Gestion de la pagination
+        const skip = parseInt(url.searchParams.get("skip") || "0", 10);
+        const take = parseInt(url.searchParams.get("take") || ITEMS_PER_PAGE.toString(), 10);
 
-        const categories = url.searchParams.getAll("categories") || [];
-        const season = url.searchParams.get("season") || '';
+        // Gestion des filtres
+        const categories = url.searchParams.getAll("categories");
+        const seasons = url.searchParams.getAll("seasons");
+
+        // Convertir les saisons en enum Season et filtrer les valeurs valides pour éviter les erreurs
+        const validSeasons = seasons.filter((season): season is Season =>
+            Object.values(Season).includes(season as Season)
+        );
 
         const ingredients = await db.ingredient.findMany({
             where: {
-                ...(categories.length > 0 && {
-                    categoryIngredient: {
-                        name: { in: categories }
-                    }
-                }),
-                ...(season && { season: season as Season }),
+                categoryIngredient: categories.length > 0 ? {
+                    name: { in: categories },
+                } : undefined,
+                
+                season: validSeasons.length > 0 ? {
+                    in: validSeasons,
+                } : undefined,
             },
             skip,
             take,
@@ -31,14 +39,15 @@ export async function GET(req: NextRequest) {
             include: { categoryIngredient: true }
         });
 
-        return NextResponse.json(ingredients, { status: 200 }); 
+        return NextResponse.json(ingredients, { status: 200 });
+
     } catch (error) {
         console.error("[FETCH_INGREDIENTS_ERROR]", error);
         return new Response(JSON.stringify({ 
             message: 'Erreur serveur, veuillez réessayer plus tard' 
         }), { 
             status: 500,
-            headers: { 'Content-Type': 'application/json' } 
+            headers: { 'Content-Type': 'application/json' }
         });
     }
 }

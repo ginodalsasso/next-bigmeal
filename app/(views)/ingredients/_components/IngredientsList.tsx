@@ -21,7 +21,6 @@ import EditItem from "@/components/layout/EditItemDrawer";
 import DeleteItem from "@/components/layout/DeleteItemDialog";
 import IsAdmin from "@/components/isAdmin";
 import IsUser from "@/components/isUser";
-import SearchBar from "@/components/layout/FilterSearchbar";
 import FilterItems from "@/components/layout/FilterItems";
 
 // Composants UI
@@ -38,29 +37,13 @@ import { CATEGORIES_INGREDIENTS, SEASONS } from "@/lib/constants/ui_constants";
 // _________________________ COMPOSANT _________________________
 export default function IngredientList({ fetchedIngredients }: { fetchedIngredients: IngredientType[] }) {
     
-    
     // _________________________ ETATS _________________________
     const router = useRouter();
     const [ingredients, setIngredients] = useState<IngredientType[]>(fetchedIngredients);
-    const [searchQuery, setSearchQuery] = useState<string>("");
+    // const [searchQuery, setSearchQuery] = useState<string>("");
     const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
     const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
 
-    useEffect(() => {
-        const queryParams = new URLSearchParams();
-        if (searchQuery) queryParams.append('search', searchQuery);
-
-        if (selectedFilters.length > 0) {
-            let categories = selectedFilters.filter(filter => CATEGORIES_INGREDIENTS.includes(filter));
-            
-            const seasons = selectedFilters.filter(filter => SEASONS.includes(filter)).map(reversedTranslatedSeason);
-
-            categories.forEach(category => queryParams.append('categories', category.toLowerCase()));
-
-            if (seasons.length > 0) queryParams.append('season', seasons[0]);
-        }
-        router.push(`/ingredients?${queryParams.toString()}`);
-    }, [searchQuery, selectedFilters, router]);
 
     // _________________________ CRUD _________________________
     // Fonction pour ajouter un ingrédient à la liste
@@ -90,26 +73,20 @@ export default function IngredientList({ fetchedIngredients }: { fetchedIngredie
     // _________________________ FILTRAGE _________________________
     const filterOptions = SEASONS.concat(CATEGORIES_INGREDIENTS); // Options de filtres
 
-    // // Fonction pour filtrer en fonction de la recherche et des filtres actifs
-    // const filteredIngredients = ingredients.filter((ingredient) => {
-    //     // Vérification du champ de recherche
-    //     const matchesSearch = ingredient.name.toLowerCase().includes(searchQuery.toLowerCase());
-
-    //     // Modification des chaines de caractères pour les saisons et catégories
-    //     const selectedSeasons = selectedFilters.map(filter => reversedTranslatedSeason(filter));
-    //     const selectedCategory = selectedFilters.map(filter => filter.toLowerCase());
-
-    //     // Vérification des filtres actifs
-    //     const category = ingredient.categoryIngredient?.name || "Non spécifié";
-    //     const season = ingredient.season;
-        
-    //     const matchesFilters =
-    //         selectedFilters.length === 0 || // Aucun filtre => tout est affiché
-    //         selectedCategory.includes(category) || (season && selectedSeasons.includes(season)); 
-
-    //     return matchesSearch && matchesFilters;
-    // });
+    // Fonction pour gérer le changement de filtre
+    const handleFilterChange = (selectedFilters: string[]) => {
+        const queryParams = new URLSearchParams();
     
+        // Filtrer les catégories et les saisons pour preparer les paramètres de requête
+        const categories = selectedFilters.filter(filter => CATEGORIES_INGREDIENTS.includes(filter));
+        const seasons = selectedFilters.filter(filter => SEASONS.includes(filter));
+
+        // Ajouter les filtres aux paramètres de requête
+        categories.forEach(categorie => queryParams.append("categories", categorie.toLowerCase()));
+        seasons.forEach(season => queryParams.append("season", reversedTranslatedSeason(season)));
+    
+        router.push(`/ingredients?${queryParams.toString()}`);
+    };
 
     // _________________________ RENDU _________________________
     if (!ingredients) return <div>Ingrédients introuvables.</div>;
@@ -143,21 +120,18 @@ export default function IngredientList({ fetchedIngredients }: { fetchedIngredie
                         </DrawerContent>
                     </Drawer>
                 </IsUser>
-
-                {/* Barre de recherche */}
-                {/* <SearchBar onSearch={(query) => setSearchQuery(query)} /> */}
             </div>
             
             {/* Filtres */}
             <FilterItems 
                 options={filterOptions} 
-                onFilterChange={setSelectedFilters} 
+                onFilterChange={handleFilterChange} 
             />
 
             {/* Liste des ingrédients */}
             <div className="cards-wrapper">
                 <div className="cards-list">
-                    {ingredients.map((ingredient) => (
+                    {fetchedIngredients.map((ingredient) => (
                         <div key={ingredient.id} className="card">
                             <ItemView
                                 title={ingredient.name}
