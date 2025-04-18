@@ -77,7 +77,7 @@ const ShoppingLists: React.FC<ShoppingListsProps> = ({ shoppingLists }) => {
                                     </ul>
                                 </div>
                                 <DeleteItem
-                                    apiUrl={API_ROUTES.shoppingList}
+                                    apiUrl={API_ROUTES.shoppingList.list}
                                     id={list.id}
                                     onSubmit={handleShoppingListDeleted}
                                 />
