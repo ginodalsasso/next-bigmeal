@@ -3,5 +3,5 @@ model CategoryHousehold {
 
     name      String      @unique
 
-    products  HouseholdProduct[]  // Relation avec vos produits ménagers
+    products  Product[]  // Relation avec vos produits ménagers
 }

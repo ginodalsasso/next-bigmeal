@@ -21,7 +21,8 @@ const Navbar = () => {
         { icon: <Carrot />, title: "ingrédients", url: "/ingredients" },
         { icon: <Utensils />, title: "repas", url: "/meals" },
         { icon:<Folder />, title: "catégorie ingrédient", url: "/categories-ingredient" },
-        { icon:<Folder />, title: "catégorie repas", url: "/categories-meal" }
+        { icon:<Folder />, title: "catégorie repas", url: "/categories-meal" },
+        { icon:<Folder />, title: "catégorie produits ménagers", url: "/categories-household-product" }
     ];
 
     
