@@ -58,23 +58,6 @@ export default function MealsList( {fetchedMeals}: { fetchedMeals: MealType[] })
     // _________________________ FILTRAGE _________________________
     const filterOptions = CATEGORIES_MEALS; // Options de filtre
 
-    // // Fonction pour filtrer en fonction de la recherche et des filtres actifs
-    // const filteredMeals = meals.filter((meal) => {
-    //     // Vérification du champ de recherche
-    //     const matchesSearch = meal.name.toLowerCase().includes(searchQuery.toLowerCase())
-
-    //     // Modification des chaines de caractères pour les saisons et catégories
-    //     const selectedCategory = selectedFilters.map(filter => filter.toLowerCase());
-
-    //     // Vérification des filtres actifs
-    //     const category = meal.categoryMeal?.name || "Non spécifié";
-        
-    //     const matchesFilters =
-    //         selectedFilters.length === 0 || // Aucun filtre => tout est affiché
-    //         selectedCategory.includes(category);
-
-    //     return matchesSearch && matchesFilters;
-    // });
     // Fonction pour gérer le changement de filtre
     const handleFilterChange = (selectedFilters: string[]) => {
         const queryParams = new URLSearchParams();

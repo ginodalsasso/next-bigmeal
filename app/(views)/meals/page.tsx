@@ -29,7 +29,7 @@ export default async function MealPage({ searchParams }: searchParamsProps) {
         const meals = await getMeals(
             (page - 1) * itemsPerPage, 
             itemsPerPage,
-            categories
+            categories,
         );
         
         // _________________________ RENDU __________________

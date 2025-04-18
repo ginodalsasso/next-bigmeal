@@ -25,12 +25,8 @@ export async function GET(req: NextRequest) {
             },
             skip,
             take,
-            orderBy: { 
-                name: 'desc'
-            },
-            include: { 
-                categoryMeal: true // Inclure la catégorie
-            }
+            orderBy: { name: 'desc' },
+            include: { categoryMeal: true }
         }); 
 
         return NextResponse.json(meals, {status: 200}); 
