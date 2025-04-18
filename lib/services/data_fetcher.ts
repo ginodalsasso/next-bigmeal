@@ -22,6 +22,17 @@ export async function getCategoriesMeal() {
     }
 }
 
+export async function getCategoriesHouseholdProduct() {
+    try {
+        const response = await fetch( API_ROUTES.categories.householdProduct, { cache: "no-store" });
+        if (!response.ok) throw new Error("Erreur lors de la récupération des catégories.");
+        return response.json();
+    } catch (error) {
+        console.error(error);
+        throw new Error("Impossible de récupérer les catégories.");
+    }
+}
+
 
 export async function getIngredients(
     skip = 0, 

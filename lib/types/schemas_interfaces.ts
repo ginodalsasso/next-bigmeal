@@ -19,9 +19,31 @@ export interface CategoryMealType {
     meals: MealType[];
 }
 
+export interface CategoryHouseholdProductType {
+    id: string;
+    name: string;
+
+    householdProducts: HouseholdProductType[];
+}
+
+
 export interface CategoryType {
     id: string;
     name: string;
+}
+
+
+export interface HouseholdProductType {
+    id: string; 
+    name: string; 
+    description?: string; 
+
+    // Clé étrangère : Lie le produit à sa catégorie
+    categoryHouseholdProductId: string;
+    categoryHouseholdProduct: CategoryHouseholdProductType;
+
+    // Relation One-to-Many
+    shoppingListItems: ShoppingListType[];
 }
 
 

@@ -27,6 +27,7 @@ const confirmEmailRoutes = {
 const categoriesRoutes = {
     ingredient: `${BASE_URL}/categories-ingredient`,
     meal: `${BASE_URL}/categories-meal`,
+    householdProduct: `${BASE_URL}/categories-household-product`,
 };
 
 const compositionsRoute = `${BASE_URL}/compositions`;
@@ -34,6 +35,7 @@ const preparationRoute = `${BASE_URL}/preparation`;
 const stepRoute = `${BASE_URL}/step`;
 const ingredientsRoute = `${BASE_URL}/ingredients`;
 const mealsRoute = `${BASE_URL}/meals`;
+const householdProductRoute = `${BASE_URL}/household-product`;
 const shoppingListRoute = {
     list: `${BASE_URL}/shopping-list`,
     item: `${BASE_URL}/shopping-list/item`,
@@ -52,6 +54,7 @@ const API_ROUTES = {
     ingredients: ingredientsRoute,
     meals: mealsRoute,
     shoppingList: shoppingListRoute,
+    householdProduct: householdProductRoute,
 };
 
 export default API_ROUTES;
