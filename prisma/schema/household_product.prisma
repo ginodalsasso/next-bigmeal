@@ -1,0 +1,11 @@
+
+model HouseholdProduct  {
+    id                   String                     @id @default(auto()) @map("_id") @db.ObjectId
+    
+    name                 String                     @unique
+
+    categoryId           String               @db.ObjectId
+    category             CategoryHousehold    @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+    @@index([categoryId])
+}

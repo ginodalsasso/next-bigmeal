@@ -1,0 +1,7 @@
+model CategoryHousehold {
+    id        String      @id @default(auto()) @map("_id") @db.ObjectId
+
+    name      String      @unique
+
+    products  HouseholdProduct[]  // Relation avec vos produits ménagers
+}
