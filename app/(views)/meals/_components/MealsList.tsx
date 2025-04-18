@@ -20,8 +20,7 @@ import UpdateMeal from "./UpdateMeal";
 import AddToShoppingListForm from "@/components/forms/AddToShoppingListForm";
 import IsAdmin from "@/components/isAdmin";
 import IsUser from "@/components/isUser";
-import SearchBar from "@/components/layout/FilterSearchbar";
-import FilterCheckboxes from "@/components/layout/FilterItems";
+import FilterItems from "@/components/layout/FilterItems";
 
 // Composants UI
 import { Button } from "@/components/ui/button";
@@ -36,9 +35,6 @@ export default function MealsList( {fetchedMeals}: { fetchedMeals: MealType[] })
     
     // _________________________ ETATS _________________________
     const [meals, setMeals] = useState<MealType[]>(fetchedMeals);
-    
-    const [searchQuery, setSearchQuery] = useState<string>(""); 
-    const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
 
     const router = useRouter();
     
@@ -62,23 +58,35 @@ export default function MealsList( {fetchedMeals}: { fetchedMeals: MealType[] })
     // _________________________ FILTRAGE _________________________
     const filterOptions = CATEGORIES_MEALS; // Options de filtre
 
-    // Fonction pour filtrer en fonction de la recherche et des filtres actifs
-    const filteredMeals = meals.filter((meal) => {
-        // Vérification du champ de recherche
-        const matchesSearch = meal.name.toLowerCase().includes(searchQuery.toLowerCase())
+    // // Fonction pour filtrer en fonction de la recherche et des filtres actifs
+    // const filteredMeals = meals.filter((meal) => {
+    //     // Vérification du champ de recherche
+    //     const matchesSearch = meal.name.toLowerCase().includes(searchQuery.toLowerCase())
 
-        // Modification des chaines de caractères pour les saisons et catégories
-        const selectedCategory = selectedFilters.map(filter => filter.toLowerCase());
+    //     // Modification des chaines de caractères pour les saisons et catégories
+    //     const selectedCategory = selectedFilters.map(filter => filter.toLowerCase());
 
-        // Vérification des filtres actifs
-        const category = meal.categoryMeal?.name || "Non spécifié";
+    //     // Vérification des filtres actifs
+    //     const category = meal.categoryMeal?.name || "Non spécifié";
         
-        const matchesFilters =
-            selectedFilters.length === 0 || // Aucun filtre => tout est affiché
-            selectedCategory.includes(category);
+    //     const matchesFilters =
+    //         selectedFilters.length === 0 || // Aucun filtre => tout est affiché
+    //         selectedCategory.includes(category);
 
-        return matchesSearch && matchesFilters;
-    });
+    //     return matchesSearch && matchesFilters;
+    // });
+    // Fonction pour gérer le changement de filtre
+    const handleFilterChange = (selectedFilters: string[]) => {
+        const queryParams = new URLSearchParams();
+    
+        // Filtrer les catégories et les saisons pour preparer les paramètres de requête
+        const meals = selectedFilters.filter(filter => CATEGORIES_MEALS.includes(filter));
+
+        // Ajouter les filtres aux paramètres de requête
+        meals.forEach(categorie => queryParams.append("categories", categorie.toLowerCase()));
+    
+        router.push(`/meals?${queryParams.toString()}`);
+    };
         
 
     // _________________________ RENDU _________________________
@@ -94,20 +102,17 @@ export default function MealsList( {fetchedMeals}: { fetchedMeals: MealType[] })
                         <span className="hidden sm:block">Ajouter un repas</span>
                     </Button>
                 </IsUser>
-
-                {/* Barre de recherche */}
-                <SearchBar onSearch={(query) => setSearchQuery(query)} />
             </div>
 
             {/* Filtres */}
-            <FilterCheckboxes 
+            <FilterItems 
                 options={filterOptions} 
-                onFilterChange={setSelectedFilters} 
+                onFilterChange={handleFilterChange} 
             />
             {/* Liste des repas */}
             <div className="cards-wrapper">
                 <div className="cards-list">
-                    {filteredMeals.map((meal) => (
+                    {fetchedMeals.map((meal) => (
                         <div key={meal.id} className="card">
                             <ItemView
                                 title={meal.name}

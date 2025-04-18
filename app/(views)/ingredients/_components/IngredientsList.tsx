@@ -1,7 +1,7 @@
 'use client';
 
 // Bibliothèques tierces
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
@@ -40,10 +40,7 @@ export default function IngredientList({ fetchedIngredients }: { fetchedIngredie
     // _________________________ ETATS _________________________
     const router = useRouter();
     const [ingredients, setIngredients] = useState<IngredientType[]>(fetchedIngredients);
-    // const [searchQuery, setSearchQuery] = useState<string>("");
-    const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
     const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
-
 
     // _________________________ CRUD _________________________
     // Fonction pour ajouter un ingrédient à la liste

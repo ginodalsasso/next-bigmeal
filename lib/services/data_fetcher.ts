@@ -1,5 +1,4 @@
 import API_ROUTES from "../constants/api_routes";
-import { ensureArray } from "../utils";
 
 export async function getCategoriesIngredient() {
     try {
@@ -51,9 +50,23 @@ export async function getIngredients(
     }
 }
 
-export async function getMeals(skip = 0, take = 10) {
+export async function getMeals(
+        skip = 0, 
+        take = 10, 
+        categories: string[] = [], 
+)  {
     try {
-        const response = await fetch(`${API_ROUTES.meals}?skip=${skip}&take=${take}`, { cache: "no-store" });
+        const url = new URL(`${API_ROUTES.meals}`);
+        // Gestion de la pagination
+        // skip = le nombre de repas à ignorer, take = le nombre de repas à récupérer
+        url.searchParams.append('skip', skip.toString());
+        url.searchParams.append('take', take.toString());
+
+        // Gestion des filtres (qui sont des tableaux)
+        categories.forEach(category => url.searchParams.append('categories', category));
+    
+        const response = await fetch(url.toString(), { cache: "no-store" });
+
         if (!response.ok) throw new Error("Erreur lors de la récupération des repas.");
         return response.json();
     } catch (error) {

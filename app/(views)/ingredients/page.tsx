@@ -11,7 +11,11 @@ import { ensureArray } from "@/lib/utils";
 export const dynamic = "force-dynamic";
 
 interface searchParamsProps {
-    searchParams: Promise<{ page?: string; search?: string; categories?: string[]; season?: string[] }> | undefined
+    searchParams: Promise<{ 
+        page?: string;  // Paramètre de page pour la pagination
+        categories?: string[];  // Paramètre de catégorie pour le filtrage
+        season?: string[]  // Paramètre de saison pour le filtrage
+    }> | undefined
 }
 
 export default async function IngredientPage( { searchParams }: searchParamsProps) {

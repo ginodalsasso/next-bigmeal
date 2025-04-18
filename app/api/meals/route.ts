@@ -8,13 +8,21 @@ import { ITEMS_PER_PAGE } from "@/lib/constants/ui_constants";
 
 export async function GET(req: NextRequest) {
     try {
-        // Récupérer les paramètres de pagination
         const url = new URL(req.url); // URL de la requête
+        // Gestion de la pagination
         const skip = parseInt(url.searchParams.get("skip") || "0", 10); // Début
         const take = parseInt(url.searchParams.get("take") || ITEMS_PER_PAGE, 10); // Quantité par page
 
+        // Gestion des filtres
+        const categories = url.searchParams.getAll("categories");
+
         // Récupérer les repas
         const meals = await db.meal.findMany({
+            where: {
+                categoryMeal: categories.length > 0 ? {
+                    name: { in: categories }, // Filtrer par catégorie
+                } : undefined,
+            },
             skip,
             take,
             orderBy: { 
@@ -25,7 +33,6 @@ export async function GET(req: NextRequest) {
             }
         }); 
 
-        console.log("[MEALS]", meals); // Log des repas récupérés
         return NextResponse.json(meals, {status: 200}); 
 
     } catch(error) {
