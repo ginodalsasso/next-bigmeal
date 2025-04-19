@@ -1,9 +1,9 @@
 'use client';
 
 // Composants des listes
-import CategoryHouseholdProductList from "../../_components/CategoryHouseholdProductList";
-import CategoryIngredientList from "../../_components/CategoryIngredientList";
-import CategoryMealList from "../../_components/CategoryMealList";
+import CategoryHouseholdProductList from "./CategoryHouseholdProductList";
+import CategoryIngredientList from "./CategoryIngredientList";
+import CategoryMealList from "./CategoryMealList";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 // Types et énumérations
