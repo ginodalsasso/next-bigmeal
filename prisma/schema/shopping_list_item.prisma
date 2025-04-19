@@ -3,6 +3,7 @@ model ShoppingListItem {
     shoppingListId String    @db.ObjectId
     ingredientId String?     @db.ObjectId
     mealId       String?     @db.ObjectId
+    productId    String?     @db.ObjectId
 
     quantity     Float       @default(0.0)
     comment      String?
@@ -11,4 +12,5 @@ model ShoppingListItem {
     shoppingList ShoppingList @relation(fields: [shoppingListId], references: [id], onDelete: Cascade)
     ingredient   Ingredient? @relation(fields: [ingredientId], references: [id])
     meal         Meal?       @relation(fields: [mealId], references: [id])
+    product      Product?    @relation(fields: [productId], references: [id])
 }

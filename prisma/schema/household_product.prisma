@@ -4,8 +4,10 @@ model Product  {
     
     name                 String                     @unique
 
-    categoryId           String               @db.ObjectId
-    category             CategoryHousehold    @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+    categoryHouseholdProductId           String               @db.ObjectId
+    categoryHouseholdProduct             CategoryHousehold    @relation(fields: [categoryHouseholdProductId], references: [id], onDelete: Cascade)
 
-    @@index([categoryId])
+    shoppingListItems    ShoppingListItem[]     // Relation avec ShoppingListItem
+
+    @@index([categoryHouseholdProductId])
 }

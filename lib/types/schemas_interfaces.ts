@@ -137,6 +137,7 @@ export interface ShoppingListItemType {
     shoppingListId: string; // Clé étrangère
     ingredientId: string; // Clé étrangère
     mealId: string; // Clé étrangère   
+    productId: string; // Clé étrangère
 
     quantity: number;
     comment?: string;
@@ -146,6 +147,7 @@ export interface ShoppingListItemType {
     shoppingList: ShoppingListType;
     ingredient: IngredientType;
     meal: MealType;
+    product: HouseholdProductType;
 }
 
 

@@ -18,7 +18,8 @@ export async function GET() {
                 items: {
                     include: {
                         ingredient: true,
-                        meal: true
+                        meal: true,
+                        product: true,
                     }
                 }
             }
@@ -59,6 +60,7 @@ export async function POST(req: NextRequest) {
 
         const body = await req.json();
 
+        console.log("body", body);
         // Valider et nettoyer les données
         const validationResult = ShoppingListConstraints.safeParse(body);
         if (!validationResult.success) {
@@ -68,7 +70,8 @@ export async function POST(req: NextRequest) {
             );
         }
 
-        const { ingredientId, quantity, mealId = null } = body;
+        const { ingredientId, productId, quantity, mealId = null } = body;
+        console.log("productId", productId);
 
         // Vérifie si une liste de courses existe
         let shoppingList = user.shoppingList[0]; // Prendre la première liste de l'utilisateur
@@ -84,6 +87,7 @@ export async function POST(req: NextRequest) {
             where: {
                 shoppingListId: shoppingList.id,
                 ingredientId,
+                productId,
             },
         });
 
@@ -105,6 +109,7 @@ export async function POST(req: NextRequest) {
                 data: {
                     shoppingListId: shoppingList.id,
                     ingredientId,
+                    productId,
                     quantity,
                     mealId: mealId || null,
                 },

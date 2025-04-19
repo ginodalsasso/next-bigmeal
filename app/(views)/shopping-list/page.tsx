@@ -117,10 +117,10 @@ const ShoppingListPage = () => {
 
 
     // Suppression d'un ingrédient dans le state après suppression API
-    const handleIngredientDeleted = (ingredientId: string) => {
+    const handleItemDeleted = (itemId: string) => {
         setShoppingList((prev) => prev && {
             ...prev,
-            items: prev.items.filter((item) => item.id !== ingredientId)
+            items: prev.items.filter((item) => item.id !== itemId)
         });
     };
 
@@ -201,7 +201,8 @@ const ShoppingListPage = () => {
                                     </button>
 
                                     <span className={item.isChecked ? "line-through" : ""}>
-                                        {item.quantity} {item.ingredient?.name || "Ingrédient non défini"}
+                                        {item.quantity && item.quantity > 1 ? `${item.quantity} x ` : ""}
+                                        {item.ingredient?.name || item.product?.name || "Ingrédient/Produit inconnu"}
                                     </span>
                                     
                                     <button 
@@ -214,7 +215,7 @@ const ShoppingListPage = () => {
                             <DeleteItem
                                 apiUrl="/api/shopping-list/item"
                                 id={item.id}
-                                onSubmit={handleIngredientDeleted}
+                                onSubmit={handleItemDeleted}
                             />
                         </div>
                         <Separator className="my-2 h-px bg-neutral-800" />

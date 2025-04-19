@@ -35,7 +35,7 @@ export async function createShoppingListMealAPI(ingredientId: string, quantity: 
 
 export async function createShoppingListIngredientAPI(ingredientId: string, quantity: number, csrfToken: string) {
     try {
-        const response = await fetch( API_ROUTES.shoppingList.item, {
+        const response = await fetch( API_ROUTES.shoppingList.list, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -49,6 +49,27 @@ export async function createShoppingListIngredientAPI(ingredientId: string, quan
         if (!response.ok) throw new Error('Erreur lors de l\'ajout de l\'ingrédient à la liste de courses');
     } catch (error) {
         console.error("[API_ERROR] createShoppingListIngredient", error);
+        throw error;
+    }
+}
+
+export async function createShoppingListProductAPI(productId: string, quantity: number, csrfToken: string) {
+    try {
+        const response = await fetch( API_ROUTES.shoppingList.list, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                "X-CSRF-Token": csrfToken,
+            },
+            body: JSON.stringify({
+                productId,
+                quantity,
+            }),
+        });
+
+        if (!response.ok) throw new Error('Erreur lors de l\'ajout du produit à la liste de courses');
+    } catch (error) {
+        console.error("[API_ERROR] createShoppingListProductAPI", error);
         throw error;
     }
 }

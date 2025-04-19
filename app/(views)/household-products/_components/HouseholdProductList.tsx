@@ -159,7 +159,7 @@ export default function HouseholdProductList({ fetchedHouseholdProducts }: { fet
                                 </div>
                             </IsAdmin>
                             {/* Ajouter l'ingrédient à la liste de courses */}
-                            <AddToShoppingListForm type="householdProduct" id={householdProduct.id} />
+                            <AddToShoppingListForm type="product" id={householdProduct.id} />
                         </div>
                     ))}
                 </div>

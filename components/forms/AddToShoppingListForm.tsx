@@ -5,26 +5,26 @@ import { toast } from 'sonner';
 import { ShoppingListConstraints } from '@/lib/constraints/forms_constraints';
 import Image from "next/image";
 import add from "@/public/img/add.svg";
-import { AddIngredientToShoppingListFormType } from '@/lib/types/forms_interfaces';
+import { AddProductToShoppingListFormType } from '@/lib/types/forms_interfaces';
 import { Button } from '../ui/button';
 import FormErrorMessage from './FormErrorMessage';
 import { useFormValidation } from '@/app/hooks/useFormValidation';
 import { getMeal } from '@/lib/services/data_fetcher';
-import { createShoppingListIngredientAPI, createShoppingListMealAPI } from '@/lib/services/shopping_list_service';
+import { createShoppingListIngredientAPI, createShoppingListMealAPI, createShoppingListProductAPI } from '@/lib/services/shopping_list_service';
 import { getCsrfToken } from 'next-auth/react';
 
 interface AddToShoppingListFormProps {
-    type: 'meal' | 'ingredient' | 'householdProduct'; // Détermine le type d'ajout
+    type: 'meal' | 'ingredient' | 'product'; // Détermine le type d'ajout
     id: string; // ID du repas ou de l'ingrédient
 }
 
 const AddToShoppingListForm: React.FC<AddToShoppingListFormProps> = ({ type, id }) => {
 
-    const [quantity, setQuantity] = useState<AddIngredientToShoppingListFormType>({ quantity: 1 });
+    const [quantity, setQuantity] = useState<AddProductToShoppingListFormType>({ quantity: 1 });
     const [isLoading, setIsLoading] = useState<boolean>(false);
         
     // Utilisation du hook de validation
-    const { error, setError, validate } = useFormValidation<AddIngredientToShoppingListFormType>(
+    const { error, setError, validate } = useFormValidation<AddProductToShoppingListFormType>(
         ShoppingListConstraints,
         ["quantity"] // Liste des champs à valider
     );
@@ -79,6 +79,26 @@ const AddToShoppingListForm: React.FC<AddToShoppingListFormProps> = ({ type, id 
                     toast('Ingrédient ajouté à la liste de courses avec succès');
                     break;
                 }
+
+                case 'product': {
+                    if (!csrfToken) {
+                        console.error("CSRF token invalide");
+                        setError({ general: "Problème de sécurité, veuillez réessayer." });
+                        return;
+                    }
+
+                    // Valider la quantité
+                    if(!validate(quantity)) {
+                        setIsLoading(false);
+                        return;
+                    }
+
+                    await createShoppingListProductAPI(id, quantity.quantity, csrfToken);
+                    
+                    toast('Produit ajouté à la liste de courses avec succès');
+                    break;
+                }
+
                 default:
                     throw new Error('Type d\'ajout non supporté');
             }
@@ -98,7 +118,7 @@ const AddToShoppingListForm: React.FC<AddToShoppingListFormProps> = ({ type, id 
             <FormErrorMessage message={error?.general} />
 
             {/* Si type = 'ingredient', on affiche le champ de quantité */}
-            {type === 'ingredient' && (
+            {(type === 'ingredient' || type === 'product') && (
                 <input
                     type="number"
                     className="input-text-select "
