@@ -13,8 +13,8 @@ import DeleteItem from "@/components/layout/DeleteItemDialog";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
 // Composants spécifiques
-import UpdateCategory from "../_components/UpdateCategory";
-import CreateCategory from "../_components/CreateCategory";
+import UpdateCategory from "./UpdateCategory";
+import CreateCategory from "./CreateCategory";
 
 // Composants d'autorisation
 import IsAdmin from "@/components/isAdmin";
