@@ -14,7 +14,7 @@ import { createShoppingListIngredientAPI, createShoppingListMealAPI } from '@/li
 import { getCsrfToken } from 'next-auth/react';
 
 interface AddToShoppingListFormProps {
-    type: 'meal' | 'ingredient'; // Détermine le type d'ajout
+    type: 'meal' | 'ingredient' | 'householdProduct'; // Détermine le type d'ajout
     id: string; // ID du repas ou de l'ingrédient
 }
 

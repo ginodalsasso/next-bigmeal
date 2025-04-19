@@ -1,5 +1,5 @@
 // Composant des catégories d'ingrédients
-import CategoryHouseholdProductList from "../../_components/CategoryHouseholdProductList";
+import CategoryHouseholdProductList from "../_components/CategoryHouseholdProductList";
 // Service de récupération des catégories d'ingrédients
 import { getCategoriesHouseholdProduct } from "@/lib/services/data_fetcher";
 

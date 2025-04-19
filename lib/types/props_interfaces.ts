@@ -1,4 +1,4 @@
-import { CompositionType, IngredientType, MealType, PreparationType, StepType } from "./schemas_interfaces";
+import { CompositionType, HouseholdProductType, IngredientType, MealType, PreparationType, StepType } from "./schemas_interfaces";
 
 
 // PROPS DES FORMULAIRES
@@ -29,6 +29,19 @@ export interface CreateIngredientProps {
 export interface UpdateIngredientProps {
     ingredient: IngredientType; // Ingrédient à mettre à jour
     onSubmit: (updatedIngredient: IngredientType) => Promise<void>;
+    onCancel: () => void;
+}
+
+// ____________ HOUSEHOLD PRODUCTS
+export interface CreateHouseholdProductProps { 
+    onSubmit: (householdProduct: HouseholdProductType) => void;
+    onClose: () => void;
+}
+
+// FORMULAIRE DE MISE A JOUR D'INGREDIENT
+export interface UpdateHouseholdProductProps {
+    householdProduct: HouseholdProductType; // Produit à mettre à jour
+    onSubmit: (updatedHouseholdProduct: HouseholdProductType) => Promise<void>;
     onCancel: () => void;
 }
 

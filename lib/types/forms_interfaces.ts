@@ -19,6 +19,20 @@ export interface IngredientFormErrorType {
     categoryIngredientId?: string;
 }
 
+// ____________ HOUSEHOLD PRODUCTS
+export interface HouseholdProductFormType {
+    id?: string;
+    name: string;
+    categoryHouseholdProductId: string;
+}
+
+// FORMULAIRE D'ERREUR INGREDIENT
+export interface HouseholdProductFormErrorType {
+    id?: string;
+    name?: string;
+    categoryHouseholdProductId?: string;
+}
+
 
 // ____________ MEALS
 export interface MealFormType {

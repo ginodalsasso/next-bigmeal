@@ -7,7 +7,7 @@ import IsUser from "../isUser";
 import { signOut } from "next-auth/react";
 import IsNotAuthenticated from "../isNotAuthenticated";
 import SearchBar from "./Search";
-import { Carrot, Folder, LogOut, Menu, Search, ShoppingCart, UserRound, Utensils, X } from "lucide-react";
+import { Carrot, Folder, LogOut, Menu, Search, ShoppingCart, SprayCan, UserRound, Utensils, X } from "lucide-react";
 
 const Navbar = () => {
     const [toggle, setToggle] = useState(false); // État du menu mobile
@@ -18,6 +18,7 @@ const Navbar = () => {
     // Liens de navigation
     const links = [
         { icon: <ShoppingCart />, title: "liste de courses", url: "/shopping-list" },
+        { icon: <SprayCan />, title: "Produits ménagers", url: "/household-products" },
         { icon: <Carrot />, title: "ingrédients", url: "/ingredients" },
         { icon: <Utensils />, title: "repas", url: "/meals" },
         { icon:<Folder />, title: "catégorie ingrédient", url: "/categories-ingredient" },

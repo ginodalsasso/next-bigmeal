@@ -34,6 +34,31 @@ export async function getCategoriesHouseholdProduct() {
 }
 
 
+export async function getHouseholdProduct(
+    skip = 0, 
+    take = 10, 
+    categories: string[] = [], 
+) {
+    try {
+        const url = new URL(`${API_ROUTES.householdProduct}`);
+        // Gestion de la pagination
+        // skip = le nombre d'ingrédients à ignorer, take = le nombre d'ingrédients à récupérer
+        url.searchParams.append('skip', skip.toString());
+        url.searchParams.append('take', take.toString());
+
+        // Gestion des filtres (qui sont des tableaux)
+        categories.forEach(category => url.searchParams.append('categories', category));
+    
+        const response = await fetch(url.toString(), { cache: "no-store" });
+
+        if (!response.ok) throw new Error("Erreur lors de la récupération des produits ménagers.");
+        return response.json();
+    } catch (error) {
+        console.error(error);
+        throw new Error("Impossible de récupérer les produits ménagers.");
+    }
+}
+
 export async function getIngredients(
     skip = 0, 
     take = 10, 

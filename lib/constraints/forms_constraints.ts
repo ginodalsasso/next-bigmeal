@@ -31,6 +31,18 @@ export const ingredientConstraints = z.object({
         .min(1, "Une catégorie est obligatoire"),
 });
 
+export const householdProductConstraints = z.object({
+    name: z
+        .string()
+        .min(3, "Le nom doit comporter au moins 3 caractères")
+        .max(100, "Le nom doit comporter au maximum 100 caractères")
+        .toLowerCase()
+        .trim(),
+        categoryHouseholdProductId: z
+        .string()
+        .min(1, "Une catégorie est obligatoire"),
+});
+
 
 export const mealConstraints = z.object({
     name: z

@@ -4,7 +4,7 @@ import { ucFirst } from "@/lib/utils";
 import Link from "next/link";
 import React, { useState } from "react";
 import IsUser from "../isUser";
-import { Carrot, Folder, ShoppingCart, Utensils } from "lucide-react";
+import { Carrot, Folder, ShoppingCart, SprayCan, Utensils } from "lucide-react";
 
 const Sidebar = () => {
     const [active, setActive] = useState(""); // État de la navigation active
@@ -12,6 +12,7 @@ const Sidebar = () => {
     // Liens de navigation
     const links = [
         { icon: <ShoppingCart />, title: "liste de courses", url: "/shopping-list" },
+        { icon: <SprayCan />, title: "Produits ménagers", url: "/household-products" },
         { icon: <Carrot />, title: "ingrédients", url: "/ingredients" },
         { icon: <Utensils />, title: "repas", url: "/meals" },
         { icon:<Folder />, title: "catégorie ingrédient", url: "/categories-ingredient" },
