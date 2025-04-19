@@ -1,7 +1,7 @@
 'use client';
 
 // Bibliothèques tierces
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
@@ -41,6 +41,11 @@ export default function IngredientList({ fetchedIngredients }: { fetchedIngredie
     const router = useRouter();
     const [ingredients, setIngredients] = useState<IngredientType[]>(fetchedIngredients);
     const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
+
+    useEffect(() => {
+        setIngredients(fetchedIngredients); // Pour les mises à jour de la liste d'ingrédients coté client
+    }, [fetchedIngredients]);
+    
 
     // _________________________ CRUD _________________________
     // Fonction pour ajouter un ingrédient à la liste
@@ -128,7 +133,7 @@ export default function IngredientList({ fetchedIngredients }: { fetchedIngredie
             {/* Liste des ingrédients */}
             <div className="cards-wrapper">
                 <div className="cards-list">
-                    {fetchedIngredients.map((ingredient) => (
+                    {ingredients.map((ingredient) => (
                         <div key={ingredient.id} className="card">
                             <ItemView
                                 title={ingredient.name}

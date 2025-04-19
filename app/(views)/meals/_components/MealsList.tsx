@@ -2,7 +2,7 @@
 'use client';
 
 // Bibliothèques tierces
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { toast } from "sonner";
 
@@ -37,6 +37,12 @@ export default function MealsList( {fetchedMeals}: { fetchedMeals: MealType[] })
     const [meals, setMeals] = useState<MealType[]>(fetchedMeals);
 
     const router = useRouter();
+
+    
+    useEffect(() => {
+        setMeals(fetchedMeals); // Pour les mises à jour de la liste de repas coté client
+    }, [fetchedMeals]);
+
     
     // _________________________ CRUD _________________________
 
@@ -95,7 +101,7 @@ export default function MealsList( {fetchedMeals}: { fetchedMeals: MealType[] })
             {/* Liste des repas */}
             <div className="cards-wrapper">
                 <div className="cards-list">
-                    {fetchedMeals.map((meal) => (
+                    {meals.map((meal) => (
                         <div key={meal.id} className="card">
                             <ItemView
                                 title={meal.name}

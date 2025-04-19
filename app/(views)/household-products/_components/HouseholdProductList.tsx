@@ -1,7 +1,7 @@
 'use client';
 
 // Bibliothèques tierces
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
@@ -38,6 +38,11 @@ export default function HouseholdProductList({ fetchedHouseholdProducts }: { fet
     const router = useRouter();
     const [householdProducts, setHouseholdProducts] = useState<HouseholdProductType[]>(fetchedHouseholdProducts);
     const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
+
+    useEffect(( ) => {
+        setHouseholdProducts(fetchedHouseholdProducts); // Pour les mises à jour de la liste de produits coté client
+    }, [fetchedHouseholdProducts]);
+
 
     // _________________________ CRUD _________________________
     // Fonction pour ajouter un produit ménager à la liste
@@ -123,7 +128,7 @@ export default function HouseholdProductList({ fetchedHouseholdProducts }: { fet
             {/* Liste des ingrédients */}
             <div className="cards-wrapper">
                 <div className="cards-list">
-                    {fetchedHouseholdProducts.map((householdProduct) => (
+                    {householdProducts.map((householdProduct) => (
                         <div key={householdProduct.id} className="card">
                             <ItemView
                                 title={householdProduct.name}
