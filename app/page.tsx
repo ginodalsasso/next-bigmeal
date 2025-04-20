@@ -45,6 +45,7 @@ function PushNotificationManager() {
     }
 
 
+
     async function subscribeToPush() {
         const registration = await navigator.serviceWorker.ready;
         const sub = await registration.pushManager.subscribe({
@@ -55,13 +56,17 @@ function PushNotificationManager() {
         });
         setSubscription(sub);
         // TODO : Enregistrer dans la base via une autre API si besoin
+        // TODO : Enregistrer dans la base via une autre API si besoin
     }
+    
     
     async function unsubscribeFromPush() {
         await subscription?.unsubscribe();
         setSubscription(null);
         // TODO : Supprimer dans la base si besoin
+        // TODO : Supprimer dans la base si besoin
     }
+    
     
     async function sendTestNotification() {
         if (subscription) {
@@ -78,6 +83,7 @@ function PushNotificationManager() {
             setMessage('');
         }
     }
+    
     
 
     if (!isSupported) {
