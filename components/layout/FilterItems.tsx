@@ -21,23 +21,32 @@ const FilterCheckboxes: React.FC<FilterCheckboxesProps> = ({ options, onFilterCh
     };
 
     return (
-        <div className="flex flex-wrap pb-2">
-            {options.map((option, index) => (
-                <label
-                    key={index}
-                    className={`cursor-pointer border px-4 py-2 hover:bg-white hover:text-black ${selectedFilters.includes(option) ? 'bg-white text-black' : ''}`}
-                >
-                    <input
-                        type="checkbox"
-                        className="hidden"
-                        value={option}
-                        checked={selectedFilters.includes(option)}
-                        onChange={handleFilterChange}
-                    />
-                    {option}
-                </label>
-            ))}
-    </div>
+        <div className="relative w-full">
+
+            <div className="scrollbar-hide my-4 flex w-full flex-nowrap space-x-2 overflow-x-auto">
+                {options.map((option, index) => (
+                    <label
+                        key={index}
+                        className={`cursor-pointer whitespace-nowrap border px-4 py-2 transition-colors duration-200 ${
+                            selectedFilters.includes(option)
+                                ? "bg-white text-black"
+                                : "border-white bg-transparent text-white"
+                        }`}
+                    >
+                        <input
+                            type="checkbox"
+                            className="hidden"
+                            value={option}
+                            checked={selectedFilters.includes(option)}
+                            onChange={handleFilterChange}
+                        />
+                        {option}
+                    </label>
+                ))}
+
+            </div>
+            <div className="pointer-events-none absolute right-0 top-0 h-full w-12 bg-gradient-to-l from-black to-transparent" />
+        </div>
 
 
     );

@@ -21,19 +21,19 @@ export default function RootLayout({
             </head>
             <body className="flex min-h-screen flex-col">
                 <SessionProvider>
-                        <header className="flex justify-center border-b border-neutral-500 bg-neutral-900">
-                            <Navbar />
-                        </header>
-                        <div className="flex">
-                            <aside className="hidden border-r border-neutral-500 lg:block">
-                                <Sidebar />
-                            </aside>
-                            <main className="flex-1 px-4 pb-20 pt-4 md:p-6">{children}</main>
-                        </div>
-                        <div className="fixed bottom-0 w-full border-t bg-black lg:hidden">
-                            <Bottombar />
-                        </div>
-                        <Toaster />
+                    <header className="flex justify-center border-b border-neutral-500 bg-neutral-900">
+                        <Navbar />
+                    </header>
+                    <div className="flex">
+                        <aside className="hidden border-r border-neutral-500 lg:block">
+                            <Sidebar />
+                        </aside>
+                        <main className="flex-1 overflow-hidden px-4 pb-20 pt-4 md:p-6" >{children}</main>
+                    </div>
+                    <div className="fixed bottom-0 w-full border-t bg-black lg:hidden">
+                        <Bottombar />
+                    </div>
+                    <Toaster />
                 </SessionProvider>
             </body>
         </html>

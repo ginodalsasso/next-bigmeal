@@ -194,11 +194,12 @@ const ShoppingListPage = () => {
                                 />
 
                                 <div className="flex items-center">
-                                    <button 
+                                    { item.quantity && item.quantity > 1 &&
+                                        <button 
                                         onClick={() => updateItemQuantity(item.id, item.quantity - 1)}
                                     >
                                         <Minus />
-                                    </button>
+                                    </button>}
 
                                     <span className={item.isChecked ? "line-through" : ""}>
                                         {item.quantity && item.quantity > 1 ? `${item.quantity} x ` : ""}
