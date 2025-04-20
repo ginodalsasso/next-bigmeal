@@ -4,7 +4,6 @@
 // import { useRouter } from "next/navigation";
 
 import { useState, useEffect } from "react";
-import { subscribeUser, unsubscribeUser, sendNotification } from "./actions";
 
 function urlBase64ToUint8Array(base64String: string) {
     const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
@@ -45,6 +44,7 @@ function PushNotificationManager() {
         setSubscription(sub);
     }
 
+
     async function subscribeToPush() {
         const registration = await navigator.serviceWorker.ready;
         const sub = await registration.pushManager.subscribe({
@@ -54,22 +54,31 @@ function PushNotificationManager() {
             ),
         });
         setSubscription(sub);
-        const serializedSub = JSON.parse(JSON.stringify(sub));
-        await subscribeUser(serializedSub);
+        // TODO : Enregistrer dans la base via une autre API si besoin
     }
-
+    
     async function unsubscribeFromPush() {
         await subscription?.unsubscribe();
         setSubscription(null);
-        await unsubscribeUser();
+        // TODO : Supprimer dans la base si besoin
     }
-
+    
     async function sendTestNotification() {
         if (subscription) {
-            await sendNotification(message);
-            setMessage("");
+            await fetch('/api/sendNotification', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    subscription: JSON.parse(JSON.stringify(subscription)),
+                    message,
+                }),
+            });
+            setMessage('');
         }
     }
+    
 
     if (!isSupported) {
         return <p>Push notifications are not supported in this browser.</p>;
