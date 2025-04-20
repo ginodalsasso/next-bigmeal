@@ -65,7 +65,7 @@ function PushNotificationManager() {
     
     async function sendTestNotification() {
         if (subscription) {
-            await fetch('/api/sendNotification', {
+            await fetch('/api/send-notification', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
