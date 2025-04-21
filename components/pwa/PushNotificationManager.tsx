@@ -3,21 +3,21 @@
 import { useState, useEffect } from "react";
 
 // fonction utilitaire pour convertir une chaîne base64 en Uint8Array pour la clé publique VAPID
-function urlBase64ToUint8Array(base64String: string) {
-    const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
-    const base64 = (base64String + padding)
-        .replace(/-/g, "+")
-        .replace(/_/g, "/");
+// function urlBase64ToUint8Array(base64String: string) {
+//     const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
+//     const base64 = (base64String + padding)
+//         .replace(/-/g, "+")
+//         .replace(/_/g, "/");
 
-    const rawData = window.atob(base64); // Décoder la chaîne base64
-    const outputArray = new Uint8Array(rawData.length);
+//     const rawData = window.atob(base64); // Décoder la chaîne base64
+//     const outputArray = new Uint8Array(rawData.length);
 
 
-    for (let i = 0; i < rawData.length; ++i) {
-        outputArray[i] = rawData.charCodeAt(i);
-    }
-    return outputArray;
-}
+//     for (let i = 0; i < rawData.length; ++i) {
+//         outputArray[i] = rawData.charCodeAt(i);
+//     }
+//     return outputArray;
+// }
 
 export default function PushNotificationManager() {
     const [isSupported, setIsSupported] = useState(false);
@@ -61,41 +61,41 @@ export default function PushNotificationManager() {
         }
     }
 
-    // Fonction pour s'abonner aux notifications push
-    async function subscribeToPush() {
-        try {
-            const registration = await navigator.serviceWorker.ready; // S'assurer que le service worker est prêt
-            const sub = await registration.pushManager.subscribe({ // Demander la souscription à l'utilisateur
-                userVisibleOnly: true, 
-                applicationServerKey: urlBase64ToUint8Array(
-                    process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY || ""
-                ),
-            });
+    // // Fonction pour s'abonner aux notifications push
+    // async function subscribeToPush() {
+    //     try {
+    //         const registration = await navigator.serviceWorker.ready; // S'assurer que le service worker est prêt
+    //         const sub = await registration.pushManager.subscribe({ // Demander la souscription à l'utilisateur
+    //             userVisibleOnly: true, 
+    //             applicationServerKey: urlBase64ToUint8Array(
+    //                 process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY || ""
+    //             ),
+    //         });
 
-            setSubscription(sub); // Mettre à jour l'état local
+    //         setSubscription(sub); // Mettre à jour l'état local
 
-            // Envoyer la souscription au serveur
-            await saveSubscription(sub);
-        } catch (error) {
-            console.error("subscribeToPush", error);
-        }
-    }
+    //         // Envoyer la souscription au serveur
+    //         await saveSubscription(sub);
+    //     } catch (error) {
+    //         console.error("subscribeToPush", error);
+    //     }
+    // }
 
-    // Fonction pour enregistrer la souscription sur le serveur
-    async function saveSubscription(subscription: PushSubscription) {
-        try {
-            await fetch("/api/save-subscription", { // ROUTE A CREER
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(subscription),
-            });
-        } catch (error) {
-            console.error("[API_ERROR] saveSubscription", error);
-            throw error;          
-        }
-    }
+    // // Fonction pour enregistrer la souscription sur le serveur
+    // async function saveSubscription(subscription: PushSubscription) {
+    //     try {
+    //         await fetch("/api/save-subscription", { // ROUTE A CREER
+    //             method: "POST",
+    //             headers: {
+    //                 "Content-Type": "application/json",
+    //             },
+    //             body: JSON.stringify(subscription),
+    //         });
+    //     } catch (error) {
+    //         console.error("[API_ERROR] saveSubscription", error);
+    //         throw error;          
+    //     }
+    // }
 
     // async function unsubscribeFromPush() {
     //     try {
@@ -192,7 +192,7 @@ export default function PushNotificationManager() {
                         You are not subscribed to push notifications.
                     </p>
                     <button
-                        onClick={subscribeToPush}
+                        // onClick={subscribeToPush}
                         className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
                     >
                         Subscribe to Notifications
