@@ -1,0 +1,137 @@
+"use client";
+
+import { useState, useEffect } from "react";
+
+interface BeforeInstallPromptEvent extends Event {
+    prompt: () => Promise<void>;
+    userChoice: Promise<{
+        outcome: "accepted" | "dismissed";
+        platform: string;
+    }>;
+}
+
+export default function InstallPrompt() {
+    const [isIOS, setIsIOS] = useState(false);
+    const [isStandalone, setIsStandalone] = useState(false);
+    const [deferredPrompt, setDeferredPrompt] =
+        useState<BeforeInstallPromptEvent | null>(null);
+    const [showIOSInstructions, setShowIOSInstructions] = useState(false);
+    const [isClient, setIsClient] = useState(false);
+
+    useEffect(() => {
+        setIsClient(true);
+
+        // Vérifier si l'application est sur iOS
+        const isAppleDevice =
+            /iPad|iPhone|iPod/.test(navigator.userAgent) &&
+            !("MSStream" in window);
+        setIsIOS(isAppleDevice);
+
+        // Vérifier si l'application est déjà installée
+        setIsStandalone(
+            window.matchMedia("(display-mode: standalone)").matches
+        );
+
+        // Intercepter l'événement beforeinstallprompt pour les appareils non-iOS
+        const handleBeforeInstallPrompt = (e: Event) => {
+            // Empêcher Chrome d'afficher automatiquement l'invite
+            e.preventDefault();
+            // Stocker l'événement pour pouvoir le déclencher plus tard
+            setDeferredPrompt(e as BeforeInstallPromptEvent);
+        };
+
+        window.addEventListener(
+            "beforeinstallprompt",
+            handleBeforeInstallPrompt
+        );
+
+        return () => {
+            window.removeEventListener(
+                "beforeinstallprompt",
+                handleBeforeInstallPrompt
+            );
+        };
+    }, []);
+
+    const installApp = async () => {
+        if (deferredPrompt) {
+            // Afficher l'invite d'installation
+            deferredPrompt.prompt();
+
+            // Attendre que l'utilisateur réponde à l'invite
+            const { outcome } = await deferredPrompt.userChoice;
+
+            console.log(`Réponse: ${outcome}`);
+
+            // On a utilisé l'invite, donc on ne peut plus l'utiliser
+            setDeferredPrompt(null);
+        } else if (isIOS) {
+            // Sur iOS, afficher les instructions d'installation
+            setShowIOSInstructions(true);
+        }
+    };
+
+    // Ne rien afficher pendant le rendu côté serveur ou si l'app est déjà installée
+    if (!isClient || isStandalone) {
+        return null;
+    }
+
+    return (
+        <div className="fixed bottom-0 left-0 right-0 bg-white p-4 shadow-lg border-t border-gray-200 z-50">
+            <div className="flex flex-col space-y-2">
+                <h3 className="text-lg font-semibold">Installer BigMeal</h3>
+
+                {isIOS ? (
+                    <div>
+                        <button
+                            onClick={installApp}
+                            className="bg-blue-500 text-white px-4 py-2 rounded-lg w-full"
+                        >
+                            Comment installer
+                        </button>
+
+                        {showIOSInstructions && (
+                            <div className="mt-2 p-3 bg-gray-100 rounded-lg">
+                                <p className="text-sm">
+                                    Pour installer cette application sur votre
+                                    appareil iOS :
+                                </p>
+                                <ol className="text-sm list-decimal pl-5 mt-2">
+                                    <li>
+                                        Appuyez sur le bouton Partager{" "}
+                                        <span className="font-bold">⎋</span>
+                                    </li>
+                                    <li>
+                                        Faites défiler et appuyez sur{" "}
+                                        <span className="font-bold">
+                                            Sur l&apos;écran d&apos;accueil&quot;
+                                        </span>
+                                    </li>
+                                    <li>
+                                        Appuyez sur{" "}
+                                        <span className="font-bold">
+                                            Ajouter&quot;
+                                        </span>{" "}
+                                        en haut à droite
+                                    </li>
+                                </ol>
+                            </div>
+                        )}
+                    </div>
+                ) : (
+                    <button
+                        onClick={installApp}
+                        className={`${
+                            deferredPrompt
+                                ? "bg-blue-500 text-white"
+                                : "bg-gray-300 text-gray-500"
+                        } px-4 py-2 rounded-lg w-full`}
+                        disabled={!deferredPrompt}
+                    >
+                        Ajouter à l&apos;écran d&apos;accueil
+                    </button>
+                )}
+            </div>
+        </div>
+    );
+}
