@@ -77,7 +77,7 @@ export default function InstallPrompt() {
     }
 
     return (
-        <div className="fixed bottom-0 left-0 right-0 bg-white p-4 shadow-lg border-t border-gray-200 z-50">
+        <div className="fixed inset-x-0 bottom-0 z-50 border-t border-gray-200 bg-white p-4 shadow-lg">
             <div className="flex flex-col space-y-2">
                 <h3 className="text-lg font-semibold">Installer BigMeal</h3>
 
@@ -85,18 +85,18 @@ export default function InstallPrompt() {
                     <div>
                         <button
                             onClick={installApp}
-                            className="bg-blue-500 text-white px-4 py-2 rounded-lg w-full"
+                            className="w-full rounded-lg bg-blue-500 px-4 py-2 text-white"
                         >
                             Comment installer
                         </button>
 
                         {showIOSInstructions && (
-                            <div className="mt-2 p-3 bg-gray-100 rounded-lg">
+                            <div className="mt-2 rounded-lg bg-gray-100 p-3">
                                 <p className="text-sm">
                                     Pour installer cette application sur votre
                                     appareil iOS :
                                 </p>
-                                <ol className="text-sm list-decimal pl-5 mt-2">
+                                <ol className="mt-2 list-decimal pl-5 text-sm">
                                     <li>
                                         Appuyez sur le bouton Partager{" "}
                                         <span className="font-bold">⎋</span>
@@ -125,7 +125,7 @@ export default function InstallPrompt() {
                             deferredPrompt
                                 ? "bg-blue-500 text-white"
                                 : "bg-gray-300 text-gray-500"
-                        } px-4 py-2 rounded-lg w-full`}
+                        } w-full rounded-lg px-4 py-2`}
                         disabled={!deferredPrompt}
                     >
                         Ajouter à l&apos;écran d&apos;accueil
