@@ -27,7 +27,7 @@ const ItemView = <T extends object>({
             )}
 
             <div className="flex">
-            {Object.entries(details).map(([key, value]) =>
+                {Object.entries(details).map(([key, value]) =>
                     badgeKeys.includes(key) ? (
                         value ? ( // Vérifie que la valeur n'est pas null ou undefined
                             <p key={key}>

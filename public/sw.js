@@ -7,6 +7,7 @@ const ASSETS_TO_CACHE = [
     "/offline",
     "/favicon192x192.png",
     "/favicon512x512.png",
+    "/favicon.ico",
 ];
 
 // Installation - mise en cache des ressources
@@ -54,8 +55,10 @@ self.addEventListener("activate", (event) => {
 
 // Gestion des requêtes - stratégie "network first" avec fallback sur le cache
 self.addEventListener("fetch", (event) => {
-    // On ne gère que les requêtes GET
     if (event.request.method !== "GET") return;
+
+    // Ignore toutes les requêtes non HTTP
+    if (!event.request.url.startsWith("http")) return;
 
     // On exclut les requêtes d'API pour éviter de mettre en cache des données dynamiques
     if (event.request.url.includes("/api/")) return;
@@ -64,8 +67,8 @@ self.addEventListener("fetch", (event) => {
         fetch(event.request)
             .then((response) => {
                 // On met en cache la réponse fraîche
-                const responseClone = response.clone();
-                caches.open(CACHE_NAME).then((cache) => {
+                const responseClone = response.clone(); // Clone la réponse pour la mettre en cache
+                caches.open(CACHE_NAME).then((cache) => { 
                     cache.put(event.request, responseClone);
                 });
                 return response;

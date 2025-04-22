@@ -2,7 +2,7 @@
 // Si l'API_URL est défini on utilise la valeur, sinon on utilise la valeur par défaut
 const apiBaseUrl = process.env.API_URL ?? "";
 
-const BASE_URL = `${apiBaseUrl}/api`;
+export const BASE_URL = `${apiBaseUrl}/api`;
 
 const authRoutes = {
     register: `${BASE_URL}/auth/register`,
