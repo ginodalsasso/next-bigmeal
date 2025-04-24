@@ -53,6 +53,7 @@ const AddToShoppingListForm: React.FC<AddToShoppingListFormProps> = ({ type, id 
                             console.error("Invalid ingredient in composition:", composition);
                             continue;
                         }
+                        console.log("Ingrédients ajoutés à la liste de courses avec succès", composition.ingredient.id);
                 
                         await createShoppingListMealAPI(
                             meal.id, 

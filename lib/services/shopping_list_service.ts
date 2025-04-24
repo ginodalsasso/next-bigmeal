@@ -12,7 +12,7 @@ export async function fetchShoppingListAPI() {
     }
 }
 
-export async function createShoppingListMealAPI(ingredientId: string, mealId: string, quantity: number, unit: IngredientUnit, csrfToken: string) {
+export async function createShoppingListMealAPI(mealId: string, ingredientId: string,  quantity: number, unit: IngredientUnit, csrfToken: string) {
     try {
         const response = await fetch( API_ROUTES.shoppingList.list, {
             method: 'POST',
@@ -21,8 +21,8 @@ export async function createShoppingListMealAPI(ingredientId: string, mealId: st
                 "X-CSRF-Token": csrfToken,
             },
             body: JSON.stringify({
-                ingredientId,
                 mealId,
+                ingredientId,
                 quantity,
                 unit,
             }),

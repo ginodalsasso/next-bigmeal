@@ -14,7 +14,7 @@ import { Separator } from "@radix-ui/react-separator";
 import { ShoppingListType } from "@/lib/types/schemas_interfaces";
 
 // Utils
-import { dateToString } from "@/lib/utils";
+import { dateToString, translatedUnit } from "@/lib/utils";
 
 // Services
 import {  fetchShoppingListAPI, markShoppingListAsExpiredAPI, toggleItemCheckedAPI, updateItemQuantityAPI } from "@/lib/services/shopping_list_service";
@@ -160,19 +160,19 @@ const ShoppingListPage = () => {
 
     return (
         <div>
-            <div className="mb-4 text-right">
-                <p className="text-lg font-bold">Date de création : {dateToString(shoppingList.createdAt)}</p>
-                <p className="text-lg font-bold">{shoppingList.items.length} ingrédients à la liste.</p>
+            <h1 className="mb-4 text-center text-2xl">Liste de courses</h1>
+            <div className="text-right">
+                <p className="font-bold">Date de création : <span className="text-sm">{dateToString(shoppingList.createdAt)}</span></p>
+                <p className="font-bold">{shoppingList.items.length} ingrédients à la liste.</p>
             </div>
-            <h1 className="text-center text-2xl">Liste de courses</h1>
 
             {/* Affichage des repas */}
             {meals.length > 0 && (
                 <div>
-                    <h4 className="mb-2 mt-4 text-lg font-semibold">Plats :</h4>
+                    <h2 className="mb-2 mt-4 text-lg font-semibold">Plats :</h2>
                     <ul>
                         {meals.map((meal, index) => (
-                            <li key={index} className="flex justify-between">
+                            <li key={index}>
                                 {meal}
                             </li>
                         ))}
@@ -182,7 +182,7 @@ const ShoppingListPage = () => {
 
             {/* Affichage des ingrédients */}
             <div className="mb-8 border border-neutral-500 p-4">
-                {shoppingList.items.map((item) => ( console.log(item), // Debug
+                {shoppingList.items.map((item) => (
                     <div key={item.id}>
                         <div className="flex items-center justify-between">
                             <div className="flex items-center">
@@ -193,24 +193,33 @@ const ShoppingListPage = () => {
                                     onChange={() => toggleItemChecked(item.id, item.isChecked ?? false)}
                                 />
 
-                                <div className="flex items-center">
-                                    { item.quantity && item.quantity > 1 &&
-                                        <button 
-                                        onClick={() => updateItemQuantity(item.id, item.quantity - 1)}
-                                    >
-                                        <Minus />
-                                    </button>}
-
+                                <div className="flex flex-col items-center">
                                     <span className={item.isChecked ? "line-through" : ""}>
-                                        {item.quantity} {item.unit?.toLowerCase() ?? ""} – {item.ingredient?.name || item.product?.name}
-
+                                        {
+                                            item.ingredient ? item.ingredient.name 
+                                            : item.product ? item.product.name 
+                                            : "Produit non trouvé"
+                                        } 
                                     </span>
-                                    
-                                    <button 
-                                        onClick={() => updateItemQuantity(item.id, item.quantity + 1)}
-                                    >
-                                        <Plus />
-                                    </button>
+                                    <div className="ml-2 flex items-center gap-2">
+                                        { item.quantity && item.quantity > 1 &&
+                                            <button 
+                                                onClick={() => updateItemQuantity(item.id, item.quantity - 1)}
+                                            >
+                                                <Minus />
+                                            </button>
+                                        }
+                                            
+                                        <span className={item.isChecked ? "line-through" : ""}>
+                                            {item.quantity} {(item.unit && translatedUnit(item.unit)) ?? "x"}
+                                        </span>
+
+                                        <button 
+                                            onClick={() => updateItemQuantity(item.id, item.quantity + 1)}
+                                        >
+                                            <Plus />
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                             <DeleteItem

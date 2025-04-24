@@ -6,7 +6,7 @@ model ShoppingListItem {
     productId    String?     @db.ObjectId
 
     quantity     Float       @default(0.0)
-    unit         Unit
+    unit         Unit?
     comment      String?
     isChecked    Boolean     @default(false)
 

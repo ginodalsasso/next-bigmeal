@@ -17,14 +17,31 @@ export async function GET() {
             include: {
                 items: {
                     include: {
-                        ingredient: true,
-                        product: true,
-                        meal: true,
+                        ingredient: {
+                            select: {
+                                id: true,
+                                name: true,
+                            }
+                        },
+                        product: {
+                            select: {
+                                id: true,
+                                name: true,
+                            }
+                        },
+                        meal: {
+                            select: {
+                                id: true,
+                                name: true,
+                            }
+                        }
                     }
                 }
-            }
+            },
         });
 
+        // const meals = Array.from(new Set(shoppingList?.items.map(item => item.meal?.name).filter(Boolean)));
+        
         if (!shoppingList) {
             return NextResponse.json(null, { status: 200 });
         }
@@ -59,18 +76,16 @@ export async function POST(req: NextRequest) {
         }
 
         const body = await req.json();
-        const { ingredientId, productId, unit, quantity, mealId = null } = body;
+        const { mealId = null, ingredientId, productId, unit, quantity} = body;
 
         
         // Valider et nettoyer les données
-        if(!body.mealId) {
-            const validationResult = ShoppingListConstraints.safeParse(body);
-            if (!validationResult.success) {
-                return NextResponse.json(
-                    { error: validationResult.error.format() },
-                    { status: 400 }
-                );
-            }
+        const validationResult = ShoppingListConstraints.safeParse(body);
+        if (!validationResult.success) {
+            return NextResponse.json(
+                { error: validationResult.error.format() },
+                { status: 400 }
+            );
         }
 
         // Vérifie si une liste de courses existe
@@ -88,7 +103,7 @@ export async function POST(req: NextRequest) {
                 ingredientId,
                 productId,
                 unit: unit || null, // Unité peut être null si non spécifiée
-                mealId: mealId || null, // MealId peut être null si non spécifié      },
+                mealId: mealId
             },
         });
 
