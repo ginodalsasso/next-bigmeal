@@ -121,8 +121,10 @@ export interface ForgotUserPasswordFormType {
 // ____________ SHOPPING LIST
 export interface AddProductToShoppingListFormType {
     quantity: number;
+    unit?: IngredientUnit;
 }
 
 export interface AddProductToShoppingListFormErrorType {
     quantity?: string;
+    unit?: string;
 }

@@ -182,7 +182,7 @@ const ShoppingListPage = () => {
 
             {/* Affichage des ingrédients */}
             <div className="mb-8 border border-neutral-500 p-4">
-                {shoppingList.items.map((item) => (
+                {shoppingList.items.map((item) => ( console.log(item), // Debug
                     <div key={item.id}>
                         <div className="flex items-center justify-between">
                             <div className="flex items-center">
@@ -202,8 +202,8 @@ const ShoppingListPage = () => {
                                     </button>}
 
                                     <span className={item.isChecked ? "line-through" : ""}>
-                                        {item.quantity && item.quantity > 1 ? `${item.quantity} x ` : ""}
-                                        {item.ingredient?.name || item.product?.name || "Ingrédient/Produit inconnu"}
+                                        {item.quantity} {item.unit?.toLowerCase() ?? ""} – {item.ingredient?.name || item.product?.name}
+
                                     </span>
                                     
                                     <button 

@@ -54,7 +54,13 @@ const AddToShoppingListForm: React.FC<AddToShoppingListFormProps> = ({ type, id 
                             continue;
                         }
                 
-                        await createShoppingListMealAPI(composition.ingredient.id, composition.quantity, meal.id, csrfToken);
+                        await createShoppingListMealAPI(
+                            meal.id, 
+                            composition.ingredient.id, 
+                            composition.quantity, 
+                            composition.unit, 
+                            csrfToken
+                        );
                     }
                     toast('Les ingrédients du repas ont été ajoutés à la liste de courses');
                     break;

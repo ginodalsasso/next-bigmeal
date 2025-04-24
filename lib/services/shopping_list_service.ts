@@ -1,4 +1,5 @@
 import API_ROUTES from "../constants/api_routes";
+import { IngredientUnit } from "../types/enums";
 
 export async function fetchShoppingListAPI() {
     try {
@@ -11,7 +12,7 @@ export async function fetchShoppingListAPI() {
     }
 }
 
-export async function createShoppingListMealAPI(ingredientId: string, quantity: number , mealId: string, csrfToken: string) {
+export async function createShoppingListMealAPI(ingredientId: string, mealId: string, quantity: number, unit: IngredientUnit, csrfToken: string) {
     try {
         const response = await fetch( API_ROUTES.shoppingList.list, {
             method: 'POST',
@@ -21,8 +22,9 @@ export async function createShoppingListMealAPI(ingredientId: string, quantity: 
             },
             body: JSON.stringify({
                 ingredientId,
-                quantity,
                 mealId,
+                quantity,
+                unit,
             }),
         });
         if (!response.ok) throw new Error('Erreur lors de l\'ajout du repas à la liste de courses');

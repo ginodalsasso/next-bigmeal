@@ -18,8 +18,8 @@ export async function GET() {
                 items: {
                     include: {
                         ingredient: true,
-                        meal: true,
                         product: true,
+                        meal: true,
                     }
                 }
             }
@@ -59,19 +59,19 @@ export async function POST(req: NextRequest) {
         }
 
         const body = await req.json();
+        const { ingredientId, productId, unit, quantity, mealId = null } = body;
 
-        console.log("body", body);
+        
         // Valider et nettoyer les données
-        const validationResult = ShoppingListConstraints.safeParse(body);
-        if (!validationResult.success) {
-            return NextResponse.json(
-                { error: validationResult.error.format() },
-                { status: 400 }
-            );
+        if(!body.mealId) {
+            const validationResult = ShoppingListConstraints.safeParse(body);
+            if (!validationResult.success) {
+                return NextResponse.json(
+                    { error: validationResult.error.format() },
+                    { status: 400 }
+                );
+            }
         }
-
-        const { ingredientId, productId, quantity, mealId = null } = body;
-        console.log("productId", productId);
 
         // Vérifie si une liste de courses existe
         let shoppingList = user.shoppingList[0]; // Prendre la première liste de l'utilisateur
@@ -81,13 +81,14 @@ export async function POST(req: NextRequest) {
                 data: { userId: user.id },
             });
         }
-
         // Vérifier si l'ingrédient (peu importe le repas) existe déjà dans la liste de courses basée sur ingredientId
         const existingItem = await db.shoppingListItem.findFirst({
             where: {
                 shoppingListId: shoppingList.id,
                 ingredientId,
                 productId,
+                unit: unit || null, // Unité peut être null si non spécifiée
+                mealId: mealId || null, // MealId peut être null si non spécifié      },
             },
         });
 
@@ -111,6 +112,7 @@ export async function POST(req: NextRequest) {
                     ingredientId,
                     productId,
                     quantity,
+                    unit: unit || null,
                     mealId: mealId || null,
                 },
             });

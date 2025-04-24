@@ -140,6 +140,7 @@ export interface ShoppingListItemType {
     productId: string; // Clé étrangère
 
     quantity: number;
+    unit: IngredientUnit;
     comment?: string;
     isChecked?: boolean;
 
