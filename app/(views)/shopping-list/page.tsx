@@ -182,7 +182,13 @@ const ShoppingListPage = () => {
 
             {/* Affichage des ingrédients */}
             <div className="mb-8 border border-neutral-500 p-4">
-                {shoppingList.items.map((item) => (
+                {shoppingList.items
+                .sort((a, b) => {
+                    const nameA = a.ingredient?.name || a.product?.name || "";
+                    const nameB = b.ingredient?.name || b.product?.name || "";
+                    return nameA.localeCompare(nameB); // Trier par nom
+                })
+                .map((item) => (
                     <div key={item.id}>
                         <div className="flex items-center justify-between">
                             <div className="flex items-center">
@@ -196,7 +202,7 @@ const ShoppingListPage = () => {
                                 <div className="flex flex-col items-center">
                                     <span className={item.isChecked ? "line-through" : ""}>
                                         {
-                                            item.ingredient ? item.ingredient.name 
+                                            item.ingredient ? item.ingredient.name
                                             : item.product ? item.product.name 
                                             : "Produit non trouvé"
                                         } 

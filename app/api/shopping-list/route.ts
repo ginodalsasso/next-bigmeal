@@ -39,8 +39,6 @@ export async function GET() {
                 }
             },
         });
-
-        // const meals = Array.from(new Set(shoppingList?.items.map(item => item.meal?.name).filter(Boolean)));
         
         if (!shoppingList) {
             return NextResponse.json(null, { status: 200 });
