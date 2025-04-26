@@ -20,10 +20,10 @@ const ItemView = <T extends object>({
         <>
             {linkToDetails ? (
                 <Link href={linkToDetails} passHref> 
-                    <h2 className="text-xl font-bold hover:underline">{ucFirst(title)}</h2>
+                    <h2 className="mb-2 text-xl font-bold hover:underline">{ucFirst(title)}</h2>
                 </Link>
             ) : (
-                <h2 className="text-xl font-bold">{ucFirst(title)}</h2>
+                <h2 className="mb-2 text-xl font-bold">{ucFirst(title)}</h2>
             )}
 
             <div className="flex">

@@ -27,7 +27,7 @@ const FilterCheckboxes: React.FC<FilterCheckboxesProps> = ({ options, onFilterCh
                 {options.map((option, index) => (
                     <label
                         key={index}
-                        className={`cursor-pointer whitespace-nowrap border px-4 py-2 transition-colors duration-200 ${
+                        className={`rounded-md cursor-pointer whitespace-nowrap border px-4 py-2 transition-colors duration-200 ${
                             selectedFilters.includes(option)
                                 ? "bg-white text-black"
                                 : "border-white bg-transparent text-white"
@@ -45,7 +45,7 @@ const FilterCheckboxes: React.FC<FilterCheckboxesProps> = ({ options, onFilterCh
                 ))}
 
             </div>
-            <div className="pointer-events-none absolute right-0 top-0 h-full w-12 bg-gradient-to-l from-black to-transparent" />
+            <div className="pointer-events-none absolute right-0 top-0 h-full w-6 bg-gradient-to-l from-black to-transparent" />
         </div>
 
 

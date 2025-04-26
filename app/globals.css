@@ -46,7 +46,7 @@ body {
 
 /* style des input type: text / select / textarea */
 .input-text-select {
-  @apply w-full p-2 text-black focus:bg-black focus:text-white;
+  @apply w-full p-2 text-black rounded-md focus:bg-black focus:text-white;
 }
 
 .input-search {
@@ -59,6 +59,10 @@ body {
 
 .table-head {
   @apply text-lg font-bold;
+}
+
+.table-cell {
+  @apply py-4;
 }
 
 @layer base {

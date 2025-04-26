@@ -6,7 +6,7 @@ import {
     DrawerTitle,
     DrawerTrigger,
 } from "@/components/ui/drawer";
-import Image from "next/image";
+import { Edit3Icon } from "lucide-react";
 
 interface EditItemProps {
     renderEditForm: (onClose: () => void) => React.ReactNode;
@@ -18,12 +18,7 @@ const EditItem: React.FC<EditItemProps> = ({ renderEditForm }) => {
     return (
         <Drawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
             <DrawerTrigger>
-                <Image
-                    src={"/img/edit.svg"}
-                    width={18}
-                    height={18}
-                    alt="Icône de modification"
-                />
+                <Edit3Icon />
             </DrawerTrigger>
             <DrawerContent>
                 <DrawerHeader>

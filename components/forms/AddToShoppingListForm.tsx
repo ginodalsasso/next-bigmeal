@@ -12,6 +12,7 @@ import { useFormValidation } from '@/app/hooks/useFormValidation';
 import { getMeal } from '@/lib/services/data_fetcher';
 import { createShoppingListIngredientAPI, createShoppingListMealAPI, createShoppingListProductAPI } from '@/lib/services/shopping_list_service';
 import { getCsrfToken } from 'next-auth/react';
+import { Plus } from 'lucide-react';
 
 interface AddToShoppingListFormProps {
     type: 'meal' | 'ingredient' | 'product'; // Détermine le type d'ajout
@@ -128,20 +129,15 @@ const AddToShoppingListForm: React.FC<AddToShoppingListFormProps> = ({ type, id 
             {(type === 'ingredient' || type === 'product') && (
                 <input
                     type="number"
-                    className="input-text-select "
+                    className="input-text-select lg:max-w-20"
                     value={quantity.quantity || ''}
                     min={1}
                     onChange={(e) => setQuantity({ quantity: parseInt(e.target.value) })}
                 />
             )}
             <FormErrorMessage message={error?.quantity} />
-            <Button variant="default" className={isLoading ? 'cursor-not-allowed opacity-50' : 'w-full'} disabled={isLoading}>
-                <Image
-                    src={add}
-                    alt="Ajouter un ingrédient"
-                    width={18}
-                    height={18}
-                />
+            <Button variant="default" className={isLoading ? 'cursor-not-allowed opacity-50' : ''} disabled={isLoading}>
+                <Plus />
                 <span className="hidden sm:block">
                     {isLoading ? 'Ajout...' : type === 'meal' ? 'Ajouter le repas' : 'Ajouter l\'ingrédient'}
                 </span>

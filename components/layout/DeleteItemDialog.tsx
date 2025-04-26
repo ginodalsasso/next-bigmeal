@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { AlertDialog, AlertDialogTrigger, AlertDialogContent, AlertDialogHeader, AlertDialogFooter, AlertDialogTitle, AlertDialogDescription } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import Image from "next/image";
 import { toast } from "sonner";
 import { getCsrfToken } from "next-auth/react";
+import { X } from "lucide-react";
 
 interface DeleteItemProps {
     apiUrl: string; // URL dynamique
@@ -47,9 +47,9 @@ const DeleteItem: React.FC<DeleteItemProps> = ({ apiUrl, id, onSubmit }) => {
     return (
         <AlertDialog>
             <AlertDialogTrigger asChild>
-                <Button variant="delete" className="w-auto" title="Supprimer" disabled={isDeleting}>
-                    {isDeleting ? "..." : <Image src={"/img/trash.svg"} width={18} height={18} alt="Icône de suppression" />}
-                </Button>
+                <button className="w-auto" title="Supprimer" disabled={isDeleting}>
+                    {isDeleting ? "..." : <X/>}
+                </button>
             </AlertDialogTrigger>
             <AlertDialogContent>
                 <AlertDialogHeader>

@@ -31,6 +31,7 @@ import { reversedTranslatedSeason, translatedSeason } from "@/lib/utils";
 
 // Constantes
 import { CATEGORIES_INGREDIENTS, SEASONS } from "@/lib/constants/ui_constants";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
 
 
@@ -95,81 +96,106 @@ export default function IngredientList({ fetchedIngredients }: { fetchedIngredie
 
     return (
         <>
-            {/* Dialogue pour ajouter un ingrédient */}
-            <div className="flex flex-col justify-between gap-2 pb-2 md:flex-row-reverse md:items-center">
-                <IsUser>
-                    <Drawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
-                        <DrawerTrigger asChild>
-                            <Button variant="success" onClick={() => setIsDrawerOpen(true)}>
-                                <Image
-                                    src={add}
-                                    alt="Ajouter un ingrédient"
-                                    width={18}
-                                    height={18}
-                                />
-                                    Ajouter un ingrédient
-                            </Button>
-                        </DrawerTrigger>
-                        <DrawerContent>
-                            <DrawerHeader>
-                                <DrawerTitle className="text-center">Ajouter un ingrédient</DrawerTitle>
-                                {/* Formulaire de création d'ingrédient */}
-                                <CreateIngredient
-                                    onSubmit={addIngredient}
-                                    onClose={() => setIsDrawerOpen(false)}
-                                />
-                            </DrawerHeader>
-                        </DrawerContent>
-                    </Drawer>
-                </IsUser>
-            </div>
-            
-            {/* Filtres */}
-            <FilterItems 
-                options={filterOptions} 
-                onFilterChange={handleFilterChange} 
-            />
-
-            {/* Liste des ingrédients */}
-            <div className="cards-wrapper">
-                <div className="cards-list">
-                    {ingredients.map((ingredient) => (
-                        <div key={ingredient.id} className="card">
-                            <ItemView
-                                title={ingredient.name}
-                                details={{
-                                    // Afficher la catégorie et la saison si elles existent
-                                    ...(ingredient.categoryIngredient?.name && { category: ingredient.categoryIngredient.name }),
-                                    ...(ingredient.season && { season: translatedSeason(ingredient.season) }),
-                                }}
+        {/* Dialogue pour ajouter un ingrédient */}
+        <div className="flex flex-col justify-between gap-2 pb-2 md:flex-row-reverse md:items-center">
+            <IsUser>
+                <Drawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
+                    <DrawerTrigger asChild>
+                        <Button variant="success" onClick={() => setIsDrawerOpen(true)}>
+                            <Image
+                                src={add}
+                                alt="Ajouter un ingrédient"
+                                width={18}
+                                height={18}
                             />
-                            <IsAdmin>
-                                <div className="flex w-full gap-2">
-                                    <EditItem
-                                        renderEditForm={(onClose) => (
-                                            <UpdateIngredient
-                                                ingredient={ingredient}
-                                                onSubmit={async (updatedIngredient: IngredientType) => {
-                                                    await updateIngredient(updatedIngredient);
-                                                    onClose();
-                                                }}
-                                                onCancel={onClose}
-                                            />
-                                        )}
+                                Ajouter un ingrédient
+                        </Button>
+                    </DrawerTrigger>
+                    <DrawerContent>
+                        <DrawerHeader>
+                            <DrawerTitle className="text-center">Ajouter un ingrédient</DrawerTitle>
+                            {/* Formulaire de création d'ingrédient */}
+                            <CreateIngredient
+                                onSubmit={addIngredient}
+                                onClose={() => setIsDrawerOpen(false)}
+                            />
+                        </DrawerHeader>
+                    </DrawerContent>
+                </Drawer>
+            </IsUser>
+        </div>
+        
+        {/* Filtres */}
+        <FilterItems 
+            options={filterOptions} 
+            onFilterChange={handleFilterChange} 
+        />
+
+        {/* Liste des ingrédients */}
+        <div className="">
+                <Table>
+                <TableHeader>
+                    <TableRow>
+                        <TableHead><span className="table-head">Noms</span></TableHead>
+                        <IsAdmin>
+                            <TableHead><span className="table-head">Actions</span></TableHead>
+                        </IsAdmin>
+                    </TableRow>
+                </TableHeader>
+                <TableBody>
+                    {ingredients.map((ingredient) => (
+                        // <div key={ingredient.id} className="card">
+                        <TableRow key={ingredient.id}>
+                            <TableCell className="table-cell">
+                                <div className="lg:relative">
+                                    <ItemView
+                                        title={ingredient.name}
+                                        details={{
+                                            // Afficher la catégorie et la saison si elles existent
+                                            ...(ingredient.categoryIngredient?.name && { category: ingredient.categoryIngredient.name }),
+                                            ...(ingredient.season && { season: translatedSeason(ingredient.season) }),
+                                        }}
                                     />
-                                    <DeleteItem
-                                        apiUrl="/api/ingredients"
-                                        id={ingredient.id}
-                                        onSubmit={handleIngredientDeleted}
-                                    />
+                                    <div className="lg:absolute right-0 top-0">
+
+                                        <IsAdmin>
+                                            <div className="flex gap-4  mt-2">
+                                                <EditItem
+                                                    renderEditForm={(onClose) => (
+                                                        <UpdateIngredient
+                                                            ingredient={ingredient}
+                                                            onSubmit={async (updatedIngredient: IngredientType) => {
+                                                                await updateIngredient(updatedIngredient);
+                                                                onClose();
+                                                            }}
+                                                            onCancel={onClose}
+                                                        />
+                                                    )}
+                                                />
+                                                <DeleteItem
+                                                    apiUrl="/api/ingredients"
+                                                    id={ingredient.id}
+                                                    onSubmit={handleIngredientDeleted}
+                                                />
+                                            </div>
+                                        </IsAdmin>
+                                    </div>
                                 </div>
-                            </IsAdmin>
-                            {/* Ajouter l'ingrédient à la liste de courses */}
-                            <AddToShoppingListForm type="ingredient" id={ingredient.id} />
-                        </div>
+                            </TableCell>
+                            
+                            <TableCell>
+                                {/* Crud admin */}
+                                <div>
+
+                                    {/* Ajouter l'ingrédient à la liste de courses */}
+                                    <AddToShoppingListForm type="ingredient" id={ingredient.id} />
+                                </div>
+                            </TableCell>
+                        </TableRow>
                     ))}
-                </div>
-            </div>
+                </TableBody>
+            </Table>
+        </div>
         </>
     );
 };

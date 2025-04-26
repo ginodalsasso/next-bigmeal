@@ -10,19 +10,19 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default:
-          "border border-orange-500 bg-orange-900 px-4 py-2 text-white hover:translate-y-0.5 hover:bg-orange-600 hover:transition ",
+          "rounded-md border border-orange-500 bg-orange-900 px-4 py-2 text-white hover:translate-y-0.5 hover:bg-orange-600 hover:transition ",
         destructive:
-          "bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90",
+          "rounded-md bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90",
         outline:
-          "border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground",
+          "rounded-md border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground",
         secondary:
-          "bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80",
-        ghost:    "px-4 py-2 hover:bg-gray-800",
-        link:     "px-4 py-2 text-white underline-offset-4 hover:underline",
-        success:  "border border-emerald-500 bg-emerald-900 px-4 py-2 text-white hover:translate-y-0.5 hover:bg-emerald-600 hover:transition",
-        edit:     "border border-blue-500 bg-blue-900 px-4 py-2 text-white hover:translate-y-0.5 hover:bg-blue-600 hover:transition",
-        delete:   "border border-red-500 bg-red-900 px-4 py-2 text-white hover:translate-y-0.5 hover:bg-red-600 hover:transition",
-        cancel:   "border border-gray-500 bg-gray-900 px-4 py-2 text-white hover:translate-y-0.5 hover:bg-gray-600 hover:transition ",
+          "rounded-md bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80",
+        ghost:    "rounded-md px-4 py-2 hover:bg-gray-800",
+        link:     "rounded-md px-4 py-2 text-white underline-offset-4 hover:underline",
+        success:  "rounded-md border border-emerald-500 bg-emerald-900 px-4 py-2 text-white hover:translate-y-0.5 hover:bg-emerald-600 hover:transition",
+        edit:     "rounded-md border border-blue-500 bg-blue-900 px-4 py-2 text-white hover:translate-y-0.5 hover:bg-blue-600 hover:transition",
+        delete:   "rounded-md border border-red-500 bg-red-900 px-4 py-2 text-white hover:translate-y-0.5 hover:bg-red-600 hover:transition",
+        cancel:   "rounded-md border border-gray-500 bg-gray-900 px-4 py-2 text-white hover:translate-y-0.5 hover:bg-gray-600 hover:transition ",
       },
       size: {
         default: "h-10 px-6 py-4",
