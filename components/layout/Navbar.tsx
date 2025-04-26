@@ -2,28 +2,16 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { ucFirst } from "@/lib/utils";
 import IsUser from "../isUser";
 import { signOut } from "next-auth/react";
 import IsNotAuthenticated from "../isNotAuthenticated";
 import SearchBar from "./Search";
-import { Carrot, Folder, LogOut, Menu, Search, ShoppingCart, SprayCan, UserRound, Utensils, X } from "lucide-react";
+import { LogOut, Search,UserRound } from "lucide-react";
 
 const Navbar = () => {
-    const [toggle, setToggle] = useState(false); // État du menu mobile
     const [toggleSearch, setToggleSearch] = useState(false); // État de la barre de recherche
 
     const searchContainerRef = useRef<HTMLDivElement>(null); // Référence au conteneur de recherche
-
-    // Liens de navigation
-    const links = [
-        { icon: <ShoppingCart />, title: "liste de courses", url: "/shopping-list" },
-        { icon: <SprayCan />, title: "Produits ménagers", url: "/household-products" },
-        { icon: <Carrot />, title: "ingrédients", url: "/ingredients" },
-        { icon: <Utensils />, title: "repas", url: "/meals" },
-        { icon:<Folder />, title: "catégories", url: "/categories" },
-    ];
-
     
     useEffect(() => {
         // Si la recherche n'est pas visible, pas besoin d'ajouter l'écouteur
@@ -42,7 +30,7 @@ const Navbar = () => {
         <nav className="w-full max-w-7xl p-4">
             <div className="flex items-center justify-between ">
                 {/* Logo */}
-                <Link href="/" className="flex items-center text-lg font-bold">
+                <Link href="/" className="hidden items-center text-lg font-bold lg:flex">
                     Big-Meal
                 </Link>
 
@@ -94,91 +82,20 @@ const Navbar = () => {
                         </li>
                     </IsNotAuthenticated>
                 </ul>
-
-
-                {/* Mobile Navigation */}
-                <div className="lg:hidden">
-                    <Menu
-                        onClick={() => setToggle(!toggle)}
-                    />
-                    <div
-                        className={`${
-                            !toggle ? "hidden" : "flex"
-                        } absolute right-0 top-0 z-10 flex size-full justify-end bg-black p-6`}
-                    >
-                        <X
-                            className="absolute right-5 top-6"
-                            onClick={() => setToggle(!toggle)}
-                        />
-                        <ul className="flex list-none flex-col items-end justify-center gap-5">
-                            <IsUser>
-                                <li>
-                                    <button 
-                                        className="nav-links-mobile align-icon" 
-                                        onClick={() => setToggleSearch(!toggleSearch)}
-                                    >                   
-                                        <span>
-                                            Recherche
-                                        </span>
-                                        <Search />
-                                    </button>
-                                </li>
-
-                                {links.map((link) => (
-                                    <li key={link.title} className="nav-links-desktop align-icon">
-                                        <Link
-                                            href={link.url}
-                                            className="nav-links-mobile"
-                                            onClick={() => setToggle(false)}
-                                            >
-                                            {ucFirst(link.title)}
-                                        </Link>
-                                        {link.icon && link.icon}
-                                    </li>
-                                ))}
-                                <li>
-                                    <button 
-                                        className="nav-links-mobile align-icon"
-                                        onClick={() => signOut()}
-                                    > 
-                                        <span>
-                                            Déconnexion
-                                        </span>
-                                        <LogOut />
-                                </button>
-                                </li>
-                            </IsUser>
-                            <IsNotAuthenticated>
-                                <li>
-                                    <Link
-                                        href="/login"
-                                        className="nav-links-mobile"
-                                        onClick={() => setToggle(!toggle)}
-                                    >
-                                        Se connecter
-                                    </Link>
-                                </li>
-                                <li>
-                                    <Link
-                                        href="/register"
-                                        className="nav-links-mobile"
-                                        onClick={() => setToggle(!toggle)}
-                                    >
-                                        S&apos;inscrire
-                                    </Link>
-                                </li>
-                            </IsNotAuthenticated>
-                        </ul>
-                    </div>
-                </div>
             </div>
-            {/* Afficher le composant SearchBar si toggleSearch est true */}
+            {/* Mobile SearchBar visible */}
+            <div className="block lg:hidden" ref={searchContainerRef}>
+                <SearchBar onSearch={() => setToggleSearch(false)} />
+            </div>
             {toggleSearch && (
-                <div className="fixed left-0 top-0  z-10 flex h-screen w-full items-center justify-center bg-zinc-950/50 p-10 backdrop-blur-sm">
-                    <div ref={searchContainerRef}>
-                        <SearchBar onSearch={() => setToggleSearch(false)} />
+                <>
+                    {/* Desktop Overlay */}
+                    <div className="fixed left-0 top-0 z-10 hidden h-screen w-full items-center justify-center bg-zinc-950/50 backdrop-blur-sm lg:flex">
+                        <div ref={searchContainerRef}>
+                            <SearchBar onSearch={() => setToggleSearch(false)} />
+                        </div>
                     </div>
-                </div>
+                </>
             )}
         </nav>
     );

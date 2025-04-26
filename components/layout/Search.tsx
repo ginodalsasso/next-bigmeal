@@ -1,6 +1,8 @@
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import React from "react";
+import { Button } from "../ui/button";
+import { SearchIcon } from "lucide-react";
 
 // _________________________ TYPES _________________________
 interface SearchResult {
@@ -71,17 +73,27 @@ const Search: React.FC<SearchBarProps> = ({ onSearch }) => {
 
     // _________________________ RENDU _________________________
     return (
-        <div className="relative shadow-lg">
+        <div className="relative">
             {/* Input de recherche */}
-            <div className="relative">
+            <div className="w-auto lg:w-screen lg:max-w-xl
+">
                 <input
                     type="text"
                     name="search"
-                    className="border-zinc-300 bg-white px-4 py-3 text-black transition-all duration-200 focus:border-zinc-500 focus:outline-none focus:ring-2 focus:ring-zinc-200"
+                    className="w-full rounded-md  border-zinc-600 bg-white px-4 py-3 text-black transition-all duration-200 focus:outline-double focus:ring-2 focus:ring-zinc-900"
                     placeholder="Rechercher un plat ou un ingrédient..."
                     value={query}
                     onChange={(e) => setQuery(e.target.value as string || "")}
                 />
+                {/* Icône de recherche */}
+                <button
+                    type="button"
+                    className="absolute right-4 top-3 text-zinc-500 transition-colors duration-150 hover:text-zinc-800"
+                    onClick={handleResult}
+                    disabled={loading}
+                >
+                    <SearchIcon />
+                </button>
                 {/* Indicateur de chargement */}
                 {loading && (
                     <div className="absolute right-4 top-3">
@@ -92,14 +104,14 @@ const Search: React.FC<SearchBarProps> = ({ onSearch }) => {
 
             {/* Liste des résultats */}
             {(results.length > 0 || (query.length >= 3 && results.length > 0)) && (
-                <div className="absolute z-50 mt-1 w-full overflow-hidden border border-zinc-200 bg-white shadow-xl">
+                <div className="size-full overflow-hidden rounded-md border border-zinc-400 bg-white hover:bg-zinc-200">
                     {/* Résultats individuels */}
                     {results.length > 0 && (
                         <ul className="max-h-60 overflow-y-auto">
                             {results.map((item) => (
                                 <li
                                     key={item.id}
-                                    className="cursor-pointer border-b border-zinc-100 px-4 py-3 text-sm text-zinc-800 transition-colors duration-150 last:border-b-0 hover:bg-zinc-100"
+                                    className="cursor-pointer border-b border-zinc-200 px-4 py-3 text-sm text-zinc-800 transition-colors duration-150 last:border-b-0 hover:bg-zinc-100"
                                     onClick={() => handleItemResult(item)}
                                 >
                                     {item.name}
@@ -110,12 +122,9 @@ const Search: React.FC<SearchBarProps> = ({ onSearch }) => {
                     
                     {/* Bouton pour voir tous les résultats */}
                     {query.length >= 3 && results.length > 0 && (
-                        <button
-                            className="w-full border-t border-zinc-200 bg-zinc-50 px-4 py-3 text-sm font-medium text-zinc-600 transition-colors duration-150 hover:bg-zinc-100"
-                            onClick={handleResult}
-                        >
+                        <Button className="w-full" onClick={handleResult}>
                             Voir tous les résultats
-                        </button>
+                        </Button>
                     )}
                 </div>
             )}
