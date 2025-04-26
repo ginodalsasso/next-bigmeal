@@ -39,8 +39,6 @@ export default function IngredientList({ fetchedIngredients }: { fetchedIngredie
     const [ingredients, setIngredients] = useState<IngredientType[]>(fetchedIngredients);
     const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
 
-    const [isVisible, setIsVisible] = useState(false); // Etat pour gérer la visibilité du filtre
-
     useEffect(() => {
         setIngredients(fetchedIngredients); // Pour les mises à jour de la liste d'ingrédients coté client
     }, [fetchedIngredients]);
@@ -105,7 +103,7 @@ export default function IngredientList({ fetchedIngredients }: { fetchedIngredie
             <Table>
             <TableHeader>
                 <TableRow>
-                    <TableHead><span className="table-head">Noms</span></TableHead>
+                    <TableHead><span className="table-head">Ingrédients</span></TableHead>
                     <IsAdmin>
                         <TableHead><span className="table-head">Actions</span></TableHead>
                     </IsAdmin>

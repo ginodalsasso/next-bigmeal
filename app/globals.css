@@ -58,7 +58,7 @@ body {
 }
 
 .table-head {
-  @apply text-lg font-bold;
+  @apply text-xl font-semibold text-zinc-400;
 }
 
 .table-cell {
