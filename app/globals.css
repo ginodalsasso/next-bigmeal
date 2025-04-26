@@ -65,6 +65,18 @@ body {
   @apply py-4;
 }
 
+.sticker-bg-white{
+  @apply bg-white text-black;
+}
+
+.sticker-bg-black{
+  @apply bg-black text-white;
+}
+
+.label-filter {
+  @apply rounded-md cursor-pointer whitespace-nowrap border px-4 py-2 transition-colors duration-200;
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;

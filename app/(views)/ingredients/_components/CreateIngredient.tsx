@@ -27,7 +27,6 @@ import { createIngredientAPI } from "@/lib/services/ingredients_service";
 import { getCsrfToken } from "next-auth/react";
 import FormSubmitButton from "@/components/forms/FormSubmitButton";
 
-
 // _________________________ COMPOSANT _________________________
 const CreateIngredient: React.FC<CreateIngredientProps> = ({
     onSubmit,
@@ -35,66 +34,52 @@ const CreateIngredient: React.FC<CreateIngredientProps> = ({
 }) => {
     // _________________________ HOOKS _________________________
     const [categories, setCategories] = useState<CategoryIngredientType[]>([]);
+    const [selectedSeason, setSelectedSeason] = useState<string>("");
 
     // Hook de validation
     const { error, setError, validate } = useFormValidation<IngredientFormType>(
         ingredientConstraints,
-        [
-            "name", 
-            "season", 
-            "categoryIngredientId"
-        ]
+        ["name", "season", "categoryIngredientId"]
     );
 
     // _________________________ LOGIQUE _________________________
-    // Appel API pour récupérer les catégories d'ingrédients
+    // Récupérer les catégories d'ingrédients
     useEffect(() => {
         const fetchCategories = async () => {
             try {
-                const data: CategoryIngredientType[] = await getCategoriesIngredient();
-                setCategories(data); 
-
+                const data = await getCategoriesIngredient();
+                setCategories(data);
             } catch (error) {
                 console.error("[FETCH_CATEGORIES_ERROR]", error);
                 setError({ general: "Erreur lors de la récupération des catégories." });
             }
         };
-
         fetchCategories();
     }, [setError]);
 
-
-
-    // Gestion de la soumission du formulaire
+    // Gestion de la soumission
     const handleSubmit = async (formData: FormData) => {
-        // Récupérer les données du formulaire
         const form: IngredientFormType = {
-            name: formData.get("name") as string,
-            season: formData.get("season") as string === "" ? undefined : (formData.get("season") as Season),
+            name: formData.get("ingredientName") as string,
+            season: formData.get("ingredientSeason") as string === "" ? undefined : (formData.get("ingredientSeason") as Season),
             categoryIngredientId: formData.get("categoryIngredientId") as string,
         };
 
-        // Valider les données du formulaire
         if (!validate(form)) {
-            console.error("Validation échouée", error, form);
+            console.error("[VALIDATION_ERROR]", error);
             return;
         }
 
         try {
             const csrfToken = await getCsrfToken();
             if (!csrfToken) {
-                console.error("CSRF token invalide");
                 setError({ general: "Problème de sécurité, veuillez réessayer." });
                 return;
             }
-            const createdIngredient = await createIngredientAPI(
-                form, 
-                csrfToken
-            );
-
+            const createdIngredient = await createIngredientAPI(form, csrfToken);
             onSubmit(createdIngredient);
             toast("Ingrédient créé avec succès");
-            onClose(); // Fermer le dialogue
+            onClose();
         } catch (error) {
             console.error("[CREATE_INGREDIENT_ERROR]", error);
             setError({ general: "Erreur lors de la création de l'ingrédient." });
@@ -103,54 +88,75 @@ const CreateIngredient: React.FC<CreateIngredientProps> = ({
 
     // _________________________ RENDU _________________________
     return (
-        <form className="flex flex-col gap-5 p-5" action={handleSubmit}>
-            {/* Champ pour le nom de l'ingrédient */}
-            <input
-                className="input-text-select"
-                type="text"
-                id="name"
-                name="name"
-                placeholder="Nom de l'ingrédient"
-                autoComplete="off"
-                required
-            />
-            <FormErrorMessage message={error?.name} />
+        <form className="flex flex-col gap-4 p-4" action={handleSubmit}>
+            <FormErrorMessage message={error?.general} />
 
-            {/* Sélection pour la saison */}
-            <select
-                className="input-text-select"
-                name="season"
-                id="season"
-                defaultValue=""
-            >
-                <option value="">-- Choisir une saison --</option>
-                {Object.values(Season).map((season) => (
-                    <option key={season} value={season}>
-                        {translatedSeason(season)}
-                    </option>
-                ))}
-            </select>
-            <FormErrorMessage message={error?.season} />
+            <div className="flex flex-col gap-2">
+                {/* Nom de l'ingrédient */}
+                <label htmlFor="ingredientName">Nom de l'ingrédient</label>
+                <input
+                    className="input-text-select"
+                    type="text"
+                    id="ingredientName"
+                    name="ingredientName"
+                    placeholder="Tomate, Poulet, etc."
+                    autoComplete="off"
+                    required
+                />
+                <FormErrorMessage message={error?.name} />
+            </div>
 
-            {/* Sélection pour la catégorie */}
-            <select
-                className="input-text-select"
-                name="categoryIngredientId"
-                id="categoryIngredientId"
-                defaultValue=""
-                required
-            >
-                <option value="">-- Choisir une catégorie --</option>
-                {categories.map((category) => (
-                    <option key={category.id} value={category.id}> 
-                        {ucFirst(category.name)}
-                    </option>
-                ))}
-            </select>
-            <FormErrorMessage message={error?.categoryIngredientId} />
+            <div className="flex flex-col gap-2">
+                {/* Catégorie de l'ingrédient */}
+                <label htmlFor="categoryIngredientId">Catégorie de l'ingrédient</label>
+                <div className="flex gap-2 flex-wrap">
+                <select
+                    className="input-text-select"
+                    name="categoryIngredientId"
+                    id="categoryIngredientId"
+                    defaultValue=""
+                    required
+                >
+                    <option value="">-- Choisir une catégorie --</option>
+                    {categories.map((category) => (
+                        <option key={category.id} value={category.id}> 
+                            {ucFirst(category.name)}
+                        </option>
+                    ))}
+                    </select>
+                </div>
+                <FormErrorMessage message={error?.categoryIngredientId} />
+            </div>
 
-            {/* Bouton de soumission */}
-            <div className="flex flex-col-reverse gap-2 lg:justify-end">
+            <div className="flex flex-col gap-2">
+                {/* Saison de l'ingrédient */}
+                <label htmlFor="ingredientSeason">Saison (optionnel)</label>
+                <div className="flex flex-col gap-2">
+                    {Object.values(Season).map((season) => (
+                        <label
+                            key={season}
+                            htmlFor={`season-${season}`}
+                            onClick={() => setSelectedSeason(season)}
+                            className={`label-filter ${selectedSeason === season ? "sticker-bg-white" : "sticker-bg-black"}`}
+                        >
+                            <input
+                                id={`season-${season}`}
+                                type="radio"
+                                name="ingredientSeason"
+                                className="hidden"
+                                value={season}
+                                checked={selectedSeason === season}
+                                onChange={() => setSelectedSeason(season)}
+                            />
+                            {translatedSeason(season)}
+                        </label>
+                    ))}
+                </div>
+                <FormErrorMessage message={error?.season} />
+            </div>
+
+            {/* Boutons d'action */}
+            <div className="mt-4 flex flex-col-reverse gap-2">
                 <Button variant="cancel" onClick={onClose}>
                     Annuler
                 </Button>

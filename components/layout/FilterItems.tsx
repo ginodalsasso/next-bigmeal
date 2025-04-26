@@ -26,10 +26,10 @@ const FilterCheckboxes: React.FC<FilterCheckboxesProps> = ({ options, onFilterCh
                 {options.map((option, index) => (
                     <label
                         key={index}
-                        className={`rounded-md cursor-pointer whitespace-nowrap border px-4 py-2 transition-colors duration-200 ${
+                        className={`label-filter ${
                             selectedFilters.includes(option)
-                                ? "bg-white text-black"
-                                : "border-white bg-transparent text-white"
+                                ? "sticker-bg-white"
+                                : "sticker-bg-black"
                         }`}
                     >
                         <input

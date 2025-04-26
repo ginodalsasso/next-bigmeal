@@ -163,7 +163,7 @@ export default function IngredientList({ fetchedIngredients }: { fetchedIngredie
             </TableBody>
         </Table>
         {/* Dialogue pour ajouter un ingrédient */}
-        <div className="flex flex-col justify-between gap-2 pt-2 md:flex-row-reverse md:items-center">
+        <div className="flex flex-col justify-between  pt-2 md:flex-row-reverse md:items-center">
             <IsUser>
                 <Drawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
                     <DrawerTrigger asChild>
@@ -177,13 +177,13 @@ export default function IngredientList({ fetchedIngredients }: { fetchedIngredie
                     </DrawerTrigger>
                     <DrawerContent>
                         <DrawerHeader>
-                            <DrawerTitle className="text-center">Ajouter un ingrédient</DrawerTitle>
-                            {/* Formulaire de création d'ingrédient */}
-                            <CreateIngredient
-                                onSubmit={addIngredient}
-                                onClose={() => setIsDrawerOpen(false)}
-                            />
+                            <DrawerTitle className="text-center my-4">Ajouter un ingrédient</DrawerTitle>
                         </DrawerHeader>
+                        {/* Formulaire de création d'ingrédient */}
+                        <CreateIngredient
+                            onSubmit={addIngredient}
+                            onClose={() => setIsDrawerOpen(false)}
+                        />
                     </DrawerContent>
                 </Drawer>
             </IsUser>
