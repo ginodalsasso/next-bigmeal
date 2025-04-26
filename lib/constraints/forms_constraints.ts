@@ -12,7 +12,11 @@ export const categoriesConstraints = z.object({
         .string()
         .min(3, "Le nom doit comporter au moins 3 caractères")
         .max(100, "Le nom doit comporter au maximum 100 caractères")
-        .toLowerCase(),
+        .transform(name => 
+            name
+                .toLowerCase()
+                .replace(/\b\w/g, char => char.toUpperCase()) // Transformation en majuscule
+        ),
 });
 
 
@@ -21,8 +25,12 @@ export const ingredientConstraints = z.object({
         .string()
         .min(3, "Le nom doit comporter au moins 3 caractères")
         .max(100, "Le nom doit comporter au maximum 100 caractères")
-        .toLowerCase()
-        .trim(),
+        .trim()
+        .transform(name => 
+            name
+                .toLowerCase()
+                .replace(/\b\w/g, char => char.toUpperCase()) // Transformation en majuscule
+        ),
     season: z
         .nativeEnum(Season)
         .optional(),
@@ -36,8 +44,12 @@ export const householdProductConstraints = z.object({
         .string()
         .min(3, "Le nom doit comporter au moins 3 caractères")
         .max(100, "Le nom doit comporter au maximum 100 caractères")
-        .toLowerCase()
-        .trim(),
+        .trim()
+        .transform(name => 
+            name
+                .toLowerCase()
+                .replace(/\b\w/g, char => char.toUpperCase()) // Transformation en majuscule
+        ),
         categoryHouseholdProductId: z
         .string()
         .min(1, "Une catégorie est obligatoire"),
@@ -49,8 +61,11 @@ export const mealConstraints = z.object({
         .string()
         .min(3, "Le nom doit comporter au moins 3 caractères")
         .max(100, "Le nom doit comporter au maximum 100 caractères")
-        .toLowerCase()
-        .trim(),
+        .transform(name => 
+            name
+                .toLowerCase()
+                .replace(/\b\w/g, char => char.toUpperCase()) // Transformation en majuscule
+        ),
     description: z
         .string()
         .min(10, "La description doit comporter au moins 10 caractères")
