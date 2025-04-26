@@ -14,7 +14,7 @@ import { Separator } from "@radix-ui/react-separator";
 import { ShoppingListType } from "@/lib/types/schemas_interfaces";
 
 // Utils
-import { dateToString, translatedUnit } from "@/lib/utils";
+import { dateToString, sortBy, translatedUnit } from "@/lib/utils";
 
 // Services
 import {  fetchShoppingListAPI, markShoppingListAsExpiredAPI, toggleItemCheckedAPI, updateItemQuantityAPI } from "@/lib/services/shopping_list_service";
@@ -151,7 +151,6 @@ const ShoppingListPage = () => {
         }
     }
 
-
     // _________________________ RENDU _________________________
     if (loading) return <div>Loading...</div>;
     if (!shoppingList) return <div>Aucune liste de courses.</div>;
@@ -183,11 +182,9 @@ const ShoppingListPage = () => {
             {/* Affichage des ingrédients */}
             <div className="mb-8 border border-neutral-500 p-4">
                 {shoppingList.items
-                .sort((a, b) => {
-                    const nameA = a.ingredient?.name || a.product?.name || "";
-                    const nameB = b.ingredient?.name || b.product?.name || "";
-                    return nameA.localeCompare(nameB); // Trier par nom
-                })
+                .sort(sortBy(item =>
+                    item.ingredient?.name || item.product?.name || ""
+                ))
                 .map((item) => (
                     <div key={item.id}>
                         <div className="flex items-center justify-between">

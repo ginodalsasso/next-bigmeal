@@ -103,3 +103,24 @@ export function ensureArray<T>(value: T | T[] | null | undefined): T[] {
     // Si la valeur est nulle ou indéfinie, on retourne un tableau vide
     return value ? [value] : [];
 }
+
+
+/**
+    - Fonction de tri getValue = fonction qui retourne la valeur à trier
+    - Utilisation de la fonction localeCompare pour trier les chaînes de caractères
+    - Typage générique pour permettre le tri de n'importe quel type d'objet
+
+    - ex d'utilisation: sort(sortBy(item => item.ingredient?.name || item.product?.name || ""))
+    - getValue = (item: T) => item.ingredient?.name || item.product?.name || ""
+ */
+export function sortBy<T>(getValue: (item: T) => string) {
+    return (a: T, b: T): number => {
+        const valueA = getValue(a) ?? ""; 
+        const valueB = getValue(b) ?? "";
+        // localeCompare renvoie :
+        //   - un nombre < 0 si textA doit être avant textB
+        //   - 0 si les deux textes sont équivalents
+        //   - un nombre > 0 si textA doit être après textB
+        return valueA.localeCompare(valueB); 
+    };
+}
