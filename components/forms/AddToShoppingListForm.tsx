@@ -3,8 +3,6 @@
 import React, { useState } from 'react';
 import { toast } from 'sonner';
 import { ShoppingListConstraints } from '@/lib/constraints/forms_constraints';
-import Image from "next/image";
-import add from "@/public/img/add.svg";
 import { AddProductToShoppingListFormType } from '@/lib/types/forms_interfaces';
 import { Button } from '../ui/button';
 import FormErrorMessage from './FormErrorMessage';
@@ -136,11 +134,8 @@ const AddToShoppingListForm: React.FC<AddToShoppingListFormProps> = ({ type, id 
                 />
             )}
             <FormErrorMessage message={error?.quantity} />
-            <Button variant="default" className={isLoading ? 'cursor-not-allowed opacity-50' : ''} disabled={isLoading}>
+            <Button variant="default" title='Ajouter' className={isLoading ? 'cursor-not-allowed opacity-50' : ''} disabled={isLoading}>
                 <Plus />
-                <span className="hidden sm:block">
-                    {isLoading ? 'Ajout...' : type === 'meal' ? 'Ajouter le repas' : 'Ajouter l\'ingrédient'}
-                </span>
             </Button>
         </form>
     );

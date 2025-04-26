@@ -17,8 +17,10 @@ const EditItem: React.FC<EditItemProps> = ({ renderEditForm }) => {
 
     return (
         <Drawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
-            <DrawerTrigger>
-                <Edit3Icon />
+            <DrawerTrigger asChild>
+                <button title="Modifier">
+                    <Edit3Icon />
+                </button>
             </DrawerTrigger>
             <DrawerContent>
                 <DrawerHeader>

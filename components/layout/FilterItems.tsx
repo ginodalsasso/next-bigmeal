@@ -22,8 +22,7 @@ const FilterCheckboxes: React.FC<FilterCheckboxesProps> = ({ options, onFilterCh
 
     return (
         <div className="relative w-full">
-
-            <div className="scrollbar-hide my-4 flex w-full flex-nowrap space-x-2 overflow-x-auto">
+            <div className="scrollbar-hide mb-4 flex w-full flex-nowrap space-x-2 overflow-x-auto">
                 {options.map((option, index) => (
                     <label
                         key={index}
@@ -43,7 +42,6 @@ const FilterCheckboxes: React.FC<FilterCheckboxesProps> = ({ options, onFilterCh
                         {option}
                     </label>
                 ))}
-
             </div>
             <div className="pointer-events-none absolute right-0 top-0 h-full w-6 bg-gradient-to-l from-black to-transparent" />
         </div>

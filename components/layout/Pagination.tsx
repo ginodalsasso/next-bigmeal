@@ -1,6 +1,8 @@
 'use client'
 
 import { usePathname, useSearchParams } from "next/navigation";
+import { Button } from "../ui/button";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 
 interface PaginationProps {
     currentPage: number;
@@ -21,26 +23,24 @@ export default function Pagination({ currentPage, hasNextPage }:PaginationProps)
     };
     
     return (
-        <div className="mt-4 flex justify-between">
+        <div className="mt-6 flex justify-between">
             {currentPage > 1 && (
-                <a 
-                href={createPageURL(currentPage - 1)}
-                className="bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
-                >
-                    Page Précédente
-                </a>
+                <Button variant="secondary">
+                    <a href={createPageURL(currentPage - 1)}>
+                        <ArrowLeft/>
+                    </a>
+                </Button>
             )}
             
+            <span className="self-center">Page {currentPage}</span>
             
             {hasNextPage && (
                 <>
-                    <span className="self-center">Page {currentPage}</span>
-                    <a 
-                    href={createPageURL(currentPage + 1)}
-                    className="bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
-                    >
-                        Page Suivante
-                    </a>
+                    <Button variant="secondary">
+                        <a href={createPageURL(currentPage + 1)}>
+                            <ArrowRight/>
+                        </a>
+                    </Button>
                 </>
             )}
         </div>
