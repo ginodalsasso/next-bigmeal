@@ -91,8 +91,8 @@ const CreateIngredient: React.FC<CreateIngredientProps> = ({
         <form className="drawer-form" action={handleSubmit}>
             <FormErrorMessage message={error?.general} />
 
+            {/* Nom de l'ingrédient */}
             <div className="drawer-label-input">
-                {/* Nom de l'ingrédient */}
                 <label htmlFor="ingredientName">Nom de l'ingrédient</label>
                 <input
                     className="input-text-select"
@@ -117,7 +117,7 @@ const CreateIngredient: React.FC<CreateIngredientProps> = ({
                         defaultValue=""
                         required
                     >
-                        <option value="">-- Choisir une catégorie --</option>
+                    <option value="">-- Choisir une catégorie --</option>
                         {categories.map((category) => (
                             <option key={category.id} value={category.id}> 
                                 {ucFirst(category.name)}

@@ -77,11 +77,11 @@ const UpdateComposition: React.FC<UpdateCompositionProps> = ({
 
     // _________________________ RENDU _________________________
     return (
-        <form action={handleSubmit} className="flex flex-col gap-5 p-5">
+        <form className="drawer-form" action={handleSubmit}>
             <FormErrorMessage message={error?.general} />
             
-            <div className="flex flex-col gap-3 border-b pb-4">
-                {/* Champ pour la quantité */}
+            {/* Champ pour la quantité */}
+            <div className="drawer-label-input">
                 <label htmlFor="quantity" className="text-sm font-semibold">
                     Quantité
                 </label>
@@ -96,8 +96,10 @@ const UpdateComposition: React.FC<UpdateCompositionProps> = ({
                     required
                 />
                 <FormErrorMessage message={error?.quantity} />
+            </div>
 
-                {/* Sélecteur pour l'unité */}
+            {/* Sélecteur pour l'unité */}
+            <div className="drawer-label-input">
                 <label htmlFor="unit" className="text-sm font-semibold">
                     Unité
                 </label>
@@ -118,12 +120,9 @@ const UpdateComposition: React.FC<UpdateCompositionProps> = ({
                 <FormErrorMessage message={error?.unit} />
             </div>
 
-            <div className="flex gap-2">
-                <Button 
-                    variant="secondary"     
-                    onClick={onClose} 
-                    className="w-full"
-                >
+            {/* Boutons d'action */}
+            <div className="drawer-buttons-form">
+                <Button variant="cancel" onClick={onClose}>
                     Annuler
                 </Button>
                 <FormSubmitButton />

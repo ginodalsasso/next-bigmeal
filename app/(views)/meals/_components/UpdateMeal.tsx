@@ -95,73 +95,78 @@ const UpdateMeal: React.FC<UpdateMealProps> = ({
 
     // _________________________ RENDU _________________________
     return (
-        <form action={handleSubmit} className="space-y-2">
-            <label htmlFor="mealName">
-                Nom du repas
-            </label>
-            <input
-                className="input-text-select"
-                type="text"
-                id="mealName"
-                name="mealName"
-                placeholder="Carbonara"
-                defaultValue={meal.name}
-                autoComplete="off"
-                required
-            />
-            <FormErrorMessage message={error?.name} />
+        <form action={handleSubmit} className="drawer-form">
+
+            <div className="drawer-label-input">
+                <label htmlFor="mealName">
+                    Nom du repas
+                </label>
+                <input
+                    className="input-text-select"
+                    type="text"
+                    id="mealName"
+                    name="mealName"
+                    placeholder="Carbonara"
+                    defaultValue={meal.name}
+                    autoComplete="off"
+                    required
+                />
+                <FormErrorMessage message={error?.name} />
+            </div>
 
             {/* Sélection pour la catégorie */}
-            <label htmlFor="categoryMealId">
-                Catégorie du repas
-            </label>
-            <div className="flex gap-4">
-                {categories.map((category) => (
-                    <label
-                        key={category.id}
-                        className={`cursor-pointer border px-4 py-2 transition-all ${
-                            selectedCategory === category.id
-                                ? "bg-white text-black"
-                                : "bg-black text-white"
-                        }`}
-                        onClick={() => setSelectedCategory(category.id)}
-                        htmlFor={`category-${category.id}`}
-                    >
-                        <input
-                            id={`category-${category.id}`}
-                            type="radio"
-                            name="categoryMealId"
-                            value={category.id}
-                            className="hidden"
-                            checked={selectedCategory === category.id}
-                            onChange={() => setSelectedCategory(category.id)}
-                            required
-                        />
-                        {ucFirst(category.name)}
-                    </label>
-                ))}
+            <div className="drawer-label-input">
+                <label htmlFor="categoryMealId">
+                    Catégorie du repas
+                </label>
+                {/* <div className="flex gap-4"> */}
+                    {categories.map((category) => (
+                        <label
+                            key={category.id}
+                            className={`label-filter ${
+                                selectedCategory === category.id
+                                    ? "sticker-bg-white"
+                                    : "sticker-bg-black"
+                            }`}
+                            onClick={() => setSelectedCategory(category.id)}
+                            htmlFor={`category-${category.id}`}
+                        >
+                            <input
+                                id={`category-${category.id}`}
+                                type="radio"
+                                name="categoryMealId"
+                                value={category.id}
+                                className="hidden"
+                                checked={selectedCategory === category.id}
+                                onChange={() => setSelectedCategory(category.id)}
+                                required
+                            />
+                            {ucFirst(category.name)}
+                        </label>
+                    ))}
+                {/* </div> */}
+                <FormErrorMessage message={error?.categoryMealId} />
             </div>
-            <FormErrorMessage message={error?.categoryMealId} />
 
             {/* Text area pour la description */}
-            <label htmlFor="mealDescription">
-                Description du repas (optionnelle)
-            </label>
-            <textarea
-                className="input-text-select"
-                id="mealDescription"
-                name="mealDescription"
-                placeholder="Quelque chose à ajouter ?"
-                defaultValue={meal.description? meal.description : ""}
-            />
-            <FormErrorMessage message={error?.description} />
+            <div className="drawer-label-input">
+                <label htmlFor="mealDescription">
+                    Description du repas (optionnelle)
+                </label>
+                <textarea
+                    className="input-text-select"
+                    id="mealDescription"
+                    name="mealDescription"
+                    placeholder="Quelque chose à ajouter ?"
+                    defaultValue={meal.description? meal.description : ""}
+                />
+                <FormErrorMessage message={error?.description} />
+            </div>
 
-            <div className="flex gap-2">
-                <Button
-                    type="button"
-                    onClick={onClose}
-                    variant="cancel"
-                >
+
+            {/* Boutons d'action */}
+            <div className="drawer-buttons-form">
+                <Button variant="cancel" onClick={onClose}>
                     Annuler
                 </Button>
                 <FormSubmitButton />

@@ -75,50 +75,44 @@ const UpdatePreparation: React.FC<UpdatePreparationProps> = ({
 
     // _________________________ RENDU _________________________
     return (
-        <form className="space-y-4" action={handleSubmit}>
-            <div className="flex gap-4">
-                {/* Champ pour le temps de préparation du plat */}
-                <div>
-                    <label htmlFor="prepTime">Temps de préparation (minutes)</label>
-                    <input
-                        className="input-text-select"
-                        id="prepTime"
-                        name="prepTime"
-                        type="number"
-                        placeholder="60"
-                        defaultValue={preparation.prepTime || ""}
-                        autoComplete="off"
-                        min={0}
-                    />
-                    <FormErrorMessage message={error?.prepTime} />
-                </div>
-
-                {/* Champ pour le temps de cuisson du plat */}
-                <div>
-                    <label htmlFor="cookTime">Temps de cuisson (minutes)</label>
-                    <input
-                        className="input-text-select"
-                        id="cookTime"
-                        name="cookTime"
-                        type="number"
-                        placeholder="30"
-                        defaultValue={preparation.cookTime || ""}
-                        autoComplete="off"
-                        min={0}
-                    />
-                    <FormErrorMessage message={error?.cookTime} />
-                </div>
-            </div>
+        <form className="drawer-form" action={handleSubmit}>
             <FormErrorMessage message={error?.general} />
 
+            {/* Champ pour le temps de préparation du plat */}
+            <div className="drawer-label-input">
+            <label htmlFor="prepTime">Temps de préparation (minutes)</label>
+                <input
+                    className="input-text-select"
+                    id="prepTime"
+                    name="prepTime"
+                    type="number"
+                    placeholder="60"
+                    defaultValue={preparation.prepTime || ""}
+                    autoComplete="off"
+                    min={0}
+                />
+                <FormErrorMessage message={error?.prepTime} />
+            </div>
+
+            {/* Champ pour le temps de cuisson du plat */}
+            <div className="drawer-label-input">
+                <label htmlFor="cookTime">Temps de cuisson (minutes)</label>
+                <input
+                    className="input-text-select"
+                    id="cookTime"
+                    name="cookTime"
+                    type="number"
+                    placeholder="30"
+                    defaultValue={preparation.cookTime || ""}
+                    autoComplete="off"
+                    min={0}
+                />
+                <FormErrorMessage message={error?.cookTime} />
+            </div>
+
             {/* Boutons d'action */}
-            <div className="flex gap-2">
-                <Button
-                    type="button"
-                    onClick={onClose}
-                    variant="cancel"
-                    className="w-full"
-                >
+            <div className="drawer-buttons-form">
+                <Button variant="cancel" onClick={onClose}>
                     Annuler
                 </Button>
                 <FormSubmitButton />

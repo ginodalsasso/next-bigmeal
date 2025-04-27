@@ -100,10 +100,10 @@ const CreateMeal: React.FC<CreateMealProps> = ({ onSubmit }) => {
 
     // _________________________ RENDU _________________________
     return (
-        <form className="flex flex-col gap-4" action={handleSubmit}>
+        <form className="drawer-form" action={handleSubmit}>
             <FormErrorMessage message={error?.general} />
 
-            <div>
+            <div className="drawer-label-input">
                 {/* Champ pour le nom du repas */}
                 <label htmlFor="mealName">
                     Nom du repas
@@ -120,7 +120,7 @@ const CreateMeal: React.FC<CreateMealProps> = ({ onSubmit }) => {
                 <FormErrorMessage message={error?.name} />
             </div>
 
-            <div>
+            <div className="drawer-label-input">
                 {/* Text area pour la description */}
                 <label htmlFor="mealDescription">
                     Description du repas (optionnelle)
@@ -136,18 +136,18 @@ const CreateMeal: React.FC<CreateMealProps> = ({ onSubmit }) => {
             </div>
 
             {/* Sélection pour la catégorie */}
-            <div>
+            <div className="drawer-label-input">
                 <label htmlFor="categoryMealId">
                     Catégorie du repas
                 </label>
-                <div className="flex gap-4">
+                <div className="flex gap-2">
                     {categories.map((category) => (
                         <label
                             key={category.id}
-                            className={`cursor-pointer border px-4 py-2 transition-all ${
+                            className={`label-filter ${
                                 selectedCategory === category.id
-                                    ? "bg-white text-black"
-                                    : "bg-black text-white"
+                                    ? "sticker-bg-white"
+                                    : "sticker-bg-black"
                             }`}
                             onClick={() => setSelectedCategory(category.id)}
                             htmlFor={`category-${category.id}`}
@@ -170,7 +170,7 @@ const CreateMeal: React.FC<CreateMealProps> = ({ onSubmit }) => {
             </div>
 
             {/* Bouton de soumission */}
-            <div className="mt-4 flex flex-col-reverse gap-2">
+            <div className="drawer-buttons-form">
                 <Button 
                     variant="cancel" 
                     onClick={() => router.push("/meals")}

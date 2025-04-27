@@ -9,9 +9,6 @@ import { toast } from "sonner";
 // Types
 import { MealType } from "@/lib/types/schemas_interfaces";
 
-// Images
-import add from "@/public/img/add.svg";
-
 // Composants
 import ItemView from "@/components/layout/ItemView";
 import EditItem from "@/components/layout/EditItemDrawer";
@@ -24,10 +21,12 @@ import FilterItems from "@/components/layout/FilterItems";
 
 // Composants UI
 import { Button } from "@/components/ui/button";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
 // Constantes
 import { CATEGORIES_MEALS } from "@/lib/constants/ui_constants";
 import { useRouter } from "next/navigation";
+import { Plus } from "lucide-react";
 
 
 // _________________________ COMPOSANT _________________________
@@ -83,61 +82,72 @@ export default function MealsList( {fetchedMeals}: { fetchedMeals: MealType[] })
 
     return (
         <>
-            {/* Dialogue pour ajouter un repas ou une composition */}
-            <div className="flex flex-row-reverse items-center justify-between gap-2 pb-2">
-                <IsUser>
-                    <Button variant="success" className="flex items-center gap-2" onClick={() => router.push("/meals/create")}>
-                        <Image src={add} alt="Ajouter un repas" className="w-4" />
-                        <span className="hidden sm:block">Ajouter un repas</span>
-                    </Button>
-                </IsUser>
-            </div>
-
             {/* Filtres */}
             <FilterItems 
                 options={filterOptions} 
                 onFilterChange={handleFilterChange} 
             />
+
             {/* Liste des repas */}
-            <div className="cards-wrapper">
-                <div className="cards-list">
+            <Table>
+                <TableHeader>
+                    <TableRow>
+                        <TableHead><span className="table-head">Repas</span></TableHead>
+                        <IsAdmin>
+                            <TableHead><span className="table-head">Actions</span></TableHead>
+                        </IsAdmin>
+                    </TableRow>
+                </TableHeader>
+                <TableBody>
                     {meals.map((meal) => (
-                        <div key={meal.id} className="card">
-                            <ItemView
-                                title={meal.name}
-                                details={{
-                                    category: meal.categoryMeal?.name || "Non spécifié",
-                                    // description: meal.description,
-                                }}
-                                linkToDetails={`/meals/${meal.name}`}
-                            />
-                            <IsAdmin>
-                                <div className="flex w-full gap-2">
-                                    {/* Édition du repas */}
-                                    <EditItem
-                                        renderEditForm={(onClose) => (
-                                            <UpdateMeal
-                                                meal={meal} 
-                                                onSubmit={updateMeal}
-                                                onClose={onClose}
+                        <TableRow key={meal.id}>
+                            <TableCell className="table-cell">
+                                <div className="lg:relative">
+                                    <ItemView
+                                        title={meal.name}
+                                        details={{
+                                            category: meal.categoryMeal?.name || "Non spécifié",
+                                            // description: meal.description,
+                                        }}
+                                        linkToDetails={`/meals/${meal.name}`}
+                                    />
+
+                                    <IsAdmin>
+                                        <div className="lg:absolute right-0 top-0 flex gap-4 mt-2">
+                                            {/* Édition du repas */}
+                                            <EditItem
+                                                renderEditForm={(onClose) => (
+                                                    <UpdateMeal
+                                                        meal={meal} 
+                                                        onSubmit={updateMeal}
+                                                        onClose={onClose}
+                                                    />
+                                                )}
                                             />
-                                        )}
-                                    />
-                                    {/* Suppression du repas */}
-                                    <DeleteItem
-                                        apiUrl="/api/meals"
-                                        id={meal.id}
-                                        onSubmit={handleMealDeleted}
-                                    />
+                                            {/* Suppression du repas */}
+                                            <DeleteItem
+                                                apiUrl="/api/meals"
+                                                id={meal.id}
+                                                onSubmit={handleMealDeleted}
+                                            />
+                                        </div>
+                                    </IsAdmin>
                                 </div>
-                            </IsAdmin>
-                            
-                            {/* Ajouter le repas à la liste de courses */}
-                            <AddToShoppingListForm type="meal" id={meal.name} />
-                        </div>
+                            </TableCell>
+
+                            <TableCell>
+                                {/* Ajouter le repas à la liste de courses */}
+                                <AddToShoppingListForm type="meal" id={meal.name} />
+                            </TableCell>
+                        </TableRow>
                     ))}
-                </div>
-            </div>
+                </TableBody>
+            </Table>
+            <IsUser>
+                <Button variant="success" className="w-full" onClick={() => router.push("/meals/create")}>
+                    Ajouter un repas <Plus/>
+                </Button>
+            </IsUser>
         </>
     );
 };

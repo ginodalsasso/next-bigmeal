@@ -7,7 +7,6 @@ import { toast } from "sonner";
 // Types et énumérations
 import { StepType } from "@/lib/types/schemas_interfaces";
 import { UpdateStepProps } from "@/lib/types/props_interfaces";
-import { StepFormType } from "@/lib/types/forms_interfaces";
 
 // Contraintes et validation
 import { updateStepConstraints } from "@/lib/constraints/forms_constraints";
@@ -20,6 +19,8 @@ import FormErrorMessage from "@/components/forms/FormErrorMessage";
 // Services
 import { updateStepAPI } from "@/lib/services/step_service";
 import { getCsrfToken } from "next-auth/react";
+import FormSubmitButton from "@/components/forms/FormSubmitButton";
+import { StepFormType } from "@/lib/types/forms_interfaces";
 
 
 // _________________________ COMPOSANT _________________________
@@ -29,7 +30,6 @@ const UpdateStep: React.FC<UpdateStepProps> = ({
     onClose,
 }) => {
     // _________________________ HOOKS _________________________
-    const [isLoading, setIsLoading] = useState<boolean>(false);
     const [step, setStep] = useState<StepType>(initialStep);
 
     // Hook de validation
@@ -39,78 +39,68 @@ const UpdateStep: React.FC<UpdateStepProps> = ({
     );
 
     // _________________________ LOGIQUE _________________________
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
+    const handleSubmit = async (formData: FormData) => {
+        const form = {
+            id: step.id,
+            preparationId: step.preparationId,
+            stepNumber: step.stepNumber,
+            description: formData.get("description") as string,
+        };
 
         // Validation des données avec le hook
-        if (!validate(step)) {
-            return;
-        }
-
-        setIsLoading(true);
-        
-        const csrfToken = await getCsrfToken();
-        if (!csrfToken) {
-            console.error("CSRF token invalide");
+        if (!validate(form)) {
+            console.error("[VALIDATION_ERROR]", error);
             return;
         }
         
         try {
-            const updatedStep = await updateStepAPI(step, csrfToken);
+            const csrfToken = await getCsrfToken();
+            if (!csrfToken) {
+                setError({ general: "Problème de sécurité, veuillez réessayer." });
+                return;
+            }
+            const updatedStep = await updateStepAPI(form, csrfToken);
             // Mettre à jour l'état parent via le callback
             onSubmit(updatedStep);
-
             toast.success("Etape mise à jour avec succès !");
             onClose(); // Fermer le Popover après la mise à jour
         } catch (error) {
             console.error("[UPDATE_STEP_ERROR]", error);
             setError({ general: "Erreur lors de la mise à jour de l'étape." });
-        } finally {
-            setIsLoading(false);
         }
     };
 
     // _________________________ RENDU _________________________
     return (
-        <form onSubmit={handleSubmit} className="flex flex-col gap-5 p-5">
+        <form className="drawer-form" action={handleSubmit}>
             <FormErrorMessage message={error?.general} />
             
-            <div className="flex flex-col gap-3 border-b pb-4">
-                {/* Champ pour la description de l'étape */}
+            {/* Champ pour la description de l'étape */}
+            <div className="drawer-label-input">
                 <label className="text-sm font-semibold" htmlFor="description">
                     Description de l&apos;étape
                 </label>
                 <textarea
+                    id="description"
+                    name="description"
+                    onChange={(e) => setStep({ ...step, description: e.target.value })}
                     placeholder="Ajouter les condiments..."
                     value={step.description}
-                    onChange={(e) =>
-                        setStep({ ...step, description: e.target.value })
-                    }
                     className="input-text-select"
+
                     required
-                    disabled={isLoading}
                 />
                 <FormErrorMessage message={error?.description} />
-
             </div>
 
-            <div className="flex gap-2">
+            <div className="drawer-buttons-form">
                 <Button 
                     variant="secondary"     
                     onClick={onClose} 
-                    className="w-full"
-                    disabled={isLoading}
                 >
                     Annuler
                 </Button>
-                <Button 
-                    type="submit" 
-                    variant="success" 
-                    className="w-full"
-                    disabled={isLoading}
-                >
-                    {isLoading ? "Mise à jour en cours..." : "Mettre à jour"}
-                </Button>
+                <FormSubmitButton />
             </div>
         </form>
     );
