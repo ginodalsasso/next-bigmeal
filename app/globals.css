@@ -5,6 +5,7 @@
 :root {
   --black: #0a0a0a;
   --white: #f5f5fa;
+  --accent-color: #ff8c00;
 }
 
 body {
@@ -46,11 +47,11 @@ body {
 
 /* style des input type: text / select / textarea */
 .input-text-select {
-  @apply w-full p-2 text-black rounded-md focus:bg-black focus:text-white;
+  @apply w-full p-2 text-black rounded-md focus:ring-2 focus:ring-accent-color focus:outline-accent-color;
 }
 
 .input-search {
-  @apply w-full md:w-[50%] p-2 text-black focus:bg-black focus:text-white;
+  @apply w-full md:w-[50%] p-2 text-black focus:text-white focus:ring-accent-color;
 }
 
 .error-form {
@@ -75,6 +76,18 @@ body {
 
 .label-filter {
   @apply rounded-md cursor-pointer whitespace-nowrap border px-4 py-2 transition-colors duration-200;
+}
+
+.drawer-form {
+  @apply flex flex-col gap-5 p-4;
+}
+
+.drawer-label-input {
+  @apply flex flex-col gap-2;
+}
+
+.drawer-buttons-form {
+  @apply mt-4 flex flex-col-reverse gap-2;
 }
 
 @layer base {

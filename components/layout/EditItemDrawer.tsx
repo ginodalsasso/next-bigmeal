@@ -26,9 +26,7 @@ const EditItem: React.FC<EditItemProps> = ({ renderEditForm }) => {
                 <DrawerHeader>
                     <DrawerTitle>Formulaire d&apos;édition</DrawerTitle>
                 </DrawerHeader>
-                <div className="flex justify-center p-4 md:p-10">
                     {renderEditForm(() => setIsDrawerOpen(false))}  
-                </div>
             </DrawerContent>
         </Drawer>
     );

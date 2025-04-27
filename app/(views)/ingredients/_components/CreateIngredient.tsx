@@ -88,10 +88,10 @@ const CreateIngredient: React.FC<CreateIngredientProps> = ({
 
     // _________________________ RENDU _________________________
     return (
-        <form className="flex flex-col gap-4 p-4" action={handleSubmit}>
+        <form className="drawer-form" action={handleSubmit}>
             <FormErrorMessage message={error?.general} />
 
-            <div className="flex flex-col gap-2">
+            <div className="drawer-label-input">
                 {/* Nom de l'ingrédient */}
                 <label htmlFor="ingredientName">Nom de l'ingrédient</label>
                 <input
@@ -106,8 +106,8 @@ const CreateIngredient: React.FC<CreateIngredientProps> = ({
                 <FormErrorMessage message={error?.name} />
             </div>
 
-            <div className="flex flex-col gap-2">
-                {/* Catégorie de l'ingrédient */}
+            {/* Catégorie de l'ingrédient */}
+            <div className="drawer-label-input">
                 <label htmlFor="categoryIngredientId">Catégorie de l'ingrédient</label>
                 <div className="flex gap-2 flex-wrap">
                 <select
@@ -128,8 +128,8 @@ const CreateIngredient: React.FC<CreateIngredientProps> = ({
                 <FormErrorMessage message={error?.categoryIngredientId} />
             </div>
 
-            <div className="flex flex-col gap-2">
-                {/* Saison de l'ingrédient */}
+            {/* Saison de l'ingrédient */}
+            <div className="drawer-label-input">
                 <label htmlFor="ingredientSeason">Saison (optionnel)</label>
                 <div className="flex flex-col gap-2">
                     {Object.values(Season).map((season) => (
@@ -156,7 +156,7 @@ const CreateIngredient: React.FC<CreateIngredientProps> = ({
             </div>
 
             {/* Boutons d'action */}
-            <div className="mt-4 flex flex-col-reverse gap-2">
+            <div className="drawer-buttons-form">
                 <Button variant="cancel" onClick={onClose}>
                     Annuler
                 </Button>

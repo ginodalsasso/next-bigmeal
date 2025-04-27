@@ -98,7 +98,6 @@ export default function IngredientList({ fetchedIngredients }: { fetchedIngredie
                 onFilterChange={handleFilterChange}
             />
 
-
             {/* Liste des ingrédients */}
             <Table>
             <TableHeader>
@@ -123,37 +122,34 @@ export default function IngredientList({ fetchedIngredients }: { fetchedIngredie
                                         ...(ingredient.season && { season: translatedSeason(ingredient.season) }),
                                     }}
                                 />
-                                <div className="lg:absolute right-0 top-0">
-
-                                    <IsAdmin>
-                                        <div className="flex gap-4  mt-2">
-                                            <EditItem
-                                                renderEditForm={(onClose) => (
-                                                    <UpdateIngredient
-                                                        ingredient={ingredient}
-                                                        onSubmit={async (updatedIngredient: IngredientType) => {
-                                                            await updateIngredient(updatedIngredient);
-                                                            onClose();
-                                                        }}
-                                                        onCancel={onClose}
-                                                    />
-                                                )}
-                                            />
-                                            <DeleteItem
-                                                apiUrl="/api/ingredients"
-                                                id={ingredient.id}
-                                                onSubmit={handleIngredientDeleted}
-                                            />
-                                        </div>
-                                    </IsAdmin>
-                                </div>
+                                {/* Edition et suppression d'ingrédients */}
+                                {/* Si l'utilisateur est admin, afficher les boutons d'édition et de suppression */}
+                                <IsAdmin>
+                                    <div className="lg:absolute right-0 top-0 flex gap-4 mt-2">
+                                        <EditItem
+                                            renderEditForm={(onClose) => (
+                                                <UpdateIngredient
+                                                    ingredient={ingredient}
+                                                    onSubmit={async (updatedIngredient: IngredientType) => {
+                                                        await updateIngredient(updatedIngredient);
+                                                        onClose();
+                                                    }}
+                                                    onCancel={onClose}
+                                                />
+                                            )}
+                                        />
+                                        <DeleteItem
+                                            apiUrl="/api/ingredients"
+                                            id={ingredient.id}
+                                            onSubmit={handleIngredientDeleted}
+                                        />
+                                    </div>
+                                </IsAdmin>
                             </div>
                         </TableCell>
                         
                         <TableCell>
-                            {/* Crud admin */}
                             <div>
-
                                 {/* Ajouter l'ingrédient à la liste de courses */}
                                 <AddToShoppingListForm type="ingredient" id={ingredient.id} />
                             </div>
@@ -163,8 +159,8 @@ export default function IngredientList({ fetchedIngredients }: { fetchedIngredie
             </TableBody>
         </Table>
         {/* Dialogue pour ajouter un ingrédient */}
-        <div className="flex flex-col justify-between  pt-2 md:flex-row-reverse md:items-center">
-            <IsUser>
+        <IsUser>
+            <div className="flex flex-col justify-between  pt-2 md:flex-row-reverse md:items-center">
                 <Drawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
                     <DrawerTrigger asChild>
                         <Button 
@@ -186,8 +182,8 @@ export default function IngredientList({ fetchedIngredients }: { fetchedIngredie
                         />
                     </DrawerContent>
                 </Drawer>
-            </IsUser>
-        </div>
+            </div>
+        </IsUser>
         </>
     );
 };

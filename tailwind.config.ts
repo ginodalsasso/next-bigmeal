@@ -14,6 +14,7 @@ export default {
   			foreground: 'hsl(var(--foreground))',
   			black: 'var(--black)',
   			white: 'var(--white)',
+			"accent-color": 'var(--accent-color)',
   			card: {
   				DEFAULT: 'hsl(var(--card))',
   				foreground: 'hsl(var(--card-foreground))'

@@ -33,6 +33,7 @@ const UpdateIngredient: React.FC<UpdateIngredientProps> = ({
 }) => {
     // _________________________ ETATS _________________________
     const [categories, setCategories] = useState<CategoryIngredientType[]>([]);
+    const [selectedSeason, setSelectedSeason] = useState<string>("");
 
     // Hook de validation
     const { error, setError, validate } = useFormValidation<IngredientFormType>(
@@ -97,65 +98,77 @@ const UpdateIngredient: React.FC<UpdateIngredientProps> = ({
 
     // _________________________ RENDU _________________________
     return (
-        <form action={handleSubmit} className="space-y-2 md:w-[50vw]">
+        <form action={handleSubmit} className="drawer-form">
             <FormErrorMessage message={error?.general} />
 
-            {/* Champ pour le nom */}
-            <input
-                className="input-text-select"
-                type="text"
-                id="name"
-                name="name"
-                defaultValue={ingredient.name}
-                placeholder="Nom de l'ingrédient"
-                autoComplete="off"
-                required
-            />
-            <FormErrorMessage message={error?.name} />
+            <div className="drawer-label-input">
+                {/* Champ pour le nom */}
+                <label htmlFor="name" className="drawer-label-input">
+                    Nom de l'ingrédient
+                </label>
+                <input
+                    className="input-text-select"
+                    type="text"
+                    id="name"
+                    name="name"
+                    defaultValue={ingredient.name}
+                    placeholder="Nom de l'ingrédient"
+                    autoComplete="off"
+                    required
+                />
+                <FormErrorMessage message={error?.name} />
+            </div>
 
             {/* Sélection pour la catégorie */}
-            <select
-                className="input-text-select"
-                name="categoryIngredientId"
-                id="categoryIngredientId"
-                defaultValue={ingredient.categoryIngredientId}
-                required
-            >
-                <option value="">-- Choisir une catégorie --</option>
-                {categories.map((category) => (
-                    <option 
-                        key={category.id} 
-                        value={category.id}
-                        >
-                        {ucFirst(category.name)}
-                    </option>
-                ))}
-            </select>
-            <FormErrorMessage message={error?.categoryIngredientId} />
+            <div className="drawer-label-input">
+                <label htmlFor="categoryIngredientId">Catégorie de l'ingrédient</label>
+                <select
+                    className="input-text-select"
+                    name="categoryIngredientId"
+                    id="categoryIngredientId"
+                    defaultValue={ingredient.categoryIngredientId}
+                    required
+                >
+                    <option value="">-- Choisir une catégorie --</option>
+                    {categories.map((category) => (
+                        <option key={category.id}  value={category.id}>
+                            {ucFirst(category.name)}
+                        </option>
+                    ))}
+                </select>
+                <FormErrorMessage message={error?.categoryIngredientId} />
+            </div>
 
             {/* Sélection pour la saison */}
-            <select
-                className="input-text-select"
-                name="season"
-                id="season"
-                defaultValue={ingredient.season ?? ""}
-            >
-                <option value="">-- Choisir une saison --</option>
-                {Object.values(Season).map((season) => (
-                    <option key={season} value={season}>
-                        {translatedSeason(season)}
-                    </option>
-                ))}
-            </select>
-            <FormErrorMessage message={error?.season} />
+            <div className="drawer-label-input">
+                <label htmlFor="season">Saison (optionnel)</label>
+                <div className="flex flex-col gap-2">
+                    {Object.values(Season).map((season) => (
+                        <label
+                            key={season}
+                            htmlFor={`season-${season}`}
+                            onClick={() => setSelectedSeason(season)}
+                            className={`label-filter ${selectedSeason === season ? "sticker-bg-white" : "sticker-bg-black"}`}
+                        >
+                            <input
+                                id={`season-${season}`}
+                                type="radio"
+                                name="season"
+                                className="hidden"
+                                value={season}
+                                checked={selectedSeason === season}
+                                onChange={() => setSelectedSeason(season)}
+                            />
+                            {translatedSeason(season)}
+                        </label>
+                    ))}
+                </div>
+                <FormErrorMessage message={error?.season} />
+            </div>
 
-            {/* Boutons de soumission et d'annulation */}
-            <div className="flex flex-col gap-2">
-                <Button
-                    type="button"
-                    onClick={onCancel}
-                    variant="secondary"
-                >
+            {/* Boutons d'action */}
+            <div className="drawer-buttons-form">
+                <Button variant="cancel" onClick={onCancel}>
                     Annuler
                 </Button>
                 <FormSubmitButton />
