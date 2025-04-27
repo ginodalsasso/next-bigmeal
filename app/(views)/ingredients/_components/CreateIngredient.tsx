@@ -93,7 +93,7 @@ const CreateIngredient: React.FC<CreateIngredientProps> = ({
 
             {/* Nom de l'ingrédient */}
             <div className="drawer-label-input">
-                <label htmlFor="ingredientName">Nom de l'ingrédient</label>
+                <label htmlFor="ingredientName">Nom de l&apos;ingrédient</label>
                 <input
                     className="input-text-select"
                     type="text"
@@ -108,7 +108,7 @@ const CreateIngredient: React.FC<CreateIngredientProps> = ({
 
             {/* Catégorie de l'ingrédient */}
             <div className="drawer-label-input">
-                <label htmlFor="categoryIngredientId">Catégorie de l'ingrédient</label>
+                <label htmlFor="categoryIngredientId">Catégorie de l&apos;ingrédient</label>
                 <div className="flex gap-2 flex-wrap">
                     <select
                         className="input-text-select"

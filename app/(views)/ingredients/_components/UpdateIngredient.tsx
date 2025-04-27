@@ -103,7 +103,7 @@ const UpdateIngredient: React.FC<UpdateIngredientProps> = ({
 
             <div className="drawer-label-input">
                 {/* Champ pour le nom */}
-                <label htmlFor="name">Nom de l'ingrédient</label>
+                <label htmlFor="name">Nom de l&apos;ingrédient</label>
                 <input
                     className="input-text-select"
                     type="text"
@@ -119,7 +119,7 @@ const UpdateIngredient: React.FC<UpdateIngredientProps> = ({
 
             {/* Sélection pour la catégorie */}
             <div className="drawer-label-input">
-                <label htmlFor="categoryIngredientId">Catégorie de l'ingrédient</label>
+                <label htmlFor="categoryIngredientId">Catégorie de l&apos;ingrédient</label>
                 <select
                     className="input-text-select"
                     name="categoryIngredientId"
