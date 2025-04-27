@@ -2,12 +2,7 @@
 
 // Bibliothèques tierces
 import React, { useEffect, useState } from "react";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
-
-
-// Images
-import add from "@/public/img/add.svg";
 
 // Types
 import { HouseholdProductType } from "@/lib/types/schemas_interfaces";
@@ -25,6 +20,8 @@ import FilterItems from "@/components/layout/FilterItems";
 
 // Composants UI
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerTrigger } from "@/components/ui/drawer";import { Button } from "@/components/ui/button";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Plus } from "lucide-react";
 
 // Constantes
 import { CATEGORIES_HOUSEHOLD_PRODUCTS } from "@/lib/constants/ui_constants";
@@ -89,36 +86,7 @@ export default function HouseholdProductList({ fetchedHouseholdProducts }: { fet
     if (!householdProducts) return <div>Ingrédients introuvables.</div>;
 
     return (
-        <>
-            {/* Dialogue pour ajouter un ingrédient */}
-            <div className="flex flex-col justify-between gap-2 pb-2 md:flex-row-reverse md:items-center">
-                <IsUser>
-                    <Drawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
-                        <DrawerTrigger asChild>
-                            <Button variant="success" onClick={() => setIsDrawerOpen(true)}>
-                                <Image
-                                    src={add}
-                                    alt="Ajouter un produit"
-                                    width={18}
-                                    height={18}
-                                />
-                                    Ajouter un produit
-                            </Button>
-                        </DrawerTrigger>
-                        <DrawerContent>
-                            <DrawerHeader>
-                                <DrawerTitle className="text-center">Ajouter un produit</DrawerTitle>
-                                {/* Formulaire de création d'ingrédient */}
-                                <CreateHouseholdProduct
-                                    onSubmit={addHouseholdProduct}
-                                    onClose={() => setIsDrawerOpen(false)}
-                                />
-                            </DrawerHeader>
-                        </DrawerContent>
-                    </Drawer>
-                </IsUser>
-            </div>
-            
+        <>  
             {/* Filtres */}
             <FilterItems 
                 options={filterOptions} 
@@ -126,44 +94,85 @@ export default function HouseholdProductList({ fetchedHouseholdProducts }: { fet
             />
 
             {/* Liste des ingrédients */}
-            <div className="cards-wrapper">
-                <div className="cards-list">
+            <Table>
+                <TableHeader>
+                    <TableRow>
+                        <TableHead><span className="table-head">Produits</span></TableHead>
+                        <IsAdmin>
+                            <TableHead><span className="table-head">Actions</span></TableHead>
+                        </IsAdmin>
+                    </TableRow>
+                </TableHeader>
+                <TableBody>
                     {householdProducts.map((householdProduct) => (
-                        <div key={householdProduct.id} className="card">
-                            <ItemView
-                                title={householdProduct.name}
-                                details={{
-                                    // Afficher la catégorie et la saison si elles existent
-                                    ...(householdProduct.categoryHouseholdProduct?.name && { category: householdProduct.categoryHouseholdProduct.name }),
-                                }}
-                            />
-                            <IsAdmin>
-                                <div className="flex w-full gap-2">
-                                    <EditItem
-                                        renderEditForm={(onClose) => (
-                                            <UpdateHouseholdProduct
-                                                householdProduct={householdProduct}
-                                                onSubmit={async (updatedHouseholdProduct: HouseholdProductType) => {
-                                                    await updateHouseholdProduct(updatedHouseholdProduct);
-                                                    onClose();
-                                                }}
-                                                onCancel={onClose}
+                        <TableRow key={householdProduct.id}>
+                            <TableCell className="table-cell">
+                                <div className="lg:relative">
+                                    <ItemView
+                                        title={householdProduct.name}
+                                        details={{
+                                            // Afficher la catégorie et la saison si elles existent
+                                            ...(householdProduct.categoryHouseholdProduct?.name && { category: householdProduct.categoryHouseholdProduct.name }),
+                                        }}
+                                    />
+                                    {/* Edition et suppression des produits */}
+                                    {/* Si l'utilisateur est admin, afficher les boutons d'édition et de suppression */}
+                                    <IsAdmin>
+                                        <div className="lg:absolute right-0 top-0 flex gap-4 mt-2">
+                                            <EditItem
+                                                renderEditForm={(onClose) => (
+                                                    <UpdateHouseholdProduct
+                                                        householdProduct={householdProduct}
+                                                        onSubmit={async (updatedHouseholdProduct: HouseholdProductType) => {
+                                                            await updateHouseholdProduct(updatedHouseholdProduct);
+                                                            onClose();
+                                                        }}
+                                                        onCancel={onClose}
+                                                    />
+                                                )}
                                             />
-                                        )}
-                                    />
-                                    <DeleteItem
-                                        apiUrl="/api/household-products"
-                                        id={householdProduct.id}
-                                        onSubmit={handleHouseholdProductDeleted}
-                                    />
+                                            <DeleteItem
+                                                apiUrl="/api/household-products"
+                                                id={householdProduct.id}
+                                                onSubmit={handleHouseholdProductDeleted}
+                                            />
+                                        </div>
+                                    </IsAdmin>
                                 </div>
-                            </IsAdmin>
-                            {/* Ajouter l'ingrédient à la liste de courses */}
-                            <AddToShoppingListForm type="product" id={householdProduct.id} />
-                        </div>
+                            </TableCell>
+                            <TableCell>
+                                {/* Ajouter l'ingrédient à la liste de courses */}
+                                <AddToShoppingListForm type="product" id={householdProduct.id} />
+                            </TableCell>
+                        </TableRow>
                     ))}
-                </div>
-            </div>
+                </TableBody>
+            </Table>
+
+            {/* Dialogue pour ajouter un ingrédient */}
+            <IsUser>
+                <Drawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
+                    <DrawerTrigger asChild>
+                        <Button 
+                            variant="success" 
+                            className="w-full"
+                            onClick={() => setIsDrawerOpen(true)}
+                        >
+                                Ajouter un produit <Plus/>
+                        </Button>
+                    </DrawerTrigger>
+                    <DrawerContent>
+                        <DrawerHeader>
+                            <DrawerTitle className="text-center my-4">Ajouter un produit</DrawerTitle>
+                        </DrawerHeader>
+                        {/* Formulaire de création d'ingrédient */}
+                        <CreateHouseholdProduct
+                            onSubmit={addHouseholdProduct}
+                            onClose={() => setIsDrawerOpen(false)}
+                        />
+                    </DrawerContent>
+                </Drawer>
+            </IsUser>
         </>
     );
 };

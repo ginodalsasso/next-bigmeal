@@ -110,19 +110,19 @@ const CreateIngredient: React.FC<CreateIngredientProps> = ({
             <div className="drawer-label-input">
                 <label htmlFor="categoryIngredientId">Catégorie de l'ingrédient</label>
                 <div className="flex gap-2 flex-wrap">
-                <select
-                    className="input-text-select"
-                    name="categoryIngredientId"
-                    id="categoryIngredientId"
-                    defaultValue=""
-                    required
-                >
-                    <option value="">-- Choisir une catégorie --</option>
-                    {categories.map((category) => (
-                        <option key={category.id} value={category.id}> 
-                            {ucFirst(category.name)}
-                        </option>
-                    ))}
+                    <select
+                        className="input-text-select"
+                        name="categoryIngredientId"
+                        id="categoryIngredientId"
+                        defaultValue=""
+                        required
+                    >
+                        <option value="">-- Choisir une catégorie --</option>
+                        {categories.map((category) => (
+                            <option key={category.id} value={category.id}> 
+                                {ucFirst(category.name)}
+                            </option>
+                        ))}
                     </select>
                 </div>
                 <FormErrorMessage message={error?.categoryIngredientId} />

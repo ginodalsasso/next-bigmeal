@@ -100,38 +100,51 @@ const CreateHouseholdProduct: React.FC<CreateHouseholdProductProps> = ({
 
     // _________________________ RENDU _________________________
     return (
-        <form className="flex flex-col gap-5 p-5" action={handleSubmit}>
-            {/* Champ pour le nom de l'ingrédient */}
-            <input
-                className="input-text-select"
-                type="text"
-                id="name"
-                name="name"
-                placeholder="Nom du produit"
-                autoComplete="off"
-                required
-            />
-            <FormErrorMessage message={error?.name} />
+        <form className="drawer-form" action={handleSubmit}>
+            <FormErrorMessage message={error?.general} />
+
+            <div className="drawer-label-input">
+                {/* Nom du produit */}
+                <label htmlFor="name">Nom du produit</label>
+                <input
+                    className="input-text-select"
+                    type="text"
+                    id="name"
+                    name="name"
+                    placeholder="Papier toilette, savon, etc."
+                    autoComplete="off"
+                    required
+                />
+                <FormErrorMessage message={error?.name} />
+            </div>
 
             {/* Sélection pour la catégorie */}
-            <select
-                className="input-text-select"
-                name="categoryHouseholdProductId"
-                id="categoryHouseholdProductId"
-                defaultValue=""
-                required
-            >
-                <option value="">-- Choisir une catégorie --</option>
-                {categories.map((category) => (
-                    <option key={category.id} value={category.id}> 
-                        {ucFirst(category.name)}
-                    </option>
-                ))}
-            </select>
-            <FormErrorMessage message={error?.categoryHouseholdProductId} />
+            <div className="drawer-label-input">
+                <label htmlFor="categoryHouseholdProductId">Catégorie du produit</label>
+                <div className="flex gap-2 flex-wrap">
+                    <select
+                        className="input-text-select"
+                        name="categoryHouseholdProductId"
+                        id="categoryHouseholdProductId"
+                        defaultValue=""
+                        required
+                    >
+                        <option value="">-- Choisir une catégorie --</option>
+                        {categories.map((category) => (
+                            <option key={category.id} value={category.id}> 
+                                {ucFirst(category.name)}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+                {/* Message d'erreur pour la catégorie */}
+                <FormErrorMessage message={error?.categoryHouseholdProductId} />
+            </div>
+
+            {/* Message d'erreur pour le nom du produit */}
 
             {/* Bouton de soumission */}
-            <div className="flex flex-col-reverse gap-2 lg:justify-end">
+            <div className="drawer-buttons-form">
                 <Button variant="cancel" onClick={onClose}>
                     Annuler
                 </Button>

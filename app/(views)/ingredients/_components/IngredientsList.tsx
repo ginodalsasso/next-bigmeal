@@ -110,7 +110,6 @@ export default function IngredientList({ fetchedIngredients }: { fetchedIngredie
             </TableHeader>
             <TableBody>
                 {ingredients.map((ingredient) => (
-                    // <div key={ingredient.id} className="card">
                     <TableRow key={ingredient.id}>
                         <TableCell className="table-cell">
                             <div className="lg:relative">
@@ -149,10 +148,8 @@ export default function IngredientList({ fetchedIngredients }: { fetchedIngredie
                         </TableCell>
                         
                         <TableCell>
-                            <div>
-                                {/* Ajouter l'ingrédient à la liste de courses */}
-                                <AddToShoppingListForm type="ingredient" id={ingredient.id} />
-                            </div>
+                            {/* Ajouter l'ingrédient à la liste de courses */}
+                            <AddToShoppingListForm type="ingredient" id={ingredient.id} />
                         </TableCell>
                     </TableRow>
                 ))}
@@ -160,29 +157,27 @@ export default function IngredientList({ fetchedIngredients }: { fetchedIngredie
         </Table>
         {/* Dialogue pour ajouter un ingrédient */}
         <IsUser>
-            <div className="flex flex-col justify-between  pt-2 md:flex-row-reverse md:items-center">
-                <Drawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
-                    <DrawerTrigger asChild>
-                        <Button 
-                            variant="success"                     
-                            className=""
-                            onClick={() => setIsDrawerOpen(true)}
-                        >
-                            Ajouter un ingrédient <Plus/> 
-                        </Button>
-                    </DrawerTrigger>
-                    <DrawerContent>
-                        <DrawerHeader>
-                            <DrawerTitle className="text-center my-4">Ajouter un ingrédient</DrawerTitle>
-                        </DrawerHeader>
-                        {/* Formulaire de création d'ingrédient */}
-                        <CreateIngredient
-                            onSubmit={addIngredient}
-                            onClose={() => setIsDrawerOpen(false)}
-                        />
-                    </DrawerContent>
-                </Drawer>
-            </div>
+            <Drawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
+                <DrawerTrigger asChild>
+                    <Button 
+                        variant="success"                     
+                        className="w-full"
+                        onClick={() => setIsDrawerOpen(true)}
+                    >
+                        Ajouter un ingrédient <Plus/> 
+                    </Button>
+                </DrawerTrigger>
+                <DrawerContent>
+                    <DrawerHeader>
+                        <DrawerTitle className="text-center my-4">Ajouter un ingrédient</DrawerTitle>
+                    </DrawerHeader>
+                    {/* Formulaire de création d'ingrédient */}
+                    <CreateIngredient
+                        onSubmit={addIngredient}
+                        onClose={() => setIsDrawerOpen(false)}
+                    />
+                </DrawerContent>
+            </Drawer>
         </IsUser>
         </>
     );
