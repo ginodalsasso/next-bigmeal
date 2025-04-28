@@ -5,6 +5,13 @@ enum Unit {
     CENTILITER
     MILLILITER
     PIECE
+    TEASPOON
+    TABLESPOON
+    PINCH
+    CUP
+    SLICE
+    HANDFUL
+    BUNCH
 }
 
 model Composition {

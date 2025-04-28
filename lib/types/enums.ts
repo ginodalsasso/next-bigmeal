@@ -6,6 +6,13 @@ export enum IngredientUnit {
     CENTILITER = "CENTILITER",
     MILLILITER = "MILLILITER",
     PIECE = "PIECE",
+    TEASPOON = "TEASPOON",
+    TABLESPOON = "TABLESPOON", 
+    PINCH = "PINCH",
+    CUP = "CUP", 
+    SLICE = "SLICE",
+    HANDFUL = "HANDFUL",
+    BUNCH = "BUNCH", 
 }
 
 export enum Season {

@@ -71,10 +71,25 @@ export const translatedUnit = (unit: string | undefined): string => {
             return "cL";
         case "PIECE":
             return "pce";
+        case "TEASPOON":
+            return "càc"; // cuillère à café
+        case "TABLESPOON":
+            return "càs"; // cuillère à soupe
+        case "PINCH":
+            return "pincée";
+        case "CUP":
+            return "tasse";
+        case "SLICE":
+            return "tranche";
+        case "HANDFUL":
+            return "poignée";
+        case "BUNCH":
+            return "botte";
         default:
             return "Non spécifié";
     }
 };
+
 
 // Compter le nombre d'ingrédients dans une liste de courses
 export const countTotalQuantities = (shoppingList: ShoppingListType[]): number => {
