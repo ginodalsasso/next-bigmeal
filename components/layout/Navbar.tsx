@@ -4,7 +4,6 @@ import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import IsUser from "../isUser";
 import { signOut } from "next-auth/react";
-import IsNotAuthenticated from "../isNotAuthenticated";
 import SearchBar from "./Search";
 import { LogOut, Search,UserRound } from "lucide-react";
 
@@ -27,77 +26,58 @@ const Navbar = () => {
     }, [toggleSearch]);
 
     return (
-        <nav className="w-full max-w-7xl p-4">
-            <div className="flex items-center justify-between ">
-                {/* Logo */}
-                <Link href="/" className="hidden items-center text-lg font-bold lg:flex">
-                    Big-Meal
-                </Link>
+        <IsUser>
+            <nav className="w-full max-w-7xl p-4">
+                <div className="flex items-center justify-between ">
+                    {/* Logo */}
+                    <Link href="/" className="hidden items-center text-lg font-bold lg:flex">
+                        Big-Meal
+                    </Link>
 
-                {/* Desktop Navigation */}
-                <ul className="hidden list-none flex-row items-center gap-6 lg:flex">
-                    {/* Si l'utilisateur est connecté */}
-                    <IsUser>
-                        <li className="nav-links-desktop align-icon">                         
-                            <Search
-                                onClick={() => setToggleSearch(!toggleSearch)}
-                            />
-                        </li>
-                        <li className="nav-links-desktop align-icon">
-                            <Link
-                                href="/profile"
-                                className="nav-links-desktop"
-                                title="Profil"
-                            >
-                                <UserRound />
-                            </Link>
-                        </li>
-                        <li>
-                            <button 
-                                className="nav-links-desktop align-icon"
-                                onClick={() => signOut()}
-                                title="Déconnexion"
-                            > 
-                                <LogOut />
-                            </button>
-                        </li>
-                    </IsUser>
-                    {/* Si l'utilisateur n'est pas connecté */}
-                    <IsNotAuthenticated>
-                        <li>
-                            <Link
-                                href="/login"
-                                className="nav-links-desktop"
-                            >
-                                Se connecter
-                            </Link>
-                        </li>
-                        <li>
-                            <Link
-                                href="/register"
-                                className="nav-links-desktop"
-                            >
-                                S&apos;inscrire
-                            </Link>
-                        </li>
-                    </IsNotAuthenticated>
-                </ul>
-            </div>
-            {/* Mobile SearchBar visible */}
-            <div className="block lg:hidden" ref={searchContainerRef}>
-                <SearchBar onSearch={() => setToggleSearch(false)} />
-            </div>
-            {toggleSearch && (
-                <>
-                    {/* Desktop Overlay */}
-                    <div className="fixed left-0 top-0 z-10 hidden h-screen w-full items-center justify-center bg-zinc-950/50 backdrop-blur-sm lg:flex">
-                        <div ref={searchContainerRef}>
-                            <SearchBar onSearch={() => setToggleSearch(false)} />
+                        {/* Desktop Navigation */}
+                        <ul className="hidden list-none flex-row items-center gap-6 lg:flex">
+                            {/* Si l'utilisateur est connecté */}
+                                <li className="nav-links-desktop align-icon">                         
+                                    <Search
+                                        onClick={() => setToggleSearch(!toggleSearch)}
+                                    />
+                                </li>
+                                <li className="nav-links-desktop align-icon">
+                                    <Link
+                                        href="/profile"
+                                        className="nav-links-desktop"
+                                        title="Profil"
+                                    >
+                                        <UserRound />
+                                    </Link>
+                                </li>
+                                <li>
+                                    <button 
+                                        className="nav-links-desktop align-icon"
+                                        onClick={() => signOut()}
+                                        title="Déconnexion"
+                                    > 
+                                        <LogOut />
+                                    </button>
+                                </li>
+                        </ul>
+                </div>
+                {/* Mobile SearchBar visible */}
+                <div className="block lg:hidden" ref={searchContainerRef}>
+                    <SearchBar onSearch={() => setToggleSearch(false)} />
+                </div>
+                {toggleSearch && (
+                    <>
+                        {/* Desktop Overlay */}
+                        <div className="fixed left-0 top-0 z-10 hidden h-screen w-full items-center justify-center bg-zinc-950/50 backdrop-blur-sm lg:flex">
+                            <div ref={searchContainerRef}>
+                                <SearchBar onSearch={() => setToggleSearch(false)} />
+                            </div>
                         </div>
-                    </div>
-                </>
-            )}
-        </nav>
+                    </>
+                )}
+            </nav>
+        </IsUser>
     );
 };
 

@@ -33,6 +33,7 @@ export const ingredientConstraints = z.object({
         ),
     season: z
         .nativeEnum(Season)
+        .nullable()
         .optional(),
     categoryIngredientId: z
         .string()

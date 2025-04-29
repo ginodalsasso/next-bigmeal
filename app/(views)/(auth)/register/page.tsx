@@ -57,8 +57,8 @@ export default function RegisterPage() {
     };
 
     return (
-        <div className="flex min-h-screen items-start justify-center">
-            <div className="mx-auto w-full max-w-md overflow-hidden rounded-xl bg-white px-6 pb-10 pt-8 transition-all duration-300">
+        <div className="flex min-h-screen items-center justify-center px-4 py-12">
+            <div className="w-full max-w-md rounded-xl bg-white p-4 transition-all duration-300">   
                 <div className="mb-6 text-center">
                     <h2 className="text-2xl font-bold text-gray-900">Inscription</h2>
                     <p className="mt-2 text-sm text-gray-600">Entrez vos informations pour créer un compte</p>

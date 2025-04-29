@@ -19,7 +19,7 @@ export default function RootLayout({
                 <title>Big Meal App</title>
                 <meta name="description" content="A simple meal app" />
             </head>
-            <body className="flex min-h-screen flex-col">
+            <body className="flex flex-col">
                 <SessionProvider>
                     <header className="flex justify-center border-b border-neutral-500 bg-neutral-900">
                         <Navbar />
@@ -28,7 +28,7 @@ export default function RootLayout({
                         <aside className="hidden border-r border-neutral-500 lg:block">
                             <Sidebar />
                         </aside>
-                        <main className="flex-1 overflow-hidden px-4 pb-20 pt-4 md:p-6" >{children}</main>
+                         <main className="flex-1 overflow-hidden" >{children}</main> {/* px-4 pb-20 pt-4 md:p-6 */}
                     </div>
                     <div className="fixed bottom-0 w-full border-t bg-black lg:hidden">
                         <Bottombar />
