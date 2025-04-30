@@ -17,8 +17,8 @@ import FormErrorMessage from "@/components/forms/FormErrorMessage";
 
 // Services
 import { createStepAPI } from "@/lib/services/step_service";
-import Image from "next/image";
 import { getCsrfToken } from "next-auth/react";
+import { X } from "lucide-react";
 
 // _________________________ COMPOSANT _________________________
 const CreatePreparation: React.FC<CreateStepProps> = ({ 
@@ -128,7 +128,7 @@ const CreatePreparation: React.FC<CreateStepProps> = ({
             <FormErrorMessage message={error.general} />
 
             {form.map((step, index) => (
-                <div key={index} className="flex flex-col gap-3 border-b pb-4">
+                <div key={index} className="flex flex-col gap-3 pb-4">
                     {/* Champ pour le numéro de l'étape */}
                     <div className="flex items-center justify-between">    
                         <strong>Étape {step.stepNumber}</strong>
@@ -136,11 +136,11 @@ const CreatePreparation: React.FC<CreateStepProps> = ({
                     {/* Bouton pour supprimer une ligne */}
                     <Button 
                         variant="delete" 
-                        className="w-auto self-end" 
+                        className="self-end" 
                         title="Supprimer" 
                         onClick={() => removeLine(index)}
                         disabled={form.length === 1}>
-                        <Image src={"/img/trash.svg"} width={18} height={18} alt="Icône de suppression" />
+                        <X /> Supprimer l&apos;étape
                     </Button>   
                     </div>
 
@@ -168,7 +168,7 @@ const CreatePreparation: React.FC<CreateStepProps> = ({
                     </div>
                     <FormErrorMessage message={error[index]?.stepNumber} />
                     <FormErrorMessage message={error[index]?.description} />
-
+                    {form.length > 1 && <hr className="border-neutral-500" />}
                 </div>
             ))}
 

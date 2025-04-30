@@ -35,8 +35,22 @@ const CreateMealPage = () => {
         createPreparation: "75%",
         createStep: "100%",
     }[currentStep]; // Récupère la valeur de la clé correspondant à currentStep
-    
 
+    // Titres pour chaque étape
+    const stepTitles = {
+        createMeal: "Création du repas",
+        createComposition: "Ajout des ingrédients",
+        createPreparation: "Définition des préparations",
+        createStep: "Description des étapes"
+    };
+    
+    // Messages pour chaque étape
+    const stepMessages = {
+        createMeal: "Commencez par créer un nouveau repas en remplissant les informations de base.",
+        createComposition: "Ajoutez maintenant les ingrédients qui composent votre repas.",
+        createPreparation: "Définissez les temps de préparation nécessaires pour réaliser ce repas.",
+        createStep: "Décrivez les étapes détaillées pour préparer ce repas.",
+    };
 
     // Callback pour la création de repas
     const handleMealCreated = (meal: MealType) => {
@@ -75,23 +89,23 @@ const CreateMealPage = () => {
     return (
         <div className="mx-auto max-w-2xl">
 
-            <div>
-                <h1 className="text-2xl font-bold">Nouveau repas</h1>
-                <p className="mt-2 text-gray-300">
-                    Créez un nouveau repas en ajoutant des compositions, des préparations et des étapes.
-                </p>
-
-            </div>
+            <h1 className="text-center text-2xl font-bold">Nouveau repas</h1>
 
             {/* Progress Bar */}
-            <div className="my-8 h-2 w-full bg-gray-200">
+            <p className="mt-3 text-center text-sm">{ progress }</p>
+            <div className="h-2 w-full bg-gray-200">
                 <div
                     className="h-2 bg-blue-500 transition-all"
                     style={{ width: progress }}
                 />
-                <p className="mt-1 text-center text-sm">{ progress }</p>
             </div>
-            
+
+            {/* Message contextualisé pour l'étape actuelle */}
+            <div className="my-8 rounded-md border border-blue-200 bg-blue-50 p-4">
+                <h2 className="text-lg font-semibold text-blue-700">{stepTitles[currentStep]}</h2>
+                <p className="text-blue-600">{stepMessages[currentStep]}</p>
+            </div>
+
             {/* Etapes */}
             {currentStep === "createMeal" && (
                 <CreateMeal onSubmit={handleMealCreated} />
