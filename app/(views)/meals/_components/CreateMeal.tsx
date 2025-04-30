@@ -113,7 +113,7 @@ const CreateMeal: React.FC<CreateMealProps> = ({ onSubmit }) => {
                     type="text"
                     id="mealName"
                     name="mealName"
-                    placeholder="Carbonara"
+                    placeholder="Carbonara, Couscous, etc."
                     autoComplete="off"
                     required
                 />

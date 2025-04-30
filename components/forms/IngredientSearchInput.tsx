@@ -53,23 +53,21 @@ export const IngredientSearchInput = ({ value, onSelect }: IngredientSearchInput
                 placeholder="Patates, tomates..."
             />
             {loading && <p className="text-sm">Chargement...</p>}
-            {results.length > 0 && (
-                <ul className="absolute z-10 w-full bg-white text-black shadow">
-                    {results.map((item) => (
-                        <li
-                            key={item.id}
-                            className="cursor-pointer p-2 hover:bg-gray-200"
-                            onClick={() => {
-                                onSelect(item);
-                                setQuery(item.name);
-                                setResults([]);
-                            }}
-                        >
-                            {item.name}
-                        </li>
-                    ))}
-                </ul>
-            )}
+            <ul className="absolute z-10 w-full bg-white text-black shadow">
+                {results.map((item) => (
+                    <li
+                        key={item.id}
+                        className="cursor-pointer p-2 hover:bg-gray-200"
+                        onClick={() => {
+                            onSelect(item);
+                            setQuery(item.name);
+                            setResults([]);
+                        }}
+                    >
+                        {item.name}
+                    </li>
+                ))}
+            </ul>
         </div>
     );
 };

@@ -24,8 +24,8 @@ import { IngredientSearchInput } from "@/components/forms/IngredientSearchInput"
 // Services
 import { getIngredients } from "@/lib/services/data_fetcher";
 import { createCompositionAPI } from "@/lib/services/composition_service";
-import Image from "next/image";
 import { getCsrfToken } from "next-auth/react";
+import { X } from "lucide-react";
 
 
 // _________________________ COMPONENT _________________________
@@ -150,7 +150,7 @@ const CreateComposition: React.FC<CreateCompositionProps>= ({
             <FormErrorMessage message={error.general} />
 
             {form.map((composition, index) => (
-                <div key={index} className="flex gap-3 border-b pb-4">
+                <div key={index} className="flex flex-col gap-3 pb-4">
                     {/* Sélection de l'ingrédient */}
                     <IngredientSearchInput
                         value={ingredients.find(ingredient => ingredient.id === composition.ingredientId)?.name || ""}
@@ -164,63 +164,65 @@ const CreateComposition: React.FC<CreateCompositionProps>= ({
                             )
                         }
                     />
-                    <div>
-                        {/* Champ pour la quantité */}
-                        <label htmlFor="quantity">Quantité</label>
-                        <input
-                            id="quantity"
-                            type="number"
-                            step="0.1"
-                            placeholder="Quantité"
-                            value={composition.quantity || ""}
-                            onChange={(e) =>
-                                setForm((prev) =>
-                                    prev.map((comp, i) =>
-                                        i === index // Si c'est la ligne en cours, mettre à jour la quantité
-                                        ? { ...comp, quantity: parseFloat(e.target.value) } // ...comp = copie de la ligne
-                                        : comp // Sinon, ne rien changer
-                                    )
-                                )
-                            }
-                            className="input-text-select"
-                            required
-                        />
-                    </div>
-                    
-                    <div>
-                        {/* Sélection de l'unité */}
-                        <label htmlFor="unit">Unité</label>
-                        <select
-                            id="unit"
-                            value={composition.unit}
-                            onChange={(e) =>
-                                setForm((prev) =>
-                                    prev.map((comp, i) =>
-                                        i === index // Si c'est la ligne en cours, mettre à jour l'unité
-                                        ? { ...comp, unit: e.target.value as IngredientUnit } // ...comp = copie de la ligne
-                                        : comp // Sinon, ne rien changer
+                    <div className="flex gap-3">
+                        <div>
+                            {/* Champ pour la quantité */}
+                            <label htmlFor="quantity">Quantité</label>
+                            <input
+                                id="quantity"
+                                type="number"
+                                step="0.1"
+                                placeholder="Quantité"
+                                value={composition.quantity || ""}
+                                onChange={(e) =>
+                                    setForm((prev) =>
+                                        prev.map((comp, i) =>
+                                            i === index // Si c'est la ligne en cours, mettre à jour la quantité
+                                            ? { ...comp, quantity: parseFloat(e.target.value) } // ...comp = copie de la ligne
+                                            : comp // Sinon, ne rien changer
                                         )
                                     )
                                 }
-                            className="input-text-select"
-                            required
-                        >
-                            <option value="">-- Choisir une unité --</option>
-                            {Object.values(IngredientUnit).map((unit) => (
-                                <option key={unit} value={unit}>
-                                    {translatedUnit(unit)}
-                                </option>
-                            ))}
-                        </select>
+                                className="input-text-select"
+                                required
+                            />
+                        </div>
+                        
+                        <div>
+                            {/* Sélection de l'unité */}
+                            <label htmlFor="unit">Unité</label>
+                            <select
+                                id="unit"
+                                value={composition.unit}
+                                onChange={(e) =>
+                                    setForm((prev) =>
+                                        prev.map((comp, i) =>
+                                            i === index // Si c'est la ligne en cours, mettre à jour l'unité
+                                            ? { ...comp, unit: e.target.value as IngredientUnit } // ...comp = copie de la ligne
+                                            : comp // Sinon, ne rien changer
+                                            )
+                                        )
+                                    }
+                                className="input-text-select"
+                                required
+                            >
+                                <option value="">-- Choisir une unité --</option>
+                                {Object.values(IngredientUnit).map((unit) => (
+                                    <option key={unit} value={unit}>
+                                        {translatedUnit(unit)}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
                     </div>
                     {/* Bouton pour supprimer une ligne */}
                     <Button 
                         variant="delete" 
-                        className="w-auto self-end" 
-                        title="Supprimer" 
+                        className="w-full self-end" 
+                        title="Supprimer la composition" 
                         onClick={() => removeLine(index)}
                         disabled={form.length === 1}>
-                        <Image src={"/img/trash.svg"} width={18} height={18} alt="Icône de suppression" />
+                        <X /> Supprimer la composition
                     </Button>   
                     
                     {/* Messages d'erreur pour chaque champ */}
@@ -228,6 +230,7 @@ const CreateComposition: React.FC<CreateCompositionProps>= ({
                     <FormErrorMessage message={error[index]?.quantity} />
                     <FormErrorMessage message={error[index]?.unit} />
 
+                    {form.length > 1 && <hr className="border-neutral-500" />}
                 </div>
             ))}
 

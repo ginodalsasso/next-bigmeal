@@ -124,7 +124,7 @@ export default function IngredientList({ fetchedIngredients }: { fetchedIngredie
                                 {/* Edition et suppression d'ingrédients */}
                                 {/* Si l'utilisateur est admin, afficher les boutons d'édition et de suppression */}
                                 <IsAdmin>
-                                    <div className="lg:absolute right-0 top-0 flex gap-4 mt-2">
+                                    <div className="right-0 top-0 mt-2 flex gap-4 lg:absolute">
                                         <EditItem
                                             renderEditForm={(onClose) => (
                                                 <UpdateIngredient
@@ -169,7 +169,7 @@ export default function IngredientList({ fetchedIngredients }: { fetchedIngredie
                 </DrawerTrigger>
                 <DrawerContent>
                     <DrawerHeader>
-                        <DrawerTitle className="text-center my-4">Ajouter un ingrédient</DrawerTitle>
+                        <DrawerTitle className="my-4 text-center">Ajouter un ingrédient</DrawerTitle>
                     </DrawerHeader>
                     {/* Formulaire de création d'ingrédient */}
                     <CreateIngredient
