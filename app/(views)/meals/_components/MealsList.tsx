@@ -81,7 +81,15 @@ export default function MealsList( {fetchedMeals}: { fetchedMeals: MealType[] })
 
     return (
         <>
+            <h1 className="h1-title">Liste des repas</h1>
+            <IsUser>
+                <Button variant="success" className="w-full" onClick={() => router.push("/meals/create")}>
+                    Ajouter un repas <Plus/>
+                </Button>
+            </IsUser>
             {/* Filtres */}
+            <div className="mb-2 mt-4 text-sm">Filtrer par catégorie:</div>
+            {/* Composant de filtre avec les options de filtre */}
             <FilterItems 
                 options={filterOptions} 
                 onFilterChange={handleFilterChange} 
@@ -142,11 +150,6 @@ export default function MealsList( {fetchedMeals}: { fetchedMeals: MealType[] })
                     ))}
                 </TableBody>
             </Table>
-            <IsUser>
-                <Button variant="success" className="w-full" onClick={() => router.push("/meals/create")}>
-                    Ajouter un repas <Plus/>
-                </Button>
-            </IsUser>
         </>
     );
 };

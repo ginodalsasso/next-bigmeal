@@ -24,6 +24,9 @@ body {
   display: none; /* Chrome, Safari, Opera */
 }
 
+.h1-title {
+  @apply mb-4 text-2xl font-bold text-center;
+}
 
 .cards-list {
   @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-2;

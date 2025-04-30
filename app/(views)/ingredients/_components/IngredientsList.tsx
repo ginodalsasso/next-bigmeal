@@ -92,7 +92,33 @@ export default function IngredientList({ fetchedIngredients }: { fetchedIngredie
 
     return (
         <>
-            {/* Filtre */}
+            <h1 className="h1-title">Liste des ingrédients</h1>
+            {/* Dialogue pour ajouter un ingrédient */}
+            <IsUser>
+                <Drawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
+                    <DrawerTrigger asChild>
+                        <Button 
+                            variant="success"                     
+                            className="w-full"
+                            onClick={() => setIsDrawerOpen(true)}
+                        >
+                            Ajouter un ingrédient <Plus/> 
+                        </Button>
+                    </DrawerTrigger>
+                    <DrawerContent>
+                        <DrawerHeader>
+                            <DrawerTitle className="my-4 text-center">Ajouter un ingrédient</DrawerTitle>
+                        </DrawerHeader>
+                        {/* Formulaire de création d'ingrédient */}
+                        <CreateIngredient
+                            onSubmit={addIngredient}
+                            onClose={() => setIsDrawerOpen(false)}
+                        />
+                    </DrawerContent>
+                </Drawer>
+            </IsUser>
+            {/* Filtres */}
+            <div className="mb-2 mt-4 text-sm">Filtrer par catégorie:</div>
             <FilterItems
                 options={filterOptions}
                 onFilterChange={handleFilterChange}
@@ -155,30 +181,6 @@ export default function IngredientList({ fetchedIngredients }: { fetchedIngredie
                 ))}
             </TableBody>
         </Table>
-        {/* Dialogue pour ajouter un ingrédient */}
-        <IsUser>
-            <Drawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
-                <DrawerTrigger asChild>
-                    <Button 
-                        variant="success"                     
-                        className="w-full"
-                        onClick={() => setIsDrawerOpen(true)}
-                    >
-                        Ajouter un ingrédient <Plus/> 
-                    </Button>
-                </DrawerTrigger>
-                <DrawerContent>
-                    <DrawerHeader>
-                        <DrawerTitle className="my-4 text-center">Ajouter un ingrédient</DrawerTitle>
-                    </DrawerHeader>
-                    {/* Formulaire de création d'ingrédient */}
-                    <CreateIngredient
-                        onSubmit={addIngredient}
-                        onClose={() => setIsDrawerOpen(false)}
-                    />
-                </DrawerContent>
-            </Drawer>
-        </IsUser>
         </>
     );
 };

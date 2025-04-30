@@ -83,11 +83,37 @@ export default function HouseholdProductList({ fetchedHouseholdProducts }: { fet
     };
 
     // _________________________ RENDU _________________________
-    if (!householdProducts) return <div>Ingrédients introuvables.</div>;
+    if (!householdProducts) return <div>Produits introuvables.</div>;
 
     return (
-        <>  
+        <>              
+            <h1 className="h1-title">Liste des produits ménagers</h1>
+            {/* Dialogue pour ajouter un ingrédient */}
+            <IsUser>
+                <Drawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
+                    <DrawerTrigger asChild>
+                        <Button 
+                            variant="success" 
+                            className="w-full"
+                            onClick={() => setIsDrawerOpen(true)}
+                        >
+                                Ajouter un produit <Plus/>
+                        </Button>
+                    </DrawerTrigger>
+                    <DrawerContent>
+                        <DrawerHeader>
+                            <DrawerTitle className="my-4 text-center">Ajouter un produit</DrawerTitle>
+                        </DrawerHeader>
+                        {/* Formulaire de création d'ingrédient */}
+                        <CreateHouseholdProduct
+                            onSubmit={addHouseholdProduct}
+                            onClose={() => setIsDrawerOpen(false)}
+                        />
+                    </DrawerContent>
+                </Drawer>
+            </IsUser>
             {/* Filtres */}
+            <div className="mb-2 mt-4 text-sm">Filtrer par catégorie:</div>
             <FilterItems 
                 options={filterOptions} 
                 onFilterChange={handleFilterChange} 
@@ -149,30 +175,7 @@ export default function HouseholdProductList({ fetchedHouseholdProducts }: { fet
                 </TableBody>
             </Table>
 
-            {/* Dialogue pour ajouter un ingrédient */}
-            <IsUser>
-                <Drawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
-                    <DrawerTrigger asChild>
-                        <Button 
-                            variant="success" 
-                            className="w-full"
-                            onClick={() => setIsDrawerOpen(true)}
-                        >
-                                Ajouter un produit <Plus/>
-                        </Button>
-                    </DrawerTrigger>
-                    <DrawerContent>
-                        <DrawerHeader>
-                            <DrawerTitle className="text-center my-4">Ajouter un produit</DrawerTitle>
-                        </DrawerHeader>
-                        {/* Formulaire de création d'ingrédient */}
-                        <CreateHouseholdProduct
-                            onSubmit={addHouseholdProduct}
-                            onClose={() => setIsDrawerOpen(false)}
-                        />
-                    </DrawerContent>
-                </Drawer>
-            </IsUser>
+
         </>
     );
 };
