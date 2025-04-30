@@ -68,8 +68,12 @@ const Bottombar = () => {
                                 )}
                             </div>
                             {/* Menu Overlay */}
-                            {toggle && (
-                            <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black text-white">
+                            <div
+                                // eslint-disable-next-line tailwindcss/migration-from-tailwind-2
+                                className={`fixed inset-0 z-50 transform bg-black text-white transition-transform duration-300 ${
+                                    toggle ? "translate-x-0" : "translate-x-full"
+                                } flex flex-col items-center justify-center`}
+                            >
                                 <ul className="flex flex-col items-end gap-8 text-2xl">
                                 <X
                                     className="absolute right-5 top-6"
@@ -122,7 +126,6 @@ const Bottombar = () => {
                                     </IsNotAuthenticated>
                                 </ul>
                             </div>
-                            )}
                         </li>
                     </ul>
                 </div>
