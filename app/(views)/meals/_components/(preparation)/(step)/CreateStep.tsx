@@ -187,7 +187,7 @@ const CreatePreparation: React.FC<CreateStepProps> = ({
                 variant="success" 
                 disabled={isLoading || form.length === 0}
             >
-                {isLoading ? "Ajout en cours..." : "Ajouter"}
+                {isLoading ? "Création des étapes en cours..." : "Valider les étapes"}
             </Button>
         </form>
     );

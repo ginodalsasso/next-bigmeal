@@ -107,7 +107,10 @@ const CreatePreparation: React.FC<CreatePreparationProps> = ({
 
             {/* Bouton de soumission */}
             <div className="flex flex-col-reverse gap-2 lg:justify-end">
-                <FormSubmitButton />
+                <FormSubmitButton 
+                    defaultText="Valider la préparation"
+                    loadingText="Création de la préparation en cours..."
+                />
             </div>
         </form>
     );

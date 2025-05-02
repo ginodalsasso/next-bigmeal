@@ -177,7 +177,10 @@ const CreateMeal: React.FC<CreateMealProps> = ({ onSubmit }) => {
                 >
                     Revenir en arrière
                 </Button>
-                <FormSubmitButton />
+                <FormSubmitButton
+                    loadingText="Création du repas en cours..."
+                    defaultText="Valider le repas"
+                />
             </div>
         </form>
     );
