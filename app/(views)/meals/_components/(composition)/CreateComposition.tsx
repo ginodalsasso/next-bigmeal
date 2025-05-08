@@ -137,11 +137,14 @@ const CreateComposition: React.FC<CreateCompositionProps>= ({
                     {/* Sélection de l'ingrédient */}
                     <IngredientSearchInput
                         value={composition.ingredientId} // ou un label si le composant le gère
-                        onSelect={(ingredient) =>
+                        onSelect={(ingredient) => 
                             setForm((prev) =>
                                 prev.map((comp, i) =>
                                     i === index 
-                                    ? { ...comp, ingredientId: ingredient.id } // Mettre à jour l'ingrédient sélectionné
+                                    ? { 
+                                        ...comp, 
+                                        ingredientId: ingredient.id, 
+                                    }
                                     : comp
                                 )
                             )

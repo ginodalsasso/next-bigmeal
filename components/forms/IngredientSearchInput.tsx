@@ -4,10 +4,11 @@ import { IngredientType } from "@/lib/types/schemas_interfaces";
 type IngredientSearchInputProps = {
     value: string;
     onSelect: (ingredient: IngredientType) => void;
+
 };
 
 export const IngredientSearchInput = ({ value, onSelect }: IngredientSearchInputProps) => {
-    const [query, setQuery] = useState(value);
+    const [query, setQuery] = useState(value) || ""; 
     const [results, setResults] = useState<IngredientType[]>([]);
     const [loading, setLoading] = useState(false);
 
@@ -39,6 +40,13 @@ export const IngredientSearchInput = ({ value, onSelect }: IngredientSearchInput
         return () => clearTimeout(timeout);
     }, [query]);
 
+    const handleSelect = (ingredient: IngredientType) => {
+        console.log("[SELECTED_INGREDIENT]", ingredient);
+        onSelect(ingredient);
+        setQuery(ingredient.name);
+        setResults([]);
+    }
+
     return (
         <div className="relative">
             <label htmlFor="ingrédient">Ingrédient</label>
@@ -53,21 +61,19 @@ export const IngredientSearchInput = ({ value, onSelect }: IngredientSearchInput
                 placeholder="Patates, tomates..."
             />
             {loading && <p className="text-sm">Chargement...</p>}
-            <ul className="absolute z-10 w-full bg-white text-black shadow">
-                {results.map((item) => (
-                    <li
-                        key={item.id}
-                        className="cursor-pointer p-2 hover:bg-gray-200"
-                        onClick={() => {
-                            onSelect(item);
-                            setQuery(item.name);
-                            setResults([]);
-                        }}
-                    >
-                        {item.name}
-                    </li>
-                ))}
-            </ul>
+            {results.length > 0 && (
+                <ul className="absolute z-10 w-full bg-white text-black shadow">
+                    {results.map((item) => (
+                        <li
+                            key={item.id}
+                            className="cursor-pointer p-2 hover:bg-gray-200"
+                            onClick={() => handleSelect(item)}
+                        >
+                            {item.name}
+                        </li>
+                    ))}
+                </ul>
+            )}
         </div>
     );
 };
