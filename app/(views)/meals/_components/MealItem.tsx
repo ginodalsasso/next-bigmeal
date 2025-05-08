@@ -2,7 +2,6 @@
 
 // Bibliothèques tierces
 import React, { useState } from "react";
-import Image from "next/image";
 
 // Types
 import { CompositionType, MealType, PreparationType } from "@/lib/types/schemas_interfaces";
@@ -10,18 +9,18 @@ import { CompositionType, MealType, PreparationType } from "@/lib/types/schemas_
 // Composants
 import CreateComposition from "./(composition)/CreateComposition";
 import IsAdmin from "@/components/isAdmin";
+import CreatePreparation from "./(preparation)/CreatePreparation";
+import CreateStep from "./(preparation)/(step)/CreateStep";
 
 // Composants UI
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-
-// Images
-import add from "@/public/img/add.svg";
+import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerTrigger } from "@/components/ui/drawer";
 
 // Constantes
 import CompositionItem from "./(composition)/CompositionItem";
 import PreparationItem from "./(preparation)/PreparationItem";
 import { ucFirst } from "@/lib/utils";
+import { Plus } from "lucide-react";
 
 
 // _________________________ COMPOSANT _________________________
@@ -30,6 +29,7 @@ export default function MealItem( {fetchedMeal}: { fetchedMeal: MealType }) {
     // _________________________ ETATS _________________________
     const [meal, setMeal] = useState<MealType>(fetchedMeal);
     const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
+    const [currentAction, setCurrentAction] = useState<"composition" | "preparation" | "step">("composition");
 
     // _________________________ CRUD _________________________
     const updateComposition = (updatedComposition: CompositionType) => {
@@ -99,17 +99,54 @@ export default function MealItem( {fetchedMeal}: { fetchedMeal: MealType }) {
             <p>{meal.description || "Aucune description disponible pour ce repas."}</p>
             <IsAdmin>
                 <div className="mt-4">
-                    {/* Dialog pour ajouter une composition */}
-                    <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-                        <DialogTrigger asChild>
-                            <Button variant="success" className="w-full" onClick={() => setIsDialogOpen(true)}>
-                                <Image src={add} alt="Ajouter une composition" className="w-4" />
-                                Ajouter une composition
-                            </Button>
-                        </DialogTrigger>
-                        <DialogContent>
-                            <DialogHeader>
-                                <DialogTitle>Ajouter une composition</DialogTitle>
+                    {/* Dialog pour ajouter une composition ou une préparation */}
+                    <Drawer open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                        <DrawerTrigger asChild>
+                            <div className="flex flex-col gap-4">
+                                <Button 
+                                    variant="success" 
+                                    className="w-full" 
+                                    onClick= {() => {
+                                        setCurrentAction("composition");
+                                        setIsDialogOpen(true);
+                                    }}
+                                >
+                                    Ajouter une composition<Plus />
+                                </Button>
+                                
+                                <Button 
+                                    variant="success" 
+                                    className="w-full" 
+                                    onClick= {() => {
+                                        setCurrentAction("preparation");
+                                        setIsDialogOpen(true);
+                                    }}
+                                >
+                                    Ajouter une préparation<Plus />
+                                </Button>
+
+                                <Button 
+                                    variant="success" 
+                                    className="w-full" 
+                                    onClick= {() => {
+                                        setCurrentAction("step");
+                                        setIsDialogOpen(true);
+                                    }}
+                                >
+                                    Ajouter une étape<Plus />
+                                </Button>
+                            </div>
+                            
+                        </DrawerTrigger>
+                        <DrawerContent>
+                            <DrawerHeader>
+                                <DrawerTitle>
+                                    {currentAction === "composition" && "Ajouter une composition"}
+                                    {currentAction === "preparation" && "Ajouter une préparation"}
+                                    {currentAction === "step" && "Ajouter des étapes"}
+                                </DrawerTitle>
+                            </DrawerHeader>
+                            {currentAction === "composition" && (
                                 <CreateComposition
                                     mealId={meal.id}
                                     onSubmit={(compositions) => {
@@ -120,9 +157,50 @@ export default function MealItem( {fetchedMeal}: { fetchedMeal: MealType }) {
                                         setIsDialogOpen(false);
                                     }}
                                 />
-                            </DialogHeader>
-                        </DialogContent>
-                    </Dialog>
+                            )}
+
+                            {currentAction === "preparation" && (
+                                <CreatePreparation
+                                    mealId={meal.id}
+                                    onSubmit={(preparation) => {
+                                        setMeal((prevMeal) => {
+                                            if (!prevMeal) return prevMeal;
+                                            return { ...prevMeal, preparation };
+                                        });
+                                        setIsDialogOpen(false);
+                                    }}
+                                />
+                            )}
+
+                            {currentAction === "step" && (
+                                <CreateStep
+                                    preparationId={meal.preparations.at(0)?.id || ""}
+                                    onSubmit={(newStep) => {
+                                        setMeal((prevMeal) => {
+                                            if (!prevMeal) return prevMeal;
+
+                                            const updatedPreparations = prevMeal.preparations.map((prep) => {
+                                                if (prep.id === meal.preparations.at(0)?.id) {
+                                                    return {
+                                                        ...prep,
+                                                        steps: [...(prep.steps || []), newStep], // Ajoute l'étape à la fin
+                                                    };
+                                                }
+                                                return prep;
+                                            });
+
+                                            return {
+                                                ...prevMeal,
+                                                preparations: updatedPreparations,
+                                            };
+                                        });
+
+                                        setIsDialogOpen(false);
+                                    }}
+                                />
+                            )}
+                        </DrawerContent>
+                    </Drawer>
                 </div>
             </IsAdmin>
 
