@@ -82,7 +82,7 @@ body {
 }
 
 .drawer-form {
-  @apply flex flex-col gap-5 p-4;
+  @apply flex flex-col gap-5;
 }
 
 .drawer-label-input {

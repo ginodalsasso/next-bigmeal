@@ -87,8 +87,6 @@ export default function MealsList( {fetchedMeals}: { fetchedMeals: MealType[] })
                     Ajouter un repas <Plus/>
                 </Button>
             </IsUser>
-            {/* Filtres */}
-            <div className="mb-2 mt-4 text-sm">Filtrer par catégorie:</div>
             {/* Composant de filtre avec les options de filtre */}
             <FilterItems 
                 options={filterOptions} 

@@ -113,7 +113,6 @@ export default function HouseholdProductList({ fetchedHouseholdProducts }: { fet
                 </Drawer>
             </IsUser>
             {/* Filtres */}
-            <div className="mb-2 mt-4 text-sm">Filtrer par catégorie:</div>
             <FilterItems 
                 options={filterOptions} 
                 onFilterChange={handleFilterChange} 

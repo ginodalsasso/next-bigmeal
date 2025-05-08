@@ -1,12 +1,11 @@
 "use client";
 
 // Bibliothèques tierces
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { toast } from "sonner";
 
 // Types et énumérations
 import { CompositionFormErrorType, CompositionFormType } from "@/lib/types/forms_interfaces";
-import { IngredientType } from "@/lib/types/schemas_interfaces";
 import { IngredientUnit } from "@/lib/types/enums";
 import { CreateCompositionProps } from "@/lib/types/props_interfaces";
 
@@ -22,7 +21,6 @@ import FormErrorMessage from "@/components/forms/FormErrorMessage";
 import { IngredientSearchInput } from "@/components/forms/IngredientSearchInput";
 
 // Services
-import { getIngredients } from "@/lib/services/data_fetcher";
 import { createCompositionAPI } from "@/lib/services/composition_service";
 import { getCsrfToken } from "next-auth/react";
 import { X } from "lucide-react";
@@ -36,7 +34,7 @@ const CreateComposition: React.FC<CreateCompositionProps>= ({
 
     // _________________________ HOOKS _________________________
     const [isLoading, setIsLoading] = useState<boolean>(false); // Indique si l'action est en cours
-    const [ingredients, setIngredients] = useState<IngredientType[]>([]); // Liste des ingrédients disponibles
+    // const [ingredients, setIngredient] = useState<IngredientType[]>([]); // Liste des ingrédients disponibles
     const [form, setForm] = useState<CompositionFormType[]>([
         {
             ingredientId: "",
@@ -50,21 +48,6 @@ const CreateComposition: React.FC<CreateCompositionProps>= ({
 
 
     // _________________________ LOGIQUE _________________________
-    // Appel API pour récupérer les ingrédients
-    useEffect(() => {
-        const fetchIngredients = async () => {
-            try {
-                const data: IngredientType[] = await getIngredients(); 
-                setIngredients(data); 
-
-            } catch (error) {
-                console.error("[FETCH_INGREDIENTS_ERROR]", error);
-            }
-        };
-        fetchIngredients();
-    }, []);
-
-
     // Ajouter une nouvelle ligne de composition
     const addNewLine = () => {
         setForm((prev) => [
@@ -150,10 +133,10 @@ const CreateComposition: React.FC<CreateCompositionProps>= ({
             <FormErrorMessage message={error.general} />
 
             {form.map((composition, index) => (
-                <div key={index} className="flex flex-col gap-3 pb-4">
+                <div key={index} className="flex flex-col gap-3">
                     {/* Sélection de l'ingrédient */}
                     <IngredientSearchInput
-                        value={ingredients.find(ingredient => ingredient.id === composition.ingredientId)?.name || ""}
+                        value={composition.ingredientId} // ou un label si le composant le gère
                         onSelect={(ingredient) =>
                             setForm((prev) =>
                                 prev.map((comp, i) =>
@@ -237,6 +220,7 @@ const CreateComposition: React.FC<CreateCompositionProps>= ({
             {/* Bouton pour ajouter une nouvelle ligne */}
             <Button 
                 variant="default" 
+                className="mb-4"
                 type="button" 
                 onClick={addNewLine} 
                 disabled= {isFormInvalid}

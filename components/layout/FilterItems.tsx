@@ -21,30 +21,33 @@ const FilterCheckboxes: React.FC<FilterCheckboxesProps> = ({ options, onFilterCh
     };
 
     return (
-        <div className="relative w-full">
-            <div className="scrollbar-hide mb-4 flex w-full flex-nowrap space-x-2 overflow-x-auto">
-                {options.map((option, index) => (
-                    <label
-                        key={index}
-                        className={`label-filter ${
-                            selectedFilters.includes(option)
-                                ? "sticker-bg-white"
-                                : "sticker-bg-black"
-                        }`}
-                    >
-                        <input
-                            type="checkbox"
-                            className="hidden"
-                            value={option}
-                            checked={selectedFilters.includes(option)}
-                            onChange={handleFilterChange}
-                        />
-                        {option}
-                    </label>
-                ))}
+        <>
+            <p className="mb-2 mt-8 text-sm">Filtrer par catégorie:</p>
+            <div className="relative w-full">
+                <div className="scrollbar-hide mb-4 flex w-full flex-nowrap space-x-2 overflow-x-auto">
+                    {options.map((option, index) => (
+                        <label
+                            key={index}
+                            className={`label-filter ${
+                                selectedFilters.includes(option)
+                                    ? "sticker-bg-white"
+                                    : "sticker-bg-black"
+                            }`}
+                        >
+                            <input
+                                type="checkbox"
+                                className="hidden"
+                                value={option}
+                                checked={selectedFilters.includes(option)}
+                                onChange={handleFilterChange}
+                            />
+                            {option}
+                        </label>
+                    ))}
+                </div>
+                <div className="pointer-events-none absolute right-0 top-0 h-full w-6 bg-gradient-to-l from-black to-transparent" />
             </div>
-            <div className="pointer-events-none absolute right-0 top-0 h-full w-6 bg-gradient-to-l from-black to-transparent" />
-        </div>
+        </>
 
 
     );
