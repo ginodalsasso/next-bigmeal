@@ -174,24 +174,21 @@ export default function MealItem( {fetchedMeal}: { fetchedMeal: MealType }) {
 
                             {currentAction === "step" && (
                                 <CreateStep
-                                    preparationId={meal.preparations.at(0)?.id || ""}
+                                    preparationId={meal.preparations} 
                                     onSubmit={(newStep) => {
                                         setMeal((prevMeal) => {
                                             if (!prevMeal) return prevMeal;
-
-                                            const updatedPreparations = prevMeal.preparations.map((prep) => {
-                                                if (prep.id === meal.preparations.at(0)?.id) {
-                                                    return {
-                                                        ...prep,
-                                                        steps: [...(prep.steps || []), newStep], // Ajoute l'étape à la fin
-                                                    };
-                                                }
-                                                return prep;
-                                            });
-
                                             return {
                                                 ...prevMeal,
-                                                preparations: updatedPreparations,
+                                                preparations: prevMeal.preparations.map((preparation) => {
+                                                    if (preparation.id) {
+                                                        return {
+                                                            ...preparation,
+                                                            steps: [...(preparation.steps || []), newStep]
+                                                        };
+                                                    }
+                                                    return preparation;
+                                                })
                                             };
                                         });
 
