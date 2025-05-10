@@ -50,7 +50,7 @@ const DeleteProfile: React.FC<DeleteProfileProps> = ({ userId }) => {
         <>
             <AlertDialog>
                 <AlertDialogTrigger asChild>
-                    <Button variant="delete" className="w-auto" title="Supprimer" disabled={isDeleting}>
+                    <Button variant="delete" className="w-full" title="Supprimer" disabled={isDeleting}>
                         {isDeleting ? "Suppression en cours..." : "Supprimer mon compte"}
                     </Button>
                 </AlertDialogTrigger>

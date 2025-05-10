@@ -67,7 +67,7 @@ const ResetPasswordForm = ({ onBackToProfile }: { onBackToProfile: () => void })
     // _________________________ RENDU _________________________
     return (
         <div>
-            <form className="mb-2" action={handleResetPassword}>
+            <form className="flex flex-col gap-2" action={handleResetPassword}>
                 <FormErrorMessage message={error?.general} />
 
                 <label htmlFor="password">Votre mot de passe actuel</label>
@@ -103,11 +103,12 @@ const ResetPasswordForm = ({ onBackToProfile }: { onBackToProfile: () => void })
                 <FormErrorMessage message={error?.password} />
 
                 <FormSubmitButton
+                    className="my-4 w-full"
                     defaultText="Modifier le mot de passe"
                 />
             </form>
 
-            <Button variant="secondary" onClick={onBackToProfile}>
+            <Button variant="secondary" className="w-full" onClick={onBackToProfile}>
                 Retour au profil
             </Button>
         </div>
