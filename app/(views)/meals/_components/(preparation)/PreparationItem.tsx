@@ -47,9 +47,9 @@ const PreparationItem = ({ fetchedPreparation, onUpdate, onDelete }: Preparation
     return (
         <>
             <div className="flex items-center justify-between">
-                <div>
-                    <p>Temps de préparation: {preparation.prepTime}</p>
-                    <p>Temps de cuisson: {preparation.cookTime}</p>
+                <div className="mt-2">
+                    <p>Préparation: {preparation.prepTime} minutes</p>
+                    <p>Cuisson: {preparation.cookTime} minutes</p>
                 </div>
                 <div>
                     <IsAdmin>
@@ -70,9 +70,9 @@ const PreparationItem = ({ fetchedPreparation, onUpdate, onDelete }: Preparation
                     </IsAdmin>
                 </div>
             </div>
-                <ul>
+                <ol className="mt-3 space-y-3">
                     {preparation.steps && preparation.steps.map((step) => (
-                        <li key={step.id} className="flex items-center justify-between border-b py-2 ">
+                        <li key={step.id} className="pl-2">
                             <StepItem
                                 key={step.id}
                                 step={step}
@@ -81,7 +81,7 @@ const PreparationItem = ({ fetchedPreparation, onUpdate, onDelete }: Preparation
                             />
                         </li>
                     ))}
-                </ul>
+                </ol>
         </>
     );
 }

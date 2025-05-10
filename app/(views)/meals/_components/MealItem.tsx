@@ -123,9 +123,12 @@ export default function MealItem( {fetchedMeal}: { fetchedMeal: MealType }) {
     if (!meal) return <div>Repas introuvable.</div>;
 
     return (
-        <div className="mx-auto border bg-neutral-900 p-6">
-            <h1 className="mb-2 text-center text-4xl font-semibold text-emerald-500">{ucFirst(meal.name)}</h1>
-            <p>{meal.description || "Aucune description disponible pour ce repas."}</p>
+        <div className="mx-auto">
+            {/* En-tête du repas */}
+            <header className="mb-8 text-center">
+                <h1 className="mb-3 text-4xl font-semibold">{ucFirst(meal.name)}</h1>
+                <p className="text-gray-500">{meal.description || "Aucune description disponible pour ce repas."}</p>
+            </header>
             <IsAdmin>
                 <div className="mt-4">
                     {/* Dialog pour ajouter une composition ou une préparation */}
@@ -142,17 +145,20 @@ export default function MealItem( {fetchedMeal}: { fetchedMeal: MealType }) {
                                 >
                                     Ajouter une composition<Plus />
                                 </Button>
-                                
-                                <Button 
-                                    variant="success" 
-                                    className="w-full" 
-                                    onClick= {() => {
-                                        setCurrentAction("preparation");
-                                        setIsDialogOpen(true);
-                                    }}
-                                >
-                                    Ajouter une préparation<Plus />
-                                </Button>
+
+                                {!meal.preparation && (
+                                    <Button 
+                                        variant="success" 
+                                        className="w-full" 
+                                        onClick={() => {
+                                            setCurrentAction("preparation");
+                                            setIsDialogOpen(true);
+                                        }}
+                                    >
+                                        Ajouter une préparation<Plus />
+                                    </Button>
+                                )}
+
                                 <Button 
                                     variant="success" 
                                     className="w-full" 
@@ -199,22 +205,36 @@ export default function MealItem( {fetchedMeal}: { fetchedMeal: MealType }) {
                 </div>
             </IsAdmin>
 
-            <div className="mt-6">
-                {meal.compositions.length > 0 ? (
-                    meal.compositions.map((composition) => (
-                        <CompositionItem
-                            key={composition.id}
-                            composition={composition}
-                            onUpdate={updateComposition}
-                            onDelete={deleteComposition}
-                        />
-                    ))
-                ) : (
-                    <p className="text-gray-500">Aucun ingrédient disponible pour ce repas.</p>
-                )}
-            </div>
-            <div>
-                <p className="mt-6">Préparation :</p>
+
+            <div className="mt-8 grid gap-8 md:grid-cols-2">
+                {/* Colonne des ingrédients */}
+                <section className="rounded-lg border border-gray-100 bg-zinc-900 p-4">
+                    <h2 className="mb-4 flex items-center text-2xl font-medium text-emerald-600">
+                        Ingrédients
+                    </h2>
+                    
+                    {meal.compositions.length > 0 ? (
+                        <div className="space-y-3">
+                            {meal.compositions.map((composition) => (
+                                <CompositionItem
+                                    key={composition.id}
+                                    composition={composition}
+                                    onUpdate={updateComposition}
+                                    onDelete={deleteComposition}
+                                />
+                            ))}
+                        </div>
+                    ) : (
+                        <p className="text-gray-500">Aucun ingrédient disponible pour ce repas.</p>
+                    )}
+                </section>
+
+                {/* Colonne de la préparation */}
+                <section className="relative rounded-lg border border-gray-100 bg-zinc-900 p-4">
+                    <h2 className="mb-4 flex items-center text-2xl font-medium text-emerald-600">
+                        Recette
+                    </h2>
+                    
                     {meal.preparation ? (
                         <PreparationItem 
                             key={meal.preparation.id} 
@@ -225,7 +245,8 @@ export default function MealItem( {fetchedMeal}: { fetchedMeal: MealType }) {
                     ) : (
                         <p className="text-gray-500">Aucune préparation disponible pour ce repas.</p>
                     )}
-                </div>
+                </section>
+            </div>
         </div>
     );
 };

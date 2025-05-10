@@ -13,20 +13,25 @@ const StepItem = ({ step, onUpdate, onDelete }: StepItemProps) => {
     // _________________________ RENDU _________________________
     return (
         <>
-            {step.stepNumber}. {step.description}
-            <div>
-                <IsAdmin>
-                    <EditItem
-                        renderEditForm={(onClose) => (
-                            <UpdateStep
-                                initialStep={step}
-                                onSubmit={onUpdate}
-                                onClose={onClose}
-                            />
-                        )}
-                    />
-                    <DeleteItem apiUrl="/api/step" id={step.id} onSubmit={onDelete} />
-                </IsAdmin>
+            <div className="flex items-center justify-between">
+                <div className="flex flex-col gap-1">
+                    <span className="text-sm text-zinc-400">Étape {step.stepNumber}: </span>
+                    <p>{step.description}</p>
+                </div>
+                <div className="ml-auto  items-center gap-2">
+                    <IsAdmin>
+                        <EditItem
+                            renderEditForm={(onClose) => (
+                                <UpdateStep
+                                    initialStep={step}
+                                    onSubmit={onUpdate}
+                                    onClose={onClose}
+                                />
+                            )}
+                        />
+                        <DeleteItem apiUrl="/api/step" id={step.id} onSubmit={onDelete} />
+                    </IsAdmin>
+                </div>
             </div>
         </>
     );

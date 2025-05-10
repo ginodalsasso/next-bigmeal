@@ -13,11 +13,11 @@ const CompositionItem = ({ composition, onUpdate, onDelete }: CompositionItemPro
 
     // _________________________ RENDU __________________
     return (
-        <div className="flex items-center justify-between border-b py-2">
-            <p className="font-medium">{ucFirst(composition.ingredient?.name || "Ingrédient inconnu")}</p>
-            <div className="flex items-center gap-1">
-                <p>{composition.quantity}</p>
-                <p>{translatedUnit(composition.unit)}</p>
+        <div className="flex gap-1">
+            <p>{composition.quantity}</p>
+            <p>{translatedUnit(composition.unit)}</p>
+            <p className="text-gray-400">{ucFirst(composition.ingredient?.name || "Ingrédient inconnu")}</p>
+            <div className="ml-auto flex items-center gap-2">
                 <IsAdmin>
                     <EditItem
                         renderEditForm={(onClose) => (
