@@ -19,7 +19,10 @@ const INTERVAL = 60 * 60 * 1000; // Intervalle en millisecondes (1 heure)
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
     adapter: PrismaAdapter(prisma),
-    session: { strategy: "jwt" },
+    session: { 
+        strategy: "jwt",
+        maxAge: 60 * 60 * 24, // 1 jour
+    },
     providers: [
         // Réglages de connexion avec email et mot de passe
         Credentials({
