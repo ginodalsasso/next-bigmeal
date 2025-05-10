@@ -8,8 +8,8 @@ const isProduction = process.env.NODE_ENV === "production"; // Vérifie si l'env
 const protectedRoutes = [
     "/ingredients",
     "/meals",
-    "/categories-ingredient",
-    "/categories-meal",
+    "household-products",
+    "/categories",
     "/shopping-list",
     "/profile",
 ];
@@ -17,7 +17,9 @@ const protectedRoutes = [
 // Patterns pour les routes dynamiques
 const dynamicRoutePatterns = [
     /^\/ingredients\/[a-zA-Z0-9-]+$/,
+    /^\/household-products\/[a-zA-Z0-9-]+$/,
     /^\/meals\/[a-zA-Z0-9-]+$/,
+    /^search-results\?query=[a-zA-Z0-9-]+$/,
     /^\/reset-token\/[a-zA-Z0-9-]+$/,
 ];
 
