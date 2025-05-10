@@ -28,7 +28,7 @@ export default function RootLayout({
                         <aside className="hidden border-r border-neutral-500 lg:block">
                             <Sidebar />
                         </aside>
-                         <main className="flex-1 overflow-hidden p-4 pb-20" >{children}</main> {/*  pb-20 pt-4 md:p-6 */}
+                        <main className="flex-1 overflow-hidden p-4 pb-20" >{children}</main>
                     </div>
                     <div className="fixed bottom-0 w-full border-t bg-black lg:hidden">
                         <Bottombar />

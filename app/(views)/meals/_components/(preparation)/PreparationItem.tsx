@@ -8,7 +8,6 @@ import UpdatePreparation from "./UpdatePreparation";
 import DeleteItem from "@/components/layout/DeleteItemDialog";
 import StepItem from "./(step)/StepItem";
 import { PreparationItemProps } from "@/lib/types/props_interfaces";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Clock, ClockIcon, MoreVertical } from "lucide-react";
 import { Button } from "@/components/ui/button";

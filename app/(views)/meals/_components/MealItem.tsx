@@ -15,12 +15,12 @@ import CreateStep from "./(preparation)/(step)/CreateStep";
 // Composants UI
 import { Button } from "@/components/ui/button";
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from "@/components/ui/drawer";
+import { Bookmark, ChefHat, ClipboardList, Plus, Sparkles, Utensils } from "lucide-react";
 
 // Constantes
 import CompositionItem from "./(composition)/CompositionItem";
 import PreparationItem from "./(preparation)/PreparationItem";
 import { ucFirst } from "@/lib/utils";
-import { Bookmark, ChefHat, ClipboardList, Clock, Plus, Sparkles, Utensils } from "lucide-react";
 
 
 // _________________________ COMPOSANT _________________________

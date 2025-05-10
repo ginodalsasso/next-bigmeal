@@ -24,6 +24,7 @@ import {
 } from "@/lib/services/shopping_list_service";
 import { getCsrfToken } from "next-auth/react";
 import { CheckCircle, Minus, Plus, ShoppingBag, Utensils } from "lucide-react";
+import LoadingSpinner from "@/components/layout/LoadingSpinner";
 
 // _________________________ COMPONENT _________________________
 const ShoppingListPage = () => {
@@ -167,7 +168,7 @@ const ShoppingListPage = () => {
     };
 
     // _________________________ RENDU _________________________
-    if (loading) return <div>Loading...</div>;
+    if (loading) return <LoadingSpinner />;
     if (!shoppingList)
         return (
             <div className="mt-8 rounded-lg border border-gray-200 bg-gray-50 p-8 text-center">
@@ -204,7 +205,7 @@ const ShoppingListPage = () => {
                             Créée le {dateToString(shoppingList.createdAt)}
                         </p>
                         <p className="mt-1 text-sm font-medium text-emerald-700">
-                            {shoppingList.items.length} ingrédients
+                            {shoppingList.items.length} Produits
                         </p>
                     </div>
                     <div className="text-right">
@@ -249,7 +250,7 @@ const ShoppingListPage = () => {
             <div className="mb-6 rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
                 <h2 className="mb-3 flex items-center gap-2 font-medium text-gray-700">
                     <ShoppingBag size={18} className="text-emerald-500" />
-                    Ingrédients à acheter
+                    Produits à acheter
                 </h2>
                 <div className="rounded-md border border-gray-200">
                     {shoppingList.items

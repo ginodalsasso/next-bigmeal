@@ -2,6 +2,7 @@
 
 import AddToShoppingListForm from "@/components/forms/AddToShoppingListForm";
 import ItemView from "@/components/layout/ItemView";
+import LoadingSpinner from "@/components/layout/LoadingSpinner";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { CATEGORIES_MEALS_TOLOWER } from "@/lib/constants/ui_constants";
 import { useSearchParams } from "next/navigation";
@@ -53,9 +54,7 @@ const SearchResultsPage: React.FC = () => {
         fetchResults();
     }, [query]);
 
-    if (loading) {
-        return <p>Chargement...</p>;
-    }
+    if (loading)  return <LoadingSpinner />;
 
     // _________________________ RENDU _________________________
     return (
