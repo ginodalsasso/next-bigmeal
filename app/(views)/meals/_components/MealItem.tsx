@@ -4,7 +4,7 @@
 import React, { useState } from "react";
 
 // Types
-import { CompositionType, MealType, PreparationType } from "@/lib/types/schemas_interfaces";
+import { CompositionType, MealType, PreparationType, StepType } from "@/lib/types/schemas_interfaces";
 
 // Composants
 import CreateComposition from "./(composition)/CreateComposition";
@@ -32,6 +32,18 @@ export default function MealItem( {fetchedMeal}: { fetchedMeal: MealType }) {
     const [currentAction, setCurrentAction] = useState<"composition" | "preparation" | "step">("composition");
 
     // _________________________ CRUD _________________________
+    // COMPOSITION
+    const createComposition = (compositions: CompositionType[]) => {
+        setMeal((prevMeal) => {
+            // Vérifie si `prevMeal` est nul ou non défini.
+            if (!prevMeal) return prevMeal;
+    
+            // Retourne un nouvel objet pour `meal` avec la liste mise à jour des compositions
+            return { ...prevMeal, compositions: [...compositions] };
+        });
+        setIsDialogOpen(false); 
+    };
+
     const updateComposition = (updatedComposition: CompositionType) => {
         setMeal((prevMeal) => {
             // Vérifie si `prevMeal` est nul ou non défini.
@@ -64,31 +76,48 @@ export default function MealItem( {fetchedMeal}: { fetchedMeal: MealType }) {
         });
     };
 
-    const updatePreparation = async (updatedPreparation: PreparationType) => {
+    // PREPARATION
+    const createPreparation = (preparation: PreparationType) => {
         setMeal((prevMeal) => {
             if (!prevMeal) return prevMeal;
-            const updatedPreparations = prevMeal.preparations.map((preparation) =>
-                preparation.id === updatedPreparation.id
-                    ? { ...preparation, ...updatedPreparation }
-                    : preparation
-            );
-            return { ...prevMeal, preparations: updatedPreparations };
+            return { ...prevMeal, preparation };
+        });
+        setIsDialogOpen(false);
+    };
+
+    const updatePreparation = (updatedPreparation: PreparationType) => {
+        setMeal((prevMeal) => {
+            if (!prevMeal) return prevMeal;
+            return { ...prevMeal, preparation: updatedPreparation };
         });
     };
 
-    const deletePreparation = (id: string) => {
+    const deletePreparation = () => {
         setMeal((prevMeal) => {
             if (!prevMeal) return prevMeal;
+            return { ...prevMeal, preparation: undefined };
+        });
+    };
+
+    // STEPS
+    const createStep = (steps: StepType[]) => {
+        setMeal((prevMeal) => {
+            if (!prevMeal || !prevMeal.preparation) {
+                return prevMeal;
+            }
             return {
-                ...prevMeal,
-                preparations: prevMeal.preparations.filter(
-                    (preparation) => preparation.id !== id
-                ),
+                ...prevMeal, 
+                preparation: { 
+                    ...prevMeal.preparation,
+                    steps: { 
+                        ...prevMeal.preparation?.steps,
+                        steps: [...steps],
+                    },
+                },
             };
         });
+        setIsDialogOpen(false);
     }
-
-
     
     // _________________________ RENDU _________________________
     if (!meal) return <div>Repas introuvable.</div>;
@@ -124,7 +153,6 @@ export default function MealItem( {fetchedMeal}: { fetchedMeal: MealType }) {
                                 >
                                     Ajouter une préparation<Plus />
                                 </Button>
-
                                 <Button 
                                     variant="success" 
                                     className="w-full" 
@@ -149,51 +177,21 @@ export default function MealItem( {fetchedMeal}: { fetchedMeal: MealType }) {
                             {currentAction === "composition" && (
                                 <CreateComposition
                                     mealId={meal.id}
-                                    onSubmit={(compositions) => {
-                                        setMeal((prevMeal) => {
-                                            if (!prevMeal) return prevMeal;
-                                            return { ...prevMeal, compositions: [...compositions] };
-                                        });
-                                        setIsDialogOpen(false);
-                                    }}
+                                    onSubmit={createComposition}
                                 />
                             )}
 
                             {currentAction === "preparation" && (
                                 <CreatePreparation
                                     mealId={meal.id}
-                                    onSubmit={(preparation) => {
-                                        setMeal((prevMeal) => {
-                                            if (!prevMeal) return prevMeal;
-                                            return { ...prevMeal, preparation };
-                                        });
-                                        setIsDialogOpen(false);
-                                    }}
+                                    onSubmit={createPreparation}
                                 />
                             )}
 
                             {currentAction === "step" && (
                                 <CreateStep
-                                    preparationId={meal.preparations} 
-                                    onSubmit={(newStep) => {
-                                        setMeal((prevMeal) => {
-                                            if (!prevMeal) return prevMeal;
-                                            return {
-                                                ...prevMeal,
-                                                preparations: prevMeal.preparations.map((preparation) => {
-                                                    if (preparation.id) {
-                                                        return {
-                                                            ...preparation,
-                                                            steps: [...(preparation.steps || []), newStep]
-                                                        };
-                                                    }
-                                                    return preparation;
-                                                })
-                                            };
-                                        });
-
-                                        setIsDialogOpen(false);
-                                    }}
+                                    preparationId={meal.preparation?.id || ""}
+                                    onSubmit={createStep}
                                 />
                             )}
                         </DrawerContent>
@@ -217,21 +215,17 @@ export default function MealItem( {fetchedMeal}: { fetchedMeal: MealType }) {
             </div>
             <div>
                 <p className="mt-6">Préparation :</p>
-                <ul>
-                    {meal.preparations.length > 0 ? (
-                        meal.preparations.map((preparation) => (
-                            <PreparationItem 
-                                key={preparation.id} 
-                                fetchedPreparation={preparation} 
-                                onUpdate={updatePreparation}
-                                onDelete={deletePreparation}
-                            />
-                        ))
+                    {meal.preparation ? (
+                        <PreparationItem 
+                            key={meal.preparation.id} 
+                            fetchedPreparation={meal.preparation} 
+                            onUpdate={updatePreparation}
+                            onDelete={deletePreparation}
+                        />
                     ) : (
                         <p className="text-gray-500">Aucune préparation disponible pour ce repas.</p>
                     )}
-                </ul>
-            </div>
+                </div>
         </div>
     );
 };

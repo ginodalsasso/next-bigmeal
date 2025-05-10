@@ -62,7 +62,7 @@ export interface UpdateMealProps {
 // ____________ PREPARATIONS
 export interface PreparationItemProps {
     fetchedPreparation: PreparationType 
-    onUpdate: (updatedPreparation: PreparationType) => Promise<void>; 
+    onUpdate: (updatedPreparation: PreparationType) => void; 
     onDelete: (id: string) => void; 
 }
 
@@ -87,7 +87,7 @@ export interface StepItemProps {
 
 export interface CreateStepProps {
     preparationId: string; // ID de la préparation parent de l'étape
-    onSubmit: (step: StepType) => void;
+    onSubmit: (step: StepType[]) => void;
 }
 
 export interface UpdateStepProps {

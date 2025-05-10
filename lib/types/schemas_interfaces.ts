@@ -72,9 +72,9 @@ export interface MealType {
     // Clé étrangère : Lie le repas à sa catégorie
     categoryMealId: string;
     categoryMeal: CategoryMealType;
-    preparationId?: string; // Clé étrangère
+
     preparation?: PreparationType; 
-    
+
     // Relation One-to-Many 
     compositions: CompositionType[];
 
