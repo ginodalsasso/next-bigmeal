@@ -1,3 +1,4 @@
+import { Filter } from "lucide-react";
 import React, { useState } from "react";
 
 interface FilterCheckboxesProps {
@@ -22,7 +23,10 @@ const FilterCheckboxes: React.FC<FilterCheckboxesProps> = ({ options, onFilterCh
 
     return (
         <>
-            <p className="mb-2 mt-8 text-sm">Filtrer par catégorie:</p>
+            <div className="mb-2 mt-4 flex items-center gap-2">
+                <Filter size={18} />
+                <h2 className="text-lg font-semibold">Filtres</h2>
+            </div>
             <div className="relative w-full">
                 <div className="scrollbar-hide mb-4 flex w-full flex-nowrap space-x-2 overflow-x-auto">
                     {options.map((option, index) => (

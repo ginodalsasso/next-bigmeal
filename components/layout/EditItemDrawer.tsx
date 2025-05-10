@@ -7,6 +7,7 @@ import {
     DrawerTrigger,
 } from "@/components/ui/drawer";
 import { Edit3Icon } from "lucide-react";
+import { Button } from "../ui/button";
 
 interface EditItemProps {
     renderEditForm: (onClose: () => void) => React.ReactNode;
@@ -18,9 +19,9 @@ const EditItem: React.FC<EditItemProps> = ({ renderEditForm }) => {
     return (
         <Drawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
             <DrawerTrigger asChild>
-                <button title="Modifier">
+                <Button variant="edit" title="Modifier">
                     <Edit3Icon />
-                </button>
+                </Button>
             </DrawerTrigger>
             <DrawerContent>
                 <DrawerHeader>

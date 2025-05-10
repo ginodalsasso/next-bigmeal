@@ -181,6 +181,7 @@ const ShoppingListPage = () => {
             </div>
         );
 
+    // Extraire les repas uniques de la liste de courses
     const meals = Array.from(
         new Set(
             shoppingList.items.map((item) => item.meal?.name).filter(Boolean)
@@ -293,7 +294,7 @@ const ShoppingListPage = () => {
                                             <div className="mt-1 flex items-center gap-2">
                                                 <button
                                                     onClick={() => updateItemQuantity(item.id, item.quantity - 1)}
-                                                    className="flex size-6 items-center justify-center rounded-full text-gray-500 hover:bg-gray-100"
+                                                    className="flex size-6 items-center justify-center rounded-full text-gray-500 active:bg-gray-200"
                                                     disabled={ item.quantity <= 1 }
                                                 >
                                                     <Minus size={16} />
@@ -311,9 +312,9 @@ const ShoppingListPage = () => {
 
                                                 <button
                                                     onClick={() => updateItemQuantity(item.id, item.quantity + 1)}
-                                                    className="flex size-6 items-center justify-center rounded-full text-gray-500 hover:bg-gray-100"
+                                                    className="flex size-6 items-center justify-center rounded-full text-gray-500 active:bg-gray-200"
                                                 >
-                                                    <Plus size={14} />
+                                                    <Plus size={16} />
                                                 </button>
                                             </div>
                                         </div>

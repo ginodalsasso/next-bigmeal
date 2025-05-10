@@ -47,7 +47,7 @@ const DeleteItem: React.FC<DeleteItemProps> = ({ apiUrl, id, onSubmit }) => {
     return (
         <AlertDialog>
             <AlertDialogTrigger asChild>
-                <Button className="w-auto" title="Supprimer" disabled={isDeleting}>
+                <Button variant="delete" className="w-auto" title="Supprimer" disabled={isDeleting}>
                     {isDeleting ? "..." : <X/>}
                 </Button>
             </AlertDialogTrigger>

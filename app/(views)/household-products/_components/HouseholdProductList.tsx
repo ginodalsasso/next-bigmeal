@@ -112,6 +112,7 @@ export default function HouseholdProductList({ fetchedHouseholdProducts }: { fet
                     </DrawerContent>
                 </Drawer>
             </IsUser>
+
             {/* Filtres */}
             <FilterItems 
                 options={filterOptions} 
