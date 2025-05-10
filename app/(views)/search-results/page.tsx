@@ -2,6 +2,7 @@
 
 import AddToShoppingListForm from "@/components/forms/AddToShoppingListForm";
 import ItemView from "@/components/layout/ItemView";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { CATEGORIES_MEALS_TOLOWER } from "@/lib/constants/ui_constants";
 import { useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
@@ -58,29 +59,41 @@ const SearchResultsPage: React.FC = () => {
 
     // _________________________ RENDU _________________________
     return (
-        <div className="p-4">
-            <h1 className="text-2xl font-bold">Résultats pour {query}</h1>
-            {results.map((result) => (
-                <div key={result.id} className="card">
-                    <ItemView
-                        title={result.name}
-                        details={{
-                            category: result.category,
-                        }}
-                         // Si la catégorie fais partie de la constante CATEGORIES_MEALS_TOLOWER, le lien pointe vers /meals/nom-du-plat
-                        linkToDetails={`
-                            /${CATEGORIES_MEALS_TOLOWER.includes(result.category) ? "meals" : "ingredients"}/${result.name}
-                        `}
-                    />
+        <>
+            <h1 className="mb-4 text-xl font-bold">Résultats pour {query}</h1>
+            <Table>
+                <TableHeader>
+                    <TableRow>
+                        <TableHead><span className="table-head">Produits</span></TableHead>
+                        <TableHead><span className="table-head">Actions</span></TableHead>
+                    </TableRow>
+                </TableHeader>
+                <TableBody>
+                    {results.map((result) => (
+                        <TableRow key={result.id}>
+                            <TableCell className="table-cell">
+                                <ItemView
+                                    title={result.name}
+                                    details={{
+                                        category: result.category,
+                                    }}
+                                    // Si la catégorie fais partie de la constante CATEGORIES_MEALS_TOLOWER, le lien pointe vers /meals/nom-du-plat
+                                    linkToDetails={`/${CATEGORIES_MEALS_TOLOWER.includes(result.category) ? "meals" : "ingredients"}/${result.name}`}
 
-                    <AddToShoppingListForm 
-                        // Si la catégorie fais partie de la constante CATEGORIES_MEALS_TOLOWER, le type est "meal", sinon "ingredient"
-                        type={CATEGORIES_MEALS_TOLOWER.includes(result.category) ? "meal" : "ingredient"} 
-                        id={CATEGORIES_MEALS_TOLOWER.includes(result.category) ? result.name : result.id.toString()} 
-                    />
-                </div>
-            ))}
-        </div>
+                                />
+                            </TableCell>
+                            <TableCell>
+                                <AddToShoppingListForm 
+                                    // Si la catégorie fais partie de la constante CATEGORIES_MEALS_TOLOWER, le type est "meal", sinon "ingredient"
+                                    type={CATEGORIES_MEALS_TOLOWER.includes(result.category) ? "meal" : "ingredient"} 
+                                    id={CATEGORIES_MEALS_TOLOWER.includes(result.category) ? result.name : result.id.toString()} 
+                                />
+                            </TableCell>
+                        </TableRow>
+                    ))}
+                </TableBody>
+            </Table>
+        </>
     );
 };
 
