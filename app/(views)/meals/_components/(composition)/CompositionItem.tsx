@@ -7,7 +7,6 @@ import DeleteItem from "@/components/layout/DeleteItemDialog";
 import EditItem from "@/components/layout/EditItemDrawer";
 import UpdateComposition from "./UpdateComposition";
 import { CompositionItemProps } from "@/lib/types/props_interfaces";
-import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { MoreVertical } from "lucide-react";

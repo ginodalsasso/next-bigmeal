@@ -111,7 +111,7 @@ const PreparationItem = ({ fetchedPreparation, onUpdate, onDelete }: Preparation
                         ))}
                 </ol>
             ) : (
-                <p className="text-center text-gray-500">Aucune étape n'a été ajoutée à cette préparation.</p>
+                <p className="text-center text-gray-500">Aucune étape n&apos;a été ajoutée à cette préparation.</p>
             )}
         </div>
     );

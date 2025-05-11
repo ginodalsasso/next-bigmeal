@@ -23,7 +23,7 @@ const StepItem = ({ step, onUpdate, onDelete }: StepItemProps) => {
                     {step.stepNumber}
                 </span>
                 
-                <p className="flex-1 text-sm font-medium text-gray-900 break-all break-words">                    
+                <p className="flex-1 text-sm font-medium text-gray-900 break-all">                    
                     {step.description}
                 </p>
             </div>
