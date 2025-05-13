@@ -3,7 +3,7 @@ import React, { useState } from "react";
 
 // Types et utils
 import { ShoppingListType } from "@/lib/types/schemas_interfaces";
-import { dateToString } from "@/lib/utils";
+import { dateToString, translatedUnit } from "@/lib/utils";
 import DeleteItem from "@/components/layout/DeleteItemDialog";
 import API_ROUTES from "@/lib/constants/api_routes";
 import { ChevronDown, ShoppingCart, Utensils, ListChecks } from "lucide-react";
@@ -121,8 +121,12 @@ const ShoppingLists: React.FC<ShoppingListsProps> = ({ shoppingLists }) => {
                                             {list.items.map((item) => (
                                                 <li key={item.id} className="flex items-center justify-between p-3">
                                                     <span>
-                                                        <span className="font-medium">{item.quantity} </span>
-                                                        <span className="text-gray-700">{item.ingredient?.name || "Ingrédient inconnu"}</span>
+                                                        <span className="font-medium text-gray-700">
+                                                            {item.quantity}{item.unit ? translatedUnit(item.unit) + " " : "x "}
+                                                        </span>
+                                                        <span className="text-gray-700">
+                                                            {item.ingredient?.name || "Ingrédient inconnu"}
+                                                        </span>
                                                     </span>
                                                     {item.meal?.name && (
                                                         <span className="ml-3 text-xs text-gray-500">

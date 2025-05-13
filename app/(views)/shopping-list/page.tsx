@@ -13,7 +13,7 @@ import DeleteItem from "@/components/layout/DeleteItemDialog";
 import { ShoppingListType } from "@/lib/types/schemas_interfaces";
 
 // Utils
-import { dateToString, sortBy, translatedUnit } from "@/lib/utils";
+import { dateToString, sortBy, translatedUnit, ucFirst } from "@/lib/utils";
 
 // Services
 import {
@@ -25,6 +25,7 @@ import {
 import { getCsrfToken } from "next-auth/react";
 import { CheckCircle, Minus, Plus, ShoppingBag, Utensils } from "lucide-react";
 import LoadingSpinner from "@/components/layout/LoadingSpinner";
+import Link from "next/link";
 
 // _________________________ COMPONENT _________________________
 const ShoppingListPage = () => {
@@ -193,7 +194,7 @@ const ShoppingListPage = () => {
     const progress = (checkedItemsCount / shoppingList.items.length) * 100; // Calcul du pourcentage de progression
 
     return (
-        <div className="mx-auto max-w-2xl">
+        <div className="mx-auto">
             {/* En-tête */}
             <div className="mb-6 rounded-xl bg-gradient-to-r from-emerald-50 to-teal-50 p-6">
                 <h1 className="mb-2 text-center text-2xl font-bold text-emerald-700">
@@ -239,7 +240,9 @@ const ShoppingListPage = () => {
                                 key={index}
                                 className="rounded-md bg-emerald-50 px-3 py-2 text-sm text-emerald-800"
                             >
-                                {meal}
+                                <Link href={`/meals/${meal}`} className="cursor-pointer underline active:text-black">
+                                    {ucFirst(meal)}
+                                </Link>
                             </div>
                         ))}
                     </div>

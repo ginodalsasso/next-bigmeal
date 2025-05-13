@@ -9,7 +9,7 @@ import DeleteItem from "@/components/layout/DeleteItemDialog";
 import StepItem from "./(step)/StepItem";
 import { PreparationItemProps } from "@/lib/types/props_interfaces";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Clock, ClockIcon, MoreVertical } from "lucide-react";
+import { ClockIcon, MoreVertical } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
@@ -51,17 +51,17 @@ const PreparationItem = ({ fetchedPreparation, onUpdate, onDelete }: Preparation
     // _________________________ RENDU _________________________
     return (
         <div className="rounded-lg border border-gray-100 bg-white shadow-sm">
-            <div className="px-4 py-4">
+            <div className="p-2">
                 <div className="flex items-center justify-between">
                 
                     <div className="flex flex-wrap gap-3 pt-2">
                         <Badge variant="outline" className="border-orange-100 bg-orange-50 text-orange-700">
-                            <Clock className="mr-1 h-3.5 w-3.5" />
+                            <ClockIcon className="mr-1 size-3.5" />
                             Préparation: {preparation.prepTime} min
                         </Badge>
                         
                         <Badge variant="outline" className="border-red-100 bg-red-50 text-red-700">
-                            <ClockIcon className="mr-1 h-3.5 w-3.5" />
+                            <ClockIcon className="mr-1 size-3.5" />
                             Cuisson: {preparation.cookTime} min
                         </Badge>
                     </div>
@@ -69,8 +69,8 @@ const PreparationItem = ({ fetchedPreparation, onUpdate, onDelete }: Preparation
                     <IsAdmin>
                         <Popover>
                             <PopoverTrigger asChild>
-                                <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                                    <MoreVertical className="h-4 w-4 text-gray-500" />
+                                <Button variant="ghost" size="sm" className="size-8 p-0">
+                                    <MoreVertical className="size-4 text-gray-500" />
                                 </Button>
                             </PopoverTrigger>
                             <PopoverContent className="w-auto">
@@ -98,7 +98,7 @@ const PreparationItem = ({ fetchedPreparation, onUpdate, onDelete }: Preparation
             
             <Separator />
             {preparation.steps && preparation.steps.length > 0 ? (
-                <ol className="space-y-4 w-full">
+                <ol className="w-full space-y-4">
                     {preparation.steps.map((step) => (
                             <li key={step.id} className="rounded-md border border-gray-100 bg-white p-4 shadow-sm">
                                 <StepItem
