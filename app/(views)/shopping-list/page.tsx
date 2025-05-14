@@ -171,6 +171,7 @@ const ShoppingListPage = () => {
     // _________________________ RENDU _________________________
     if (loading) return <LoadingSpinner />;
     if (!shoppingList)
+        
         return (
             <div className="mt-8 rounded-lg border border-gray-200 bg-gray-50 p-8 text-center">
                 <ShoppingBag className="mx-auto mb-3 size-12 text-gray-300" />
@@ -230,7 +231,7 @@ const ShoppingListPage = () => {
             {/* Affichage des repas */}
             {meals.length > 0 && (
                 <div className="mb-6 rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
-                    <h2 className="mb-3 flex items-center gap-2 font-medium text-gray-700">
+                    <h2 className="h2-title">
                         <Utensils size={18} className="text-emerald-500" />
                         Repas prévus ({meals.length})
                     </h2>
@@ -251,7 +252,7 @@ const ShoppingListPage = () => {
 
             {/* Liste des ingrédients */}
             <div className="mb-6 rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
-                <h2 className="mb-3 flex items-center gap-2 font-medium text-gray-700">
+                <h2 className="h2-title">
                     <ShoppingBag size={18} className="text-emerald-500" />
                     Produits à acheter
                 </h2>

@@ -21,8 +21,8 @@ export default function CategoriesPageClient({
 }) {
 
     return (
-        <Tabs defaultValue="ingredients" className="w-full space-y-6">
-            <TabsList className="grid w-full grid-cols-3">
+        <Tabs defaultValue="ingredients">
+            <TabsList className="mb-4 w-full">
                 <TabsTrigger value="ingredients">Ingrédients</TabsTrigger>
                 <TabsTrigger value="household">Produits ménagers</TabsTrigger>
                 <TabsTrigger value="meals">Repas</TabsTrigger>
