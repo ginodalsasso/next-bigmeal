@@ -17,7 +17,7 @@ const CompositionItem = ({ composition, onUpdate, onDelete }: CompositionItemPro
 
     // _________________________ RENDU __________________
     return (
-        <div className="group relative rounded-md border border-gray-100 bg-white p-2 transition-all shadow-sm hover:border-emerald-200 hover:shadow-sm">
+        <div className="card-content group relative p-2 ">
             <div className="flex items-center">
                 {/* Quantité et unité dans un badge */}
                 <Badge 

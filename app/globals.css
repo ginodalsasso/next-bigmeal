@@ -24,12 +24,20 @@ body {
   display: none; /* Chrome, Safari, Opera */
 }
 
+.button-icons {
+  @apply mr-2 size-4;
+}
+
 .h1-title {
-  @apply mb-4 text-2xl font-bold text-center;
+  @apply mb-4 text-center text-2xl font-bold text-emerald-700;
 }
 
 .h2-title {
   @apply mb-4 flex items-center gap-3 text-xl font-semibold text-gray-800;
+}
+
+.h2-icons {
+  @apply text-emerald-500 size-4;
 }
 
 
@@ -38,8 +46,16 @@ body {
   @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-2;
 }
 
+.header-card {
+  @apply mb-6 rounded-lg bg-gradient-to-r from-emerald-50 to-teal-50 p-8 text-center;
+}
+
 .card {
-  @apply border border-neutral-500 bg-neutral-900 flex flex-col gap-2 p-6;
+  @apply mb-6 rounded-lg bg-white p-6 text-black;
+}
+
+.card-content {
+  @apply overflow-hidden rounded-lg border border-gray-300 bg-gray-50;
 }
 
 .nav-links-desktop {
@@ -56,7 +72,7 @@ body {
 
 /* style des input type: text / select / textarea */
 .input-text-select {
-  @apply w-full p-2 text-black rounded-md focus:ring-2 focus:ring-accent-color focus:outline-accent-color;
+  @apply w-full p-2 text-black rounded-md border focus:ring-2 focus:ring-accent-color focus:outline-accent-color;
 }
 
 .input-search {

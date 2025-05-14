@@ -34,7 +34,7 @@ const ProfilePage = () => {
         fetchUser();
     }, []);
 
-    
+
     const updateEmail = (newEmail: string) => {
         setUser((prevUser) => 
             prevUser ? { ...prevUser, email: newEmail } : prevUser
@@ -67,7 +67,6 @@ const ProfilePage = () => {
                         <Button
                             onClick={() => signOut()}
                             variant="ghost"
-                            size="lg"
                         >
                             <LogOut className="mr-2"/>
                             Déconnexion
@@ -93,9 +92,7 @@ const ProfilePage = () => {
                             />
                         </TabsContent>
                         <TabsContent value="shoppingList">
-                            <div className="rounded-lg bg-white p-6 shadow-sm">
-                                <ShoppingLists shoppingLists={user.shoppingList} />
-                            </div>
+                            <ShoppingLists shoppingLists={user.shoppingList} />
                         </TabsContent>
                     </Tabs>
                 </div>

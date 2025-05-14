@@ -3,7 +3,7 @@ import React, { useState } from "react";
 
 // Types et utils
 import { ShoppingListType } from "@/lib/types/schemas_interfaces";
-import { dateToString, translatedUnit } from "@/lib/utils";
+import { dateToString, translatedUnit, ucFirst } from "@/lib/utils";
 import DeleteItem from "@/components/layout/DeleteItemDialog";
 import API_ROUTES from "@/lib/constants/api_routes";
 import { ChevronDown, ShoppingCart, Utensils, ListChecks } from "lucide-react";
@@ -45,9 +45,9 @@ const ShoppingLists: React.FC<ShoppingListsProps> = ({ shoppingLists }) => {
     }
 
     return (
-        <div>
-            <h2 className="mb-5 flex items-center text-xl font-semibold text-gray-800">
-                <ShoppingCart className="mr-2" /> 
+        <div className="card">
+            <h2 className="h2-title">
+                <ShoppingCart size={18} className="h2-icons" /> 
                 Mes listes de courses
             </h2>
             <div className="space-y-4">
@@ -65,9 +65,9 @@ const ShoppingLists: React.FC<ShoppingListsProps> = ({ shoppingLists }) => {
 
                     // Rendu de la liste de courses
                     return (
-                        <div key={list.id} className="overflow-hidden rounded-lg border border-gray-300 bg-white">
+                        <div key={list.id} className="card-content">
                             <div 
-                                className="flex cursor-pointer items-center justify-between bg-gray-50 p-4 hover:bg-gray-100"
+                                className="flex cursor-pointer items-center justify-between p-4"
                                 onClick={() => toggleDetails(list.id)}
                             >
                                 <div>
@@ -104,7 +104,7 @@ const ShoppingLists: React.FC<ShoppingListsProps> = ({ shoppingLists }) => {
                                             <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
                                                 {meals.map((meal, index) => (
                                                     <div key={index} className="rounded-md bg-emerald-50 px-3 py-2 text-emerald-800">
-                                                        {meal}
+                                                        {ucFirst(meal)}
                                                     </div>
                                                 ))}
                                             </div>

@@ -171,7 +171,7 @@ const ShoppingListPage = () => {
     // _________________________ RENDU _________________________
     if (loading) return <LoadingSpinner />;
     if (!shoppingList)
-        
+
         return (
             <div className="mt-8 rounded-lg border border-gray-200 bg-gray-50 p-8 text-center">
                 <ShoppingBag className="mx-auto mb-3 size-12 text-gray-300" />
@@ -197,8 +197,8 @@ const ShoppingListPage = () => {
     return (
         <div className="mx-auto">
             {/* En-tête */}
-            <div className="mb-6 rounded-xl bg-gradient-to-r from-emerald-50 to-teal-50 p-6">
-                <h1 className="mb-2 text-center text-2xl font-bold text-emerald-700">
+            <header className="header-card">
+                <h1 className="h1-title">
                     Liste de courses
                 </h1>
                 <div className="flex justify-between">
@@ -206,7 +206,7 @@ const ShoppingListPage = () => {
                         <p className="text-sm text-gray-600">
                             Créée le {dateToString(shoppingList.createdAt)}
                         </p>
-                        <p className="mt-1 text-sm font-medium text-emerald-700">
+                        <p className="mt-1 text-left text-sm font-medium text-emerald-700">
                             {shoppingList.items.length} Produits
                         </p>
                     </div>
@@ -226,13 +226,13 @@ const ShoppingListPage = () => {
                         </p>
                     </div>
                 </div>
-            </div>
+            </header>
 
             {/* Affichage des repas */}
             {meals.length > 0 && (
-                <div className="mb-6 rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
+                <div className="card">
                     <h2 className="h2-title">
-                        <Utensils size={18} className="text-emerald-500" />
+                        <Utensils className="h2-icons" />
                         Repas prévus ({meals.length})
                     </h2>
                     <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
@@ -251,34 +251,32 @@ const ShoppingListPage = () => {
             )}
 
             {/* Liste des ingrédients */}
-            <div className="mb-6 rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
+            <div className="card">
                 <h2 className="h2-title">
-                    <ShoppingBag size={18} className="text-emerald-500" />
+                    <ShoppingBag className="h2-icons" />
                     Produits à acheter
                 </h2>
-                <div className="rounded-md border border-gray-200">
+                <div className="card-content">
                     {shoppingList.items
                         .sort(
                             sortBy( (item) => item.ingredient?.name || item.product?.name || "" )
                         )
                         .map((item) => (
                             <div key={item.id}>
-                                <div className="flex items-center justify-between p-3 hover:bg-gray-50">
+                                <div className="flex items-center justify-between p-3">
                                     <div className="flex items-center gap-3">
-                                        <div className="relative">
-                                            <input
-                                                type="checkbox"
-                                                id={`item-${item.id}`}
-                                                className="size-5 cursor-pointer rounded-md"
-                                                checked={item.isChecked}
-                                                onChange={() =>
-                                                    toggleItemChecked(
-                                                        item.id,
-                                                        item.isChecked ?? false
-                                                    )
-                                                }
-                                            />
-                                        </div>
+                                        <input
+                                            type="checkbox"
+                                            id={`item-${item.id}`}
+                                            className="size-5 cursor-pointer rounded-md"
+                                            checked={item.isChecked}
+                                            onChange={() =>
+                                                toggleItemChecked(
+                                                    item.id,
+                                                    item.isChecked ?? false
+                                                )
+                                            }
+                                        />
                                         {/* Affichage de la gestion de quantité */}
                                         <div>
                                             <label
@@ -343,7 +341,7 @@ const ShoppingListPage = () => {
                     className="w-full"
                     onClick={setShoppingListExpired}
                 >
-                    <CheckCircle className="mr-2 size-5" />
+                    <CheckCircle className="button-icons" />
                     J&apos;ai terminé mes courses
                 </Button>
             </div>

@@ -12,7 +12,6 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { ClockIcon, MoreVertical } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
 
 // _________________________ COMPOSANT _________________________
 const PreparationItem = ({ fetchedPreparation, onUpdate, onDelete }: PreparationItemProps) => {
@@ -50,7 +49,7 @@ const PreparationItem = ({ fetchedPreparation, onUpdate, onDelete }: Preparation
 
     // _________________________ RENDU _________________________
     return (
-        <div className="rounded-lg border border-gray-100 bg-white shadow-sm">
+        <div className="card-content space-y-2">
             <div className="p-2">
                 <div className="flex items-center justify-between">
                 
@@ -95,12 +94,10 @@ const PreparationItem = ({ fetchedPreparation, onUpdate, onDelete }: Preparation
                     </IsAdmin>
                 </div>
             </div>
-            
-            <Separator />
             {preparation.steps && preparation.steps.length > 0 ? (
                 <ol className="w-full space-y-4">
                     {preparation.steps.map((step) => (
-                            <li key={step.id} className="rounded-md border border-gray-100 bg-white p-4 shadow-sm">
+                            <li key={step.id} className="card-content p-4">
                                 <StepItem
                                     key={step.id}
                                     step={step}

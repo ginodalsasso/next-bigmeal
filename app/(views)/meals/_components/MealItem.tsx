@@ -125,24 +125,23 @@ export default function MealItem( {fetchedMeal}: { fetchedMeal: MealType }) {
     return (
         <div className="mx-auto max-w-4xl space-y-8">
             {/* En-tête du repas */}
-            <header className="rounded-xl bg-gradient-to-r from-emerald-50 to-teal-50 p-8 text-center">
+            <header className="header-card">
                 <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-emerald-100 text-emerald-600">
                     <ChefHat size={36} />
                 </div>
-                <h1 className="mb-3 text-3xl font-bold text-emerald-700">{ucFirst(meal.name)}</h1>
+                <h1 className="h1-title">{ucFirst(meal.name)}</h1>
                 <p className="mx-auto max-w-2xl text-emerald-600">
                     {meal.description || "Aucune description disponible pour ce repas."}
                 </p>
-                
             </header>
 
             {/* Boutons d'administration */}
             <IsAdmin>
                 <div className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
-                    <h3 className="mb-3 flex items-center gap-2 text-sm font-medium text-gray-700">
-                        <Sparkles className="h-4 w-4 text-emerald-500" />
+                    <h2 className="h2-title">
+                        <Sparkles className="h2-icons" />
                         Options d&apos;administration
-                    </h3>
+                    </h2>
                     <Drawer open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                         <div className="flex flex-wrap gap-2">
                             <Button 
@@ -153,7 +152,7 @@ export default function MealItem( {fetchedMeal}: { fetchedMeal: MealType }) {
                                     setIsDialogOpen(true);
                                 }}
                             >
-                                <Utensils className="mr-2 size-4" />
+                                <Utensils className="button-icons" />
                                 Ajouter des ingrédients
                             </Button>
 
@@ -166,7 +165,7 @@ export default function MealItem( {fetchedMeal}: { fetchedMeal: MealType }) {
                                         setIsDialogOpen(true);
                                     }}
                                 >
-                                    <ClipboardList className="mr-2 size-4" />
+                                    <ClipboardList className="button-icons" />
                                     Ajouter une préparation
                                 </Button>
                             )}
@@ -180,7 +179,7 @@ export default function MealItem( {fetchedMeal}: { fetchedMeal: MealType }) {
                                         setIsDialogOpen(true);
                                     }}
                                 >
-                                    <Plus className="mr-2 size-4" />
+                                    <Plus className="button-icons" />
                                     Ajouter des étapes
                                 </Button>
                             )}
@@ -188,22 +187,19 @@ export default function MealItem( {fetchedMeal}: { fetchedMeal: MealType }) {
                         
                         <DrawerContent className="px-4">
                             <DrawerHeader>
-                                <DrawerTitle className="my-4 text-center">
+                                <DrawerTitle>
                                     {currentAction === "composition" && (
                                         <>
-                                            <Utensils className="mx-auto mb-2 h-6 w-6" />
                                             Ajouter des ingrédients
                                         </>
                                     )}
                                     {currentAction === "preparation" && (
                                         <>
-                                            <ClipboardList className="mx-auto mb-2 h-6 w-6" />
                                             Ajouter une préparation
                                         </>
                                     )}
                                     {currentAction === "step" && (
                                         <>
-                                            <Plus className="mx-auto mb-2 h-6 w-6" />
                                             Ajouter des étapes
                                         </>
                                     )}
@@ -249,9 +245,9 @@ export default function MealItem( {fetchedMeal}: { fetchedMeal: MealType }) {
             </div>
             <div className="grid gap-8 md:grid-cols-2">
                 {/* Liste des ingrédeints */}
-                <section className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-                    <h2 className="mb-5 flex items-center gap-2 text-xl font-semibold text-emerald-700">
-                        <Utensils className="size-5" />
+                <section className="card">
+                    <h2 className="h2-title">
+                        <Utensils className="h2-icons" />
                         Liste des ingrédients
                     </h2>
                     
@@ -278,9 +274,9 @@ export default function MealItem( {fetchedMeal}: { fetchedMeal: MealType }) {
                 </section>
 
                 {/* section de préparation */}
-                <section className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-                    <h2 className="mb-5 flex items-center gap-2 text-xl font-semibold text-emerald-700">
-                        <ClipboardList/>
+                <section className="card">
+                    <h2 className="h2-title">
+                        <ClipboardList className="h2-icons"/>
                         Instructions de préparation
                     </h2>
                     

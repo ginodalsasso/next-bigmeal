@@ -29,17 +29,13 @@ const UserInformation = ({
     return (
         <>
             {isChangedPassword ? (
-                <div className="rounded-lg shadow-md">
-                    <ResetPasswordForm
-                        onBackToProfile={() => setIsChangedPassword(false)}
-                    />
-                </div>
+                <ResetPasswordForm onBackToProfile={() => setIsChangedPassword(false)} />
             ) : (
-                <div>
+                <>
                     {/* Infos personnelles */}
-                    <div className="mb-6 rounded-lg bg-white p-6">
+                    <div className="card">
                         <h2 className="h2-title">
-                            <IdCard size={18} className="text-emerald-500" />
+                            <IdCard className="h2-icons" />
                             Informations personnelles
                         </h2>
 
@@ -50,7 +46,7 @@ const UserInformation = ({
                                 onBackToProfile={() => setIsChangedEmail(false)}
                             />
                         ) : (
-                            <div className="space-y-4">
+                            <div className="card-content space-y-4 p-4">
                                 <div className="flex items-center align-middle">
                                     <Mail
                                         className="mr-3 text-gray-500"
@@ -70,7 +66,7 @@ const UserInformation = ({
                                                 }
                                                 className="ml-3 text-emerald-500 hover:text-emerald-600"
                                             >
-                                                <Edit />
+                                                <Edit size={18} />
                                             </button>
                                         </div>
                                     </div>
@@ -112,9 +108,9 @@ const UserInformation = ({
                     </div>
 
                     {/* Actions du compte */}
-                    <div className="rounded-lg bg-white p-6 shadow-sm">
+                    <div className="card">
                         <h2 className="h2-title">
-                            <UserCog size={18} className="text-emerald-500" />
+                            <UserCog className="h2-icons" />
                             Actions du compte
                         </h2>
                         <div className="grid gap-4 md:grid-cols-2">
@@ -137,7 +133,7 @@ const UserInformation = ({
                             <DeleteProfile userId={user.id} />
                         </div>
                     </div>
-                </div>
+                </>
             )}
         </>
     );

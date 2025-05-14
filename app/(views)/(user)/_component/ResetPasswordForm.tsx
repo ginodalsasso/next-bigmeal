@@ -67,7 +67,7 @@ const ResetPasswordForm = ({ onBackToProfile }: { onBackToProfile: () => void })
     // _________________________ RENDU _________________________
     return (
         <div>
-            <form className="flex flex-col gap-2" action={handleResetPassword}>
+            <form className="card" action={handleResetPassword}>
                 <FormErrorMessage message={error?.general} />
 
                 <label htmlFor="password">Votre mot de passe actuel</label>
