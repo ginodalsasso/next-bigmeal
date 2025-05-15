@@ -15,6 +15,7 @@ import FormErrorMessage from "@/components/forms/FormErrorMessage";
 // Contraintes et services
 import { RegisterConstraints } from "@/lib/constraints/forms_constraints";
 import { registerUserAPI } from "@/lib/services/auth_service";
+import { Eye, EyeClosed } from "lucide-react";
 
 // _________________________ COMPONENT _________________________
 export default function RegisterPage() {
@@ -22,6 +23,7 @@ export default function RegisterPage() {
     // _________________________ ETATS _________________________
     const router = useRouter();
     const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [togglePassword, setTogglePassword] = useState<boolean>(false);
 
     // Utilisation du hook de validation
     const { error, setError, validate } = useFormValidation(
@@ -92,21 +94,33 @@ export default function RegisterPage() {
                         <label htmlFor="password" className="block font-medium text-gray-700">
                             Mot de passe
                         </label>
-                        <input
-                            className="input-text-select mt-1 w-full"
-                            type="password"
-                            id="password"
-                            name="password"
-                            placeholder="••••••••"
-                            required
-                            autoComplete="current-password"
-                            value={formData.password}
-                            onChange={(e) =>
-                                setFormData({ ...formData, password: e.target.value })
-                            }
-                        />
-                        <FormErrorMessage message={error?.password} />
-                    </div>
+
+                        <div className="relative">
+                            <input
+                                className="input-text-select mt-1 w-full pr-10"
+                                type={togglePassword ? "text" : "password"}
+                                id="password"
+                                name="password"
+                                placeholder="••••••••"
+                                required
+                                autoComplete="current-password"
+                                value={formData.password}
+                                onChange={(e) =>
+                                    setFormData({ ...formData, password: e.target.value })
+                                }
+                            />
+                            <button
+                                type="button"
+                                onClick={() => setTogglePassword(prev => !prev)}
+                                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-600"
+                            >
+                                {togglePassword ? <EyeClosed /> : <Eye />}
+                            </button>
+                        </div>
+
+                    <FormErrorMessage message={error?.password} />
+                </div>
+
     
                     <Button 
                         type="submit" 

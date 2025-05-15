@@ -17,21 +17,17 @@ export default function HomePage() {
                     </p>
                     
                     <div className="flex flex-col justify-center gap-4 sm:flex-row">
-                        <Button variant="default">
-                            <Link
-                                href="/login"
-                            >
-                                Se connecter
-                            </Link>
-                        </Button>
-                        <Button variant="secondary">
+                        <Link href="/login" passHref>
+                            <Button variant="default" className="w-full" asChild>
+                                <span>Se connecter</span>
+                            </Button>
+                        </Link>
 
-                            <Link
-                                href="/register"
-                            >
-                                S&apos;inscrire
-                            </Link>
-                        </Button>
+                        <Link href="/register" passHref>
+                            <Button variant="secondary" className="w-full" asChild>
+                                <span>S&apos;inscrire</span>
+                            </Button>
+                        </Link>
                     </div>
                 </div>
                 
