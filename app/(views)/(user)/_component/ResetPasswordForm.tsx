@@ -16,6 +16,7 @@ import { ResetPasswordConstraints } from "@/lib/constraints/forms_constraints";
 import { resetPasswordAPI } from "@/lib/services/user_service";
 import { getCsrfToken } from "next-auth/react";
 import FormSubmitButton from "@/components/forms/FormSubmitButton";
+import PasswordInput from "@/components/forms/PasswordInput";
 
 // _________________________ COMPONENT _________________________
 const ResetPasswordForm = ({ onBackToProfile }: { onBackToProfile: () => void }) => {
@@ -70,16 +71,17 @@ const ResetPasswordForm = ({ onBackToProfile }: { onBackToProfile: () => void })
             <form className="card" action={handleResetPassword}>
                 <FormErrorMessage message={error?.general} />
 
-                <label htmlFor="password">Votre mot de passe actuel</label>
-                <input
-                    className="input-text-select mb-6"
-                    type="password"
+                <PasswordInput
                     id="password"
                     name="password"
+                    label="Mot de passe actuel"
                     placeholder="••••••••"
-                    autoComplete="current-password"
+                    autoComplete="off"
                     required
+                    error={error?.password}
                 />
+                <FormErrorMessage message={error?.password} />
+
                 <label htmlFor="new-password">Nouveau mot de passe</label>
                 <input
                     className="input-text-select"

@@ -7,10 +7,10 @@ import FormErrorMessage from "@/components/forms/FormErrorMessage";
 interface PasswordInputProps {
     id?: string;
     name?: string;
-    label?: string;
+    label?: string | null;
     placeholder?: string;
-    value: string;
-    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    value?: string;
+    onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
     error?: string;
     required?: boolean;
     autoComplete?: string;
@@ -19,7 +19,7 @@ interface PasswordInputProps {
 export default function PasswordInput({
     id = "password",
     name = "password",
-    label = "Mot de passe",
+    label,
     placeholder = "••••••••",
     value,
     onChange,

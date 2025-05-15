@@ -15,6 +15,7 @@ import ForgotPasswordForm from "../_component/ForgotPasswordEmailForm";
 
 // Contraintes
 import { LoginConstraints } from "@/lib/constraints/forms_constraints";
+import PasswordInput from "@/components/forms/PasswordInput";
 
 
 export default function LoginPage() {
@@ -120,17 +121,14 @@ export default function LoginPage() {
                                 </div>
 
                                 <div className="mt-1">
-                                    <input
-                                        className="input-text-select"
-                                        type="password"
+                                    <PasswordInput
                                         id="password"
                                         name="password"
                                         placeholder="••••••••"
+                                        error={error?.password}
                                         required
-                                        autoComplete="current-password"
                                     />
                                 </div>
-                                <FormErrorMessage message={error?.password} />
                             </div>
 
                             {/* Bouton de connexion */}
