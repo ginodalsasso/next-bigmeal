@@ -23,7 +23,8 @@ const ProfilePage = () => {
     useEffect(() => {
         const fetchUser = async () => {
             try {
-                fetchUserProfileAPI().then((data) => setUser(data));
+                const data: UserType = await fetchUserProfileAPI();
+                setUser(data);
             } catch (error) {
                 console.error("Erreur lors de la récupération de l'utilisateur :", error);
                 setError("Impossible de charger le profil.");

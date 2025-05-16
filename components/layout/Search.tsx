@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import React from "react";
 import { Button } from "../ui/button";
 import { SearchIcon } from "lucide-react";
+import { useDebounce } from "@/app/hooks/useDebounce";
 
 // _________________________ TYPES _________________________
 interface SearchResult {
@@ -23,8 +24,10 @@ const Search: React.FC<SearchBarProps> = ({ onSearch }) => {
     const [loading, setLoading] = useState(false);
     const router = useRouter();
 
+    const debouncedQuery = useDebounce<string>(query, 300);
+
     useEffect(() => {
-        if (!query || query.length < 3) {
+        if (!debouncedQuery || debouncedQuery.length < 3) {
             setResults([]);
             return;
         }
@@ -32,7 +35,7 @@ const Search: React.FC<SearchBarProps> = ({ onSearch }) => {
         const fetchResults = async () => {
             setLoading(true);
             try {
-                const response = await fetch(`/api/search?query=${query}`, { 
+                const response = await fetch(`/api/search?query=${debouncedQuery}`, { 
                     method: "GET",
                     headers: { "Content-Type": "application/json" },
                 });
@@ -51,10 +54,10 @@ const Search: React.FC<SearchBarProps> = ({ onSearch }) => {
 
         const timeout = setTimeout(fetchResults, 300); // délai de 300ms avant de lancer la recherche pour éviter les appels inutiles
         return () => clearTimeout(timeout); // annule le délai si la recherche est relancée avant la fin du délai
-    }, [query]); // relance la recherche à chaque changement de la valeur de query
+    }, [debouncedQuery]); // relance la recherche à chaque changement de la valeur de query
 
     const handleResult = () => {
-        const url = `/search-results?query=${query}`;
+        const url = `/search-results?query=${debouncedQuery}`;
         router.push(url);
         setQuery("");
         if (onSearch) {
