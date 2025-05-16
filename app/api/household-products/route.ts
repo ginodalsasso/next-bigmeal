@@ -25,7 +25,16 @@ export async function GET(req: NextRequest) {
             skip,
             take,
             orderBy: { name: 'desc' },
-            include: { categoryHouseholdProduct: true }
+            select: {
+                id: true,
+                name: true,
+                categoryHouseholdProduct: {
+                    select: {
+                        id: true,
+                        name: true,
+                    },
+                },
+            },
         });
 
         return NextResponse.json(householdProducts, { status: 200 });
