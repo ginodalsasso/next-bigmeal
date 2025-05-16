@@ -6,9 +6,10 @@ import { verifyCSRFToken } from "@/lib/security/verifyCsrfToken";
 import { ChangeEmailConstraints, idConstraints } from "@/lib/constraints/forms_constraints";
 
 export async function GET() {
-        const { session, error } = await getUserSession();
-        if (error) return error;
+    const { session, error } = await getUserSession();
+    if (error) return error;
 
+    try {
         // Vérification que l'utilisateur connecté correspond au username demandé
         const user = await db.user.findUnique({
             where: { id: session.user.id },
