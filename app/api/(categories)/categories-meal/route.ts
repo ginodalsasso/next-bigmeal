@@ -9,7 +9,15 @@ import { getAdminSession } from "@/lib/security/getSession";
 
 export async function GET() {
     try {
-        const categoryMeal = await db.categoryMeal.findMany(); 
+        const categoryMeal = await db.categoryMeal.findMany(
+            {
+                orderBy: { name: 'asc' },
+                select: {
+                    id: true,
+                    name: true,
+                },
+            }
+        ); 
 
         return NextResponse.json(categoryMeal, {status: 200});
     } catch(error) {

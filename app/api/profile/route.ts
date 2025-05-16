@@ -6,28 +6,52 @@ import { verifyCSRFToken } from "@/lib/security/verifyCsrfToken";
 import { ChangeEmailConstraints, idConstraints } from "@/lib/constraints/forms_constraints";
 
 export async function GET() {
-    try {
         const { session, error } = await getUserSession();
         if (error) return error;
 
         // Vérification que l'utilisateur connecté correspond au username demandé
         const user = await db.user.findUnique({
             where: { id: session.user.id },
-            include: {
+            select: {
+                id: true,
+                email: true,
+                role: true,
+                createdAt: true,
                 shoppingList: {
-                    include: {
+                    orderBy: { createdAt: "desc" },
+                    select: {
+                        id: true,
+                        createdAt: true,
                         items: {
-                            include: {
-                                ingredient: true,
-                                meal: true,
+                            select: {
+                                id: true,
+                                quantity: true,
+                                unit: true,
+                                ingredient: {
+                                    select: {
+                                        id: true,
+                                        name: true,
+                                    },
+                                },
+                                meal: {
+                                    select: {
+                                        id: true,
+                                        name: true,
+                                    },
+                                },
+                                product: {
+                                    select: {
+                                        id: true,
+                                        name: true,
+                                    },
+                                },
                             },
                         },
                     },
-                    orderBy: { createdAt: "desc" },
                 },
             },
         });
-
+    
         if (!user) {
             return NextResponse.json(
                 { error: "User not found" },
