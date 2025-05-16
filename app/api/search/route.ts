@@ -19,17 +19,31 @@ export async function GET(req: NextRequest) {
 
     try {
         const meals = await db.meal.findMany({
+            take: 10,
             where: { name: { contains: query, mode: "insensitive" } }, // Insensible à la casse
-            include: { 
-                categoryMeal: true
-            },
+            select: {
+                id: true,
+                name: true,
+                categoryMeal: {
+                    select: {
+                        name: true,
+                    },
+                },
+            } 
         });
 
         const ingredients = await db.ingredient.findMany({
+            take: 10,
             where: { name: { contains: query, mode: "insensitive" } },
-            include : {
-                categoryIngredient: true
-            },
+            select: {
+                id: true,
+                name: true,
+                categoryIngredient: {
+                    select: {
+                        name: true,
+                    },
+                },
+            }
         });
 
         return NextResponse.json([
