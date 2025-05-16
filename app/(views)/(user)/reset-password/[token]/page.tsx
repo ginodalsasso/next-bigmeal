@@ -76,7 +76,6 @@ const ResetPasswordPage = () => {
         }
     };
 
-
     // _________________________ RENDU __________________
     return (
         <form

@@ -18,7 +18,7 @@ export default async function Dashboard() {
     // Récupération des utilisateurs
     const users = await getUsers();
     if (!users) {
-        return <div>Erreur lors de la récupération des utilisateurs</div>;
+        return notFound();
     }
     
     return (

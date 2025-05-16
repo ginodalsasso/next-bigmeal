@@ -16,6 +16,7 @@ import ForgotPasswordForm from "../_component/ForgotPasswordEmailForm";
 // Contraintes
 import { LoginConstraints } from "@/lib/constraints/forms_constraints";
 import PasswordInput from "@/components/forms/PasswordInput";
+import LoadingSpinner from "@/components/layout/LoadingSpinner";
 
 
 export default function LoginPage() {
@@ -62,6 +63,7 @@ export default function LoginPage() {
         }
     };
 
+    if(isLoading) {<LoadingSpinner />}
 
     return (
         <div className="card transition-all duration-300">            {/* Affichage conditionnel des formulaires */}

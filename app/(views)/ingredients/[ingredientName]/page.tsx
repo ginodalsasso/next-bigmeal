@@ -9,6 +9,7 @@ import { IngredientType } from "@/lib/types/schemas_interfaces";
 // Services
 import { fetchIngredientAPI } from "@/lib/services/ingredients_service";
 import { notFound } from "next/navigation";
+import LoadingSpinner from "@/components/layout/LoadingSpinner";
 
 
 // _________________________ COMPONENT _________________________
@@ -41,7 +42,7 @@ const IngredientDetailPage = ({ params }: { params: Promise<{ ingredientName: st
     }, [ingredientName]);
 
     // _________________________ RENDU _________________________
-    if (loading) return <div>Loading...</div>;
+    if (loading) return <LoadingSpinner />;
     if (error) return <div>{error}</div>;
     if (!ingredient) return  notFound();
 

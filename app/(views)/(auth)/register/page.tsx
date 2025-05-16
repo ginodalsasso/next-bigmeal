@@ -16,6 +16,7 @@ import FormErrorMessage from "@/components/forms/FormErrorMessage";
 import { RegisterConstraints } from "@/lib/constraints/forms_constraints";
 import { registerUserAPI } from "@/lib/services/auth_service";
 import PasswordInput from "@/components/forms/PasswordInput";
+import LoadingSpinner from "@/components/layout/LoadingSpinner";
 
 // _________________________ COMPONENT _________________________
 export default function RegisterPage() {
@@ -56,6 +57,8 @@ export default function RegisterPage() {
             setIsLoading(false);
         }
     };
+
+    if (isLoading) { <LoadingSpinner /> }
 
     return (
         <div className="card transition-all duration-300">   
