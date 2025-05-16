@@ -170,8 +170,7 @@ const ShoppingListPage = () => {
 
     // _________________________ RENDU _________________________
     if (loading) return <LoadingSpinner />;
-    if (!shoppingList)
-
+    if (!shoppingList) {
         return (
             <div className="mt-8 rounded-lg border border-gray-200 bg-gray-50 p-8 text-center">
                 <ShoppingBag className="mx-auto mb-3 size-12 text-gray-300" />
@@ -183,6 +182,7 @@ const ShoppingListPage = () => {
                 </p>
             </div>
         );
+    }
 
     // Extraire les repas uniques de la liste de courses
     const meals = Array.from(

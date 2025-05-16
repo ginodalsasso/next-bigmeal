@@ -8,6 +8,7 @@ import { IngredientType } from "@/lib/types/schemas_interfaces";
 
 // Services
 import { fetchIngredientAPI } from "@/lib/services/ingredients_service";
+import { notFound } from "next/navigation";
 
 
 // _________________________ COMPONENT _________________________
@@ -42,7 +43,7 @@ const IngredientDetailPage = ({ params }: { params: Promise<{ ingredientName: st
     // _________________________ RENDU _________________________
     if (loading) return <div>Loading...</div>;
     if (error) return <div>{error}</div>;
-    if (!ingredient) return <div>Ingredient introuvable.</div>;
+    if (!ingredient) return  notFound();
 
     return (
         <div className="mx-auto rounded-lg border p-6">

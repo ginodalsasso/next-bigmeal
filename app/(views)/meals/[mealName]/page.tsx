@@ -1,4 +1,5 @@
 // Composant affichant un repas
+import { notFound } from "next/navigation";
 import MealItem from "../_components/MealItem";
 
 // Service de récupération d'un repas
@@ -14,7 +15,7 @@ export default async function MealDetailPage({ params }: MealDetailPageProps) {
     const { mealName } = await params;
 
     if (!mealName) {
-        return <div>Erreur : Aucun nom de repas fourni.</div>;
+        return  notFound();
     }
 
     const meal = await getMeal(mealName); 

@@ -24,7 +24,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 
 // Constantes
 import { CATEGORIES_MEALS } from "@/lib/constants/ui_constants";
-import { useRouter } from "next/navigation";
+import { notFound, useRouter } from "next/navigation";
 import { Plus } from "lucide-react";
 
 
@@ -77,7 +77,7 @@ export default function MealsList( {fetchedMeals}: { fetchedMeals: MealType[] })
         
 
     // _________________________ RENDU _________________________
-    if (!meals) return <div>Repas introuvables.</div>;
+    if (!meals) return  notFound();
 
     return (
         <>

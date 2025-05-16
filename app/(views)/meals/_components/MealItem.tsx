@@ -21,6 +21,7 @@ import { Bookmark, ChefHat, ClipboardList, Plus, Sparkles, Utensils } from "luci
 import CompositionItem from "./(composition)/CompositionItem";
 import PreparationItem from "./(preparation)/PreparationItem";
 import { ucFirst } from "@/lib/utils";
+import { notFound } from "next/navigation";
 
 
 // _________________________ COMPOSANT _________________________
@@ -120,7 +121,7 @@ export default function MealItem( {fetchedMeal}: { fetchedMeal: MealType }) {
     }
     
     // _________________________ RENDU _________________________
-    if (!meal) return <div>Repas introuvable.</div>;
+    if (!meal) return  notFound();
 
     return (
         <div className="mx-auto max-w-4xl space-y-8">

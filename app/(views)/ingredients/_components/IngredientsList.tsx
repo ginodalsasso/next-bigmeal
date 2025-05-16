@@ -2,7 +2,7 @@
 
 // Bibliothèques tierces
 import React, { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { notFound, useRouter } from "next/navigation";
 
 // Types
 import { IngredientType } from "@/lib/types/schemas_interfaces";
@@ -88,8 +88,8 @@ export default function IngredientList({ fetchedIngredients }: { fetchedIngredie
     };
 
     // _________________________ RENDU _________________________
-    if (!ingredients) return <div>Ingrédients introuvables.</div>;
-
+    if (!ingredients) return  notFound();
+    
     return (
         <>
             <h1 className="h1-title">Liste des ingrédients</h1>

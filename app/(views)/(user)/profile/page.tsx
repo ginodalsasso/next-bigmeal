@@ -12,11 +12,11 @@ import { LogOut, User } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { TabsContent } from "@radix-ui/react-tabs";
 import UserInformation from "../_component/UserInformation";
+import { notFound } from "next/navigation";
 
 const ProfilePage = () => {
     const [user, setUser] = useState<UserType>();
     const [loading, setLoading] = useState<boolean>(true);
-    const [error, setError] = useState<string>("");
     const [isChangedPassword, setIsChangedPassword] = useState<boolean>(false);
     const [isChangedEmail, setIsChangedEmail] = useState<boolean>(false);
 
@@ -27,7 +27,6 @@ const ProfilePage = () => {
                 setUser(data);
             } catch (error) {
                 console.error("Erreur lors de la récupération de l'utilisateur :", error);
-                setError("Impossible de charger le profil.");
             } finally {
                 setLoading(false);
             }
@@ -43,8 +42,8 @@ const ProfilePage = () => {
         setIsChangedEmail(false);
     }
 
-    if (loading || !user) return <LoadingSpinner />;
-    if (error) return <div className="text-red-500">{error}</div>;
+    if (loading) return <LoadingSpinner />;
+    if (!user) return notFound();
 
     return (
         <div className="mx-auto">

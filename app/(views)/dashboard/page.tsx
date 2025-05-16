@@ -1,7 +1,7 @@
 import { auth } from "@/lib/auth"; 
 import UsersList from "./_component/UsersList";
 import { getUsers } from "@/lib/services/data_fetcher";
-import { unauthorized } from 'next/navigation'
+import { notFound, unauthorized } from 'next/navigation'
 
 
 export default async function Dashboard() {
@@ -9,6 +9,10 @@ export default async function Dashboard() {
     
     if(session?.user.role !== "ADMIN") {
         unauthorized();
+    }
+
+    if (!session) {
+        return  notFound();
     }
 
     // Récupération des utilisateurs

@@ -15,9 +15,7 @@ import { UpdateCategoryProps } from "@/lib/types/props_interfaces";
 import { getCsrfToken } from "next-auth/react";
 import FormSubmitButton from "@/components/forms/FormSubmitButton";
 
-
 type CategoryFormType = { name: string };
-
 
 // _________________________ COMPONENT _________________________
 const UpdateCategory = <T extends { id: string; name: string }>({

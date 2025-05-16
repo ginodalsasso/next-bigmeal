@@ -2,7 +2,7 @@
 
 // Bibliothèques tierces
 import React, { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { notFound, useRouter } from "next/navigation";
 
 // Types
 import { HouseholdProductType } from "@/lib/types/schemas_interfaces";
@@ -83,7 +83,7 @@ export default function HouseholdProductList({ fetchedHouseholdProducts }: { fet
     };
 
     // _________________________ RENDU _________________________
-    if (!householdProducts) return <div>Produits introuvables.</div>;
+    if (!householdProducts) return  notFound();
 
     return (
         <>              
