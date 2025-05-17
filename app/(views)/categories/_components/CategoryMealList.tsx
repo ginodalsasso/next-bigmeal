@@ -61,7 +61,7 @@ export default function CategoryMealList({ fetchedCategories }: { fetchedCategor
 
 
             {/* Liste des catégories */}
-            <Table>
+            <Table className="card">
                 <TableHeader>
                     <TableRow>
                         <TableHead><span className="table-head">Noms</span></TableHead>

@@ -12,11 +12,10 @@ import ItemView from "@/components/layout/ItemView";
 import CreateIngredient from "./CreateIngredient";
 import UpdateIngredient from "./UpdateIngredient";
 import AddToShoppingListForm from "@/components/forms/AddToShoppingListForm";
-import EditItem from "@/components/layout/EditItemDrawer";
-import DeleteItem from "@/components/layout/DeleteItemDialog";
 import IsAdmin from "@/components/isAdmin";
 import IsUser from "@/components/isUser";
 import FilterItems from "@/components/layout/FilterItems";
+import PopoverActions from "@/components/layout/PopoverActions";
 
 // Composants UI
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerTrigger } from "@/components/ui/drawer";import { Button } from "@/components/ui/button";
@@ -136,38 +135,31 @@ export default function IngredientList({ fetchedIngredients }: { fetchedIngredie
                 {ingredients.map((ingredient) => (
                     <TableRow key={ingredient.id}>
                         <TableCell className="table-cell">
-                            <div className="lg:relative">
-                                <ItemView
-                                    title={ingredient.name}
-                                    details={{
-                                        // Afficher la catégorie et la saison si elles existent
-                                        ...(ingredient.categoryIngredient?.name && { category: ingredient.categoryIngredient.name }),
-                                        ...(ingredient.season && { season: translatedSeason(ingredient.season) }),
-                                    }}
-                                />
+                            <div className="relative">
+                                <div>
+                                    <ItemView
+                                        title={ingredient.name}
+                                        details={{
+                                            // Afficher la catégorie et la saison si elles existent
+                                            ...(ingredient.categoryIngredient?.name && { category: ingredient.categoryIngredient.name }),
+                                            ...(ingredient.season && { season: translatedSeason(ingredient.season) }),
+                                        }}
+                                    />
+                                </div>
                                 {/* Edition et suppression d'ingrédients */}
                                 {/* Si l'utilisateur est admin, afficher les boutons d'édition et de suppression */}
-                                <IsAdmin>
-                                    <div className="right-0 top-0 mt-2 flex gap-4 lg:absolute">
-                                        <EditItem
-                                            renderEditForm={(onClose) => (
-                                                <UpdateIngredient
-                                                    ingredient={ingredient}
-                                                    onSubmit={async (updatedIngredient: IngredientType) => {
-                                                        await updateIngredient(updatedIngredient);
-                                                        onClose();
-                                                    }}
-                                                    onCancel={onClose}
-                                                />
-                                            )}
+                                <PopoverActions
+                                    id={ingredient.id}
+                                    apiUrl="/api/ingredients"
+                                    onDelete={() => handleIngredientDeleted(ingredient.id)}
+                                    renderEditForm={(onClose) => (
+                                        <UpdateIngredient
+                                            ingredient={ingredient}
+                                            onSubmit={updateIngredient}
+                                            onCancel={onClose}
                                         />
-                                        <DeleteItem
-                                            apiUrl="/api/ingredients"
-                                            id={ingredient.id}
-                                            onSubmit={handleIngredientDeleted}
-                                        />
-                                    </div>
-                                </IsAdmin>
+                                    )}
+                                />
                             </div>
                         </TableCell>
                         

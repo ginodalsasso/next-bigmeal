@@ -12,14 +12,14 @@ import ItemView from "@/components/layout/ItemView";
 import CreateHouseholdProduct from "./CreateHouseholdProduct";
 import UpdateHouseholdProduct from "./UpdateHouseholdProduct";
 import AddToShoppingListForm from "@/components/forms/AddToShoppingListForm";
-import EditItem from "@/components/layout/EditItemDrawer";
-import DeleteItem from "@/components/layout/DeleteItemDialog";
 import IsAdmin from "@/components/isAdmin";
 import IsUser from "@/components/isUser";
 import FilterItems from "@/components/layout/FilterItems";
+import PopoverActions from "@/components/layout/PopoverActions";
 
 // Composants UI
-import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerTrigger } from "@/components/ui/drawer";import { Button } from "@/components/ui/button";
+import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerTrigger } from "@/components/ui/drawer";
+import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Plus } from "lucide-react";
 
@@ -133,7 +133,7 @@ export default function HouseholdProductList({ fetchedHouseholdProducts }: { fet
                     {householdProducts.map((householdProduct) => (
                         <TableRow key={householdProduct.id}>
                             <TableCell className="table-cell">
-                                <div className="lg:relative">
+                                <div className="relative">
                                     <ItemView
                                         title={householdProduct.name}
                                         details={{
@@ -142,28 +142,19 @@ export default function HouseholdProductList({ fetchedHouseholdProducts }: { fet
                                         }}
                                     />
                                     {/* Edition et suppression des produits */}
-                                    {/* Si l'utilisateur est admin, afficher les boutons d'édition et de suppression */}
-                                    <IsAdmin>
-                                        <div className="lg:absolute right-0 top-0 flex gap-4 mt-2">
-                                            <EditItem
-                                                renderEditForm={(onClose) => (
-                                                    <UpdateHouseholdProduct
-                                                        householdProduct={householdProduct}
-                                                        onSubmit={async (updatedHouseholdProduct: HouseholdProductType) => {
-                                                            await updateHouseholdProduct(updatedHouseholdProduct);
-                                                            onClose();
-                                                        }}
-                                                        onCancel={onClose}
-                                                    />
-                                                )}
+                                    {/* Si l'utilisateur est admin, afficher les boutons d'édition et de suppression */}                              
+                                    <PopoverActions
+                                        id={householdProduct.id}
+                                        apiUrl="/api/household-products"
+                                        onDelete={() => handleHouseholdProductDeleted(householdProduct.id)}
+                                        renderEditForm={(onClose) => (
+                                            <UpdateHouseholdProduct
+                                                householdProduct={householdProduct}
+                                                onSubmit={updateHouseholdProduct}
+                                                onCancel={onClose}
                                             />
-                                            <DeleteItem
-                                                apiUrl="/api/household-products"
-                                                id={householdProduct.id}
-                                                onSubmit={handleHouseholdProductDeleted}
-                                            />
-                                        </div>
-                                    </IsAdmin>
+                                        )}
+                                    />
                                 </div>
                             </TableCell>
                             <TableCell>

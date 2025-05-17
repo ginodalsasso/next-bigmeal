@@ -138,7 +138,7 @@ export default function MealItem( {fetchedMeal}: { fetchedMeal: MealType }) {
 
             {/* Boutons d'administration */}
             <IsAdmin>
-                <div className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
+                <div className="rounded-lg border border-g ray-200 bg-white p-4 shadow-sm">
                     <h2 className="h2-title">
                         <Sparkles className="h2-icons" />
                         Options d&apos;administration

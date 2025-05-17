@@ -40,7 +40,6 @@ const CompositionItem = ({ composition, onUpdate, onDelete }: CompositionItemPro
                                 <Button variant="link">
                                     <MoreVertical className="text-gray-500" />
                                 </Button>
-                                {/* </Button> */}
                             </PopoverTrigger>
                             <PopoverContent className="w-auto">
                                 <div className="flex gap-2">

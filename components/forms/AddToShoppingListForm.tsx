@@ -119,7 +119,7 @@ const AddToShoppingListForm: React.FC<AddToShoppingListFormProps> = ({ type, id 
     return (
         <form
             onSubmit={handleAddToShoppingList}
-            className="flex items-center gap-2"
+            className="flex items-center space-x-2"
         >
             <FormErrorMessage message={error?.general} />
 
@@ -127,7 +127,7 @@ const AddToShoppingListForm: React.FC<AddToShoppingListFormProps> = ({ type, id 
             {(type === 'ingredient' || type === 'product') && (
                 <input
                     type="number"
-                    className="input-text-select lg:max-w-20"
+                    className="input-text-select h-10 !w-12"
                     value={quantity.quantity || ''}
                     min={1}
                     onChange={(e) => setQuantity({ quantity: parseInt(e.target.value) })}

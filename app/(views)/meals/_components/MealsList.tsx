@@ -10,13 +10,12 @@ import { MealType } from "@/lib/types/schemas_interfaces";
 
 // Composants
 import ItemView from "@/components/layout/ItemView";
-import EditItem from "@/components/layout/EditItemDrawer";
-import DeleteItem from "@/components/layout/DeleteItemDialog";
 import UpdateMeal from "./UpdateMeal";
 import AddToShoppingListForm from "@/components/forms/AddToShoppingListForm";
 import IsAdmin from "@/components/isAdmin";
 import IsUser from "@/components/isUser";
 import FilterItems from "@/components/layout/FilterItems";
+import PopoverActions from "@/components/layout/PopoverActions";
 
 // Composants UI
 import { Button } from "@/components/ui/button";
@@ -107,7 +106,7 @@ export default function MealsList( {fetchedMeals}: { fetchedMeals: MealType[] })
                     {meals.map((meal) => (
                         <TableRow key={meal.id}>
                             <TableCell className="table-cell">
-                                <div className="lg:relative">
+                                <div className="relative">
                                     <ItemView
                                         title={meal.name}
                                         details={{
@@ -116,27 +115,19 @@ export default function MealsList( {fetchedMeals}: { fetchedMeals: MealType[] })
                                         }}
                                         linkToDetails={`/meals/${meal.name}`}
                                     />
-
-                                    <IsAdmin>
-                                        <div className="lg:absolute right-0 top-0 flex gap-4 mt-2">
-                                            {/* Édition du repas */}
-                                            <EditItem
-                                                renderEditForm={(onClose) => (
-                                                    <UpdateMeal
-                                                        meal={meal} 
-                                                        onSubmit={updateMeal}
-                                                        onClose={onClose}
-                                                    />
-                                                )}
+                                    {/* Menu d'actions admin avec Popover */}
+                                    <PopoverActions
+                                        id={meal.id}
+                                        apiUrl="/api/meals"
+                                        onDelete={() => handleMealDeleted(meal.id)}
+                                        renderEditForm={(onClose) => (
+                                            <UpdateMeal
+                                                meal={meal}
+                                                onSubmit={updateMeal}
+                                                onClose={onClose}
                                             />
-                                            {/* Suppression du repas */}
-                                            <DeleteItem
-                                                apiUrl="/api/meals"
-                                                id={meal.id}
-                                                onSubmit={handleMealDeleted}
-                                            />
-                                        </div>
-                                    </IsAdmin>
+                                        )}
+                                    />
                                 </div>
                             </TableCell>
 

@@ -19,11 +19,11 @@ const StepItem = ({ step, onUpdate, onDelete }: StepItemProps) => {
             {/* Première ligne: contenu */}
             <div className="flex items-start gap-2">
                 {/* Numéro d'étape */}
-                <span className="mt-0.5 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-emerald-100 text-sm font-semibold text-emerald-800">
+                <span className="mt-0.5 flex size-6 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-sm font-semibold text-emerald-800">
                     {step.stepNumber}
                 </span>
                 
-                <p className="flex-1 text-sm font-medium text-gray-900 break-all">                    
+                <p className="flex-1 break-all text-sm font-medium text-gray-900">                    
                     {step.description}
                 </p>
             </div>
@@ -33,8 +33,8 @@ const StepItem = ({ step, onUpdate, onDelete }: StepItemProps) => {
                 <div className="ml-auto">
                     <Popover>
                         <PopoverTrigger asChild>
-                            <Button variant="link" size="icon" className="h-8 w-8 text-gray-500 hover:bg-gray-100">
-                                <MoreVertical className="h-4 w-4" />
+                            <Button variant="link" size="icon" className="size-8 text-gray-500 hover:bg-gray-100">
+                                <MoreVertical className="size-4" />
                             </Button>
                         </PopoverTrigger>
                         <PopoverContent className="w-auto">
