@@ -58,6 +58,10 @@ body {
   @apply overflow-hidden rounded-lg border border-gray-300 bg-gray-50;
 }
 
+.centered-block {
+  @apply m-4 fixed inset-0 z-50 flex items-center justify-center;
+}
+
 .nav-links-desktop {
   @apply text-gray-200 text-[18px] font-medium cursor-pointer hover:underline;
 };

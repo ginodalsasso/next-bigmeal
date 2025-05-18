@@ -14,6 +14,7 @@ import { useFormValidation } from '@/app/hooks/useFormValidation';
 import { NewPasswordConstraints } from '@/lib/constraints/forms_constraints';
 import FormSubmitButton from '@/components/forms/FormSubmitButton';
 import FormErrorMessage from '@/components/forms/FormErrorMessage';
+import PasswordInput from '@/components/forms/PasswordInput';
 
 
 // _________________________ COMPONENT _________________________
@@ -80,22 +81,21 @@ const ResetPasswordPage = () => {
     return (
         <form
             action={handleSubmit}
-            className="mx-auto mt-[10%] flex flex-col gap-2 border px-4 py-8 sm:w-[400px]"
+            className="card"
         >
-            <h1 className="text-2xl font-bold">Réinitialiser le mot de passe</h1>
+            <h1 className="h1-title">Réinitialiser le mot de passe</h1>
             <FormErrorMessage message={error?.general} />
 
             <label htmlFor="password" className="mb-2 text-lg font-bold">
                 Nouveau mot de passe
             </label>
-            <input
-                className="input-text-select"
-                type="password"
+            <PasswordInput 
                 id="password"
                 name="password"
                 placeholder="••••••••"
                 autoComplete="off"
                 required
+                error={error?.password}
             />
             <FormErrorMessage message={error?.password} />
 
@@ -115,6 +115,7 @@ const ResetPasswordPage = () => {
 
             <FormSubmitButton
                 defaultText='Réinitialiser le mot de passe'
+                className='mt-4 w-full'
             />
         </form>
     );

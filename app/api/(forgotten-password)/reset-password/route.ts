@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 import { NextRequest } from 'next/server';
 import { hash } from 'argon2';
 import { sendEmail } from '@/lib/services/email_service';
-import { BASE_URL } from '@/lib/constants/api_routes';
+import { URL } from '@/lib/constants/api_routes';
 
 
 export async function POST(req: NextRequest) {
@@ -23,7 +23,7 @@ export async function POST(req: NextRequest) {
         { expiresIn: '1h' }
     );
 
-    const resetLink = `${BASE_URL}/reset-password/${generatedToken}`;
+    const resetLink = `${URL}/reset-password/${generatedToken}`;
 
     const emailResult = await sendEmail(
         recipient,

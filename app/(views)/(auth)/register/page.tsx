@@ -61,74 +61,75 @@ export default function RegisterPage() {
     if (isLoading) { <LoadingSpinner /> }
 
     return (
-        <div className="card transition-all duration-300">   
-            <div className="mb-6 text-center">
-                <h2 className="text-2xl font-bold text-gray-900">Inscription</h2>
-                <p className="mt-2 text-sm text-gray-600">Entrez vos informations pour créer un compte</p>
-            </div>
+        <div className="centered-block">
+            <div className="card transition-all duration-300">   
+                <div className="mb-6 text-center">
+                    <h2 className="text-2xl font-bold text-gray-900">Inscription</h2>
+                    <p className="mt-2 text-sm text-gray-600">Entrez vos informations pour créer un compte</p>
+                </div>
 
-            <FormErrorMessage message={error?.general} />
+                <FormErrorMessage message={error?.general} />
 
-            <form className="space-y-4" onSubmit={handleSubmit}>
+                <form className="space-y-4" onSubmit={handleSubmit}>
+                    <div>
+                        <label htmlFor="email" className="block font-medium text-gray-700">
+                            Adresse email
+                        </label>
+                        <input
+                            className="input-text-select mt-1 w-full shadow-sm"
+                            type="email"
+                            id="email"
+                            name="email"
+                            placeholder="email@exemple.com"
+                            required
+                            autoComplete="email"
+                            autoFocus
+                            value={formData.email}
+                            onChange={(e) =>
+                                setFormData({ ...formData, email: e.target.value })
+                            }
+                        />
+                        <FormErrorMessage message={error?.email} />
+                    </div>
+
                 <div>
-                    <label htmlFor="email" className="block font-medium text-gray-700">
-                        Adresse email
-                    </label>
-                    <input
-                        className="input-text-select mt-1 w-full shadow-sm"
-                        type="email"
-                        id="email"
-                        name="email"
-                        placeholder="email@exemple.com"
-                        required
-                        autoComplete="email"
-                        autoFocus
-                        value={formData.email}
+                    <PasswordInput 
+                        id="password"
+                        name="password"
+                        label="Mot de passe"
+                        placeholder="••••••••"
+                        value={formData.password}
                         onChange={(e) =>
-                            setFormData({ ...formData, email: e.target.value })
+                            setFormData({ ...formData, password: e.target.value })
                         }
+                        error={error?.password}
+                        required
                     />
-                    <FormErrorMessage message={error?.email} />
                 </div>
 
-            <div>
-                <PasswordInput 
-                    id="password"
-                    name="password"
-                    label="Mot de passe"
-                    placeholder="••••••••"
-                    value={formData.password}
-                    onChange={(e) =>
-                        setFormData({ ...formData, password: e.target.value })
-                    }
-                    error={error?.password}
-                    required
-                />
+
+                    <Button 
+                        type="submit" 
+                        className="w-full"
+                        disabled={isLoading} 
+                        variant={isLoading ? "ghost" : "success"}
+                    >
+                        {isLoading ? "Création en cours..." : "Créer un compte"}
+                    </Button>
+
+                    <div className="mt-6 text-center">
+                        <p className="text-sm text-gray-600">
+                            Déjà un compte ?{" "}
+                            <Button
+                                variant="link"
+                                onClick={() => router.push("/login")}
+                                className="font-medium text-blue-600 hover:text-blue-500"
+                            >
+                                Se connecter
+                            </Button>
+                        </p>
+                    </div>
+                </form>
             </div>
-
-
-                <Button 
-                    type="submit" 
-                    className="w-full"
-                    disabled={isLoading} 
-                    variant={isLoading ? "ghost" : "success"}
-                >
-                    {isLoading ? "Création en cours..." : "Créer un compte"}
-                </Button>
-
-                <div className="mt-6 text-center">
-                    <p className="text-sm text-gray-600">
-                        Déjà un compte ?{" "}
-                        <Button
-                            variant="link"
-                            onClick={() => router.push("/login")}
-                            className="font-medium text-blue-600 hover:text-blue-500"
-                        >
-                            Se connecter
-                        </Button>
-                    </p>
-                </div>
-            </form>
-        </div>
-    );
+        </div>);
 }    

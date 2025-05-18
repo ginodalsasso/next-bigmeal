@@ -3,6 +3,7 @@
 const apiBaseUrl = process.env.API_URL ?? "";
 
 export const BASE_URL = `${apiBaseUrl}/api`;
+export const URL = `${apiBaseUrl}`;
 
 const authRoutes = {
     register: `${BASE_URL}/auth/register`,

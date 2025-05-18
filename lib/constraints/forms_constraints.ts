@@ -3,6 +3,17 @@ import { Season, IngredientUnit, UserStatus } from "../types/enums";
 
 // _________________________ CONTRAINTES DE VALIDATION _________________________
 
+const passwordConstraints = z
+        .string()
+        .min(8, "Le mot de passe doit comporter au moins 8 caractères")
+        .max(100, "Le mot de passe doit comporter au maximum 100 caractères")
+        .regex(
+            /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>~`'[\]\\/_+\-=])[A-Za-z\d!@#$%^&*(),.?":{}|<>~`'[\]\\/_+\-=]{12,}$/, 
+            "Le mot de passe doit comporter au moins 12 caractères, une lettre majuscule, une lettre minuscule, un chiffre et un caractère spécial"
+        )
+        .trim();
+
+
 export const idConstraints = z.object({
     id: z.string(),
 });
@@ -196,12 +207,7 @@ export const RegisterConstraints = z.object({
         .email()
         .min(3, "L'email doit comporter au moins 3 caractères")
         .max(100, "L'email doit comporter au maximum 100 caractères"),
-    password: z
-        .string()
-        // .min(8, "Le mot de passe doit comporter au moins 8 caractères")
-        .max(100, "Le mot de passe doit comporter au maximum 100 caractères")
-        // .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>~`'[\]\\/_+\-=])[A-Za-z\d!@#$%^&*(),.?":{}|<>~`'[\]\\/_+\-=]{12,}$/, "Le mot de passe doit comporter au moins 12 caractères, une lettre majuscule, une lettre minuscule, un chiffre et un caractère spécial"),
-        .trim(),
+    password: passwordConstraints
 });
 
 export const LoginConstraints = z.object({
@@ -225,42 +231,27 @@ export const ForgotPasswordConstraints = z.object({
         .trim(),
 });
 
+
 export const NewPasswordConstraints = z.object({
-    password: z
-        .string()
-        // .min(8, "Le mot de passe doit comporter au moins 8 caractères")
-        .max(100, "Le mot de passe doit comporter au maximum 100 caractères")
-        // .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>~`'[\]\\/_+\-=])[A-Za-z\d!@#$%^&*(),.?":{}|<>~`'[\]\\/_+\-=]{12,}$/, "Le mot de passe doit comporter au moins 12 caractères, une lettre majuscule, une lettre minuscule, un chiffre et un caractère spécial"),
-        .trim(),
-    confirmPassword: z
-        .string()
-        // .min(8, "Le mot de passe doit comporter au moins 8 caractères")
-        .max(100, "Le mot de passe doit comporter au maximum 100 caractères")
-        // .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>~`'[\]\\/_+\-=])[A-Za-z\d!@#$%^&*(),.?":{}|<>~`'[\]\\/_+\-=]{12,}$/, "Le mot de passe doit comporter au moins 12 caractères, une lettre majuscule, une lettre minuscule, un chiffre et un caractère spécial"),
-        .trim(),
+    password: passwordConstraints,
+    confirmPassword: passwordConstraints,
+})
+.refine((data) => data.password === data.confirmPassword, {
+    message: "Les mots de passe ne correspondent pas",
+    path: ["confirmPassword"],
 });
 
+
 export const ResetPasswordConstraints = z.object({
-    password: z
-        .string()
-        // .min(8, "Le mot de passe doit comporter au moins 8 caractères")
-        .max(100, "Le mot de passe doit comporter au maximum 100 caractères")
-        // .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>~`'[\]\\/_+\-=])[A-Za-z\d!@#$%^&*(),.?":{}|<>~`'[\]\\/_+\-=]{12,}$/, "Le mot de passe doit comporter au moins 12 caractères, une lettre majuscule, une lettre minuscule, un chiffre et un caractère spécial"),
-        .trim(),
-    newPassword: z
-        .string()
-        // .min(8, "Le mot de passe doit comporter au moins 8 caractères")
-        .max(100, "Le mot de passe doit comporter au maximum 100 caractères")
-        // .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>~`'[\]\\/_+\-=])[A-Za-z\d!@#$%^&*(),.?":{}|<>~`'[\]\\/_+\-=]{12,}$/, "Le mot de passe doit comporter au moins 12 caractères, une lettre majuscule, une lettre minuscule, un chiffre et un caractère spécial"),
-        .trim(),
-    confirmNewPassword: z
-        .string()
-        // .min(8, "Le mot de passe doit comporter au moins 8 caractères")
-        .max(100, "Le mot de passe doit comporter au maximum 100 caractères")
-        // .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>~`'[\]\\/_+\-=])[A-Za-z\d!@#$%^&*(),.?":{}|<>~`'[\]\\/_+\-=]{12,}$/, "Le mot de passe doit comporter au moins 12 caractères, une lettre majuscule, une lettre minuscule, un chiffre et un caractère spécial"),
-        .trim(),
-    
+    password: passwordConstraints,
+    newPassword: passwordConstraints,
+    confirmNewPassword: passwordConstraints,
+})
+.refine((data) => data.newPassword === data.confirmNewPassword, {
+    message: "Les mots de passe ne correspondent pas",
+    path: ["confirmNewPassword"],
 });
+
 
 export const UpdateUserStatusConstraints = z.object({
     userId: z.string(),
