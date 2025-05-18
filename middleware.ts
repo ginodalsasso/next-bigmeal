@@ -68,29 +68,19 @@ export async function middleware(req: NextRequest) {
         return NextResponse.redirect(redirectUrl);
     }
 
-    const cspOptions = `
-        default-src 'self'; 
-        style-src 'self'; 
-        img-src 'self' data:; 
-        connect-src 'self' https://github.com https://api.github.com https://accounts.google.com https://oauth2.googleapis.com;
-        frame-src https://accounts.google.com https://github.com;
-        font-src 'self' data:;
-        script-src 'self' 'unsafe-inline' https://accounts.google.com https://github.com;
-    `;
-
-    const ContentSecurityPolicy = isProduction ? cspOptions : "";
-
     const response = NextResponse.next();
     response.headers.set("X-Content-Type-Options", "nosniff"); // Empêche le navigateur de deviner le type MIME
     response.headers.set("X-Frame-Options", "DENY"); // Empêche l'intégration du site dans un iframe (protection contre le clickjacking)
     response.headers.set("Referrer-Policy", "no-referrer-when-downgrade"); // Politique de référent pour éviter de divulguer des informations sensibles ex: l'URL de la page précédente
     response.headers.set("X-XSS-Protection", "1; mode=block"); // Active la protection contre certaines attaques XSS dans les navigateurs compatibles
-    response.headers.set("Content-Security-Policy", ContentSecurityPolicy);
 
     return response;
 }
 
 export const config = {
     // Empêche d'appliquer le middleware sur les fichiers statiques, les requêtes API, les images ou tout fichier au format `.png`
-    matcher: ["/((?!api|_next/static|_next/image|.*\\.png$).*)"],
+    matcher: [
+        "/((?!api|_next/static|_next/image|.*\\.png$).*)"
+    ],
+
 };

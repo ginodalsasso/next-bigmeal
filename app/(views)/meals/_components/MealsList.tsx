@@ -60,7 +60,7 @@ export default function MealsList( {fetchedMeals}: { fetchedMeals: MealType[] })
     };
 
     // Fonction pour gérer le repas aimé
-    const toggleLikeMeal = async (mealId: string) => {
+    const toggleLikeMeal = async (mealName: string) => {
         try {
             // Récupérer le CSRF Token
             const csrfToken = await getCsrfToken();
@@ -69,16 +69,16 @@ export default function MealsList( {fetchedMeals}: { fetchedMeals: MealType[] })
                 return;
             }
 
-            likedMealAPI(mealId, csrfToken); 
+            likedMealAPI(mealName, csrfToken); 
 
             setLikedMeals((prev) => {
                 // stocker les ID des repas aimés dans un Se
                 const likedMeals = new Set(prev);
-                if (likedMeals.has(mealId)) {
-                    likedMeals.delete(mealId);
+                if (likedMeals.has(mealName)) {
+                    likedMeals.delete(mealName);
                     toast("Repas retiré des favoris");
                 } else {
-                    likedMeals.add(mealId);
+                    likedMeals.add(mealName);
                     toast("Repas ajouté aux favoris");
                 }
                 return likedMeals;
@@ -151,9 +151,9 @@ export default function MealsList( {fetchedMeals}: { fetchedMeals: MealType[] })
                                     <Heart
                                         size={20}
                                         className={`cursor-pointer transition-colors ${
-                                            likedMeals.has(meal.id) ? "fill-red-500 text-red-500" : "text-gray-400"
+                                            likedMeals.has(meal.name) ? "fill-red-500 text-red-500" : "text-gray-400"
                                         }`}
-                                        onClick={() => toggleLikeMeal(meal.id)}
+                                        onClick={() => toggleLikeMeal(meal.name)}
                                     />
 
                                     {/* Menu d'actions admin avec Popover */}
