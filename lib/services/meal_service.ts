@@ -43,3 +43,24 @@ export async function updateMealAPI(mealData: object, csrfToken: string) {
         throw error;
     }
 }
+
+export async function likedMealAPI(mealId: string, csrfToken: string) {
+    try {
+        const response = await fetch( API_ROUTES.meals + "/" + mealId + "/like", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRF-Token": csrfToken
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error("Erreur lors de la mise à jour du statut du like");
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error("[API_ERROR] likedMealAPI", error);
+        throw error;
+    }
+}

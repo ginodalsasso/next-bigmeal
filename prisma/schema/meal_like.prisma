@@ -1,0 +1,15 @@
+model MealLike {
+    id        String   @id @default(auto()) @map("_id") @db.ObjectId
+
+    user      User     @relation(fields: [userId], references: [id])
+    userId    String   @db.ObjectId
+
+    meal      Meal     @relation(fields: [mealId], references: [id])
+    mealId    String   @db.ObjectId
+
+    createdAt DateTime @default(now())
+
+    @@index([userId])
+    @@index([mealId])
+    @@unique([userId, mealId])
+}

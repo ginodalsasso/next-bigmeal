@@ -8,8 +8,10 @@ model Meal {
     categoryMeal      CategoryMeal   @relation(fields: [categoryMealId], references: [id], onDelete: Cascade)
     
     preparation     Preparation? @relation
+
     compositions      Composition[]
     shoppingListItems ShoppingListItem[]
+    mealLikes         MealLike[]
 
     @@index([categoryMealId])
 }

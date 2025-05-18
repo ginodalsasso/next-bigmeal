@@ -80,8 +80,19 @@ export interface MealType {
 
     // Relation One-to-Many
     shoppingListItems: ShoppingListType[];
+    mealLikes: MealLikeType[];
 }
 
+export interface MealLikeType {
+    id: string; 
+    mealId: string; // Clé étrangère
+    userId: string; // Clé étrangère
+
+    meal: MealType;
+    user: UserType;
+
+    createdAt: Date;
+}
 
 export interface CompositionType {
     id: string;
@@ -165,6 +176,7 @@ export interface UserType {
 
     // Relation One-to-Many 
     shoppingList: ShoppingListType[];
+    mealLikes: MealLikeType[];
 }
 
 

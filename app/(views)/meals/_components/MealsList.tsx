@@ -24,7 +24,9 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 // Constantes
 import { CATEGORIES_MEALS } from "@/lib/constants/ui_constants";
 import { notFound, useRouter } from "next/navigation";
-import { Plus } from "lucide-react";
+import { Heart, Plus } from "lucide-react";
+import { likedMealAPI } from "@/lib/services/meal_service";
+import { getCsrfToken } from "next-auth/react";
 
 
 // _________________________ COMPOSANT _________________________
@@ -32,10 +34,10 @@ export default function MealsList( {fetchedMeals}: { fetchedMeals: MealType[] })
     
     // _________________________ ETATS _________________________
     const [meals, setMeals] = useState<MealType[]>(fetchedMeals);
+    const [likedMeals, setLikedMeals] = useState<Set<string>>(new Set()); // newSet pour stocker les ID des repas aimés ex: setLikedMeals(new Set(["id1", "id2"]))
 
     const router = useRouter();
 
-    
     useEffect(() => {
         setMeals(fetchedMeals); // Pour les mises à jour de la liste de repas coté client
     }, [fetchedMeals]);
@@ -56,6 +58,37 @@ export default function MealsList( {fetchedMeals}: { fetchedMeals: MealType[] })
     const handleMealDeleted = (id: string) => {
         setMeals((prev) => prev.filter((meal) => meal.id !== id));
     };
+
+    // Fonction pour gérer le repas aimé
+    const toggleLikeMeal = async (mealId: string) => {
+        try {
+            // Récupérer le CSRF Token
+            const csrfToken = await getCsrfToken();
+            if (!csrfToken) {
+                console.error("CSRF token invalide");
+                return;
+            }
+
+            likedMealAPI(mealId, csrfToken); 
+
+            setLikedMeals((prev) => {
+                // stocker les ID des repas aimés dans un Se
+                const likedMeals = new Set(prev);
+                if (likedMeals.has(mealId)) {
+                    likedMeals.delete(mealId);
+                    toast("Repas retiré des favoris");
+                } else {
+                    likedMeals.add(mealId);
+                    toast("Repas ajouté aux favoris");
+                }
+                return likedMeals;
+            });
+        } catch (error) {
+            console.error("Erreur lors de la modification du statut du like", error);
+            toast.error("Impossible de modifier le statut du like");
+        }
+    };
+
 
 
     // _________________________ FILTRAGE _________________________
@@ -111,10 +144,18 @@ export default function MealsList( {fetchedMeals}: { fetchedMeals: MealType[] })
                                         title={meal.name}
                                         details={{
                                             category: meal.categoryMeal?.name || "Non spécifié",
-                                            // description: meal.description,
                                         }}
                                         linkToDetails={`/meals/${meal.name}`}
                                     />
+
+                                    <Heart
+                                        size={20}
+                                        className={`cursor-pointer transition-colors ${
+                                            likedMeals.has(meal.id) ? "fill-red-500 text-red-500" : "text-gray-400"
+                                        }`}
+                                        onClick={() => toggleLikeMeal(meal.id)}
+                                    />
+
                                     {/* Menu d'actions admin avec Popover */}
                                     <PopoverActions
                                         id={meal.id}
