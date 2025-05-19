@@ -72,18 +72,18 @@ export default function MealsList( {fetchedMeals, fetchedlikedMeals}: { fetchedM
             likedMealAPI(mealName, csrfToken); 
 
             setLikedMeals((prev) => {
-                // stocker les ID des repas aimés dans un Se
+                // stocker les ID des repas aimés dans un Set
                 const likedMeals = new Set(prev);
+                
                 if (likedMeals.has(mealName)) {
                     likedMeals.delete(mealName);
-                    toast("Repas retiré des favoris");
                 } else {
                     likedMeals.add(mealName);
-                    toast("Repas ajouté aux favoris");
                 }
-                console.log("likedMeals", likedMeals);
                 return likedMeals;
             });
+
+            toast(likedMeals.has(mealName) ? "Repas ajouté aux favoris" : "Repas retiré des favoris");
         } catch (error) {
             console.error("Erreur lors de la modification du statut du like", error);
             toast.error("Impossible de modifier le statut du like");
@@ -151,25 +151,27 @@ export default function MealsList( {fetchedMeals, fetchedlikedMeals}: { fetchedM
 
                                     <Heart
                                         size={20}
-                                        className={`cursor-pointer transition-colors ${
+                                        className={` cursor-pointer transition-colors ${
                                             likedMeals.has(meal.name) ? "fill-red-500 text-red-500" : "text-gray-400"
                                         }`}
                                         onClick={() => toggleLikeMeal(meal.name)}
                                     />
 
                                     {/* Menu d'actions admin avec Popover */}
-                                    <PopoverActions
-                                        id={meal.id}
-                                        apiUrl="/api/meals"
-                                        onDelete={() => handleMealDeleted(meal.id)}
-                                        renderEditForm={(onClose) => (
-                                            <UpdateMeal
-                                                meal={meal}
-                                                onSubmit={updateMeal}
-                                                onClose={onClose}
-                                            />
-                                        )}
-                                    />
+                                    <IsAdmin>
+                                        <PopoverActions
+                                            id={meal.id}
+                                            apiUrl="/api/meals"
+                                            onDelete={() => handleMealDeleted(meal.id)}
+                                            renderEditForm={(onClose) => (
+                                                <UpdateMeal
+                                                    meal={meal}
+                                                    onSubmit={updateMeal}
+                                                    onClose={onClose}
+                                                />
+                                            )}
+                                        />
+                                    </IsAdmin>
                                 </div>
                             </TableCell>
 

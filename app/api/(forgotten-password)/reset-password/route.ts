@@ -4,10 +4,15 @@ import { NextRequest } from 'next/server';
 import { hash } from 'argon2';
 import { sendEmail } from '@/lib/services/email_service';
 import { URL } from '@/lib/constants/api_routes';
+import rateLimit from '@/lib/security/rateLimit';
 
+const LIMIT = 5; // Nombre maximal de requêtes
+const INTERVAL = 60 * 60 * 1000; // Intervalle en millisecondes (1 heure)
 
 export async function POST(req: NextRequest) {
-    
+    // Appliquer la limitation de débit
+    rateLimit(req, LIMIT, INTERVAL);
+
     const body = await req.json();
 
     const { recipient } = body;

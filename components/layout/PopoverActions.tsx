@@ -4,7 +4,6 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Button } from "@/components/ui/button";
 import EditItem from "./EditItemDrawer";
 import DeleteItem from "./DeleteItemDialog";
-import IsAdmin from "../isAdmin";
 
 type PopoverActionsProps = {
     id: string;
@@ -27,20 +26,18 @@ export default function PopoverActions({
     );
 
     return (
-        <IsAdmin>
-            <Popover>
-                <PopoverTrigger asChild>
-                    <Button
-                        variant="link"
-                        className="absolute -right-4 -top-2"
-                    >
-                        <MoreVertical className="text-gray-500" />
-                    </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto">
-                    {content}
-                </PopoverContent>
-            </Popover>
-        </IsAdmin>
+        <Popover>
+            <PopoverTrigger asChild>
+                <Button
+                    variant="link"
+                    className="absolute -right-4 -top-2"
+                >
+                    <MoreVertical className="text-gray-500" />
+                </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto">
+                {content}
+            </PopoverContent>
+        </Popover>
     );
 }
