@@ -2,12 +2,12 @@ import type { NextConfig } from "next";
 
   const cspHeader = `
       default-src 'self'; 
-      style-src 'self'; 
+      style-src 'self' 'unsafe-inline'; 
       img-src 'self' data:; 
       connect-src 'self' https://github.com https://api.github.com https://accounts.google.com https://oauth2.googleapis.com;
       frame-src https://accounts.google.com https://github.com;
       font-src 'self' data:;
-      script-src 'self' 'unsafe-inline' https://accounts.google.com https://github.com;
+      script-src 'self' 'unsafe-eval' 'unsafe-inline' https://accounts.google.com https://github.com;
       form-action 'self';
       frame-ancestors 'none';
       upgrade-insecure-requests;

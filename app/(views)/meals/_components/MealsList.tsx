@@ -30,11 +30,11 @@ import { getCsrfToken } from "next-auth/react";
 
 
 // _________________________ COMPOSANT _________________________
-export default function MealsList( {fetchedMeals}: { fetchedMeals: MealType[] }) {
-    
+export default function MealsList( {fetchedMeals, fetchedlikedMeals}: { fetchedMeals: MealType[], fetchedlikedMeals: string[] }) {
+
     // _________________________ ETATS _________________________
     const [meals, setMeals] = useState<MealType[]>(fetchedMeals);
-    const [likedMeals, setLikedMeals] = useState<Set<string>>(new Set()); // newSet pour stocker les ID des repas aimés ex: setLikedMeals(new Set(["id1", "id2"]))
+    const [likedMeals, setLikedMeals] = useState<Set<string>>(new Set(fetchedlikedMeals)); // newSet pour stocker les ID des repas aimés ex: setLikedMeals(new Set(["id1", "id2"]))
 
     const router = useRouter();
 
@@ -81,6 +81,7 @@ export default function MealsList( {fetchedMeals}: { fetchedMeals: MealType[] })
                     likedMeals.add(mealName);
                     toast("Repas ajouté aux favoris");
                 }
+                console.log("likedMeals", likedMeals);
                 return likedMeals;
             });
         } catch (error) {
