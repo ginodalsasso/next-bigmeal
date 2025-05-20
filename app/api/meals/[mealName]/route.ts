@@ -13,6 +13,8 @@ export async function GET ( req: NextRequest, { params }: Props){
         return NextResponse.json({ error: "Meal ID is required" }, { status: 400 });
     }
 
+    
+
     try {
         const meal = await db.meal.findUnique({
             where: { name: mealName },

@@ -1,6 +1,6 @@
 import { db } from "@/lib/db";
 import { NextRequest, NextResponse } from "next/server";
-import { idConstraints, mealConstraints } from "@/lib/constraints/forms_constraints";
+import { idConstraints, mealConstraints, urlConstraints } from "@/lib/constraints/forms_constraints";
 import { verifyCSRFToken } from "@/lib/security/verifyCsrfToken";
 import { getAdminSession, getUserSession } from "@/lib/security/getSession";
 import { ITEMS_PER_PAGE } from "@/lib/constants/ui_constants";
@@ -15,6 +15,21 @@ export async function GET(req: NextRequest) {
 
         // Gestion des filtres
         const categories = url.searchParams.getAll("categories");
+
+        const data = {
+            skip,
+            take,
+            categories,
+        };
+
+        const validationResult = urlConstraints.safeParse(data);
+        
+        if (!validationResult.success) {
+            return NextResponse.json(
+                { error: validationResult.error.format() },
+                { status: 400 }
+            );
+        }
 
         // Récupérer les repas
         const meals = await db.meal.findMany({

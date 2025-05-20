@@ -3,6 +3,22 @@ import { Season, IngredientUnit, UserStatus } from "../types/enums";
 
 // _________________________ CONTRAINTES DE VALIDATION _________________________
 
+export const urlConstraints = z.object({
+    skip: z
+        .number()
+        .min(0)
+        .default(0),
+    take: z
+        .number()
+        .min(1)
+        .max(100)
+        .default(10),
+    categories: z
+        .array(z
+            .string()
+        ),
+});
+
 const passwordConstraints = z
         .string()
         .min(8, "Le mot de passe doit comporter au moins 8 caractères")

@@ -19,7 +19,7 @@ export async function GET(req: NextRequest) {
         const meals = await db.meal.findMany({
             where: {
                 mealLikes: {
-                    some: {
+                    some: { 
                         userId: session?.user.id,
                     },
                 },
@@ -41,7 +41,6 @@ export async function GET(req: NextRequest) {
                 },
             },
         });
-        console.table(meals);
         return NextResponse.json(meals, {status: 200}); 
 
     } catch(error) {
