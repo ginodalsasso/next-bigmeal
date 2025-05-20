@@ -122,6 +122,31 @@ export async function getMeal(mealName: string) {
     }
 }
 
+export async function getLikedMeals(
+        skip = 0, 
+        take = 10, 
+        categories: string[] = [], 
+)  {
+    try {
+        const url = new URL(`${API_ROUTES.meals}/favorites`);
+        // Gestion de la pagination
+        // skip = le nombre de repas à ignorer, take = le nombre de repas à récupérer
+        url.searchParams.append('skip', skip.toString());
+        url.searchParams.append('take', take.toString());
+
+        // Gestion des filtres (qui sont des tableaux)
+        categories.forEach(category => url.searchParams.append('categories', category));
+    
+        const response = await fetch(url.toString(), { cache: "no-store" });
+
+        if (!response.ok) throw new Error("Erreur lors de la récupération des repas.");
+        return response.json();
+    } catch (error) {
+        console.error(error);
+        throw new Error("Impossible de récupérer les repas.");
+    }
+}
+
 
 export async function getUsers() {
     try {

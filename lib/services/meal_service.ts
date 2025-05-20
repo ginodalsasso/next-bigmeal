@@ -46,7 +46,7 @@ export async function updateMealAPI(mealData: object, csrfToken: string) {
 
 export async function likedMealAPI(mealName: string, csrfToken: string) {
     try {
-        const response = await fetch( API_ROUTES.meals + "/" + mealName + "/like", {
+        const response = await fetch( `${API_ROUTES.meals}/${mealName}/like`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

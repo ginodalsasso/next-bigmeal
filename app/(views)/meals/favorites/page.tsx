@@ -1,9 +1,9 @@
 // Composant listant les repas
 import { ITEMS_PER_PAGE } from "@/lib/constants/ui_constants";
-import MealsList from "./_components/MealsList";
+import MealsList from "../_components/MealsList";
 
 // Service de récupération des repas
-import { getMeals } from "@/lib/services/data_fetcher";
+import { getLikedMeals } from "@/lib/services/data_fetcher";
 import Pagination from "@/components/layout/Pagination";
 import { ensureArray } from "@/lib/utils";
 import { db } from "@/lib/db";
@@ -19,12 +19,12 @@ interface searchParamsProps {
     }> | undefined 
 }
 
-export default async function MealPage({ searchParams }: searchParamsProps) {
-    
+export default async function FavoritesPage({ searchParams }: searchParamsProps) {
+
     try {
         const { session } = await getUserSession();
         const userId = session?.user?.id;
-        
+
         // _________________________ PARAMETRES __________________
         const params  = await searchParams; // Attendre la résolution de la promesse pour obtenir les paramètres de recherche
         // Récupérer le numéro de page à partir des paramètres de recherche, ou 1 par défaut
@@ -32,18 +32,18 @@ export default async function MealPage({ searchParams }: searchParamsProps) {
         const itemsPerPage = parseInt(ITEMS_PER_PAGE, 10); // Nombre d'items par page pour la pagination
         
         const categories = ensureArray(params?.categories); // Vérifie si les paramètres de recherche existent et s'ils sont des tableaux
-        
+
         // _________________________ API _________________________
-        const meals = await getMeals(
+        const meals = await getLikedMeals(
             (page - 1) * itemsPerPage, 
             itemsPerPage,
             categories,
         );
+    
         // _________________________ LIKES ______________________
         let likedMealNames: string[] = [];
 
-        
-        const likedMeals = await db.mealLike.findMany({
+        const likedMealsNames = await db.mealLike.findMany({
             where: { userId },
             select: {
                 meal: {
@@ -54,13 +54,21 @@ export default async function MealPage({ searchParams }: searchParamsProps) {
             },
         });
         
-        likedMealNames = likedMeals.map((like) => like.meal.name);
-
+        likedMealNames = likedMealsNames.map((like) => like.meal.name);
+        
         // _________________________ RENDU __________________
         if (!userId) {
             return <p className="text-center text-gray-500">Veuillez vous connecter pour voir vos favoris.</p>;
         }
-
+        
+        if (!meals || meals.length === 0) {
+            return (
+                <div className="text-center">
+                    <p className="text-gray-500">Aucun repas trouvé dans vos favoris.</p>
+                </div>
+            );
+        }
+        
         return (
             <div>
                 <MealsList 
