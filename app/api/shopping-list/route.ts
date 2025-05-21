@@ -16,29 +16,58 @@ export async function GET() {
             },
             include: {
                 items: {
+                    orderBy: [
+                        {
+                            ingredient: {
+                                categoryIngredient: {
+                                    name: 'asc'
+                                }
+                            }
+                        },
+                        {
+                            product: {
+                                categoryHouseholdProduct: {
+                                    name: 'asc'
+                                }
+                            }
+                        },
+                    ],
                     include: {
                         ingredient: {
                             select: {
                                 id: true,
                                 name: true,
+                                categoryIngredient: {
+                                    select: {
+                                        id: true,
+                                        name: true
+                                    }
+                                }
                             }
                         },
                         product: {
                             select: {
                                 id: true,
                                 name: true,
+                                categoryHouseholdProduct: {
+                                    select: {
+                                        id: true,
+                                        name: true
+                                    }
+                                }
                             }
                         },
                         meal: {
                             select: {
                                 id: true,
-                                name: true,
+                                name: true
                             }
                         }
                     }
                 }
             },
         });
+
         
         if (!shoppingList) {
             return NextResponse.json(null, { status: 200 });

@@ -13,7 +13,7 @@ import DeleteItem from "@/components/layout/DeleteItemDialog";
 import { ShoppingListType } from "@/lib/types/schemas_interfaces";
 
 // Utils
-import { dateToString, sortBy, translatedUnit, ucFirst } from "@/lib/utils";
+import { dateToString, translatedUnit, ucFirst } from "@/lib/utils";
 
 // Services
 import {
@@ -258,9 +258,6 @@ const ShoppingListPage = () => {
                 </h2>
                 <div className="card-content">
                     {shoppingList.items
-                        .sort(
-                            sortBy( (item) => item.ingredient?.name || item.product?.name || "" )
-                        )
                         .map((item) => (
                             <div key={item.id}>
                                 <div className="flex items-center justify-between p-3">
@@ -292,6 +289,13 @@ const ShoppingListPage = () => {
                                                     : item.product
                                                     ? item.product.name
                                                     : "Produit non trouvé"}
+                                                <span className="text-sm text-gray-500">
+                                                    {item.ingredient
+                                                        ? ` (${item.ingredient.categoryIngredient.name})`
+                                                        : item.product
+                                                        ? ` (${item.product.categoryHouseholdProduct.name})`
+                                                        : ""}
+                                                </span>
                                             </label>
 
                                             <div className="mt-1 flex items-center gap-2">

@@ -3,13 +3,52 @@ import { db } from "@/lib/db";
 import { getUserSession } from "@/lib/security/getSession";
 import { hash, verify } from "argon2";
 import { verifyCSRFToken } from "@/lib/security/verifyCsrfToken";
-import { ChangeEmailConstraints, idConstraints } from "@/lib/constraints/forms_constraints";
+import {
+    ChangeEmailConstraints,
+    idConstraints,
+} from "@/lib/constraints/forms_constraints";
 
 export async function GET() {
     const { session, error } = await getUserSession();
     if (error) return error;
 
     try {
+        const itemSelection = {
+            id: true,
+            quantity: true,
+            unit: true,
+            ingredient: {
+                select: {
+                    id: true,
+                    name: true,
+                    categoryIngredient: {
+                        select: {
+                            id: true,
+                            name: true,
+                        },
+                    },
+                },
+            },
+            meal: {
+                select: {
+                    id: true,
+                    name: true,
+                },
+            },
+            product: {
+                select: {
+                    id: true,
+                    name: true,
+                    categoryHouseholdProduct: {
+                        select: {
+                            id: true,
+                            name: true,
+                        },
+                    },
+                },
+            },
+        };
+
         // Vérification que l'utilisateur connecté correspond au username demandé
         const user = await db.user.findUnique({
             where: { id: session.user.id },
@@ -24,35 +63,20 @@ export async function GET() {
                         id: true,
                         createdAt: true,
                         items: {
-                            select: {
-                                id: true,
-                                quantity: true,
-                                unit: true,
+                            orderBy: {
                                 ingredient: {
-                                    select: {
-                                        id: true,
-                                        name: true,
-                                    },
-                                },
-                                meal: {
-                                    select: {
-                                        id: true,
-                                        name: true,
-                                    },
-                                },
-                                product: {
-                                    select: {
-                                        id: true,
-                                        name: true,
+                                    categoryIngredient: {
+                                        name: "asc",
                                     },
                                 },
                             },
+                            select: itemSelection
                         },
                     },
                 },
             },
         });
-    
+
         if (!user) {
             return NextResponse.json(
                 { error: "User not found" },
@@ -63,15 +87,17 @@ export async function GET() {
         return NextResponse.json(user, { status: 200 });
     } catch (error) {
         console.error("[FETCH_USER_ERROR]", error);
-        return new Response(JSON.stringify({ 
-            message: 'Erreur serveur, veuillez réessayer plus tard' 
-        }), { 
-            status: 500,
-            headers: { 'Content-Type': 'application/json' }
-        });
+        return new Response(
+            JSON.stringify({
+                message: "Erreur serveur, veuillez réessayer plus tard",
+            }),
+            {
+                status: 500,
+                headers: { "Content-Type": "application/json" },
+            }
+        );
     }
 }
-
 
 export async function PUT(req: NextRequest) {
     try {
@@ -80,18 +106,24 @@ export async function PUT(req: NextRequest) {
 
         const csrfTokenVerified = await verifyCSRFToken(req);
         if (!csrfTokenVerified) {
-            return new NextResponse("CSRF Token is missing or invalid", { status: 403 });
+            return new NextResponse("CSRF Token is missing or invalid", {
+                status: 403,
+            });
         }
 
         const body = await req.json();
         const { password, newPassword, confirmNewPassword } = body;
 
         if (!password || !newPassword || !confirmNewPassword) {
-            return new NextResponse("Tous les champs sont requis", { status: 400 });
+            return new NextResponse("Tous les champs sont requis", {
+                status: 400,
+            });
         }
-        
+
         if (newPassword !== confirmNewPassword) {
-            return new NextResponse("Les mots de passe ne correspondent pas", { status: 400 });
+            return new NextResponse("Les mots de passe ne correspondent pas", {
+                status: 400,
+            });
         }
 
         // Vérification que l'utilisateur connecté existe
@@ -137,7 +169,9 @@ export async function PUT(req: NextRequest) {
     } catch (error) {
         console.error("UPDATE_PASSWORD_ERROR", error);
         return new Response(
-            JSON.stringify({ message: "Erreur serveur, veuillez réessayer plus tard" }),
+            JSON.stringify({
+                message: "Erreur serveur, veuillez réessayer plus tard",
+            }),
             { status: 500, headers: { "Content-Type": "application/json" } }
         );
     }
@@ -150,33 +184,42 @@ export async function PATCH(req: NextRequest) {
 
         const csrfTokenVerified = await verifyCSRFToken(req);
         if (!csrfTokenVerified) {
-            return new NextResponse("CSRF Token is missing or invalid", { status: 403 });
+            return new NextResponse("CSRF Token is missing or invalid", {
+                status: 403,
+            });
         }
 
         const body = await req.json();
         const { userId, email } = body.userData;
-                
-        const validationResult = ChangeEmailConstraints.safeParse(body.userData);
-        
+
+        const validationResult = ChangeEmailConstraints.safeParse(
+            body.userData
+        );
+
         if (!validationResult.success) {
             return NextResponse.json(
                 { error: validationResult.error.format() },
                 { status: 400 }
             );
         }
-        
+
         if (session.user.id !== userId) {
-            return new NextResponse("Vous n'avez pas les droits pour cette action", { status: 403 });
+            return new NextResponse(
+                "Vous n'avez pas les droits pour cette action",
+                { status: 403 }
+            );
         }
 
         // Vérifier si l'email existe déjà
         const existingUser = await db.user.findUnique({
-            where: { email: email }
+            where: { email: email },
         });
 
         if (existingUser && existingUser.id !== session.user.id) {
             return new NextResponse(
-                JSON.stringify({ message: "Cet email est déjà utilisé par un autre compte" }),
+                JSON.stringify({
+                    message: "Cet email est déjà utilisé par un autre compte",
+                }),
                 { status: 400, headers: { "Content-Type": "application/json" } }
             );
         }
@@ -193,51 +236,61 @@ export async function PATCH(req: NextRequest) {
     } catch (error) {
         console.error("UPDATE_EMAIL_ERROR", error);
         return new Response(
-            JSON.stringify({ message: "Erreur serveur, veuillez réessayer plus tard" }),
+            JSON.stringify({
+                message: "Erreur serveur, veuillez réessayer plus tard",
+            }),
             { status: 500, headers: { "Content-Type": "application/json" } }
         );
     }
-
 }
 
-
 export async function DELETE(req: NextRequest) {
-        try {
-            const { session, error } = await getUserSession();
-            if (error) return error;
-            
-            const csrfTokenVerified = await verifyCSRFToken(req);
-            if (!csrfTokenVerified) {
-                return new NextResponse("CSRF Token is missing or invalid", { status: 403 });
-            }
-    
-            const body = await req.json();
+    try {
+        const { session, error } = await getUserSession();
+        if (error) return error;
 
-            if (session.user.id !== body.id) {
-                return new NextResponse("Vous n'avez pas les droits pour cette action", { status: 403 });
-            }
-    
-            const validationResult = idConstraints.safeParse(body);
-    
-            if (!validationResult.success) {
-                return NextResponse.json(
-                    { error: validationResult.error.format() },
-                    { status: 400 }
-                );
-            }
-    
-            const { id } = validationResult.data;
-            await db.user.delete({ where: { id } });
-    
-            return NextResponse.json({ message: "Utilisateur supprimé" }, {status: 200});
-        } catch (error) {
-            console.error("[DELETE_USER_ERROR]", error);
-            return new Response(JSON.stringify({ 
-                message: 'Erreur serveur, veuillez réessayer plus tard' 
-            }), { 
-                status: 500,
-                headers: { 'Content-Type': 'application/json' }
+        const csrfTokenVerified = await verifyCSRFToken(req);
+        if (!csrfTokenVerified) {
+            return new NextResponse("CSRF Token is missing or invalid", {
+                status: 403,
             });
         }
+
+        const body = await req.json();
+
+        if (session.user.id !== body.id) {
+            return new NextResponse(
+                "Vous n'avez pas les droits pour cette action",
+                { status: 403 }
+            );
+        }
+
+        const validationResult = idConstraints.safeParse(body);
+
+        if (!validationResult.success) {
+            return NextResponse.json(
+                { error: validationResult.error.format() },
+                { status: 400 }
+            );
+        }
+
+        const { id } = validationResult.data;
+        await db.user.delete({ where: { id } });
+
+        return NextResponse.json(
+            { message: "Utilisateur supprimé" },
+            { status: 200 }
+        );
+    } catch (error) {
+        console.error("[DELETE_USER_ERROR]", error);
+        return new Response(
+            JSON.stringify({
+                message: "Erreur serveur, veuillez réessayer plus tard",
+            }),
+            {
+                status: 500,
+                headers: { "Content-Type": "application/json" },
+            }
+        );
     }
-    
+}
