@@ -1,40 +1,48 @@
 import { db } from "@/lib/db";
 import { NextRequest, NextResponse } from "next/server";
-import { idConstraints, ingredientConstraints } from "@/lib/constraints/forms_constraints";
+import { idConstraints, ingredientConstraints, urlConstraints } from "@/lib/constraints/forms_constraints";
 import { verifyCSRFToken } from "@/lib/security/verifyCsrfToken";
 import { getAdminSession, getUserSession } from "@/lib/security/getSession";
 import { ITEMS_PER_PAGE } from "@/lib/constants/ui_constants";
-import { Season } from "@/lib/types/enums";
 
 
 export async function GET(req: NextRequest) {
     try {
         const url = new URL(req.url);
-        // Gestion de la pagination
-        const skip = parseInt(url.searchParams.get("skip") || "0", 10);
-        const take = parseInt(url.searchParams.get("take") || ITEMS_PER_PAGE.toString(), 10);
 
-        // Gestion des filtres
-        const categories = url.searchParams.getAll("categories");
-        const seasons = url.searchParams.getAll("seasons");
+        const data = {
+            // Gestion de la pagination
+            skip: parseInt(url.searchParams.get("skip") || "0", 10),
+            take: parseInt(url.searchParams.get("take") || ITEMS_PER_PAGE.toString(), 10),
 
-        // Convertir les saisons en enum Season et filtrer les valeurs valides pour éviter les erreurs
-        const validSeasons = seasons.filter((season): season is Season =>
-            Object.values(Season).includes(season as Season)
-        );
+            // Gestion des filtres
+            categories: url.searchParams.getAll("categories"),
+            seasons: url.searchParams.getAll("seasons")
+        };
+        
+        const validationResult = urlConstraints.safeParse(data);
+        
+        if (!validationResult.success) {
+            return NextResponse.json(
+                { error: validationResult.error.format() },
+                { status: 400 }
+            );
+        }
+
+        const { skip, take, categories, seasons } = validationResult.data;
 
         const ingredients = await db.ingredient.findMany({
             where: {
                 categoryIngredient: categories.length > 0 ? {
                     name: { in: categories },
                 } : undefined,
-                
-                season: validSeasons.length > 0 ? {
-                    in: validSeasons,
+
+                season: seasons.length > 0 ? {
+                    in: seasons,
                 } : undefined,
             },
-            skip,
-            take,
+            skip: skip,
+            take: take,
             orderBy: { name: 'desc' },
             select: {
                 id: true,

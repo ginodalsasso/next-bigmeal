@@ -10,16 +10,10 @@ export async function GET(req: NextRequest) {
     try {
         const url = new URL(req.url); // URL de la requête
         // Gestion de la pagination
-        const skip = parseInt(url.searchParams.get("skip") || "0", 10); // Début
-        const take = parseInt(url.searchParams.get("take") || ITEMS_PER_PAGE, 10); // Quantité par page
-
-        // Gestion des filtres
-        const categories = url.searchParams.getAll("categories");
-
         const data = {
-            skip,
-            take,
-            categories,
+            skip: parseInt(url.searchParams.get("skip") || "0", 10), // Début
+            take: parseInt(url.searchParams.get("take") || ITEMS_PER_PAGE, 10), // Quantité par page
+            categories: url.searchParams.getAll("categories"),
         };
 
         const validationResult = urlConstraints.safeParse(data);
@@ -31,6 +25,8 @@ export async function GET(req: NextRequest) {
             );
         }
 
+        const { skip, take, categories } = validationResult.data;
+
         // Récupérer les repas
         const meals = await db.meal.findMany({
             where: {
@@ -38,8 +34,8 @@ export async function GET(req: NextRequest) {
                     name: { in: categories }, // Filtrer par catégorie
                 } : undefined,
             },
-            skip,
-            take,
+            skip: skip,
+            take: take,
             orderBy: { name: 'desc' },
             select: {
                 id: true,

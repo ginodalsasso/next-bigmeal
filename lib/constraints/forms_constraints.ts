@@ -14,9 +14,17 @@ export const urlConstraints = z.object({
         .max(100)
         .default(10),
     categories: z
-        .array(z
-            .string()
-        ),
+        .array(z.string())
+        .default([]),
+    seasons: z
+        .array(z.string())
+        .transform(seasons => 
+            // Filtrer et convertir les chaînes valides en enum Season
+            seasons.filter(season => 
+                Object.values(Season).includes(season as Season)
+            ) as Season[]
+        )
+        .default([]),
 });
 
 const passwordConstraints = z
