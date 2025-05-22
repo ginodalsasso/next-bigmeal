@@ -58,6 +58,7 @@ export async function GET() {
                 role: true,
                 createdAt: true,
                 shoppingList: {
+                    take: 10,
                     orderBy: { createdAt: "desc" },
                     select: {
                         id: true,

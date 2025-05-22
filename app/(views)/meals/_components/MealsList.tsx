@@ -24,9 +24,10 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 // Constantes
 import { CATEGORIES_MEALS } from "@/lib/constants/ui_constants";
 import { notFound, useRouter } from "next/navigation";
-import { Heart, Plus } from "lucide-react";
+import { Heart, Plus, Share2 } from "lucide-react";
 import { likedMealAPI } from "@/lib/services/meal_service";
 import { getCsrfToken } from "next-auth/react";
+import { URL } from "@/lib/constants/api_routes";
 
 
 // _________________________ COMPOSANT _________________________
@@ -107,7 +108,21 @@ export default function MealsList( {fetchedMeals, fetchedlikedMeals}: { fetchedM
     
         router.push(`/meals?${queryParams.toString()}`);
     };
-        
+
+    // _________________________ PARTAGE _________________________
+    const handleShareData = async (mealName: string) => {
+        const shareData = {
+            title: `Recette : ${mealName}`,
+            text: `Découvre cette recette sur notre app !`,
+            url: `${URL}/meals/${mealName}`,
+        };
+
+        navigator.share(shareData).catch((error) => {
+            console.error("Erreur de partage :", error);
+            toast.error("Le partage a échoué");
+        });
+    };
+
 
     // _________________________ RENDU _________________________
     if (!meals) return  notFound();
@@ -151,11 +166,19 @@ export default function MealsList( {fetchedMeals, fetchedlikedMeals}: { fetchedM
 
                                     <Heart
                                         size={20}
-                                        className={` cursor-pointer transition-colors ${
+                                        className={` cursor-pointer transition-colors hover:text-white ${
                                             likedMeals.has(meal.name) ? "fill-red-500 text-red-500" : "text-gray-400"
                                         }`}
                                         onClick={() => toggleLikeMeal(meal.name)}
                                     />
+
+                                    {typeof navigator.share === 'function' && (
+                                        <Share2 
+                                            size={20}
+                                            className="cursor-pointer text-gray-400 transition-colors hover:text-white"
+                                            onClick={() => handleShareData(meal.name)}
+                                        />
+                                    )}
 
                                     {/* Menu d'actions admin avec Popover */}
                                     <IsAdmin>
