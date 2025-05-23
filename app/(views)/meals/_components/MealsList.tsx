@@ -16,6 +16,7 @@ import IsAdmin from "@/components/isAdmin";
 import IsUser from "@/components/isUser";
 import FilterItems from "@/components/layout/FilterItems";
 import PopoverActions from "@/components/layout/PopoverActions";
+import ShareButton from "@/components/ShareButton";
 
 // Composants UI
 import { Button } from "@/components/ui/button";
@@ -24,7 +25,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 // Constantes
 import { CATEGORIES_MEALS } from "@/lib/constants/ui_constants";
 import { notFound, useRouter } from "next/navigation";
-import { Heart, Plus, Share2 } from "lucide-react";
+import { Heart, Plus } from "lucide-react";
 import { likedMealAPI } from "@/lib/services/meal_service";
 import { getCsrfToken } from "next-auth/react";
 import { URL } from "@/lib/constants/api_routes";
@@ -109,21 +110,6 @@ export default function MealsList( {fetchedMeals, fetchedlikedMeals}: { fetchedM
         router.push(`/meals?${queryParams.toString()}`);
     };
 
-    // _________________________ PARTAGE _________________________
-    const handleShareData = async (mealName: string) => {
-        const shareData = {
-            title: `Recette : ${mealName}`,
-            text: `Découvre cette recette sur notre app !`,
-            url: `${URL}/meals/${mealName}`,
-        };
-
-        navigator.share(shareData).catch((error) => {
-            console.error("Erreur de partage :", error);
-            toast.error("Le partage a échoué");
-        });
-    };
-
-
     // _________________________ RENDU _________________________
     if (!meals) return  notFound();
 
@@ -163,23 +149,24 @@ export default function MealsList( {fetchedMeals, fetchedlikedMeals}: { fetchedM
                                         }}
                                         linkToDetails={`/meals/${meal.name}`}
                                     />
+                                    <div className="absolute bottom-0 right-2 flex gap-4">
+                                        {typeof navigator.share === 'function' && (
+                                            <ShareButton
+                                                className="text-gray-400"
+                                                title={`Recette : ${meal.name}`}
+                                                text={`Découvre cette recette sur notre app !`}
+                                                url={`${URL}/meals/${meal.name}`}
+                                            />
+                                        )}
 
-                                    <Heart
-                                        size={20}
-                                        className={` cursor-pointer transition-colors hover:text-white ${
-                                            likedMeals.has(meal.name) ? "fill-red-500 text-red-500" : "text-gray-400"
-                                        }`}
-                                        onClick={() => toggleLikeMeal(meal.name)}
-                                    />
-
-                                    {typeof navigator.share === 'function' && (
-                                        <Share2 
+                                        <Heart
                                             size={20}
-                                            className="cursor-pointer text-gray-400 transition-colors hover:text-white"
-                                            onClick={() => handleShareData(meal.name)}
+                                            className={` cursor-pointer transition-colors hover:text-white ${
+                                                likedMeals.has(meal.name) ? "fill-red-500 text-red-500" : "text-gray-400"
+                                            }`}
+                                            onClick={() => toggleLikeMeal(meal.name)}
                                         />
-                                    )}
-
+                                    </div>
                                     {/* Menu d'actions admin avec Popover */}
                                     <IsAdmin>
                                         <PopoverActions

@@ -22,6 +22,8 @@ import CompositionItem from "./(composition)/CompositionItem";
 import PreparationItem from "./(preparation)/PreparationItem";
 import { ucFirst } from "@/lib/utils";
 import { notFound } from "next/navigation";
+import ShareButton from "@/components/ShareButton";
+import { URL } from "@/lib/constants/api_routes";
 
 
 // _________________________ COMPOSANT _________________________
@@ -126,7 +128,7 @@ export default function MealItem( {fetchedMeal}: { fetchedMeal: MealType }) {
     return (
         <div className="mx-auto max-w-4xl space-y-8">
             {/* En-tête du repas */}
-            <header className="header-card">
+            <header className="header-card relative">
                 <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-emerald-100 text-emerald-600">
                     <ChefHat size={36} />
                 </div>
@@ -134,6 +136,12 @@ export default function MealItem( {fetchedMeal}: { fetchedMeal: MealType }) {
                 <p className="mx-auto max-w-2xl text-emerald-600">
                     {meal.description || "Aucune description disponible pour ce repas."}
                 </p>
+                <ShareButton
+                    className="absolute right-8 top-8 text-emerald-600"
+                    title={meal.name}
+                    text={meal.description || "Aucune description disponible pour ce repas."}
+                    url={`${URL}/meals/${meal.name}`}
+                />
             </header>
 
             {/* Boutons d'administration */}
