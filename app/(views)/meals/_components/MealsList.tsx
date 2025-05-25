@@ -84,8 +84,6 @@ export default function MealsList( {fetchedMeals, fetchedlikedMeals}: { fetchedM
                 }
                 return likedMeals;
             });
-
-            toast(likedMeals.has(mealName) ? "Repas ajouté aux favoris" : "Repas retiré des favoris");
         } catch (error) {
             console.error("Erreur lors de la modification du statut du like", error);
             toast.error("Impossible de modifier le statut du like");
