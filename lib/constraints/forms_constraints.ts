@@ -49,9 +49,9 @@ export const categoriesConstraints = z.object({
         .max(100, "Le nom doit comporter au maximum 100 caractères")
         .transform(name => 
             name
-                .toLowerCase()
-                .replace(/\b\w/g, char => char.toUpperCase()) // Transformation en majuscule
-        ),
+                .charAt(0).toUpperCase() + name.slice(1).toLowerCase()
+
+    )
 });
 
 
@@ -63,8 +63,7 @@ export const ingredientConstraints = z.object({
         .trim()
         .transform(name => 
             name
-                .toLowerCase()
-                .replace(/\b\w/g, char => char.toUpperCase()) // Transformation en majuscule
+                .charAt(0).toUpperCase() + name.slice(1).toLowerCase()
         ),
     season: z
         .nativeEnum(Season)
@@ -83,8 +82,7 @@ export const householdProductConstraints = z.object({
         .trim()
         .transform(name => 
             name
-                .toLowerCase()
-                .replace(/\b\w/g, char => char.toUpperCase()) // Transformation en majuscule
+                .charAt(0).toUpperCase() + name.slice(1).toLowerCase()
         ),
         categoryHouseholdProductId: z
         .string()
@@ -99,8 +97,7 @@ export const mealConstraints = z.object({
         .max(100, "Le nom doit comporter au maximum 100 caractères")
         .transform(name => 
             name
-                .toLowerCase()
-                .replace(/\b\w/g, char => char.toUpperCase()) // Transformation en majuscule
+                .charAt(0).toUpperCase() + name.slice(1).toLowerCase()
         ),
     description: z
         .string()
