@@ -2,7 +2,7 @@ import API_ROUTES from "../constants/api_routes";
 
 export async function getCategoriesIngredient() {
     try {
-        const response = await fetch( API_ROUTES.categories.ingredient, { cache: "no-store" });
+        const response = await fetch( API_ROUTES.categories.ingredient, { next: { revalidate: 86400 } });
         if (!response.ok) throw new Error("Erreur lors de la récupération des catégories.");
         return response.json();
     } catch (error) {
@@ -13,7 +13,7 @@ export async function getCategoriesIngredient() {
 
 export async function getCategoriesMeal() {
     try {
-        const response = await fetch( API_ROUTES.categories.meal, { cache: "no-store" });
+        const response = await fetch( API_ROUTES.categories.meal, { next: { revalidate: 86400 } });
         if (!response.ok) throw new Error("Erreur lors de la récupération des catégories.");
         return response.json();
     } catch (error) {
@@ -24,7 +24,7 @@ export async function getCategoriesMeal() {
 
 export async function getCategoriesHouseholdProduct() {
     try {
-        const response = await fetch( API_ROUTES.categories.householdProduct, { cache: "no-store" });
+        const response = await fetch( API_ROUTES.categories.householdProduct, { next: { revalidate: 86400 } }); // Revalidation tous les jours
         if (!response.ok) throw new Error("Erreur lors de la récupération des catégories.");
         return response.json();
     } catch (error) {
