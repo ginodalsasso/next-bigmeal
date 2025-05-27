@@ -5,7 +5,7 @@ import React, { useEffect, useState } from "react";
 import { notFound, useRouter } from "next/navigation";
 
 // Types
-import { IngredientType } from "@/lib/types/schemas_interfaces";
+import { CategoryIngredientType, IngredientType } from "@/lib/types/schemas_interfaces";
 
 // Composants
 import ItemView from "@/components/layout/ItemView";
@@ -24,14 +24,20 @@ import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerTrigger } from 
 import { reversedTranslatedSeason, translatedSeason } from "@/lib/utils";
 
 // Constantes
-import { CATEGORIES_INGREDIENTS, SEASONS } from "@/lib/constants/ui_constants";
+import { SEASONS } from "@/lib/constants/ui_constants";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Plus } from "lucide-react";
 
 
 
 // _________________________ COMPOSANT _________________________
-export default function IngredientList({ fetchedIngredients }: { fetchedIngredients: IngredientType[] }) {
+export default function IngredientList({ 
+    fetchedIngredients, 
+    fetchedCategories
+}: { 
+    fetchedIngredients: IngredientType[],
+    fetchedCategories: CategoryIngredientType[]
+}) {
     
     // _________________________ ETATS _________________________
     const router = useRouter();
@@ -69,14 +75,14 @@ export default function IngredientList({ fetchedIngredients }: { fetchedIngredie
     };
 
     // _________________________ FILTRAGE _________________________
-    const filterOptions = SEASONS.concat(CATEGORIES_INGREDIENTS); // Options de filtres
+    const filterOptions = SEASONS.concat(fetchedCategories.map(cat => cat.name));
 
     // Fonction pour gérer le changement de filtre
     const handleFilterChange = (selectedFilters: string[]) => {
         const queryParams = new URLSearchParams();
     
         // Filtrer les catégories et les saisons pour preparer les paramètres de requête
-        const categories = selectedFilters.filter(filter => CATEGORIES_INGREDIENTS.includes(filter));
+        const categories = selectedFilters.filter(filter => fetchedCategories.map(cat => cat.name).includes(filter));
         const seasons = selectedFilters.filter(filter => SEASONS.includes(filter));
 
         // Ajouter les filtres aux paramètres de requête

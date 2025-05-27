@@ -3,7 +3,7 @@ import { ITEMS_PER_PAGE } from "@/lib/constants/ui_constants";
 import IngredientsList from "./_components/IngredientsList";
 
 // Service de récupération des ingrédients
-import { getIngredients } from "@/lib/services/data_fetcher";
+import { getCategoriesIngredient, getIngredients } from "@/lib/services/data_fetcher";
 import Pagination from "@/components/layout/Pagination";
 import { ensureArray } from "@/lib/utils";
 
@@ -39,9 +39,14 @@ export default async function IngredientPage( { searchParams }: searchParamsProp
             season
         ); 
 
+        const categoryNames = await getCategoriesIngredient();
+
         return (
             <div>
-                <IngredientsList fetchedIngredients={ingredients} />
+                <IngredientsList 
+                    fetchedIngredients={ingredients} 
+                    fetchedCategories={categoryNames}
+                />
 
                 {/* Pagination */}
                 <Pagination

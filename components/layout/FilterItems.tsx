@@ -1,3 +1,4 @@
+import { ucFirst } from "@/lib/utils";
 import { Filter } from "lucide-react";
 import React, { useState } from "react";
 
@@ -45,7 +46,7 @@ const FilterCheckboxes: React.FC<FilterCheckboxesProps> = ({ options, onFilterCh
                                 checked={selectedFilters.includes(option)}
                                 onChange={handleFilterChange}
                             />
-                            {option}
+                            {ucFirst(option)}
                         </label>
                     ))}
                 </div>

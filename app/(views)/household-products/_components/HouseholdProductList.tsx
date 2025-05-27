@@ -5,7 +5,7 @@ import React, { useEffect, useState } from "react";
 import { notFound, useRouter } from "next/navigation";
 
 // Types
-import { HouseholdProductType } from "@/lib/types/schemas_interfaces";
+import { CategoryHouseholdProductType, HouseholdProductType } from "@/lib/types/schemas_interfaces";
 
 // Composants
 import ItemView from "@/components/layout/ItemView";
@@ -23,14 +23,16 @@ import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Plus } from "lucide-react";
 
-// Constantes
-import { CATEGORIES_HOUSEHOLD_PRODUCTS } from "@/lib/constants/ui_constants";
-
-
 
 // _________________________ COMPOSANT _________________________
-export default function HouseholdProductList({ fetchedHouseholdProducts }: { fetchedHouseholdProducts: HouseholdProductType[] }) {
-    
+export default function HouseholdProductList({ 
+    fetchedHouseholdProducts,
+    fetchedCategories
+}: { 
+    fetchedHouseholdProducts: HouseholdProductType[],
+    fetchedCategories: CategoryHouseholdProductType[]
+}) {
+
     // _________________________ ETATS _________________________
     const router = useRouter();
     const [householdProducts, setHouseholdProducts] = useState<HouseholdProductType[]>(fetchedHouseholdProducts);
@@ -67,14 +69,14 @@ export default function HouseholdProductList({ fetchedHouseholdProducts }: { fet
     };
 
     // _________________________ FILTRAGE _________________________
-    const filterOptions = CATEGORIES_HOUSEHOLD_PRODUCTS; // Options de filtres
+    const filterOptions = fetchedCategories.map(cat => cat.name); // Options de filtres
 
     // Fonction pour gérer le changement de filtre
     const handleFilterChange = (selectedFilters: string[]) => {
         const queryParams = new URLSearchParams();
     
         // Filtrer les catégories et les saisons pour preparer les paramètres de requête
-        const categories = selectedFilters.filter(filter => CATEGORIES_HOUSEHOLD_PRODUCTS.includes(filter));
+        const categories = selectedFilters.filter(filter => fetchedCategories.map(cat => cat.name).includes(filter));
 
         // Ajouter les filtres aux paramètres de requête
         categories.forEach(categorie => queryParams.append("categories", categorie.toLowerCase()));

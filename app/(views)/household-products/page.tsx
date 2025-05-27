@@ -3,7 +3,7 @@ import { ITEMS_PER_PAGE } from "@/lib/constants/ui_constants";
 import HouseholdProductList from "./_components/HouseholdProductList";
 
 // Service de récupération des ingrédients
-import { getHouseholdProduct } from "@/lib/services/data_fetcher";
+import { getCategoriesHouseholdProduct, getHouseholdProduct } from "@/lib/services/data_fetcher";
 import Pagination from "@/components/layout/Pagination";
 import { ensureArray } from "@/lib/utils";
 
@@ -36,9 +36,14 @@ export default async function HouseholdProductPage( { searchParams }: searchPara
             categories, 
         ); 
 
+        const categoryNames = await getCategoriesHouseholdProduct();
+
         return (
             <div>
-                <HouseholdProductList fetchedHouseholdProducts={householdProducts} />
+                <HouseholdProductList 
+                    fetchedHouseholdProducts={householdProducts} 
+                    fetchedCategories={categoryNames}
+                />
 
                 {/* Pagination */}
                 <Pagination

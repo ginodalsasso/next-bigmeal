@@ -3,7 +3,7 @@ import { ITEMS_PER_PAGE } from "@/lib/constants/ui_constants";
 import MealsList from "./_components/MealsList";
 
 // Service de récupération des repas
-import { getMeals } from "@/lib/services/data_fetcher";
+import { getCategoriesMeal, getMeals } from "@/lib/services/data_fetcher";
 import Pagination from "@/components/layout/Pagination";
 import { ensureArray } from "@/lib/utils";
 import { db } from "@/lib/db";
@@ -39,6 +39,9 @@ export default async function MealPage({ searchParams }: searchParamsProps) {
             itemsPerPage,
             categories,
         );
+
+        const categoryNames = await getCategoriesMeal();
+
         // _________________________ LIKES ______________________
         let likedMealNames: string[] = [];
 
@@ -65,6 +68,7 @@ export default async function MealPage({ searchParams }: searchParamsProps) {
             <div>
                 <MealsList 
                     fetchedMeals={meals}
+                    fetchedCategories={categoryNames}
                     fetchedlikedMeals={likedMealNames}
                 />
 

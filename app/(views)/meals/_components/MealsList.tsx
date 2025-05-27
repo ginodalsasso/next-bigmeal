@@ -6,7 +6,7 @@ import React, { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 // Types
-import { MealType } from "@/lib/types/schemas_interfaces";
+import { CategoryMealType, MealType } from "@/lib/types/schemas_interfaces";
 
 // Composants
 import ItemView from "@/components/layout/ItemView";
@@ -23,7 +23,6 @@ import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
 // Constantes
-import { CATEGORIES_MEALS } from "@/lib/constants/ui_constants";
 import { notFound, useRouter } from "next/navigation";
 import { Heart, Plus } from "lucide-react";
 import { likedMealAPI } from "@/lib/services/meal_service";
@@ -32,7 +31,15 @@ import { URL } from "@/lib/constants/api_routes";
 
 
 // _________________________ COMPOSANT _________________________
-export default function MealsList( {fetchedMeals, fetchedlikedMeals}: { fetchedMeals: MealType[], fetchedlikedMeals: string[] }) {
+export default function MealsList( {
+    fetchedMeals, 
+    fetchedlikedMeals,
+    fetchedCategories
+}: { 
+    fetchedMeals: MealType[], 
+    fetchedlikedMeals: string[], 
+    fetchedCategories: CategoryMealType[] 
+}) {
 
     // _________________________ ETATS _________________________
     const [meals, setMeals] = useState<MealType[]>(fetchedMeals);
@@ -93,14 +100,14 @@ export default function MealsList( {fetchedMeals, fetchedlikedMeals}: { fetchedM
 
 
     // _________________________ FILTRAGE _________________________
-    const filterOptions = CATEGORIES_MEALS; // Options de filtre
+    const filterOptions = fetchedCategories.map(cat => cat.name); // Options de filtre
 
     // Fonction pour gérer le changement de filtre
     const handleFilterChange = (selectedFilters: string[]) => {
         const queryParams = new URLSearchParams();
     
         // Filtrer les catégories et les saisons pour preparer les paramètres de requête
-        const meals = selectedFilters.filter(filter => CATEGORIES_MEALS.includes(filter));
+        const meals = selectedFilters.filter(filter => fetchedCategories.map(cat => cat.name).includes(filter));
 
         // Ajouter les filtres aux paramètres de requête
         meals.forEach(categorie => queryParams.append("categories", categorie.toLowerCase()));
