@@ -80,7 +80,7 @@ export async function middleware(req: NextRequest) {
 export const config = {
     // Empêche d'appliquer le middleware sur les fichiers statiques, les requêtes API, les images ou tout fichier au format `.png`
     matcher: [
-        "/((?!api|_next/static|_next/image|.*\\.png$).*)"
+        "/((?!_next/static|_next/image|.*\\.png$).*)"
     ],
 
 };

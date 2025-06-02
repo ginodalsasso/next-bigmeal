@@ -53,7 +53,7 @@ export default async function FavoritesPage({ searchParams }: searchParamsProps)
                 },
             },
         });
-        
+
         likedMealNames = likedMealsNames.map((like) => like.meal.name);
         
         // _________________________ RENDU __________________
@@ -63,6 +63,7 @@ export default async function FavoritesPage({ searchParams }: searchParamsProps)
         
         if (!meals || meals.length === 0) {
             return (
+
                 <div className="text-center">
                     <p className="text-gray-500">Aucun repas trouvé dans vos favoris.</p>
                 </div>

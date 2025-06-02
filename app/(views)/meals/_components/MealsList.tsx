@@ -29,17 +29,18 @@ import { likedMealAPI } from "@/lib/services/meal_service";
 import { getCsrfToken } from "next-auth/react";
 import { URL } from "@/lib/constants/api_routes";
 
+type MealsListProps = {
+    fetchedMeals: MealType[];
+    fetchedCategories?: CategoryMealType[] | [];
+    fetchedlikedMeals: string[];
+};
 
 // _________________________ COMPOSANT _________________________
 export default function MealsList( {
     fetchedMeals, 
     fetchedlikedMeals,
     fetchedCategories
-}: { 
-    fetchedMeals: MealType[], 
-    fetchedlikedMeals: string[], 
-    fetchedCategories: CategoryMealType[] 
-}) {
+}: MealsListProps) {
 
     // _________________________ ETATS _________________________
     const [meals, setMeals] = useState<MealType[]>(fetchedMeals);
@@ -100,14 +101,14 @@ export default function MealsList( {
 
 
     // _________________________ FILTRAGE _________________________
-    const filterOptions = fetchedCategories.map(cat => cat.name); // Options de filtre
+    const filterOptions = (fetchedCategories ?? []).map(cat => cat.name); // Options de filtre
 
     // Fonction pour gérer le changement de filtre
     const handleFilterChange = (selectedFilters: string[]) => {
         const queryParams = new URLSearchParams();
     
         // Filtrer les catégories et les saisons pour preparer les paramètres de requête
-        const meals = selectedFilters.filter(filter => fetchedCategories.map(cat => cat.name).includes(filter));
+        const meals = selectedFilters.filter(filter => (fetchedCategories ?? []).map(cat => cat.name).includes(filter));
 
         // Ajouter les filtres aux paramètres de requête
         meals.forEach(categorie => queryParams.append("categories", categorie.toLowerCase()));
