@@ -2,16 +2,19 @@
 
 ## Overview
 
-Next BigMeal is a web application designed for food enthusiasts to create, manage, and share their recipes. It includes features for user authentication without external libraries, session management, and the ability to organize recipes into shopping lists. 
+Next BigMeal is a web application designed for food enthusiasts to create, manage, and share their recipes but also for making ShoppingLists using your recipes. It includes features for user authentication using nextAuth, and the ability to organize recipes into shopping lists. 
 Future enhancements will expand its functionality.
 
 ## Features
 
 - **Recipe Management**: Create, edit, and delete recipes with ease.
-- **User Authentication**: Secure login and session management without external libraries.
+- **User Authentication**: Secure login and session management using nextAuth.
 - **Shopping List Integration**: Add recipes or individual ingredients to a shopping list.
+- **Search Bar**: Quickly find recipes or ingredients via full-text search.
+- **Pagination**: Display large sets of data (e.g., recipes) in manageable chunks with pagination.
 - **Responsive Design**: Optimized for use on desktop and mobile devices.
-
+- **Server-Side Rendering (SSR)**: Most `GET` methods use SSR for improved SEO and faster initial load.
+- **Progressive Web App (PWA)**: Install the app on your device for an app-like experience, offline support, and faster loading.
 - **Extensibility**: Built with future features in mind, allowing for seamless updates.
 
 ## Technologies Used
