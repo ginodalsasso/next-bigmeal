@@ -93,15 +93,14 @@ export default function InstallPrompt() {
                         </Button>
 
                         {showIOSInstructions && (
-                            <div className="mt-2 rounded-lg bg-gray-100 p-3">
+                            <div className="mt-2 rounded-lg bg-gray-100 p-3 text-black">
                                 <p className="text-sm">
                                     Pour installer cette application sur votre
                                     appareil iOS :
                                 </p>
                                 <ol className="mt-2 list-decimal pl-5 text-sm">
                                     <li>
-                                        Appuyez sur le bouton Partager{" "}
-                                        <span className="font-bold">⎋</span>
+                                        Appuyez sur le bouton Partager
                                     </li>
                                     <li>
                                         Faites défiler et appuyez sur{" "}
@@ -129,7 +128,7 @@ export default function InstallPrompt() {
                                 : "edit"
                         }`}
                         className="w-full"
-                        disabled={!deferredPrompt}
+                        // disabled={!deferredPrompt}
                     >
                         Ajouter à l&apos;écran d&apos;accueil
                     </Button>
