@@ -61,16 +61,12 @@ Future enhancements will expand its functionality.
 
 6. Access the application at `http://localhost:3000`.
 
-## Contribution
-
-We welcome contributions to improve the Next BigMeal project. To contribute:
-
-1. Fork the repository.
-2. Create a new branch for your feature or bug fix.
-3. Commit your changes and push the branch.
-4. Open a pull request for review.
 
 ## Conclusion
 
 Next BigMeal is a versatile platform for managing recipes and meal planning. Its robust session management and user-friendly design make it an ideal tool for food enthusiasts, with scalability to incorporate future enhancements.
 
+![Frame 76](https://github.com/user-attachments/assets/b7bd10a2-af43-42a7-9e40-6b58dbabf878)
+![Frame 77](https://github.com/user-attachments/assets/e74252bf-8971-414d-a611-7f598e7eb842)
+![Frame 78](https://github.com/user-attachments/assets/13671d09-f81f-4469-9d4d-94ad39df9f09)
+![Frame 79](https://github.com/user-attachments/assets/3fae0901-fe94-4a30-97cb-3accabf25e6e)
