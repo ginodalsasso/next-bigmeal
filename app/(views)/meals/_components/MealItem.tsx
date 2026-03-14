@@ -129,15 +129,15 @@ export default function MealItem( {fetchedMeal}: { fetchedMeal: MealType }) {
         <div className="mx-auto max-w-4xl space-y-8">
             {/* En-tête du repas */}
             <header className="header-card relative">
-                <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-emerald-100 text-emerald-600">
-                    <ChefHat size={36} />
+                <div className="mx-auto mb-3 flex h-16 w-16 items-center justify-center rounded-full bg-orange-100 text-orange-500">
+                    <ChefHat size={28} aria-hidden="true" />
                 </div>
                 <h1 className="h1-title">{ucFirst(meal.name)}</h1>
-                <p className="mx-auto max-w-2xl text-emerald-600">
+                <p className="mx-auto max-w-2xl text-sm text-zinc-500">
                     {meal.description || "Aucune description disponible pour ce repas."}
                 </p>
                 <ShareButton
-                    className="absolute right-8 top-8 text-emerald-600"
+                    className="absolute right-4 top-4 text-zinc-400 hover:text-orange-500"
                     title={meal.name}
                     text={meal.description || "Aucune description disponible pour ce repas."}
                     url={`${URL}/meals/${meal.name}`}
@@ -146,7 +146,7 @@ export default function MealItem( {fetchedMeal}: { fetchedMeal: MealType }) {
 
             {/* Boutons d'administration */}
             <IsAdmin>
-                <div className="rounded-lg border border-g ray-200 bg-white p-4 shadow-sm">
+                <div className="rounded-lg border border-zinc-200 bg-white p-4 shadow-sm">
                     <h2 className="h2-title">
                         <Sparkles className="h2-icons" />
                         Options d&apos;administration
@@ -272,10 +272,10 @@ export default function MealItem( {fetchedMeal}: { fetchedMeal: MealType }) {
                             ))}
                         </div>
                     ) : (
-                        <div className="rounded-md bg-gray-50 py-6 text-center">
-                            <Utensils className="mx-auto mb-3 size-8 text-gray-300" />
-                            <p className="text-gray-500">Aucun ingrédient disponible pour ce repas.</p>
-                            <p className="mt-1 text-sm text-gray-400">
+                        <div className="rounded-md bg-zinc-50 py-6 text-center">
+                            <Utensils className="mx-auto mb-3 size-8 text-zinc-300" />
+                            <p className="text-zinc-500">Aucun ingrédient disponible pour ce repas.</p>
+                            <p className="mt-1 text-sm text-zinc-400">
                                 Ajoutez des ingrédients en cliquant sur le bouton ci-dessus
                             </p>
                         </div>
@@ -297,10 +297,10 @@ export default function MealItem( {fetchedMeal}: { fetchedMeal: MealType }) {
                             onDelete={deletePreparation}
                         />
                     ) : (
-                        <div className="rounded-md bg-gray-50 py-6 text-center">
-                            <ClipboardList className="mx-auto mb-3 text-gray-300" />
-                            <p className="text-gray-500">Aucune préparation disponible pour ce repas.</p>
-                            <p className="mt-1 text-sm text-gray-400">
+                        <div className="rounded-md bg-zinc-50 py-6 text-center">
+                            <ClipboardList className="mx-auto mb-3 text-zinc-300" />
+                            <p className="text-zinc-500">Aucune préparation disponible pour ce repas.</p>
+                            <p className="mt-1 text-sm text-zinc-400">
                                 Ajoutez une méthode de préparation en cliquant sur le bouton ci-dessus
                             </p>
                         </div>

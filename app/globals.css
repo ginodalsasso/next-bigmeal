@@ -9,7 +9,7 @@
 }
 
 body {
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: ui-sans-serif, system-ui, sans-serif;
   color: var(--white);
   background-color: var(--black);
 }
@@ -29,15 +29,15 @@ body {
 }
 
 .h1-title {
-  @apply mb-4 text-center text-2xl font-bold text-emerald-700;
+  @apply mb-4 text-center text-2xl font-bold text-zinc-900;
 }
 
 .h2-title {
-  @apply mb-4 flex items-center gap-3 text-xl font-semibold text-gray-800;
+  @apply mb-4 flex items-center gap-3 text-lg font-semibold text-zinc-900;
 }
 
 .h2-icons {
-  @apply text-emerald-500 size-4;
+  @apply size-4 text-orange-500;
 }
 
 
@@ -47,15 +47,15 @@ body {
 }
 
 .header-card {
-  @apply mb-6 rounded-lg bg-gradient-to-r from-emerald-50 to-teal-50 p-8 text-center;
+  @apply mb-4 rounded-lg border border-zinc-200 bg-zinc-50 p-5 text-center;
 }
 
 .card {
-  @apply mb-6 rounded-lg bg-white p-6 text-black;
+  @apply mb-4 rounded-lg bg-white p-4 text-zinc-900;
 }
 
 .card-content {
-  @apply overflow-hidden rounded-lg border border-gray-300 bg-gray-50;
+  @apply overflow-hidden rounded-lg border border-zinc-200 bg-zinc-50;
 }
 
 .centered-block {
@@ -80,7 +80,7 @@ body {
 }
 
 .input-search {
-  @apply w-full md:w-[50%] p-2 text-black focus:text-white focus:ring-accent-color;
+  @apply w-full rounded-md border border-neutral-700 bg-neutral-800 p-2 text-white placeholder-neutral-500 focus:border-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-500;
 }
 
 .error-form {
@@ -88,7 +88,7 @@ body {
 }
 
 .table-head {
-  @apply text-xl font-semibold text-zinc-400;
+  @apply text-sm font-semibold text-zinc-500;
 }
 
 .table-cell {
@@ -96,15 +96,15 @@ body {
 }
 
 .sticker-bg-white{
-  @apply bg-white text-black;
+  @apply bg-orange-500 text-white border-orange-500;
 }
 
 .sticker-bg-black{
-  @apply bg-black text-white;
+  @apply bg-white text-zinc-700 border-zinc-200 hover:bg-zinc-50 hover:border-zinc-300;
 }
 
 .label-filter {
-  @apply rounded-md cursor-pointer whitespace-nowrap border px-4 py-2 transition-colors duration-200;
+  @apply rounded-full cursor-pointer whitespace-nowrap border text-sm font-medium px-3 py-1.5 transition-colors duration-150;
 }
 
 .drawer-form {
@@ -174,17 +174,6 @@ body {
     --chart-5: 340 75% 55%;
   }
 }
-
-@layer base {
-  * {
-    @apply border-border;
-  }
-  body {
-    @apply bg-background text-foreground;
-  }
-}
-
-
 
 @layer base {
   * {

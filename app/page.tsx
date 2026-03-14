@@ -8,27 +8,42 @@ import { Button } from "@/components/ui/button";
 
 export default function HomePage() {
     return (
-        <section className="mt-10 flex flex-col items-center justify-center p-4">
-            <h1 className="mb-6 text-2xl font-bold">Bienvenue sur Big-Meal</h1> 
-            <IsNotAuthenticated>
-                <div className="mb-8 max-w-md text-center">
-                    <p className="mb-6">
+        <section className="flex min-h-[100dvh] flex-col items-center justify-center bg-white px-4 py-12 antialiased dark:bg-zinc-950">
+            <div className="w-full max-w-sm space-y-8 text-center">
+                
+                {/* En-tête simple et très lisible */}
+                <div className="space-y-3">
+                    <h1 className="text-3xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">
+                        Big-Meal
+                    </h1>
+                    <p className="text-sm text-zinc-500 dark:text-zinc-400">
                         Préparez vos listes de courses avec facilité.
                     </p>
-                    
-                    <div className="flex flex-col justify-center gap-4 sm:flex-row">
-                    <Button asChild variant="default" className="w-full">
-                        <Link href="/login">Se connecter</Link>
-                    </Button>
-
-                    <Button asChild variant="secondary" className="w-full">
-                        <Link href="/register">S&apos;inscrire</Link>
-                    </Button>
-                    </div>
                 </div>
-                
-                <InstallPrompt />
-            </IsNotAuthenticated>
+
+                <IsNotAuthenticated>
+                    <div className="flex flex-col space-y-3">
+                        <Button 
+                            asChild 
+                            className="h-11 w-full rounded-md bg-zinc-900 text-sm font-medium text-white transition-colors hover:bg-zinc-800 dark:bg-zinc-50 dark:text-zinc-900 dark:hover:bg-zinc-200"
+                        >
+                            <Link href="/login">Se connecter</Link>
+                        </Button>
+
+                        <Button 
+                            asChild 
+                            variant="outline" 
+                            className="h-11 w-full rounded-md border border-zinc-200 bg-transparent text-sm font-medium text-zinc-900 transition-colors hover:bg-zinc-50 dark:border-zinc-800 dark:text-zinc-50 dark:hover:bg-zinc-900"
+                        >
+                            <Link href="/register">Créer un compte</Link>
+                        </Button>
+                    </div>
+                </IsNotAuthenticated>
+
+                <div className="pt-4">
+                    <InstallPrompt />
+                </div>
+            </div>
         </section>
     );
 }

@@ -1,5 +1,4 @@
 import { ucFirst } from "@/lib/utils";
-import { Filter } from "lucide-react";
 import React, { useState } from "react";
 
 interface FilterCheckboxesProps {
@@ -23,38 +22,31 @@ const FilterCheckboxes: React.FC<FilterCheckboxesProps> = ({ options, onFilterCh
     };
 
     return (
-        <>
-            <div className="mb-2 mt-4 flex items-center gap-2">
-                <Filter size={18} />
-                <h2 className="text-lg font-semibold">Filtres</h2>
+        <div className="relative my-3 w-full" role="group" aria-label="Filtres">
+            <div className="scrollbar-hide flex w-full flex-nowrap gap-2 overflow-x-auto pb-1 pr-8">
+                {options.map((option, index) => (
+                    <label
+                        key={index}
+                        className={`label-filter ${
+                            selectedFilters.includes(option)
+                                ? "sticker-bg-white"
+                                : "sticker-bg-black"
+                        }`}
+                    >
+                        <input
+                            type="checkbox"
+                            className="sr-only"
+                            value={option}
+                            checked={selectedFilters.includes(option)}
+                            onChange={handleFilterChange}
+                            aria-label={ucFirst(option)}
+                        />
+                        {ucFirst(option)}
+                    </label>
+                ))}
             </div>
-            <div className="relative w-full">
-                <div className="scrollbar-hide mb-4 flex w-full flex-nowrap space-x-2 overflow-x-auto">
-                    {options.map((option, index) => (
-                        <label
-                            key={index}
-                            className={`label-filter ${
-                                selectedFilters.includes(option)
-                                    ? "sticker-bg-white"
-                                    : "sticker-bg-black"
-                            }`}
-                        >
-                            <input
-                                type="checkbox"
-                                className="hidden"
-                                value={option}
-                                checked={selectedFilters.includes(option)}
-                                onChange={handleFilterChange}
-                            />
-                            {ucFirst(option)}
-                        </label>
-                    ))}
-                </div>
-                <div className="pointer-events-none absolute right-0 top-0 h-full w-6 bg-gradient-to-l from-black to-transparent" />
-            </div>
-        </>
-
-
+            <div className="pointer-events-none absolute right-0 top-0 h-full w-8" />
+        </div>
     );
 };
 

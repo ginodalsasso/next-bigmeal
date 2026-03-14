@@ -34,8 +34,8 @@ const DeleteItem: React.FC<DeleteItemProps> = ({ apiUrl, id, onSubmit }) => {
             });
             if (!response.ok) throw new Error("Échec de la suppression");
 
-            onSubmit(id); // Met à jour la liste dans le parent
-            toast("Suppression réussie");
+            onSubmit(id);
+            toast.success("Suppression réussie");
         } catch (error) {
             console.error("Erreur de suppression:", error);
             toast.error("Erreur lors de la suppression");
@@ -47,8 +47,8 @@ const DeleteItem: React.FC<DeleteItemProps> = ({ apiUrl, id, onSubmit }) => {
     return (
         <AlertDialog>
             <AlertDialogTrigger asChild>
-                <Button variant="delete" className="w-auto" title="Supprimer" disabled={isDeleting}>
-                    {isDeleting ? "..." : <X/>}
+                <Button variant="delete" className="w-auto" aria-label="Supprimer" disabled={isDeleting}>
+                    {isDeleting ? "..." : <X aria-hidden="true" />}
                 </Button>
             </AlertDialogTrigger>
             <AlertDialogContent>

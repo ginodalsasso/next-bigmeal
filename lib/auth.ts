@@ -2,7 +2,7 @@
 
 import NextAuth from "next-auth";
 import { PrismaAdapter } from "@auth/prisma-adapter";
-import { PrismaClient } from "@prisma/client";
+import { db } from "./db";
 import Credentials from "next-auth/providers/credentials";
 import { LoginConstraints } from "./constraints/forms_constraints";
 import { getUserByEmail } from "./dal";
@@ -12,13 +12,11 @@ import rateLimit from "./security/rateLimit";
 import { NextRequest } from "next/server";
 import API_ROUTES from "./constants/api_routes";
 
-const prisma = new PrismaClient();
-
 const LIMIT = 5; // Nombre maximal de requêtes
 const INTERVAL = 60 * 60 * 1000; // Intervalle en millisecondes (1 heure)
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
-    adapter: PrismaAdapter(prisma),
+    adapter: PrismaAdapter(db),
     session: { 
         strategy: "jwt",
         maxAge: 60 * 60 * 24, // 1 jour
@@ -86,13 +84,28 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         }),
     ],
     callbacks: {
-        // Ajout du rôle utilisateur au token JWT
         async jwt({ token, user }) {
-            // Si l'utilisateur est connecté, ajoutez son rôle et son statut au token
             if (user) {
+                // Connexion initiale : on écrit les données dans le token
                 token.id = user.id;
                 token.role = user.role;
                 token.status = user.status;
+                token.statusCheckedAt = Date.now();
+            } else if (token.id) {
+                // Rafraîchissement : on re-vérifie le statut en DB toutes les 5 min
+                const FIVE_MIN = 5 * 60 * 1000;
+                const lastCheck = (token.statusCheckedAt as number) ?? 0;
+                if (Date.now() - lastCheck > FIVE_MIN) {
+                    const dbUser = await db.user.findUnique({
+                        where: { id: token.id as string },
+                        select: { role: true, status: true },
+                    });
+                    if (dbUser) {
+                        token.role = dbUser.role;
+                        token.status = dbUser.status;
+                    }
+                    token.statusCheckedAt = Date.now();
+                }
             }
             return token;
         },

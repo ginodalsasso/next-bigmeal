@@ -43,29 +43,35 @@ export async function middleware(req: NextRequest) {
         logger: console,
     });
 
-    const isLoggedIn = !!token; // Détermine si l'utilisateur est connecté avec un token valide
+    const isLoggedIn = !!token;
+    const userStatus = token?.status as string | undefined;
 
-    const userStatus = token?.status;
-
-    // Autoriser les routes publiques
-    // Si l'utilisateur tente d'accéder à une route publique, autoriser l'accès
+    // Routes publiques : toujours accessibles
     if (publicRoutes.includes(path)) {
         return NextResponse.next();
     }
-    
-    // Vérification des routes protégées
-    // Une route est considérée comme protégée si elle figure dans la liste des `protectedRoutes` 
-    // ou si elle correspond à l'un des patterns dynamiques définis
-    const isProtectedRoute =
-        protectedRoutes.some((route) => path.startsWith(route)) || // Routes statiques protégées
-        dynamicRoutePatterns.some((pattern) => pattern.test(path)); // Routes dynamiques protégées
 
-    // Gestion des utilisateurs non connectés
-    // Si une route est protégée, mais que l'utilisateur n'est pas connecté, redirige vers `/login` en conservant l'URL demandée
-    if (isProtectedRoute && !isLoggedIn && userStatus !== "APPROVED") {
-        const redirectUrl = new URL("/login", nextUrl.origin); // Redirection vers la page de login
-        redirectUrl.searchParams.set("callbackUrl", encodeURIComponent(path)); // Ajoute l'URL demandée comme paramètre de callback
-        return NextResponse.redirect(redirectUrl);
+    // Routes réservées aux comptes bloqués/rejetés : évite les boucles de redirection
+    if (path === "/blocked") {
+        return NextResponse.next();
+    }
+
+    const isProtectedRoute =
+        protectedRoutes.some((route) => path.startsWith(route)) ||
+        dynamicRoutePatterns.some((pattern) => pattern.test(path));
+
+    if (isProtectedRoute) {
+        // Non connecté → login avec callbackUrl
+        if (!isLoggedIn) {
+            const redirectUrl = new URL("/login", nextUrl.origin);
+            redirectUrl.searchParams.set("callbackUrl", encodeURIComponent(path));
+            return NextResponse.redirect(redirectUrl);
+        }
+
+        // Connecté mais compte non approuvé → page dédiée
+        if (userStatus !== "APPROVED") {
+            return NextResponse.redirect(new URL("/blocked", nextUrl.origin));
+        }
     }
 
     const response = NextResponse.next();

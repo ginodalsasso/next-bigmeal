@@ -14,18 +14,18 @@ export default function RootLayout({
 }) {
 
     return (
-        <html lang="en">
+        <html lang="fr">
             <head>
                 <title>Big Meal App</title>
                 <meta name="description" content="A simple meal app" />
             </head>
-            <body className="flex flex-col">
+            <body className="flex flex-col antialiased">
                 <SessionProvider>
-                    <header className="flex justify-center border-b border-neutral-500 bg-neutral-900">
+                    <header className="flex justify-center border-b border-neutral-800 bg-neutral-900">
                         <Navbar />
                     </header>
                     <div className="flex">
-                        <aside className="hidden border-r border-neutral-500 lg:block">
+                        <aside className="hidden border-r border-neutral-800 lg:block">
                             <Sidebar />
                         </aside>
                         <main className="flex-1 overflow-hidden p-4 pb-20" >{children}</main>

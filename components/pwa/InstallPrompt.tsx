@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Button } from "../ui/button";
+import { X } from "lucide-react";
 
 interface BeforeInstallPromptEvent extends Event {
     prompt: () => Promise<void>;
@@ -18,6 +19,7 @@ export default function InstallPrompt() {
         useState<BeforeInstallPromptEvent | null>(null);
     const [showIOSInstructions, setShowIOSInstructions] = useState(false);
     const [isClient, setIsClient] = useState(false);
+    const [isDismissed, setIsDismissed] = useState(false);
 
     useEffect(() => {
         setIsClient(true);
@@ -73,14 +75,23 @@ export default function InstallPrompt() {
     };
 
     // Ne rien afficher pendant le rendu côté serveur ou si l'app est déjà installée
-    if (!isClient || isStandalone) {
+    if (!isClient || isStandalone || isDismissed) {
         return null;
     }
 
     return (
-        <div className="fixed inset-x-0 bottom-0 z-50 border-t border-gray-200 bg-neutral-900 p-4 shadow-lg">
+        <div className="fixed inset-x-0 bottom-0 z-50 border-t border-neutral-800 bg-neutral-900 p-4 shadow-lg">
             <div className="flex flex-col space-y-2">
-                <h3 className="text-lg font-semibold">Installer l&apos;appli</h3>
+                <div className="flex items-center justify-between">
+                    <h3 className="text-lg font-semibold">Installer l&apos;appli</h3>
+                    <button
+                        onClick={() => setIsDismissed(true)}
+                        aria-label="Fermer"
+                        className="rounded p-1 text-neutral-400 hover:text-neutral-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400"
+                    >
+                        <X size={18} aria-hidden="true" />
+                    </button>
+                </div>
 
                 {isIOS ? (
                     <div>
@@ -93,7 +104,7 @@ export default function InstallPrompt() {
                         </Button>
 
                         {showIOSInstructions && (
-                            <div className="mt-2 rounded-lg bg-gray-100 p-3 text-black">
+                            <div className="mt-2 rounded-lg bg-neutral-800 p-3 text-neutral-100">
                                 <p className="text-sm">
                                     Pour installer cette application sur votre
                                     appareil iOS :

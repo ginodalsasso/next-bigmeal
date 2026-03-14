@@ -16,32 +16,13 @@ export async function GET() {
             },
             include: {
                 items: {
-                    orderBy: [
-                        {
-                            ingredient: {
-                                categoryIngredient: {
-                                    name: 'asc'
-                                }
-                            }
-                        },
-                        {
-                            product: {
-                                categoryHouseholdProduct: {
-                                    name: 'asc'
-                                }
-                            }
-                        },
-                    ],
                     include: {
                         ingredient: {
                             select: {
                                 id: true,
                                 name: true,
                                 categoryIngredient: {
-                                    select: {
-                                        id: true,
-                                        name: true
-                                    }
+                                    select: { id: true, name: true }
                                 }
                             }
                         },
@@ -50,28 +31,28 @@ export async function GET() {
                                 id: true,
                                 name: true,
                                 categoryHouseholdProduct: {
-                                    select: {
-                                        id: true,
-                                        name: true
-                                    }
+                                    select: { id: true, name: true }
                                 }
                             }
                         },
                         meal: {
-                            select: {
-                                id: true,
-                                name: true
-                            }
+                            select: { id: true, name: true }
                         }
                     }
                 }
             },
         });
 
-        
         if (!shoppingList) {
             return NextResponse.json(null, { status: 200 });
         }
+
+        // Tri JS : évite les orderBy sur relations imbriquées (N+1 sur MongoDB)
+        shoppingList.items.sort((a, b) => {
+            const catA = a.ingredient?.categoryIngredient?.name ?? a.product?.categoryHouseholdProduct?.name ?? "";
+            const catB = b.ingredient?.categoryIngredient?.name ?? b.product?.categoryHouseholdProduct?.name ?? "";
+            return catA.localeCompare(catB, "fr");
+        });
 
         return NextResponse.json(shoppingList, { status: 200 });
     } catch (error) {

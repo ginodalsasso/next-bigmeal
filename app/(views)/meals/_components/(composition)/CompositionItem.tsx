@@ -20,25 +20,25 @@ const CompositionItem = ({ composition, onUpdate, onDelete }: CompositionItemPro
         <div className="card-content group relative p-2 ">
             <div className="flex items-center">
                 {/* Quantité et unité dans un badge */}
-                <Badge 
-                    variant="outline" 
-                    className="mr-3 border-emerald-100 bg-emerald-50 font-medium text-emerald-700"
+                <Badge
+                    variant="outline"
+                    className="mr-3 border-orange-100 bg-orange-50 font-medium text-orange-700"
                 >
                     {composition.quantity} {translatedUnit(composition.unit)}
                 </Badge>
-                
+
                 {/* Nom d'ingrédient */}
-                <p className="flex-1 font-medium text-gray-700">
+                <p className="flex-1 font-medium text-zinc-700">
                     {ucFirst(composition.ingredient?.name || "Ingrédient inconnu")}
                 </p>
-                
+
                 {/* Menu d'actions admin avec Popover */}
                 <IsAdmin>
                     <div className="ml-auto">
                         <Popover>
                             <PopoverTrigger asChild>
-                                <Button variant="link">
-                                    <MoreVertical className="text-gray-500" />
+                                <Button variant="link" aria-label="Actions">
+                                    <MoreVertical className="text-zinc-500" aria-hidden="true" />
                                 </Button>
                             </PopoverTrigger>
                             <PopoverContent className="w-auto">

@@ -1,5 +1,5 @@
 // Composant listant les repas
-import { ITEMS_PER_PAGE } from "@/lib/constants/ui_constants";
+import { MEALS_PER_PAGE } from "@/lib/constants/ui_constants";
 import MealsList from "./_components/MealsList";
 
 // Service de récupération des repas
@@ -29,7 +29,7 @@ export default async function MealPage({ searchParams }: searchParamsProps) {
         const params  = await searchParams; // Attendre la résolution de la promesse pour obtenir les paramètres de recherche
         // Récupérer le numéro de page à partir des paramètres de recherche, ou 1 par défaut
         const page = parseInt(params?.page  || '1', 10) as number; 
-        const itemsPerPage = parseInt(ITEMS_PER_PAGE, 10); // Nombre d'items par page pour la pagination
+        const itemsPerPage = parseInt(MEALS_PER_PAGE, 10); // Grille mosaïque : 24 items (multiple de 4)
         
         const categories = ensureArray(params?.categories); // Vérifie si les paramètres de recherche existent et s'ils sont des tableaux
         
@@ -61,7 +61,7 @@ export default async function MealPage({ searchParams }: searchParamsProps) {
 
         // _________________________ RENDU __________________
         if (!userId) {
-            return <p className="text-center text-gray-500">Veuillez vous connecter pour voir vos favoris.</p>;
+            return <p className="text-center text-zinc-500">Veuillez vous connecter pour voir vos favoris.</p>;
         }
 
         return (

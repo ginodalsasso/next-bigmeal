@@ -93,7 +93,7 @@ const CreateMealPage = () => {
 
             {/* Progress Bar */}
             <p className="mt-3 text-center text-sm">{ progress }</p>
-            <div className="h-2 w-full bg-gray-200">
+            <div className="h-2 w-full bg-zinc-200">
                 <div
                     className="h-2 bg-blue-500 transition-all"
                     style={{ width: progress }}

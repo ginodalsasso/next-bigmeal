@@ -1,15 +1,17 @@
-/* eslint-disable tailwindcss/no-custom-classname */
-'use client';
+"use client";
 
-// Bibliothèques tierces
 import React, { useEffect, useState } from "react";
+import Link from "next/link";
 import { toast } from "sonner";
+import { Heart, Plus } from "lucide-react";
+import { getCsrfToken } from "next-auth/react";
+import { notFound, useRouter } from "next/navigation";
 
-// Types
 import { CategoryMealType, MealType } from "@/lib/types/schemas_interfaces";
+import { likedMealAPI } from "@/lib/services/meal_service";
+import { URL } from "@/lib/constants/api_routes";
+import { ucFirst } from "@/lib/utils";
 
-// Composants
-import ItemView from "@/components/layout/ItemView";
 import UpdateMeal from "./UpdateMeal";
 import AddToShoppingListForm from "@/components/forms/AddToShoppingListForm";
 import IsAdmin from "@/components/isAdmin";
@@ -17,17 +19,7 @@ import IsUser from "@/components/isUser";
 import FilterItems from "@/components/layout/FilterItems";
 import PopoverActions from "@/components/layout/PopoverActions";
 import ShareButton from "@/components/ShareButton";
-
-// Composants UI
 import { Button } from "@/components/ui/button";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-
-// Constantes
-import { notFound, useRouter } from "next/navigation";
-import { Heart, Plus } from "lucide-react";
-import { likedMealAPI } from "@/lib/services/meal_service";
-import { getCsrfToken } from "next-auth/react";
-import { URL } from "@/lib/constants/api_routes";
 
 type MealsListProps = {
     fetchedMeals: MealType[];
@@ -35,150 +27,105 @@ type MealsListProps = {
     fetchedlikedMeals: string[];
 };
 
-// _________________________ COMPOSANT _________________________
-export default function MealsList( {
-    fetchedMeals, 
+export default function MealsList({
+    fetchedMeals,
     fetchedlikedMeals,
-    fetchedCategories
+    fetchedCategories,
 }: MealsListProps) {
-
-    // _________________________ ETATS _________________________
     const [meals, setMeals] = useState<MealType[]>(fetchedMeals);
-    const [likedMeals, setLikedMeals] = useState<Set<string>>(new Set(fetchedlikedMeals)); // newSet pour stocker les ID des repas aimés ex: setLikedMeals(new Set(["id1", "id2"]))
-
+    const [likedMeals, setLikedMeals] = useState<Set<string>>(
+        new Set(fetchedlikedMeals),
+    );
     const router = useRouter();
 
     useEffect(() => {
-        setMeals(fetchedMeals); // Pour les mises à jour de la liste de repas coté client
+        setMeals(fetchedMeals);
     }, [fetchedMeals]);
 
-    
-    // _________________________ CRUD _________________________
-
-    // Suppression d'un repas dans le state après suppression API
     const updateMeal = async (updatedMeal: MealType): Promise<void> => {
-        setMeals((prevMeals) =>
-            prevMeals.map((meal) => (meal.id === updatedMeal.id ? updatedMeal : meal))
+        setMeals((prev) =>
+            prev.map((m) => (m.id === updatedMeal.id ? updatedMeal : m)),
         );
         toast("Repas mis à jour avec succès");
-    }
-
-
-    // Suppression d'un repas dans le state après suppression API
-    const handleMealDeleted = (id: string) => {
-        setMeals((prev) => prev.filter((meal) => meal.id !== id));
     };
 
-    // Fonction pour gérer le repas aimé
+    const handleMealDeleted = (id: string) => {
+        setMeals((prev) => prev.filter((m) => m.id !== id));
+    };
+
     const toggleLikeMeal = async (mealName: string) => {
         try {
-            // Récupérer le CSRF Token
             const csrfToken = await getCsrfToken();
-            if (!csrfToken) {
-                console.error("CSRF token invalide");
-                return;
-            }
-
-            likedMealAPI(mealName, csrfToken); 
-
+            if (!csrfToken) return;
+            likedMealAPI(mealName, csrfToken);
             setLikedMeals((prev) => {
-                // stocker les ID des repas aimés dans un Set
-                const likedMeals = new Set(prev);
-                
-                if (likedMeals.has(mealName)) {
-                    likedMeals.delete(mealName);
+                const next = new Set(prev);
+                if (next.has(mealName)) {
+                    next.delete(mealName);
                 } else {
-                    likedMeals.add(mealName);
+                    next.add(mealName);
                 }
-                return likedMeals;
+                return next;
             });
-        } catch (error) {
-            console.error("Erreur lors de la modification du statut du like", error);
+        } catch {
             toast.error("Impossible de modifier le statut du like");
         }
     };
 
+    const filterOptions = (fetchedCategories ?? []).map((cat) => cat.name);
 
-
-    // _________________________ FILTRAGE _________________________
-    const filterOptions = (fetchedCategories ?? []).map(cat => cat.name); // Options de filtre
-
-    // Fonction pour gérer le changement de filtre
     const handleFilterChange = (selectedFilters: string[]) => {
-        const queryParams = new URLSearchParams();
-    
-        // Filtrer les catégories et les saisons pour preparer les paramètres de requête
-        const meals = selectedFilters.filter(filter => (fetchedCategories ?? []).map(cat => cat.name).includes(filter));
-
-        // Ajouter les filtres aux paramètres de requête
-        meals.forEach(categorie => queryParams.append("categories", categorie.toLowerCase()));
-    
-        router.push(`/meals?${queryParams.toString()}`);
+        const params = new URLSearchParams();
+        selectedFilters
+            .filter((f) =>
+                (fetchedCategories ?? []).map((c) => c.name).includes(f),
+            )
+            .forEach((cat) => params.append("categories", cat.toLowerCase()));
+        router.push(`/meals?${params.toString()}`);
     };
 
-    // _________________________ RENDU _________________________
-    if (!meals) return  notFound();
+    if (!meals) return notFound();
 
     return (
         <>
             <h1 className="h1-title">Liste des repas</h1>
+
             <IsUser>
-                <Button variant="success" className="w-full" onClick={() => router.push("/meals/create")}>
-                    Ajouter un repas <Plus/>
+                <Button
+                    variant="success"
+                    className="w-full"
+                    onClick={() => router.push("/meals/create")}
+                >
+                    Ajouter un repas <Plus aria-hidden="true" />
                 </Button>
             </IsUser>
-            {/* Composant de filtre avec les options de filtre */}
-            <FilterItems 
-                options={filterOptions} 
-                onFilterChange={handleFilterChange} 
+
+            <FilterItems
+                options={filterOptions}
+                onFilterChange={handleFilterChange}
             />
 
-            {/* Liste des repas */}
-            <Table>
-                <TableHeader>
-                    <TableRow>
-                        <TableHead><span className="table-head">Repas</span></TableHead>
-                        <IsAdmin>
-                            <TableHead><span className="table-head">Actions</span></TableHead>
-                        </IsAdmin>
-                    </TableRow>
-                </TableHeader>
-                <TableBody>
+            {meals.length === 0 ? (
+                <p className="py-12 text-center text-sm text-zinc-500">
+                    Aucun repas trouvé.
+                </p>
+            ) : (
+                <ul
+                    className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4"
+                    role="list"
+                >
                     {meals.map((meal) => (
-                        <TableRow key={meal.id}>
-                            <TableCell className="table-cell">
-                                <div className="relative">
-                                    <ItemView
-                                        title={meal.name}
-                                        details={{
-                                            category: meal.categoryMeal?.name || "Non spécifié",
-                                        }}
-                                        linkToDetails={`/meals/${meal.name}`}
-                                    />
-                                    <div className="absolute bottom-0 right-2 flex gap-4">
-                                        {typeof navigator.share === 'function' && (
-                                            <ShareButton
-                                                className="text-gray-400"
-                                                title={`Recette : ${meal.name}`}
-                                                text={`Découvre cette recette sur notre app !`}
-                                                url={`${URL}/meals/${meal.name}`}
-                                            />
-                                        )}
-
-                                        <Heart
-                                            size={20}
-                                            className={` cursor-pointer transition-colors hover:text-white ${
-                                                likedMeals.has(meal.name) ? "fill-red-500 text-red-500" : "text-gray-400"
-                                            }`}
-                                            onClick={() => toggleLikeMeal(meal.name)}
-                                        />
-                                    </div>
-                                    {/* Menu d'actions admin avec Popover */}
-                                    <IsAdmin>
+                        <li key={meal.id}>
+                            <article className="relative flex h-full flex-col rounded-lg border border-zinc-200 bg-white shadow-sm transition-shadow hover:shadow-md">
+                                {/* Admin — menu 3 points en haut à droite */}
+                                <IsAdmin>
+                                    <div className="absolute right-1 top-1 z-10">
                                         <PopoverActions
                                             id={meal.id}
                                             apiUrl="/api/meals"
-                                            onDelete={() => handleMealDeleted(meal.id)}
+                                            onDelete={() =>
+                                                handleMealDeleted(meal.id)
+                                            }
                                             renderEditForm={(onClose) => (
                                                 <UpdateMeal
                                                     meal={meal}
@@ -187,18 +134,75 @@ export default function MealsList( {
                                                 />
                                             )}
                                         />
-                                    </IsAdmin>
-                                </div>
-                            </TableCell>
+                                    </div>
+                                </IsAdmin>
 
-                            <TableCell>
-                                {/* Ajouter le repas à la liste de courses */}
-                                <AddToShoppingListForm type="meal" id={meal.name} />
-                            </TableCell>
-                        </TableRow>
+                                {/* Contenu principal — cliquable vers le détail */}
+                                <Link
+                                    href={`/meals/${meal.name}`}
+                                    className="flex flex-1 flex-col gap-1 p-3 pr-8 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-1 rounded-t-lg"
+                                    aria-label={`Voir la recette ${ucFirst(meal.name)}`}
+                                >
+                                    <p className="line-clamp-2 text-sm font-semibold leading-snug text-zinc-900">
+                                        {ucFirst(meal.name)}
+                                    </p>
+                                    {meal.categoryMeal && (
+                                        <span className="mt-0.5 w-fit rounded-full bg-orange-50 px-2 py-0.5 text-xs font-medium text-orange-700">
+                                            {meal.categoryMeal.name}
+                                        </span>
+                                    )}
+                                </Link>
+
+                                {/* Footer — actions compactes */}
+                                <div className="flex items-center justify-between border-t border-zinc-100 px-3 py-2">
+                                    <AddToShoppingListForm
+                                        type="meal"
+                                        id={meal.name}
+                                    />
+
+                                    <div className="flex items-center gap-3">
+                                        {typeof navigator !== "undefined" &&
+                                            typeof navigator.share ===
+                                                "function" && (
+                                                <ShareButton
+                                                    className="text-zinc-400 hover:text-orange-500"
+                                                    title={`Recette : ${meal.name}`}
+                                                    text="Découvre cette recette sur notre app !"
+                                                    url={`${URL}/meals/${meal.name}`}
+                                                />
+                                            )}
+                                        <button
+                                            type="button"
+                                            aria-label={
+                                                likedMeals.has(meal.name)
+                                                    ? "Retirer des favoris"
+                                                    : "Ajouter aux favoris"
+                                            }
+                                            aria-pressed={likedMeals.has(
+                                                meal.name,
+                                            )}
+                                            onClick={() =>
+                                                toggleLikeMeal(meal.name)
+                                            }
+                                            className="flex size-8 items-center justify-center rounded-md transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500"
+                                        >
+                                            <Heart
+                                                size={18}
+                                                aria-hidden="true"
+                                                className={`transition-colors ${
+                                                    likedMeals.has(meal.name)
+                                                        ? "fill-red-500 text-red-500"
+                                                        : "text-zinc-400 hover:text-red-400"
+                                                }`}
+                                            />
+                                        </button>
+                                    </div>
+                                </div>
+                            </article>
+                        </li>
                     ))}
-                </TableBody>
-            </Table>
+                </ul>
+            )}
         </>
     );
-};
+}

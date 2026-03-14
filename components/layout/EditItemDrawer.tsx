@@ -19,8 +19,8 @@ const EditItem: React.FC<EditItemProps> = ({ renderEditForm }) => {
     return (
         <Drawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
             <DrawerTrigger asChild>
-                <Button variant="edit" title="Modifier">
-                    <Edit3Icon />
+                <Button variant="edit" aria-label="Modifier">
+                    <Edit3Icon aria-hidden="true" />
                 </Button>
             </DrawerTrigger>
             <DrawerContent>

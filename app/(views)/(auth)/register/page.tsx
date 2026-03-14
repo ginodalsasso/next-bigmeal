@@ -64,15 +64,15 @@ export default function RegisterPage() {
         <div className="centered-block">
             <div className="card transition-all duration-300">   
                 <div className="mb-6 text-center">
-                    <h2 className="text-2xl font-bold text-gray-900">Inscription</h2>
-                    <p className="mt-2 text-sm text-gray-600">Entrez vos informations pour créer un compte</p>
+                    <h2 className="text-2xl font-bold text-zinc-900">Inscription</h2>
+                    <p className="mt-2 text-sm text-zinc-600">Entrez vos informations pour créer un compte</p>
                 </div>
 
                 <FormErrorMessage message={error?.general} />
 
                 <form className="space-y-4" onSubmit={handleSubmit}>
                     <div>
-                        <label htmlFor="email" className="block font-medium text-gray-700">
+                        <label htmlFor="email" className="block font-medium text-zinc-700">
                             Adresse email
                         </label>
                         <input
@@ -118,7 +118,7 @@ export default function RegisterPage() {
                     </Button>
 
                     <div className="mt-6 text-center">
-                        <p className="text-sm text-gray-600">
+                        <p className="text-sm text-zinc-600">
                             Déjà un compte ?{" "}
                             <Button
                                 variant="link"

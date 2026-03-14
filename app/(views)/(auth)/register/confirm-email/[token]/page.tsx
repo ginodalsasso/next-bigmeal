@@ -51,23 +51,23 @@ const ConfirmEmailPage = () => {
             <div className="w-full max-w-md rounded-lg bg-white p-6">
                 {status === "loading" && (
                     <div className="py-8">
-                        <div className="mx-auto size-10 animate-spin rounded-full border-y-2 border-gray-400"></div>
-                        <p className="mt-4 text-gray-600">Vérification de votre email...</p>
+                        <div className="mx-auto size-10 animate-spin rounded-full border-y-2 border-zinc-400"></div>
+                        <p className="mt-4 text-zinc-600">Vérification de votre email...</p>
                     </div>
                 )}
                 
                 {status === "success" && (
                     <div className="py-8">
-                        <h2 className="mt-4 text-xl font-semibold text-gray-800">Email confirmé</h2>
-                        <p className="mt-2 text-gray-600">Votre compte est en attente de validation par l&apos;administrateur.</p>
-                        <p className="mt-4 text-sm text-gray-500">Vous allez être redirigé automatiquement...</p>
+                        <h2 className="mt-4 text-xl font-semibold text-zinc-800">Email confirmé</h2>
+                        <p className="mt-2 text-zinc-600">Votre compte est en attente de validation par l&apos;administrateur.</p>
+                        <p className="mt-4 text-sm text-zinc-500">Vous allez être redirigé automatiquement...</p>
                     </div>
                 )}
                 
                 {status === "error" && (
                     <div className="py-8">
-                        <h2 className="mt-4 text-xl font-semibold text-gray-800">Erreur de confirmation</h2>
-                        <p className="mt-2 text-gray-600">Le lien que vous avez utilisé est invalide ou a expiré.</p>
+                        <h2 className="mt-4 text-xl font-semibold text-zinc-800">Erreur de confirmation</h2>
+                        <p className="mt-2 text-zinc-600">Le lien que vous avez utilisé est invalide ou a expiré.</p>
                     </div>
                 )}
             </div>

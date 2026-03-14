@@ -9,8 +9,7 @@ import { fetchUserProfileAPI } from "@/lib/services/user_service";
 import ShoppingLists from "../_component/ShoppingLists";
 import LoadingSpinner from "@/components/layout/LoadingSpinner";
 import { LogOut, User } from "lucide-react";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { TabsContent } from "@radix-ui/react-tabs";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import UserInformation from "../_component/UserInformation";
 import { notFound } from "next/navigation";
 
@@ -54,21 +53,22 @@ const ProfilePage = () => {
             ) : (
                 <div>
                     {/* En-tête du profil */}
-                    <div className="mb-6 flex flex-col items-center justify-between rounded-lg bg-gradient-to-r from-emerald-500 to-teal-600 p-6 text-white">
-                        <div className="mb-4 flex items-center md:mb-0">
-                            <div className="mr-4 rounded-full bg-white p-3 text-emerald-500">
-                                <User size={36} />
+                    <div className="mb-4 flex flex-col items-center gap-4 rounded-lg border border-neutral-800 bg-neutral-900 p-5 text-white">
+                        <div className="flex items-center gap-3">
+                            <div className="rounded-full bg-neutral-800 p-2 text-orange-400">
+                                <User size={28} aria-hidden="true" />
                             </div>
                             <div>
-                                <h1 className="text-2xl font-bold">Mon profil</h1>
-                                <p className="text-emerald-100">{user.email}</p>
+                                <h1 className="text-lg font-semibold leading-tight">Mon profil</h1>
+                                <p className="text-sm text-neutral-400">{user.email}</p>
                             </div>
                         </div>
                         <Button
                             onClick={() => signOut()}
                             variant="ghost"
+                            className="w-full text-neutral-300 hover:bg-neutral-800 hover:text-white"
                         >
-                            <LogOut className="mr-2"/>
+                            <LogOut size={16} aria-hidden="true" />
                             Déconnexion
                         </Button>
                     </div>

@@ -58,14 +58,14 @@ export default async function FavoritesPage({ searchParams }: searchParamsProps)
         
         // _________________________ RENDU __________________
         if (!userId) {
-            return <p className="text-center text-gray-500">Veuillez vous connecter pour voir vos favoris.</p>;
+            return <p className="text-center text-zinc-500">Veuillez vous connecter pour voir vos favoris.</p>;
         }
         
         if (!meals || meals.length === 0) {
             return (
 
                 <div className="text-center">
-                    <p className="text-gray-500">Aucun repas trouvé dans vos favoris.</p>
+                    <p className="text-zinc-500">Aucun repas trouvé dans vos favoris.</p>
                 </div>
             );
         }

@@ -30,9 +30,10 @@ export default function PopoverActions({
             <PopoverTrigger asChild>
                 <Button
                     variant="link"
+                    aria-label="Actions"
                     className="absolute -right-4 -top-2"
                 >
-                    <MoreVertical className="text-gray-500" />
+                    <MoreVertical className="text-zinc-500" aria-hidden="true" />
                 </Button>
             </PopoverTrigger>
             <PopoverContent className="w-auto">

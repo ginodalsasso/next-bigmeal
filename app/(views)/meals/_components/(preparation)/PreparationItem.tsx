@@ -69,7 +69,7 @@ const PreparationItem = ({ fetchedPreparation, onUpdate, onDelete }: Preparation
                         <Popover>
                             <PopoverTrigger asChild>
                                 <Button variant="ghost" size="sm" className="size-8 p-0">
-                                    <MoreVertical className="size-4 text-gray-500" />
+                                    <MoreVertical className="size-4 text-zinc-500" />
                                 </Button>
                             </PopoverTrigger>
                             <PopoverContent className="w-auto">
@@ -108,7 +108,7 @@ const PreparationItem = ({ fetchedPreparation, onUpdate, onDelete }: Preparation
                         ))}
                 </ol>
             ) : (
-                <p className="text-center text-gray-500">Aucune étape n&apos;a été ajoutée à cette préparation.</p>
+                <p className="text-center text-zinc-500">Aucune étape n&apos;a été ajoutée à cette préparation.</p>
             )}
         </div>
     );

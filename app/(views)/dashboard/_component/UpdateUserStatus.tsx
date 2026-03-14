@@ -51,7 +51,7 @@ export default function UpdateUserStatus({ userId, currentStatus }: UpdateUserSt
                     </option>
                 ))}  
             </select>
-            {loading && <span className="text-sm text-gray-500">Mise à jour...</span>}
+            {loading && <span className="text-sm text-zinc-500">Mise à jour...</span>}
         </div>
     );
 }

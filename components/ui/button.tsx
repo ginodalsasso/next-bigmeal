@@ -5,30 +5,30 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
   {
     variants: {
       variant: {
         default:
-          "rounded-md border border-orange-500 bg-orange-900 px-4 py-2 text-white hover:translate-y-0.5 hover:bg-orange-600 hover:transition ",
+          "rounded-md bg-orange-500 px-4 py-2 text-white hover:bg-orange-600 active:bg-orange-700",
         destructive:
           "rounded-md bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90",
         outline:
-          "rounded-md border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground",
+          "rounded-md border border-zinc-200 bg-white text-zinc-900 shadow-sm hover:border-zinc-300 hover:bg-zinc-50",
         secondary:
-          "rounded-md bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80",
-        ghost:    "rounded-md px-4 py-2 hover:bg-gray-800",
-        link:     "rounded-md px-4 py-2 text-white underline-offset-4 hover:underline",
-        success:  "rounded-md border border-emerald-500 bg-emerald-900 px-4 py-2 text-white hover:translate-y-0.5 hover:bg-emerald-600 hover:transition",
-        edit:     "rounded-md border border-blue-500 bg-blue-900 px-4 py-2 text-white hover:translate-y-0.5 hover:bg-blue-600 hover:transition",
-        delete:   "rounded-md border border-red-500 bg-red-900 px-4 py-2 text-white hover:translate-y-0.5 hover:bg-red-600 hover:transition",
-        cancel:   "rounded-md border border-gray-500 bg-gray-900 px-4 py-2 text-white hover:translate-y-0.5 hover:bg-gray-600 hover:transition ",
+          "rounded-md bg-zinc-100 text-zinc-900 hover:bg-zinc-200",
+        ghost:    "rounded-md text-zinc-900 hover:bg-zinc-100",
+        link:     "rounded-md text-orange-500 underline-offset-4 hover:underline",
+        success:  "rounded-md bg-emerald-600 px-4 py-2 text-white hover:bg-emerald-700 active:bg-emerald-800",
+        edit:     "rounded-md bg-zinc-700 px-4 py-2 text-white hover:bg-zinc-800 active:bg-zinc-900",
+        delete:   "rounded-md bg-red-600 px-4 py-2 text-white hover:bg-red-700 active:bg-red-800",
+        cancel:   "rounded-md border border-zinc-300 bg-white px-4 py-2 text-zinc-700 hover:bg-zinc-50",
       },
       size: {
-        default: "h-10 px-6 py-4",
-        sm: "h-8 px-3 text-xs",
-        lg: "h-10 px-8",
-        icon: "size-9",
+        default: "h-11 px-5",
+        sm: "h-9 px-3 text-xs",
+        lg: "h-12 px-8",
+        icon: "size-11",
       },
     },
     defaultVariants: {

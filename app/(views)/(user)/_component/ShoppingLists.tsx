@@ -35,9 +35,9 @@ const ShoppingLists: React.FC<ShoppingListsProps> = ({ shoppingLists }) => {
     if (lists.length === 0) {
         return (
             <div className="py-10 text-center">
-                <ShoppingCart className="mx-auto mb-3 text-gray-300" size={48} />
-                <p className="text-gray-500">Aucune liste de courses enregistrée.</p>
-                <p className="mt-1 text-sm text-gray-400">
+                <ShoppingCart className="mx-auto mb-3 text-zinc-300" size={48} />
+                <p className="text-zinc-500">Aucune liste de courses enregistrée.</p>
+                <p className="mt-1 text-sm text-zinc-400">
                     Les listes que vous créerez apparaîtront ici.
                 </p>
             </div>
@@ -71,15 +71,15 @@ const ShoppingLists: React.FC<ShoppingListsProps> = ({ shoppingLists }) => {
                                 onClick={() => toggleDetails(list.id)}
                             >
                                 <div>
-                                    <h3 className="font-medium text-gray-800">
+                                    <h3 className="font-medium text-zinc-800">
                                         Liste du {dateToString(list.createdAt)}
                                     </h3>
-                                    <p className="text-sm text-gray-500">
+                                    <p className="text-sm text-zinc-500">
                                         {list.items.length} article{list.items.length > 1 ? 's' : ''}
                                     </p>
                                 </div>
                                 <ChevronDown 
-                                    className={`text-gray-500 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} 
+                                    className={`text-zinc-500 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} 
                                     size={20} 
                                 />
                             </div>
@@ -89,7 +89,7 @@ const ShoppingLists: React.FC<ShoppingListsProps> = ({ shoppingLists }) => {
                                 <div className="p-4">
                                     {/* Commentaire */}
                                     {list.comment && (
-                                        <div className="mb-4 rounded border border-gray-100 bg-gray-50 p-3 text-amber-800">
+                                        <div className="mb-4 rounded border border-zinc-100 bg-zinc-50 p-3 text-amber-800">
                                             <p className="text-sm">{list.comment}</p>
                                         </div>
                                     )}
@@ -97,13 +97,13 @@ const ShoppingLists: React.FC<ShoppingListsProps> = ({ shoppingLists }) => {
                                     {/* Affichage des repas de la liste de courses */}
                                     {meals.length > 0 && (
                                         <div className="mb-5">
-                                            <h4 className="mb-3 flex items-center font-medium text-gray-700">
+                                            <h4 className="mb-3 flex items-center font-medium text-zinc-700">
                                                 <Utensils className="mr-2" size={16} />
                                                 Plats ({meals.length})
                                             </h4>
                                             <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
                                                 {meals.map((meal, index) => (
-                                                    <div key={index} className="rounded-md bg-emerald-50 px-3 py-2 text-emerald-800">
+                                                    <div key={index} className="rounded-md bg-orange-50 px-3 py-2 text-orange-800">
                                                         {ucFirst(meal)}
                                                     </div>
                                                 ))}
@@ -113,23 +113,23 @@ const ShoppingLists: React.FC<ShoppingListsProps> = ({ shoppingLists }) => {
 
                                     {/* Affichage des items de la liste de courses */}
                                     <div>
-                                        <h4 className="mb-3 flex items-center font-medium text-gray-700">
+                                        <h4 className="mb-3 flex items-center font-medium text-zinc-700">
                                             <ListChecks className="mr-2" size={16} />
                                             Ingrédients ({list.items.length})
                                         </h4>
-                                        <ul className="divide-y divide-gray-100 rounded-md border border-gray-200 bg-gray-50">
+                                        <ul className="divide-y divide-zinc-100 rounded-md border border-zinc-200 bg-zinc-50">
                                             {list.items.map((item) => (
                                                 <li key={item.id} className="flex items-center justify-between p-3">
                                                     <span>
-                                                        <span className="font-medium text-gray-700">
+                                                        <span className="font-medium text-zinc-700">
                                                             {item.quantity}{item.unit ? translatedUnit(item.unit) + " " : "x "}
                                                         </span>
-                                                        <span className="text-gray-700">
+                                                        <span className="text-zinc-700">
                                                             {item.ingredient?.name || "Ingrédient inconnu"}
                                                         </span>
                                                     </span>
                                                     {item.meal?.name && (
-                                                        <span className="ml-3 text-xs text-gray-500">
+                                                        <span className="ml-3 text-xs text-zinc-500">
                                                             Pour &quot;{item.meal.name}&quot;
                                                         </span>
                                                     )}

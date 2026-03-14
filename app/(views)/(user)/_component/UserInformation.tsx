@@ -49,24 +49,26 @@ const UserInformation = ({
                             <div className="card-content space-y-4 p-4">
                                 <div className="flex items-center align-middle">
                                     <Mail
-                                        className="mr-3 text-gray-500"
+                                        className="mr-3 text-zinc-500"
                                         size={20}
+                                        aria-hidden="true"
                                     />
                                     <div>
-                                        <p className=" text-gray-500">
+                                        <p className="text-zinc-500">
                                             Adresse e-mail
                                         </p>
                                         <div className="flex items-center">
-                                            <p className="font-medium text-black">
+                                            <p className="font-medium text-zinc-900">
                                                 {user.email}
                                             </p>
                                             <button
                                                 onClick={() =>
                                                     setIsChangedEmail(true)
                                                 }
-                                                className="ml-3 text-emerald-500 hover:text-emerald-600"
+                                                aria-label="Modifier l'adresse e-mail"
+                                                className="ml-3 text-orange-500 hover:text-orange-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 rounded"
                                             >
-                                                <Edit size={18} />
+                                                <Edit size={18} aria-hidden="true" />
                                             </button>
                                         </div>
                                     </div>
@@ -74,14 +76,15 @@ const UserInformation = ({
 
                                 <div className="flex items-center">
                                     <ShieldCheck
-                                        className="mr-3 text-gray-500"
+                                        className="mr-3 text-zinc-500"
                                         size={20}
+                                        aria-hidden="true"
                                     />
                                     <div>
-                                        <p className="text-sm text-gray-500">
+                                        <p className="text-sm text-zinc-500">
                                             Rôle
                                         </p>
-                                        <p className="font-medium text-black">
+                                        <p className="font-medium text-zinc-900">
                                             {user.role === "ADMIN"
                                                 ? "Administrateur"
                                                 : "Utilisateur"}
@@ -91,14 +94,15 @@ const UserInformation = ({
 
                                 <div className="flex items-center">
                                     <CalendarRange
-                                        className="mr-3 text-gray-500"
+                                        className="mr-3 text-zinc-500"
                                         size={20}
+                                        aria-hidden="true"
                                     />
                                     <div>
-                                        <p className="text-sm text-gray-500">
+                                        <p className="text-sm text-zinc-500">
                                             Date d&apos;inscription
                                         </p>
-                                        <p className="font-medium text-black">
+                                        <p className="font-medium text-zinc-900">
                                             {dateToString(user.createdAt)}
                                         </p>
                                     </div>
@@ -123,7 +127,7 @@ const UserInformation = ({
                             </Button>
 
                             <IsAdmin>
-                                <Button variant="default" className="w-full">
+                                <Button asChild variant="default" className="w-full">
                                     <Link href="/dashboard">
                                         Accéder au dashboard
                                     </Link>

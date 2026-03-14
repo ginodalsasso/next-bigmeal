@@ -172,12 +172,12 @@ const ShoppingListPage = () => {
     if (loading) return <LoadingSpinner />;
     if (!shoppingList) {
         return (
-            <div className="mt-8 rounded-lg border border-gray-200 bg-gray-50 p-8 text-center">
-                <ShoppingBag className="mx-auto mb-3 size-12 text-gray-300" />
-                <h3 className="mb-1 text-lg font-medium text-gray-500">
+            <div className="mt-8 rounded-lg border border-zinc-200 bg-zinc-50 p-8 text-center">
+                <ShoppingBag className="mx-auto mb-3 size-12 text-zinc-300" />
+                <h3 className="mb-1 text-lg font-medium text-zinc-500">
                     Aucune liste de courses
                 </h3>
-                <p className="text-sm text-gray-400">
+                <p className="text-sm text-zinc-400">
                     Créez une nouvelle liste pour commencer vos courses
                 </p>
             </div>
@@ -203,24 +203,24 @@ const ShoppingListPage = () => {
                 </h1>
                 <div className="flex justify-between">
                     <div>
-                        <p className="text-sm text-gray-600">
+                        <p className="text-sm text-zinc-600">
                             Créée le {dateToString(shoppingList.createdAt)}
                         </p>
-                        <p className="mt-1 text-left text-sm font-medium text-emerald-700">
+                        <p className="mt-1 text-left text-sm font-medium text-orange-600">
                             {shoppingList.items.length} Produits
                         </p>
                     </div>
                     <div className="text-right">
-                        <p className="text-sm font-medium text-gray-600">
+                        <p className="text-sm font-medium text-zinc-600">
                             Progression
                         </p>
-                        <div className="mt-1 h-2 w-32 overflow-hidden rounded-full bg-gray-200">
+                        <div className="mt-1 h-2 w-32 overflow-hidden rounded-full bg-zinc-200">
                             <div
-                                className="h-full bg-emerald-500 transition-all duration-500 ease-out"
+                                className="h-full bg-orange-500 transition-all duration-500 ease-out"
                                 style={{ width: `${progress}%` }}
                             />
                         </div>
-                        <p className="mt-1 text-xs text-gray-500">
+                        <p className="mt-1 text-xs text-zinc-500">
                             {checkedItemsCount} sur {shoppingList.items.length}{" "}
                             articles
                         </p>
@@ -239,7 +239,7 @@ const ShoppingListPage = () => {
                         {meals.map((meal, index) => (
                             <div
                                 key={index}
-                                className="rounded-md bg-emerald-50 px-3 py-2 text-sm text-emerald-800"
+                                className="rounded-md bg-orange-50 px-3 py-2 text-sm text-orange-800"
                             >
                                 <Link href={`/meals/${meal}`} className="cursor-pointer underline active:text-black">
                                     {ucFirst(meal)}
@@ -280,8 +280,8 @@ const ShoppingListPage = () => {
                                                 htmlFor={`item-${item.id}`}
                                                 className={`cursor-pointer select-none font-medium transition-all duration-200 ${
                                                     item.isChecked
-                                                        ? "text-gray-400 line-through"
-                                                        : "text-gray-700"
+                                                        ? "text-zinc-400 line-through"
+                                                        : "text-zinc-700"
                                                 }`}
                                             >
                                                 {item.ingredient
@@ -289,7 +289,7 @@ const ShoppingListPage = () => {
                                                     : item.product
                                                     ? item.product.name
                                                     : "Produit non trouvé"}
-                                                <span className="text-sm text-gray-500">
+                                                <span className="text-sm text-zinc-500">
                                                     {item.ingredient
                                                         ? ` (${item.ingredient.categoryIngredient.name})`
                                                         : item.product
@@ -301,7 +301,7 @@ const ShoppingListPage = () => {
                                             <div className="mt-1 flex items-center gap-2">
                                                 <button
                                                     onClick={() => updateItemQuantity(item.id, item.quantity - 1)}
-                                                    className="flex size-6 items-center justify-center rounded-full text-gray-500 active:bg-gray-200"
+                                                    className="flex size-6 items-center justify-center rounded-full text-zinc-500 active:bg-zinc-200"
                                                     disabled={ item.quantity <= 1 }
                                                 >
                                                     <Minus size={16} />
@@ -310,8 +310,8 @@ const ShoppingListPage = () => {
                                                 <span
                                                     className={`mx-1 text-sm ${
                                                         item.isChecked
-                                                            ? "text-gray-400 line-through"
-                                                            : "text-gray-600"
+                                                            ? "text-zinc-400 line-through"
+                                                            : "text-zinc-600"
                                                     }`}
                                                 >
                                                     {item.quantity}{" "}{(item.unit && translatedUnit(item.unit)) ??"x"}
@@ -319,7 +319,7 @@ const ShoppingListPage = () => {
 
                                                 <button
                                                     onClick={() => updateItemQuantity(item.id, item.quantity + 1)}
-                                                    className="flex size-6 items-center justify-center rounded-full text-gray-500 active:bg-gray-200"
+                                                    className="flex size-6 items-center justify-center rounded-full text-zinc-500 active:bg-zinc-200"
                                                 >
                                                     <Plus size={16} />
                                                 </button>

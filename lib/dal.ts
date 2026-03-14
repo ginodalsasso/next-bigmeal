@@ -29,9 +29,8 @@ export const getUser = cache(async () => {
                 role: true,
                 status: true,
                 shoppingList: {
-                    where: {
-                        isExpired: false, // Filtrer les listes de courses non expirées
-                    },
+                    where: { isExpired: false },
+                    select: { id: true },
                 },
             },
         });

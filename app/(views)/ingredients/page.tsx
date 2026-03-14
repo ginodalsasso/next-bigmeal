@@ -1,5 +1,5 @@
 // Composant de liste des ingrédients
-import { ITEMS_PER_PAGE } from "@/lib/constants/ui_constants";
+import { INGREDIENTS_PER_PAGE } from "@/lib/constants/ui_constants";
 import IngredientsList from "./_components/IngredientsList";
 
 // Service de récupération des ingrédients
@@ -24,7 +24,7 @@ export default async function IngredientPage( { searchParams }: searchParamsProp
 
         // Gestion de la pagination
         const page = parseInt(params?.page || "1", 10);
-        const itemsPerPage = parseInt(ITEMS_PER_PAGE, 10);
+        const itemsPerPage = parseInt(INGREDIENTS_PER_PAGE, 10);
     
         // Vérifie si les paramètres de recherche existent et s'ils sont des tableaux
         const categories = ensureArray(params?.categories);

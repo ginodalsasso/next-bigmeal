@@ -18,16 +18,33 @@ export async function GET ( req: NextRequest, { params }: Props){
     try {
         const meal = await db.meal.findUnique({
             where: { name: mealName },
-            include: {
+            select: {
+                id: true,
+                name: true,
+                description: true,
+                categoryMeal: {
+                    select: { id: true, name: true }
+                },
                 compositions: {
-                    include: {
-                        ingredient: true,
-                    },
+                    select: {
+                        id: true,
+                        quantity: true,
+                        unit: true,
+                        ingredient: {
+                            select: { id: true, name: true }
+                        }
+                    }
                 },
                 preparation: {
-                    include: {
-                        steps: true,
-                    },
+                    select: {
+                        id: true,
+                        prepTime: true,
+                        cookTime: true,
+                        steps: {
+                            select: { id: true, stepNumber: true, description: true, imageUrl: true },
+                            orderBy: { stepNumber: "asc" }
+                        }
+                    }
                 }
             },
         });

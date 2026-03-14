@@ -5,76 +5,82 @@ import Link from "next/link";
 import IsUser from "../isUser";
 import { signOut } from "next-auth/react";
 import SearchBar from "./Search";
-import { LogOut, Search,UserRound } from "lucide-react";
+import { LogOut, Search, UserRound } from "lucide-react";
+import { usePathname } from "next/navigation";
 
 const Navbar = () => {
-    const [toggleSearch, setToggleSearch] = useState(false); // État de la barre de recherche
+    const [toggleSearch, setToggleSearch] = useState(false);
+    const searchContainerRef = useRef<HTMLDivElement>(null);
+    const pathname = usePathname();
 
-    const searchContainerRef = useRef<HTMLDivElement>(null); // Référence au conteneur de recherche
-    
+    // Ferme la recherche au changement de route
     useEffect(() => {
-        // Si la recherche n'est pas visible, pas besoin d'ajouter l'écouteur
+        setToggleSearch(false);
+    }, [pathname]);
+
+    // Ferme la recherche si clic en dehors
+    useEffect(() => {
         if (!toggleSearch) return;
-        
-        // Ferme la recherche si le clic est en dehors du conteneur
-        const handleClickOutside = (e: MouseEvent) => 
-            searchContainerRef.current?.contains(e.target as Node) || setToggleSearch(false); // Si le clic est en dehors du conteneur, on ferme la recherche
-        
-        document.addEventListener('mousedown', handleClickOutside);
-        // Nettoyage de l'écouteur d'événements lorsque le composant est démonté ou que toggleSearch change
-        return () => document.removeEventListener('mousedown', handleClickOutside);
+        const handleClickOutside = (e: MouseEvent) =>
+            searchContainerRef.current?.contains(e.target as Node) || setToggleSearch(false);
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
     }, [toggleSearch]);
 
     return (
         <IsUser>
-            <nav className="w-full max-w-7xl p-4">
-                <div className="flex items-center justify-between ">
+            <nav aria-label="Navigation principale" className="w-full max-w-7xl px-4 py-3">
+                <div className="flex items-center justify-between">
                     {/* Logo */}
-                    <Link href="/" className="hidden items-center text-lg font-bold lg:flex">
-                        Big-Meal
+                    <Link href="/" className="hidden items-center gap-1 lg:flex">
+                        <span className="text-xl font-bold text-orange-400 tracking-tight">Big-Meal</span>
                     </Link>
 
-                        {/* Desktop Navigation */}
-                        <ul className="hidden list-none flex-row items-center gap-6 lg:flex">
-                            {/* Si l'utilisateur est connecté */}
-                                <li className="nav-links-desktop align-icon">                         
-                                    <Search
-                                        onClick={() => setToggleSearch(!toggleSearch)}
-                                    />
-                                </li>
-                                <li className="nav-links-desktop align-icon">
-                                    <Link
-                                        href="/profile"
-                                        className="nav-links-desktop"
-                                        title="Profil"
-                                    >
-                                        <UserRound />
-                                    </Link>
-                                </li>
-                                <li>
-                                    <button 
-                                        className="nav-links-desktop align-icon"
-                                        onClick={() => signOut()}
-                                        title="Déconnexion"
-                                    > 
-                                        <LogOut />
-                                    </button>
-                                </li>
-                        </ul>
+                    {/* Actions desktop */}
+                    <ul className="hidden list-none flex-row items-center gap-1 lg:flex">
+                        <li>
+                            <button
+                                className="rounded-lg p-2 text-neutral-400 transition-colors hover:bg-neutral-800 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400"
+                                onClick={() => setToggleSearch(!toggleSearch)}
+                                aria-label="Rechercher"
+                                aria-expanded={toggleSearch}
+                            >
+                                <Search size={18} aria-hidden="true" />
+                            </button>
+                        </li>
+                        <li>
+                            <Link
+                                href="/profile"
+                                className="flex items-center rounded-lg p-2 text-neutral-400 transition-colors hover:bg-neutral-800 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400"
+                                aria-label="Profil"
+                            >
+                                <UserRound size={18} aria-hidden="true" />
+                            </Link>
+                        </li>
+                        <li>
+                            <button
+                                className="rounded-lg p-2 text-neutral-400 transition-colors hover:bg-red-500/10 hover:text-red-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400"
+                                onClick={() => signOut()}
+                                aria-label="Déconnexion"
+                            >
+                                <LogOut size={18} aria-hidden="true" />
+                            </button>
+                        </li>
+                    </ul>
                 </div>
-                {/* Mobile SearchBar visible */}
+
+                {/* SearchBar mobile */}
                 <div className="block lg:hidden" ref={searchContainerRef}>
                     <SearchBar onSearch={() => setToggleSearch(false)} />
                 </div>
+
+                {/* Overlay desktop */}
                 {toggleSearch && (
-                    <>
-                        {/* Desktop Overlay */}
-                        <div className="fixed left-0 top-0 z-10 hidden h-screen w-full items-center justify-center bg-zinc-950/50 backdrop-blur-sm lg:flex">
-                            <div ref={searchContainerRef}>
-                                <SearchBar onSearch={() => setToggleSearch(false)} />
-                            </div>
+                    <div className="fixed left-0 top-0 z-10 hidden h-screen w-full items-center justify-center bg-zinc-950/60 backdrop-blur-sm lg:flex">
+                        <div ref={searchContainerRef}>
+                            <SearchBar onSearch={() => setToggleSearch(false)} />
                         </div>
-                    </>
+                    </div>
                 )}
             </nav>
         </IsUser>

@@ -19,22 +19,22 @@ const StepItem = ({ step, onUpdate, onDelete }: StepItemProps) => {
             {/* Première ligne: contenu */}
             <div className="flex items-start gap-2">
                 {/* Numéro d'étape */}
-                <span className="mt-0.5 flex size-6 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-sm font-semibold text-emerald-800">
+                <span className="mt-0.5 flex size-6 shrink-0 items-center justify-center rounded-full bg-orange-100 text-sm font-semibold text-orange-800">
                     {step.stepNumber}
                 </span>
-                
-                <p className="flex-1 break-all text-sm font-medium text-gray-900">                    
+
+                <p className="flex-1 break-all text-sm font-medium text-zinc-900">
                     {step.description}
                 </p>
             </div>
-            
+
             {/* Menu d'actions admin avec Popover */}
             <IsAdmin>
                 <div className="ml-auto">
                     <Popover>
                         <PopoverTrigger asChild>
-                            <Button variant="link" size="icon" className="size-8 text-gray-500 hover:bg-gray-100">
-                                <MoreVertical className="size-4" />
+                            <Button variant="link" size="icon" aria-label="Actions" className="size-8 text-zinc-500 hover:bg-zinc-100">
+                                <MoreVertical className="size-4" aria-hidden="true" />
                             </Button>
                         </PopoverTrigger>
                         <PopoverContent className="w-auto">

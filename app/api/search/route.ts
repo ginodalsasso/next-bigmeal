@@ -18,36 +18,28 @@ export async function GET(req: NextRequest) {
     }
 
     try {
-        const meals = await db.meal.findMany({
-            take: 10,
-            where: { name: { contains: query, mode: "insensitive" } }, // Insensible à la casse
-            select: {
-                id: true,
-                name: true,
-                categoryMeal: {
-                    select: {
-                        name: true,
-                    },
-                },
-            } 
-        });
-
-        const ingredients = await db.ingredient.findMany({
-            take: 10,
-            where: { name: { contains: query, mode: "insensitive" } },
-            select: {
-                id: true,
-                name: true,
-                categoryIngredient: {
-                    select: {
-                        name: true,
-                    },
-                },
-            }
-        });
+        const [meals, ingredients] = await Promise.all([
+            db.meal.findMany({
+                take: 10,
+                where: { name: { contains: query, mode: "insensitive" } },
+                select: {
+                    id: true,
+                    name: true,
+                    categoryMeal: { select: { name: true } },
+                }
+            }),
+            db.ingredient.findMany({
+                take: 10,
+                where: { name: { contains: query, mode: "insensitive" } },
+                select: {
+                    id: true,
+                    name: true,
+                    categoryIngredient: { select: { name: true } },
+                }
+            }),
+        ]);
 
         return NextResponse.json([
-            // fusionne les résultats des plats et des ingrédients dans un seul tableau
             ...meals.map((meal) => ({
                 id: meal.id,
                 name: meal.name,

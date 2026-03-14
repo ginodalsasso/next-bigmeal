@@ -66,7 +66,7 @@ export const IngredientSearchInput = ({ value, onSelect }: IngredientSearchInput
                     {results.map((item) => (
                         <li
                             key={item.id}
-                            className="cursor-pointer p-2 hover:bg-gray-200"
+                            className="cursor-pointer p-2 hover:bg-zinc-100"
                             onClick={() => handleSelect(item)}
                         >
                             {item.name}

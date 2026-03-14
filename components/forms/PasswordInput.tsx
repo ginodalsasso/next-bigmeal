@@ -31,7 +31,7 @@ export default function PasswordInput({
     return (
         <div>
             {label && (
-                <label htmlFor={id} className="block font-medium text-gray-700">
+                <label htmlFor={id} className="block font-medium text-zinc-700">
                     {label}
                 </label>
             )}
@@ -52,7 +52,7 @@ export default function PasswordInput({
                 <button
                     type="button"
                     onClick={() => setShowPassword(prev => !prev)}
-                    className="absolute right-3 top-[55%] -translate-y-1/2 text-gray-600"
+                    className="absolute right-3 top-[55%] -translate-y-1/2 text-zinc-600"
                     aria-label={showPassword ? "Masquer le mot de passe" : "Afficher le mot de passe"}
                 >
                     {showPassword ? <EyeClosed size={18} /> : <Eye size={18} />}

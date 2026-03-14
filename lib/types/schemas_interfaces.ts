@@ -1,4 +1,4 @@
-import { IngredientUnit, Season, UserStatus } from './enums.ts';
+import { IngredientUnit, Season, UserStatus } from './enums';
 
 
 // TYPES SCHEMA
@@ -34,16 +34,15 @@ export interface CategoryType {
 
 
 export interface HouseholdProductType {
-    id: string; 
-    name: string; 
-    description?: string; 
+    id: string;
+    name: string;
 
     // Clé étrangère : Lie le produit à sa catégorie
     categoryHouseholdProductId: string;
     categoryHouseholdProduct: CategoryHouseholdProductType;
 
     // Relation One-to-Many
-    shoppingListItems: ShoppingListType[];
+    shoppingListItems: ShoppingListItemType[];
 }
 
 
@@ -60,7 +59,7 @@ export interface IngredientType {
     compositions: CompositionType[];
 
     // Relation One-to-Many
-    shoppingListItems: ShoppingListType[];
+    shoppingListItems: ShoppingListItemType[];
 }
 
 
@@ -75,11 +74,11 @@ export interface MealType {
 
     preparation?: PreparationType; 
 
-    // Relation One-to-Many 
+    // Relation One-to-Many
     compositions: CompositionType[];
 
-    // Relation One-to-Many
-    shoppingListItems: ShoppingListType[];
+    // Relation One-to-Many 
+    shoppingListItems: ShoppingListItemType[];
     mealLikes: MealLikeType[];
 }
 
@@ -147,34 +146,35 @@ export interface ShoppingListType {
 export interface ShoppingListItemType {
     id: string;
     shoppingListId: string; // Clé étrangère
-    ingredientId: string; // Clé étrangère
-    mealId: string; // Clé étrangère   
-    productId: string; // Clé étrangère
+
+    // Clés étrangères optionnelles (nullable dans le schéma Prisma)
+    ingredientId: string | null;
+    mealId: string | null;
+    productId: string | null;
 
     quantity: number;
-    unit: IngredientUnit;
+    unit: IngredientUnit | null; // Optionnel dans le schéma Prisma (Unit?)
     comment?: string;
     isChecked?: boolean;
 
-    // Relation Many-to-One
+    // Relations (nullable car les FK sont optionnelles)
     shoppingList: ShoppingListType;
-    ingredient: IngredientType;
-    meal: MealType;
-    product: HouseholdProductType;
+    ingredient: IngredientType | null;
+    meal: MealType | null;
+    product: HouseholdProductType | null;
 }
 
 
 export interface UserType {
-    meals: boolean;
-    id: string; 
-    email: string; 
+    id: string;
+    email: string;
     password: string;
     createdAt: Date;
     role: string;
     status: UserStatus;
     emailVerified: Date;
 
-    // Relation One-to-Many 
+    // Relation One-to-Many
     shoppingList: ShoppingListType[];
     mealLikes: MealLikeType[];
 }

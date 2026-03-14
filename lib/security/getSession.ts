@@ -8,6 +8,9 @@ export async function getAdminSession() {
     if (!session) {
         return { error: new NextResponse(null, { status: 302, headers: { Location: "/login" } }) };
     }
+    if (session.user.status !== "APPROVED") {
+        return { error: new NextResponse("Compte suspendu", { status: 403 }) };
+    }
     if (session.user.role !== "ADMIN") {
         return { error: new NextResponse("Unauthorized", { status: 401 }) };
     }
@@ -18,6 +21,9 @@ export async function getUserSession() {
     const session = await auth();
     if (!session) {
         return { error: new NextResponse(null, { status: 302, headers: { Location: "/login" } }) };
+    }
+    if (session.user.status !== "APPROVED") {
+        return { error: new NextResponse("Compte suspendu", { status: 403 }) };
     }
     return { session };
 }   

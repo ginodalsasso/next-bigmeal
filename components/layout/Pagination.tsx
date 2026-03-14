@@ -3,46 +3,49 @@
 import { usePathname, useSearchParams } from "next/navigation";
 import { Button } from "../ui/button";
 import { ArrowLeft, ArrowRight } from "lucide-react";
+import Link from "next/link";
 
 interface PaginationProps {
     currentPage: number;
     hasNextPage: boolean;
 }
 
-export default function Pagination({ currentPage, hasNextPage }:PaginationProps) {
+export default function Pagination({ currentPage, hasNextPage }: PaginationProps) {
 
-    const searchParams = useSearchParams(); // Récupérer les paramètres de recherche de l'URL ex: ?categories=plat&page=1
-    const pathname = usePathname() // Récupérer le chemin de l'URL actuelle ex: /meals
+    const searchParams = useSearchParams();
+    const pathname = usePathname();
 
-    // Fonction pour créer une URL avec tous les paramètres actuels plus le numéro de page
     const createPageURL = (pageNumber: number) => {
-        const params = new URLSearchParams(searchParams.toString()); // paramètres de recherche actuels
-        params.set('page', pageNumber.toString()); // attribuer le numéro de page à la clé 'page'
-        
-        return `${pathname}?${params.toString()}`; // ex:/meals?categories=plat&page=1
+        const params = new URLSearchParams(searchParams.toString());
+        params.set('page', pageNumber.toString());
+        return `${pathname}?${params.toString()}`;
     };
-    
+
     return (
-        <div className="mt-6 flex justify-between">
-            {currentPage > 1 && (
-                <Button variant="secondary">
-                    <a href={createPageURL(currentPage - 1)}>
-                        <ArrowLeft/>
-                    </a>
+        <nav aria-label="Pagination" className="mt-6 flex items-center justify-between">
+            {currentPage > 1 ? (
+                <Button asChild variant="secondary" aria-label="Page précédente">
+                    <Link href={createPageURL(currentPage - 1)}>
+                        <ArrowLeft aria-hidden="true" />
+                    </Link>
                 </Button>
+            ) : (
+                <span />
             )}
-            
-            <span className="self-center">Page {currentPage}</span>
-            
-            {hasNextPage && (
-                <>
-                    <Button variant="secondary">
-                        <a href={createPageURL(currentPage + 1)}>
-                            <ArrowRight/>
-                        </a>
-                    </Button>
-                </>
+
+            <span className="text-sm text-neutral-400" aria-current="page">
+                Page {currentPage}
+            </span>
+
+            {hasNextPage ? (
+                <Button asChild variant="secondary" aria-label="Page suivante">
+                    <Link href={createPageURL(currentPage + 1)}>
+                        <ArrowRight aria-hidden="true" />
+                    </Link>
+                </Button>
+            ) : (
+                <span />
             )}
-        </div>
+        </nav>
     );
 }

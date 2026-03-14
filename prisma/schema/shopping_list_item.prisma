@@ -14,4 +14,9 @@ model ShoppingListItem {
     ingredient   Ingredient? @relation(fields: [ingredientId], references: [id])
     meal         Meal?       @relation(fields: [mealId], references: [id])
     product      Product?    @relation(fields: [productId], references: [id])
+
+    @@index([shoppingListId])
+    @@index([ingredientId])
+    @@index([productId])
+    @@index([mealId])
 }

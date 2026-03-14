@@ -48,7 +48,7 @@ const IngredientDetailPage = ({ params }: { params: Promise<{ ingredientName: st
 
     return (
         <div className="mx-auto rounded-lg border p-6">
-            <h1 className="mb-2 text-center text-4xl font-semibold text-emerald-500">
+            <h1 className="mb-2 text-center text-4xl font-semibold text-orange-500">
                 {ingredient.name}
             </h1>
             <p className="mx-auto w-[90%] rounded-md bg-slate-700 p-4 text-center">

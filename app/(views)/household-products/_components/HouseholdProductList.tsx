@@ -1,174 +1,130 @@
 'use client';
 
-// Bibliothèques tierces
 import React, { useEffect, useState } from "react";
 import { notFound, useRouter } from "next/navigation";
+import { Plus } from "lucide-react";
 
-// Types
 import { CategoryHouseholdProductType, HouseholdProductType } from "@/lib/types/schemas_interfaces";
+import { ucFirst } from "@/lib/utils";
 
-// Composants
-import ItemView from "@/components/layout/ItemView";
 import CreateHouseholdProduct from "./CreateHouseholdProduct";
 import UpdateHouseholdProduct from "./UpdateHouseholdProduct";
 import AddToShoppingListForm from "@/components/forms/AddToShoppingListForm";
-import IsAdmin from "@/components/isAdmin";
 import IsUser from "@/components/isUser";
 import FilterItems from "@/components/layout/FilterItems";
 import PopoverActions from "@/components/layout/PopoverActions";
 
-// Composants UI
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerTrigger } from "@/components/ui/drawer";
 import { Button } from "@/components/ui/button";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Plus } from "lucide-react";
 
-
-// _________________________ COMPOSANT _________________________
-export default function HouseholdProductList({ 
+export default function HouseholdProductList({
     fetchedHouseholdProducts,
-    fetchedCategories
-}: { 
-    fetchedHouseholdProducts: HouseholdProductType[],
-    fetchedCategories: CategoryHouseholdProductType[]
+    fetchedCategories,
+}: {
+    fetchedHouseholdProducts: HouseholdProductType[];
+    fetchedCategories: CategoryHouseholdProductType[];
 }) {
-
-    // _________________________ ETATS _________________________
     const router = useRouter();
     const [householdProducts, setHouseholdProducts] = useState<HouseholdProductType[]>(fetchedHouseholdProducts);
     const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
 
-    useEffect(( ) => {
-        setHouseholdProducts(fetchedHouseholdProducts); // Pour les mises à jour de la liste de produits coté client
+    useEffect(() => {
+        setHouseholdProducts(fetchedHouseholdProducts);
     }, [fetchedHouseholdProducts]);
 
-
-    // _________________________ CRUD _________________________
-    // Fonction pour ajouter un produit ménager à la liste
     const addHouseholdProduct = (householdProduct: HouseholdProductType) => {
-        // Ajouter le produit ménager à la liste en conservant les anciens produits
-        setHouseholdProducts((prevHouseholdProducts) =>
-            [...prevHouseholdProducts, householdProduct]
-        );
+        setHouseholdProducts((prev) => [...prev, householdProduct]);
     };
 
-    // Appel API pour mettre à jour un produit ménager
     const updateHouseholdProduct = async (updatedHouseholdProduct: HouseholdProductType) => {
-        setHouseholdProducts((prev) => // Remplacer l'ancien produit ménager par le nouveau
-            prev.map((householdProduct) =>
-                householdProduct.id === updatedHouseholdProduct.id ? updatedHouseholdProduct : householdProduct
-            )
+        setHouseholdProducts((prev) =>
+            prev.map((p) => (p.id === updatedHouseholdProduct.id ? updatedHouseholdProduct : p))
         );
     };
 
-    // Suppression d'une catégorie dans le state après suppression API
     const handleHouseholdProductDeleted = (id: string) => {
-        setHouseholdProducts((prev) => 
-            prev.filter((householdProduct) => householdProduct.id !== id)
-        );
+        setHouseholdProducts((prev) => prev.filter((p) => p.id !== id));
     };
 
-    // _________________________ FILTRAGE _________________________
-    const filterOptions = fetchedCategories.map(cat => cat.name); // Options de filtres
+    const filterOptions = fetchedCategories.map((cat) => cat.name);
 
-    // Fonction pour gérer le changement de filtre
     const handleFilterChange = (selectedFilters: string[]) => {
-        const queryParams = new URLSearchParams();
-    
-        // Filtrer les catégories et les saisons pour preparer les paramètres de requête
-        const categories = selectedFilters.filter(filter => fetchedCategories.map(cat => cat.name).includes(filter));
-
-        // Ajouter les filtres aux paramètres de requête
-        categories.forEach(categorie => queryParams.append("categories", categorie.toLowerCase()));
-    
-        router.push(`/household-products?${queryParams.toString()}`);
+        const params = new URLSearchParams();
+        selectedFilters
+            .filter((f) => fetchedCategories.map((c) => c.name).includes(f))
+            .forEach((cat) => params.append("categories", cat.toLowerCase()));
+        router.push(`/household-products?${params.toString()}`);
     };
 
-    // _________________________ RENDU _________________________
-    if (!householdProducts) return  notFound();
+    if (!householdProducts) return notFound();
 
     return (
-        <>              
+        <>
             <h1 className="h1-title">Liste des produits ménagers</h1>
-            {/* Dialogue pour ajouter un ingrédient */}
+
             <IsUser>
                 <Drawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
                     <DrawerTrigger asChild>
-                        <Button 
-                            variant="success" 
-                            className="w-full"
-                            onClick={() => setIsDrawerOpen(true)}
-                        >
-                                Ajouter un produit <Plus/>
+                        <Button variant="success" className="w-full" onClick={() => setIsDrawerOpen(true)}>
+                            Ajouter un produit <Plus aria-hidden="true" />
                         </Button>
                     </DrawerTrigger>
                     <DrawerContent>
                         <DrawerHeader>
                             <DrawerTitle className="my-4 text-center">Ajouter un produit</DrawerTitle>
                         </DrawerHeader>
-                        {/* Formulaire de création d'ingrédient */}
-                        <CreateHouseholdProduct
-                            onSubmit={addHouseholdProduct}
-                            onClose={() => setIsDrawerOpen(false)}
-                        />
+                        <CreateHouseholdProduct onSubmit={addHouseholdProduct} onClose={() => setIsDrawerOpen(false)} />
                     </DrawerContent>
                 </Drawer>
             </IsUser>
 
-            {/* Filtres */}
-            <FilterItems 
-                options={filterOptions} 
-                onFilterChange={handleFilterChange} 
-            />
+            <FilterItems options={filterOptions} onFilterChange={handleFilterChange} />
 
-            {/* Liste des ingrédients */}
-            <Table>
-                <TableHeader>
-                    <TableRow>
-                        <TableHead><span className="table-head">Produits</span></TableHead>
-                        <IsAdmin>
-                            <TableHead><span className="table-head">Actions</span></TableHead>
-                        </IsAdmin>
-                    </TableRow>
-                </TableHeader>
-                <TableBody>
-                    {householdProducts.map((householdProduct) => (
-                        <TableRow key={householdProduct.id}>
-                            <TableCell className="table-cell">
-                                <div className="relative">
-                                    <ItemView
-                                        title={householdProduct.name}
-                                        details={{
-                                            // Afficher la catégorie et la saison si elles existent
-                                            ...(householdProduct.categoryHouseholdProduct?.name && { category: householdProduct.categoryHouseholdProduct.name }),
-                                        }}
-                                    />
-                                    {/* Edition et suppression des produits */}
-                                    {/* Si l'utilisateur est admin, afficher les boutons d'édition et de suppression */}                              
+            {householdProducts.length === 0 ? (
+                <p className="py-12 text-center text-sm text-zinc-500">Aucun produit trouvé.</p>
+            ) : (
+                <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4" role="list">
+                    {householdProducts.map((product) => (
+                        <li key={product.id}>
+                            <article className="relative flex h-full flex-col rounded-lg border border-zinc-200 bg-white shadow-sm transition-shadow hover:shadow-md">
+
+                                {/* Menu actions en haut à droite */}
+                                <div className="absolute right-1 top-1 z-10">
                                     <PopoverActions
-                                        id={householdProduct.id}
+                                        id={product.id}
                                         apiUrl="/api/household-products"
-                                        onDelete={() => handleHouseholdProductDeleted(householdProduct.id)}
+                                        onDelete={() => handleHouseholdProductDeleted(product.id)}
                                         renderEditForm={(onClose) => (
                                             <UpdateHouseholdProduct
-                                                householdProduct={householdProduct}
+                                                householdProduct={product}
                                                 onSubmit={updateHouseholdProduct}
                                                 onCancel={onClose}
                                             />
                                         )}
                                     />
                                 </div>
-                            </TableCell>
-                            <TableCell>
-                                {/* Ajouter l'ingrédient à la liste de courses */}
-                                <AddToShoppingListForm type="product" id={householdProduct.id} />
-                            </TableCell>
-                        </TableRow>
+
+                                {/* Contenu principal */}
+                                <div className="flex flex-1 flex-col gap-1.5 p-3 pr-8">
+                                    <p className="line-clamp-2 text-sm font-semibold leading-snug text-zinc-900">
+                                        {ucFirst(product.name)}
+                                    </p>
+                                    {product.categoryHouseholdProduct?.name && (
+                                        <span className="w-fit rounded-full bg-orange-50 px-2 py-0.5 text-xs font-medium text-orange-700">
+                                            {product.categoryHouseholdProduct.name}
+                                        </span>
+                                    )}
+                                </div>
+
+                                {/* Footer — ajouter à la liste de courses */}
+                                <div className="border-t border-zinc-100 px-3 py-2">
+                                    <AddToShoppingListForm type="product" id={product.id} />
+                                </div>
+                            </article>
+                        </li>
                     ))}
-                </TableBody>
-            </Table>
-
-
+                </ul>
+            )}
         </>
     );
-};
+}
