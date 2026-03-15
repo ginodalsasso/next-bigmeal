@@ -129,7 +129,7 @@ export default function MealItem( {fetchedMeal}: { fetchedMeal: MealType }) {
         <div className="mx-auto max-w-4xl space-y-8">
             {/* En-tête du repas */}
             <header className="header-card relative">
-                <div className="mx-auto mb-3 flex h-16 w-16 items-center justify-center rounded-full bg-orange-100 text-orange-500">
+                <div className="mx-auto mb-3 flex size-16 items-center justify-center rounded-full bg-orange-100 text-orange-500">
                     <ChefHat size={28} aria-hidden="true" />
                 </div>
                 <h1 className="h1-title">{ucFirst(meal.name)}</h1>

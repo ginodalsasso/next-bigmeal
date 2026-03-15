@@ -109,7 +109,7 @@ const CreateIngredient: React.FC<CreateIngredientProps> = ({
             {/* Catégorie de l'ingrédient */}
             <div className="drawer-label-input">
                 <label htmlFor="categoryIngredientId">Catégorie de l&apos;ingrédient</label>
-                <div className="flex gap-2 flex-wrap">
+                <div className="flex flex-wrap gap-2">
                     <select
                         className="input-text-select"
                         name="categoryIngredientId"

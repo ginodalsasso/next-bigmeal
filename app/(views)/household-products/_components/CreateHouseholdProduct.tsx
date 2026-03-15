@@ -121,7 +121,7 @@ const CreateHouseholdProduct: React.FC<CreateHouseholdProductProps> = ({
             {/* Sélection pour la catégorie */}
             <div className="drawer-label-input">
                 <label htmlFor="categoryHouseholdProductId">Catégorie du produit</label>
-                <div className="flex gap-2 flex-wrap">
+                <div className="flex flex-wrap gap-2">
                     <select
                         className="input-text-select"
                         name="categoryHouseholdProductId"

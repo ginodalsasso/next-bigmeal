@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 
 export default function HomePage() {
     return (
-        <section className="flex min-h-[100dvh] flex-col items-center justify-center bg-white px-4 py-12 antialiased dark:bg-zinc-950">
+        <section className="flex min-h-dvh flex-col items-center justify-center bg-white px-4 py-12 antialiased dark:bg-zinc-950">
             <div className="w-full max-w-sm space-y-8 text-center">
                 
                 {/* En-tête simple et très lisible */}

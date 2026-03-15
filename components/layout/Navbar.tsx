@@ -33,7 +33,7 @@ const Navbar = () => {
                 <div className="flex items-center justify-between">
                     {/* Logo */}
                     <Link href="/" className="hidden items-center gap-1 lg:flex">
-                        <span className="text-xl font-bold text-orange-400 tracking-tight">Big-Meal</span>
+                        <span className="text-xl font-bold tracking-tight text-orange-400">Big-Meal</span>
                     </Link>
 
                     {/* Actions desktop */}

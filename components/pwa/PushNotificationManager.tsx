@@ -155,8 +155,8 @@ export default function PushNotificationManager() {
     }
 
     return (
-        <div className="bg-white p-4 rounded-lg shadow">
-            <h3 className="text-xl font-semibold mb-4">Push Notifications</h3>
+        <div className="rounded-lg bg-white p-4 shadow">
+            <h3 className="mb-4 text-xl font-semibold">Push Notifications</h3>
             {subscription ? (
                 <div className="space-y-4">
                     <p className="text-green-600">
@@ -168,18 +168,18 @@ export default function PushNotificationManager() {
                             placeholder="Enter notification message"
                             value={message}
                             onChange={(e) => setMessage(e.target.value)}
-                            className="w-full p-2 border rounded"
+                            className="w-full rounded border p-2"
                         />
                         <div className="flex space-x-2">
                             <button
                                 onClick={sendTestNotification}
-                                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                                className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
                             >
                                 Send Test Notification
                             </button>
                             <button
                                 // onClick={unsubscribeFromPush}
-                                className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+                                className="rounded bg-red-500 px-4 py-2 text-white hover:bg-red-600"
                             >
                                 Unsubscribe
                             </button>
@@ -193,7 +193,7 @@ export default function PushNotificationManager() {
                     </p>
                     <button
                         // onClick={subscribeToPush}
-                        className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                        className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
                     >
                         Subscribe to Notifications
                     </button>

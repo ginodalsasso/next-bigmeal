@@ -77,7 +77,7 @@ const ChangeEmailForm = ({
                     />
                     <FormErrorMessage message={error?.email} />
 
-                    <div className="flex gap-2 mt-2">
+                    <div className="mt-2 flex gap-2">
                         <Button type="submit" className="flex-1">
                             Enregistrer
                         </Button>

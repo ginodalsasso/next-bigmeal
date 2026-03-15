@@ -66,7 +66,7 @@ const UserInformation = ({
                                                     setIsChangedEmail(true)
                                                 }
                                                 aria-label="Modifier l'adresse e-mail"
-                                                className="ml-3 text-orange-500 hover:text-orange-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 rounded"
+                                                className="ml-3 rounded text-orange-500 hover:text-orange-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500"
                                             >
                                                 <Edit size={18} aria-hidden="true" />
                                             </button>
