@@ -242,7 +242,7 @@ const ShoppingListPage = () => {
                                 className="rounded-md bg-orange-50 px-3 py-2 text-sm text-orange-800"
                             >
                                 <Link href={`/meals/${meal}`} className="cursor-pointer underline active:text-black">
-                                    {ucFirst(meal)}
+                                    {ucFirst(meal || "Repas inconnu")}
                                 </Link>
                             </div>
                         ))}
