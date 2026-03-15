@@ -46,13 +46,15 @@ export default function LoginPage() {
 
         try {
             const response = await signIn("credentials", {
-                redirect: true,
+                redirect: false,
                 email,
                 password,
             });
 
             if (response?.error) {
-                setError({ general: response.error || "Une erreur est survenue lors de la connexion." });
+                setError({ general: "Email ou mot de passe incorrect." });
+            } else {
+                router.push("/");
             }
         } catch (error) {
             console.error("Erreur lors de la connexion :", error);

@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { NextRequest } from "next/server";
 import { getToken } from "next-auth/jwt";
 
-const isProduction = process.env.NODE_ENV === "production"; // Vérifie si l'environnement est en production
+const isProduction = process.env.NODE_ENV === "production";
 
 // Routes protégées statiques
 const protectedRoutes = [
@@ -26,10 +26,9 @@ const dynamicRoutePatterns = [
 // Routes publiques accessibles sans authentification
 const publicRoutes = ["/login", "/register", "/"];
 
-export async function middleware(req: NextRequest) {
-    const { nextUrl } = req; // L'URL de la requête en cours
-    const path = nextUrl.pathname; // Le chemin de la requête ex: `/ingredients`
-    
+export async function proxy(req: NextRequest) {
+    const { nextUrl } = req;
+    const path = nextUrl.pathname;
 
     const cookieKey = process.env.NODE_ENV === 'production' ? '__Secure-authjs.session-token' : 'authjs.session-token';
 
@@ -75,18 +74,16 @@ export async function middleware(req: NextRequest) {
     }
 
     const response = NextResponse.next();
-    response.headers.set("X-Content-Type-Options", "nosniff"); // Empêche le navigateur de deviner le type MIME
-    response.headers.set("X-Frame-Options", "DENY"); // Empêche l'intégration du site dans un iframe (protection contre le clickjacking)
-    response.headers.set("Referrer-Policy", "no-referrer-when-downgrade"); // Politique de référent pour éviter de divulguer des informations sensibles ex: l'URL de la page précédente
-    response.headers.set("X-XSS-Protection", "1; mode=block"); // Active la protection contre certaines attaques XSS dans les navigateurs compatibles
+    response.headers.set("X-Content-Type-Options", "nosniff");
+    response.headers.set("X-Frame-Options", "DENY");
+    response.headers.set("Referrer-Policy", "no-referrer-when-downgrade");
+    response.headers.set("X-XSS-Protection", "1; mode=block");
 
     return response;
 }
 
 export const config = {
-    // Empêche d'appliquer le middleware sur les fichiers statiques, les requêtes API, les images ou tout fichier au format `.png`
     matcher: [
         "/((?!_next/static|_next/image|.*\\.png$).*)"
     ],
-
 };
