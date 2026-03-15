@@ -140,7 +140,7 @@ export default function MealsList({
                                 {/* Contenu principal — cliquable vers le détail */}
                                 <Link
                                     href={`/meals/${meal.name}`}
-                                    className="flex flex-1 flex-col gap-1 p-3 pr-8 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-1 rounded-t-lg"
+                                    className="flex flex-1 flex-col gap-1 rounded-t-lg p-3 pr-8 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-1"
                                     aria-label={`Voir la recette ${ucFirst(meal.name)}`}
                                 >
                                     <p className="line-clamp-2 text-sm font-semibold leading-snug text-zinc-900">
