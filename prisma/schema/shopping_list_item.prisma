@@ -11,9 +11,9 @@ model ShoppingListItem {
     isChecked    Boolean     @default(false)
 
     shoppingList ShoppingList @relation(fields: [shoppingListId], references: [id], onDelete: Cascade)
-    ingredient   Ingredient? @relation(fields: [ingredientId], references: [id])
-    meal         Meal?       @relation(fields: [mealId], references: [id])
-    product      Product?    @relation(fields: [productId], references: [id])
+    ingredient   Ingredient? @relation(fields: [ingredientId], references: [id], onDelete: Cascade)
+    meal         Meal?       @relation(fields: [mealId], references: [id], onDelete: Cascade)
+    product      Product?    @relation(fields: [productId], references: [id], onDelete: Cascade)
 
     @@index([shoppingListId])
     @@index([ingredientId])

@@ -1,9 +1,40 @@
-// Saisons et catégories
+// Saisons — fixes par nature
 export const SEASONS = ["Printemps", "Été", "Automne", "Hiver"];
-export const CATEGORIES_INGREDIENTS = ["Légumes", "Viandes", "Poissons", "Charcuterie", "Épices", "Fromage", "Divers", "Céréales"];
-export const CATEGORIES_MEALS = ["Entrée", "Plat", "Dessert", "Apéro"];
-export const CATEGORIES_HOUSEHOLD_PRODUCTS = ["Entretien", "Cuisine", "Salle de bain", "Jardin", "Bricolage", "Cosmétique", "Divers"];
 
+// Catégories ingrédients — doit correspondre exactement au seed (prisma/seed.ts)
+export const CATEGORIES_INGREDIENTS = [
+    "Légumes",
+    "Fruits",
+    "Viandes & Poissons",
+    "Produits laitiers & Œufs",
+    "Féculents & Céréales",
+    "Épices & Condiments",
+    "Herbes aromatiques",
+    "Huiles & Graisses",
+    "Légumineuses",
+];
+
+// Catégories repas — doit correspondre exactement au seed (prisma/seed.ts)
+export const CATEGORIES_MEALS = [
+    "Plat principal",
+    "Entrée",
+    "Dessert",
+    "Petit-déjeuner",
+    "Snack & Apéro",
+    "Soupe & Velouté",
+];
+
+// Catégories produits ménagers — doit correspondre exactement au seed (prisma/seed.ts)
+export const CATEGORIES_HOUSEHOLD_PRODUCTS = [
+    "Entretien & Nettoyage",
+    "Lessive & Textile",
+    "Hygiène & Beauté",
+    "Cuisine & Conservation",
+    "Papeterie & Divers",
+    "Pharmacie & Premiers secours",
+];
+
+// Utilisé dans search-results pour distinguer un repas d'un ingrédient
 export const CATEGORIES_MEALS_TOLOWER = CATEGORIES_MEALS.map(category => category.toLowerCase());
 
 // Liste combinée pour les cas où on veut toutes les options
