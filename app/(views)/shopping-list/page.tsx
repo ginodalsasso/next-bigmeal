@@ -135,6 +135,17 @@ const ShoppingListPage = () => {
         );
     };
 
+    // Suppression d'un repas et de tous ses ingrédients associés du state local
+    // (l'appel API est géré par le composant DeleteItem)
+    const handleMealDeleted = (mealId: string) => {
+        setShoppingList((prev) =>
+            prev && {
+                ...prev,
+                items: prev.items.filter((item) => item.mealId !== mealId),
+            }
+        );
+    };
+
     // Mise à jour de la quantité d'un ingrédient
     const updateItemQuantity = async (id: string, newQuatity: number) => {
         if (shoppingList) {
@@ -184,11 +195,13 @@ const ShoppingListPage = () => {
         );
     }
 
-    // Extraire les repas uniques de la liste de courses
+    // Extraire les repas uniques de la liste de courses (avec leur ID pour la suppression)
     const meals = Array.from(
-        new Set(
-            shoppingList.items.map((item) => item.meal?.name).filter(Boolean)
-        )
+        new Map(
+            shoppingList.items
+                .filter((item) => item.mealId && item.meal)
+                .map((item) => [item.mealId, { id: item.mealId!, name: item.meal!.name }])
+        ).values()
     );
 
     const checkedItemsCount = shoppingList.items.filter((item) => item.isChecked).length;
@@ -236,14 +249,19 @@ const ShoppingListPage = () => {
                         Repas prévus ({meals.length})
                     </h2>
                     <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-                        {meals.map((meal, index) => (
+                        {meals.map((meal) => (
                             <div
-                                key={index}
-                                className="rounded-md bg-orange-50 px-3 py-2 text-sm text-orange-800"
+                                key={meal.id}
+                                className="flex items-center justify-between rounded-md bg-orange-50 px-3 py-2 text-sm text-orange-800"
                             >
-                                <Link href={`/meals/${meal}`} className="cursor-pointer underline active:text-black">
-                                    {ucFirst(meal || "Repas inconnu")}
+                                <Link href={`/meals/${meal.name}`} className="cursor-pointer underline active:text-black">
+                                    {ucFirst(meal.name)}
                                 </Link>
+                                <DeleteItem
+                                    apiUrl="/api/shopping-list/meal"
+                                    id={meal.id}
+                                    onSubmit={handleMealDeleted}
+                                />
                             </div>
                         ))}
                     </div>

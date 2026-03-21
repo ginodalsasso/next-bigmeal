@@ -111,6 +111,23 @@ export async function markShoppingListAsExpiredAPI(id: string, csrfToken: string
     }
 }
 
+export async function deleteMealFromShoppingListAPI(mealId: string, csrfToken: string) {
+    try {
+        const response = await fetch(API_ROUTES.shoppingList.meal, {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRF-Token": csrfToken,
+            },
+            body: JSON.stringify({ id: mealId }),
+        });
+        if (!response.ok) throw new Error("Erreur lors de la suppression du repas.");
+    } catch (error) {
+        console.error("[API_ERROR] deleteMealFromShoppingList", error);
+        throw error;
+    }
+}
+
 export async function updateItemQuantityAPI(id: string, quantity: number, csrfToken: string) {
     try {
         const response = await fetch( API_ROUTES.shoppingList.item, {

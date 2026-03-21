@@ -40,6 +40,7 @@ const householdProductRoute = `${BASE_URL}/household-products`;
 const shoppingListRoute = {
     list: `${BASE_URL}/shopping-list`,
     item: `${BASE_URL}/shopping-list/item`,
+    meal: `${BASE_URL}/shopping-list/meal`,
 }
 
 // Export des routes
