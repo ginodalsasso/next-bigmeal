@@ -55,7 +55,7 @@ export default function IngredientList({
         const params = new URLSearchParams();
         selectedFilters
             .filter((f) => fetchedCategories.map((c) => c.name).includes(f))
-            .forEach((cat) => params.append("categories", cat.toLowerCase()));
+            .forEach((cat) => params.append("categories", cat));
         selectedFilters
             .filter((f) => SEASONS.includes(f))
             .forEach((s) => params.append("season", reversedTranslatedSeason(s)));

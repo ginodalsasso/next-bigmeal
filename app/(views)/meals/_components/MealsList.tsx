@@ -80,7 +80,7 @@ export default function MealsList({
             .filter((f) =>
                 (fetchedCategories ?? []).map((c) => c.name).includes(f),
             )
-            .forEach((cat) => params.append("categories", cat.toLowerCase()));
+            .forEach((cat) => params.append("categories", cat));
         router.push(`/meals?${params.toString()}`);
     };
 
