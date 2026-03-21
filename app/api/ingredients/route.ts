@@ -182,6 +182,20 @@ export async function DELETE (req: NextRequest) {
         }
 
         const { id } = validationResult.data;
+
+        const usedInMeals = await db.composition.findMany({
+            where: { ingredientId: id },
+            select: { meal: { select: { name: true } } },
+        });
+
+        if (usedInMeals.length > 0) {
+            const mealNames = usedInMeals.map((c) => c.meal.name).join(", ");
+            return NextResponse.json(
+                { message: `Cet ingrédient est utilisé dans ${usedInMeals.length} recette(s) : ${mealNames}. Retirez-le des recettes avant de le supprimer.` },
+                { status: 409 }
+            );
+        }
+
         await db.ingredient.delete({ where: { id } });
 
         return NextResponse.json({ message: "Ingredient supprimé" }, {status: 200});

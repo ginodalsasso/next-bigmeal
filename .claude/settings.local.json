@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ls -la \"C:\\\\laragon\\\\www\\\\next-bigmeal\\\\app\\\\\\(views\\)\\\\\\(auth\\)\")"
+    ]
+  }
+}

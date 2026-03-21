@@ -1,10 +1,10 @@
 model MealLike {
     id        String   @id @default(auto()) @map("_id") @db.ObjectId
 
-    user      User     @relation(fields: [userId], references: [id])
+    user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
     userId    String   @db.ObjectId
 
-    meal      Meal     @relation(fields: [mealId], references: [id])
+    meal      Meal     @relation(fields: [mealId], references: [id], onDelete: Cascade)
     mealId    String   @db.ObjectId
 
     createdAt DateTime @default(now())
