@@ -90,14 +90,14 @@ export async function POST(req: NextRequest) {
 
 export async function DELETE (req: NextRequest) {
     try {
-        const { error } = await getUserSession();
+        const { error, session } = await getUserSession();
         if (error) return error;
-        
+
         const csrfTokenVerified = await verifyCSRFToken(req);
         if (!csrfTokenVerified) {
             return new NextResponse("CSRF Token is missing or invalid", { status: 403 });
         }
-        
+
         const body = await req.json();
 
         const validationResult = idConstraints.safeParse({ id: body.id });
@@ -108,8 +108,17 @@ export async function DELETE (req: NextRequest) {
             );
         }
 
-        await db.shoppingListItem.deleteMany({ where: { mealId: body.id } });
-        return NextResponse.json({ message: "Articles supprimés" }, {status: 200});
+        // Restreint la suppression aux listes appartenant à l'utilisateur courant
+        const userLists = await db.shoppingList.findMany({
+            where: { userId: session!.user.id },
+            select: { id: true },
+        });
+        const listIds = userLists.map(l => l.id);
+
+        await db.shoppingListItem.deleteMany({
+            where: { mealId: body.id, shoppingListId: { in: listIds } },
+        });
+        return NextResponse.json({ message: "Articles supprimés" }, { status: 200 });
         
     } catch (error) {
         console.error("[DELETE_ITEM_ERROR]", error);

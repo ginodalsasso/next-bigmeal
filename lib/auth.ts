@@ -120,12 +120,22 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             return session;
         },
 
-        // Redirection après connexion
         async redirect({ url, baseUrl }) {
-            // vérifiee si un callback est présent dans l'url pour rediriger sur la page demandée initialement
-            const callbackUrl = new URL(url, baseUrl).searchParams.get("callbackUrl");
-            // redirige vers la page d'accueil si pas de callback
-            return callbackUrl ? decodeURIComponent(callbackUrl) : "/";
+            const parsed = new URL(url, baseUrl);
+            const callbackUrl = parsed.searchParams.get("callbackUrl");
+
+            if (callbackUrl) {
+                const decoded = decodeURIComponent(callbackUrl);
+                // N'autoriser que les chemins relatifs pour éviter les redirections externes
+                if (decoded.startsWith("/") && !decoded.startsWith("//")) {
+                    return decoded;
+                }
+            }
+
+            // Redirection interne sûre (ex: page d'origine avant auth)
+            if (url.startsWith(baseUrl)) return url;
+
+            return "/";
         },
     },
 });

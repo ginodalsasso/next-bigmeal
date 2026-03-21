@@ -21,10 +21,12 @@ export async function POST(req: NextRequest) {
     }
 
     
-    const secret = process.env.JWT_SECRET || 'default_secret';
+    const secret = process.env.JWT_SECRET;
+    if (!secret) throw new Error("JWT_SECRET non configuré");
+
     const generatedToken = jwt.sign(
         { email: recipient },
-        secret, 
+        secret,
         { expiresIn: '1h' }
     );
 
@@ -73,8 +75,9 @@ export async function PUT(req: NextRequest) {
             });
         }
         
-        const secret = process.env.JWT_SECRET || 'default_secret';
-        
+        const secret = process.env.JWT_SECRET;
+        if (!secret) throw new Error("JWT_SECRET non configuré");
+
         // Vérification du token
         let decoded;
         try {

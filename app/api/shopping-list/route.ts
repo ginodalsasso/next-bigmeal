@@ -157,16 +157,15 @@ export async function POST(req: NextRequest) {
 
 export async function PUT(req: NextRequest) {
     try {
-        const { error } = await getUserSession();
+        const { error, session } = await getUserSession();
         if (error) return error;
-        
+
         const csrfTokenVerified = await verifyCSRFToken(req);
         if (!csrfTokenVerified) {
             return new NextResponse("CSRF Token is missing or invalid", { status: 403 });
         }
 
         const body = await req.json();
-        // Si la propriété isChecked est présente dans le corps de la requête
         if ('isChecked' in body) {
             const validationResult = isCheckedShoppingListConstraints.safeParse(body);
 
@@ -179,16 +178,20 @@ export async function PUT(req: NextRequest) {
 
             const { id, isChecked } = body;
 
+            // Vérifie que l'item appartient à une liste de l'utilisateur courant
+            const item = await db.shoppingListItem.findFirst({
+                where: { id, shoppingList: { userId: session!.user.id } },
+            });
+            if (!item) return NextResponse.json({ error: "Non autorisé" }, { status: 403 });
+
             const updatedItem = await db.shoppingListItem.update({
                 where: { id },
                 data: { isChecked },
             });
 
             return NextResponse.json(updatedItem, { status: 200 });
-            
-        // Si la propriété isExpired est présente dans le corps de la requête
+
         } else if ('isExpired' in body) {
-            // Mise à jour de la propriété isExpired d'une liste
             const { id, isExpired } = body;
 
             if (typeof isExpired !== 'boolean') {
@@ -197,6 +200,12 @@ export async function PUT(req: NextRequest) {
                     { status: 400 }
                 );
             }
+
+            // Vérifie que la liste appartient à l'utilisateur courant
+            const list = await db.shoppingList.findFirst({
+                where: { id, userId: session!.user.id },
+            });
+            if (!list) return NextResponse.json({ error: "Non autorisé" }, { status: 403 });
 
             const updatedList = await db.shoppingList.update({
                 where: { id },
@@ -209,9 +218,9 @@ export async function PUT(req: NextRequest) {
         }
     } catch (error) {
         console.error("[UPDATE_ERROR]", error);
-        return new Response(JSON.stringify({ 
-            message: 'Erreur serveur, veuillez réessayer plus tard' 
-        }), { 
+        return new Response(JSON.stringify({
+            message: 'Erreur serveur, veuillez réessayer plus tard'
+        }), {
             status: 500,
             headers: { 'Content-Type': 'application/json' }
         });
@@ -221,9 +230,9 @@ export async function PUT(req: NextRequest) {
 
 export async function DELETE(req: NextRequest) {
     try {
-        const { error } = await getUserSession();
+        const { error, session } = await getUserSession();
         if (error) return error;
-        
+
         const csrfTokenVerified = await verifyCSRFToken(req);
         if (!csrfTokenVerified) {
             return new NextResponse("CSRF Token is missing or invalid", { status: 403 });
@@ -239,8 +248,14 @@ export async function DELETE(req: NextRequest) {
             );
         }
 
+        // Vérifie que la liste appartient à l'utilisateur courant
+        const list = await db.shoppingList.findFirst({
+            where: { id: body.id, userId: session!.user.id },
+        });
+        if (!list) return NextResponse.json({ error: "Non autorisé" }, { status: 403 });
+
         await db.shoppingList.delete({ where: { id: body.id } });
-        return NextResponse.json({ message: "Liste supprimée" }, {status: 200});
+        return NextResponse.json({ message: "Liste supprimée" }, { status: 200 });
     } catch (error) {
         console.error("[DELETE_ERROR]", error);
         return new Response(JSON.stringify({ 

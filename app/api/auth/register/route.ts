@@ -56,10 +56,13 @@ export async function POST(req: NextRequest) {
             );
         }
 
-        const secret = process.env.JWT_SECRET || 'default_secret';
+        const secret = process.env.JWT_SECRET;
+        if (!secret) throw new Error("JWT_SECRET non configuré");
+
         const generatedToken = jwt.sign(
             { email: user.email },
-            secret
+            secret,
+            { expiresIn: '24h' }
         );
         const resetLink = `${process.env.API_URL}/register/confirm-email/${generatedToken}`;
 

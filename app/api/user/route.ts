@@ -6,7 +6,9 @@ import { NextResponse } from "next/server";
 
 export async function GET() {
     try {
-        // Récupération de tous les utilisateurs
+        const { error } = await getAdminSession();
+        if (error) return error;
+
         const users = await db.user.findMany({
             select: {
                 id: true,

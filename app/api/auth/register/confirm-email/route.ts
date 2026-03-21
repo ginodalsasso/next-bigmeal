@@ -9,7 +9,8 @@ export async function POST(req: NextRequest) {
         return new Response('Token manquant', { status: 400 });
     }
 
-    const secret = process.env.JWT_SECRET || 'default_secret';
+    const secret = process.env.JWT_SECRET;
+    if (!secret) throw new Error("JWT_SECRET non configuré");
 
     try {
         const decoded = jwt.verify(token, secret) as { email: string }; // Récupérer l'email du token décodé
