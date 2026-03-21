@@ -13,63 +13,56 @@ import { ClockIcon, MoreVertical } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
-// _________________________ COMPOSANT _________________________
 const PreparationItem = ({ fetchedPreparation, onUpdate, onDelete }: PreparationItemProps) => {
 
     const [preparation, setPreparation] = useState<PreparationType>(fetchedPreparation);
 
     const updatePreparation = async (updatedPreparation: PreparationType) => {
-        setPreparation(updatedPreparation); // Mettre à jour l'état local avec la préparation mise à jour
-        await onUpdate(updatedPreparation); // Appeler onUpdate pour le parent MealItem
-    }
+        setPreparation(updatedPreparation);
+        await onUpdate(updatedPreparation);
+    };
 
     const updateStep = (updatedStep: StepType) => {
-        setPreparation((prevPreparation) => { 
+        setPreparation((prevPreparation) => {
             if (!prevPreparation) return prevPreparation;
-
             const updatedSteps = prevPreparation.steps.map((step) =>
-                step.id === updatedStep.id
-                    ? { ...step, ...updatedStep }
-                    : step
+                step.id === updatedStep.id ? { ...step, ...updatedStep } : step
             );
-
             return { ...prevPreparation, steps: updatedSteps };
         });
-    }
+    };
 
     const deleteStep = (id: string) => {
         setPreparation((prevPreparation) => {
             if (!prevPreparation) return prevPreparation;
             return {
                 ...prevPreparation,
-                steps: prevPreparation.steps.filter((step) => step.id !== id)
+                steps: prevPreparation.steps.filter((step) => step.id !== id),
             };
         });
-    }
+    };
 
-    // _________________________ RENDU _________________________
     return (
         <div className="card-content space-y-2">
             <div className="p-2">
                 <div className="flex items-center justify-between">
-                
-                    <div className="flex flex-wrap gap-3 pt-2">
-                        <Badge variant="outline" className="border-orange-100 bg-orange-50 text-orange-700">
+                    <div className="flex flex-wrap gap-2 pt-1">
+                        <Badge variant="outline" className="border-warm-border bg-warm-accent/15 text-warm-primary">
                             <ClockIcon className="mr-1 size-3.5" />
-                            Préparation: {preparation.prepTime} min
+                            Préparation : {preparation.prepTime} min
                         </Badge>
-                        
-                        <Badge variant="outline" className="border-red-100 bg-red-50 text-red-700">
+
+                        <Badge variant="outline" className="border-warm-border bg-warm-danger/10 text-warm-danger">
                             <ClockIcon className="mr-1 size-3.5" />
-                            Cuisson: {preparation.cookTime} min
+                            Cuisson : {preparation.cookTime} min
                         </Badge>
                     </div>
-                    {/* Menu d'actions admin avec Popover */}
+
                     <IsAdmin>
                         <Popover>
                             <PopoverTrigger asChild>
                                 <Button variant="ghost" size="sm" className="size-8 p-0">
-                                    <MoreVertical className="size-4 text-zinc-500" />
+                                    <MoreVertical className="size-4 text-warm-secondary" />
                                 </Button>
                             </PopoverTrigger>
                             <PopoverContent className="w-auto">
@@ -83,10 +76,10 @@ const PreparationItem = ({ fetchedPreparation, onUpdate, onDelete }: Preparation
                                             />
                                         )}
                                     />
-                                    <DeleteItem 
-                                        apiUrl="/api/preparation" 
-                                        id={preparation.id} 
-                                        onSubmit={onDelete} 
+                                    <DeleteItem
+                                        apiUrl="/api/preparation"
+                                        id={preparation.id}
+                                        onSubmit={onDelete}
                                     />
                                 </div>
                             </PopoverContent>
@@ -94,24 +87,26 @@ const PreparationItem = ({ fetchedPreparation, onUpdate, onDelete }: Preparation
                     </IsAdmin>
                 </div>
             </div>
+
             {preparation.steps && preparation.steps.length > 0 ? (
-                <ol className="w-full space-y-4">
+                <ol className="w-full space-y-3 p-2">
                     {preparation.steps.map((step) => (
-                            <li key={step.id} className="card-content p-4">
-                                <StepItem
-                                    key={step.id}
-                                    step={step}
-                                    onUpdate={updateStep}
-                                    onDelete={deleteStep}
-                                />
-                            </li>
-                        ))}
+                        <li key={step.id} className="card-content p-3">
+                            <StepItem
+                                step={step}
+                                onUpdate={updateStep}
+                                onDelete={deleteStep}
+                            />
+                        </li>
+                    ))}
                 </ol>
             ) : (
-                <p className="text-center text-zinc-500">Aucune étape n&apos;a été ajoutée à cette préparation.</p>
+                <p className="py-4 text-center text-sm text-warm-secondary">
+                    Aucune étape n&apos;a été ajoutée à cette préparation.
+                </p>
             )}
         </div>
     );
-}
+};
 
 export default PreparationItem;

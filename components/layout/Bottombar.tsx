@@ -24,11 +24,9 @@ const Bottombar = () => {
     const [toggle, setToggle] = useState(false);
     const pathname = usePathname();
 
-    // Ferme le menu au changement de route
     useEffect(() => {
         setToggle(false);
     }, [pathname]);
-
 
     const hamburgerLinks = [
         { icon: ShoppingCart, title: "liste de courses",  url: "/shopping-list" },
@@ -39,8 +37,8 @@ const Bottombar = () => {
     ];
 
     const quickLinks = [
-        { icon: Home,         url: "/",             alt: "Accueil" },
-        { icon: UserRound,    url: "/profile",      alt: "Profil" },
+        { icon: Home,         url: "/",              alt: "Accueil" },
+        { icon: UserRound,    url: "/profile",       alt: "Profil" },
         { icon: ShoppingCart, url: "/shopping-list", alt: "Liste de courses" },
     ];
 
@@ -60,8 +58,8 @@ const Bottombar = () => {
                                         title={link.alt}
                                         className={`flex items-center justify-center rounded-xl px-5 py-2 transition-colors duration-150 ${
                                             isActive
-                                                ? "text-orange-400"
-                                                : "text-neutral-500 hover:text-neutral-300"
+                                                ? "text-warm-accent"
+                                                : "text-warm-secondary hover:text-warm-primary"
                                         }`}
                                     >
                                         <Icon size={22} strokeWidth={isActive ? 2.5 : 1.5} />
@@ -70,10 +68,9 @@ const Bottombar = () => {
                             );
                         })}
 
-                        {/* Bouton menu */}
                         <li>
                             <button
-                                className="flex items-center justify-center rounded-xl px-5 py-2 text-neutral-500 transition-colors hover:text-neutral-300"
+                                className="flex items-center justify-center rounded-xl px-5 py-2 text-warm-secondary transition-colors hover:text-warm-primary"
                                 onClick={() => setToggle(true)}
                                 title="Menu"
                             >
@@ -85,24 +82,22 @@ const Bottombar = () => {
 
                 {/* Overlay slide-up */}
                 <div
-                    className={`fixed inset-0 z-50 flex flex-col bg-neutral-950 transition-all duration-300 ease-in-out ${
+                    className={`fixed inset-0 z-50 flex flex-col bg-warm-base transition-all duration-300 ease-in-out ${
                         toggle
                             ? "translate-y-0 opacity-100"
                             : "pointer-events-none translate-y-full opacity-0"
                     }`}
                 >
-                    {/* Header */}
-                    <div className="flex items-center justify-between border-b border-neutral-800 px-6 py-5">
-                        <span className="text-base font-semibold text-white">Menu</span>
+                    <div className="flex items-center justify-between border-b border-warm-border px-6 py-5">
+                        <span className="text-base font-semibold text-warm-primary">Menu</span>
                         <button
                             onClick={() => setToggle(false)}
-                            className="rounded-lg p-2 text-neutral-400 transition-colors hover:bg-neutral-800 hover:text-white"
+                            className="rounded-lg p-2 text-warm-secondary transition-colors hover:bg-warm-subtle hover:text-warm-primary"
                         >
                             <X size={20} />
                         </button>
                     </div>
 
-                    {/* Liens */}
                     <nav className="flex-1 overflow-y-auto p-4">
                         <ul className="flex flex-col gap-1">
                             <IsUser>
@@ -117,24 +112,21 @@ const Bottombar = () => {
                                                 href={link.url}
                                                 className={`flex items-center gap-4 rounded-xl px-4 py-3.5 text-base font-medium transition-colors duration-150 ${
                                                     isActive
-                                                        ? "bg-orange-500/10 text-orange-400"
-                                                        : "text-neutral-300 hover:bg-neutral-800 hover:text-white"
+                                                        ? "bg-warm-accent/15 text-warm-primary"
+                                                        : "text-warm-secondary hover:bg-warm-subtle hover:text-warm-primary"
                                                 }`}
                                             >
-                                                <Icon
-                                                    size={20}
-                                                    strokeWidth={isActive ? 2.5 : 1.75}
-                                                />
+                                                <Icon size={20} strokeWidth={isActive ? 2.5 : 1.75} />
                                                 {ucFirst(link.title)}
                                             </Link>
                                         </li>
                                     );
                                 })}
 
-                                <li className="mt-4 border-t border-neutral-800 pt-4">
+                                <li className="mt-4 border-t border-warm-border pt-4">
                                     <button
                                         onClick={() => signOut()}
-                                        className="flex w-full items-center gap-4 rounded-xl px-4 py-3.5 text-base font-medium text-red-400 transition-colors hover:bg-red-500/10"
+                                        className="flex w-full items-center gap-4 rounded-xl px-4 py-3.5 text-base font-medium text-warm-danger transition-colors hover:bg-warm-danger/10"
                                     >
                                         <LogOut size={20} strokeWidth={1.75} />
                                         Déconnexion
@@ -146,7 +138,7 @@ const Bottombar = () => {
                                 <li>
                                     <Link
                                         href="/login"
-                                        className="flex items-center gap-4 rounded-xl px-4 py-3.5 text-base font-medium text-neutral-300 transition-colors hover:bg-neutral-800 hover:text-white"
+                                        className="flex items-center gap-4 rounded-xl px-4 py-3.5 text-base font-medium text-warm-secondary transition-colors hover:bg-warm-subtle hover:text-warm-primary"
                                     >
                                         Se connecter
                                     </Link>
@@ -154,7 +146,7 @@ const Bottombar = () => {
                                 <li>
                                     <Link
                                         href="/register"
-                                        className="flex items-center gap-4 rounded-xl px-4 py-3.5 text-base font-medium text-neutral-300 transition-colors hover:bg-neutral-800 hover:text-white"
+                                        className="flex items-center gap-4 rounded-xl px-4 py-3.5 text-base font-medium text-warm-secondary transition-colors hover:bg-warm-subtle hover:text-warm-primary"
                                     >
                                         S&apos;inscrire
                                     </Link>

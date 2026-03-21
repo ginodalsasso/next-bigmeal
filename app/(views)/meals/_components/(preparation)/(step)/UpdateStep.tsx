@@ -77,7 +77,7 @@ const UpdateStep: React.FC<UpdateStepProps> = ({
             
             {/* Champ pour la description de l'étape */}
             <div className="drawer-label-input">
-                <label className="text-sm font-semibold" htmlFor="description">
+                <label className="text-sm font-medium text-warm-primary" htmlFor="description">
                     Description de l&apos;étape
                 </label>
                 <textarea

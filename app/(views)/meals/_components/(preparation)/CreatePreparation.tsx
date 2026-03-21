@@ -72,7 +72,7 @@ const CreatePreparation: React.FC<CreatePreparationProps> = ({
             <div className="flex gap-4">
                 {/* Champ pour le temps de préparation du plat */}
                 <div>
-                    <label htmlFor="prepTime">
+                    <label htmlFor="prepTime" className="text-sm font-medium text-warm-primary">
                         Temps de préparation en minutes (optionnel)
                     </label>
                     <input
@@ -88,7 +88,7 @@ const CreatePreparation: React.FC<CreatePreparationProps> = ({
 
                 {/* Champ pour le temps de cuisson du plat */}
                 <div>
-                    <label htmlFor="cookTime">
+                    <label htmlFor="cookTime" className="text-sm font-medium text-warm-primary">
                         Temps de cuisson en minutes (optionnel)
                     </label>
                     <input

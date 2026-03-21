@@ -92,7 +92,6 @@ export default function MealsList({
 
             <IsUser>
                 <Button
-                    variant="success"
                     className="w-full"
                     onClick={() => router.push("/meals/create")}
                 >
@@ -106,7 +105,7 @@ export default function MealsList({
             />
 
             {meals.length === 0 ? (
-                <p className="py-12 text-center text-sm text-zinc-500">
+                <p className="py-12 text-center text-sm text-warm-secondary">
                     Aucun repas trouvé.
                 </p>
             ) : (
@@ -116,8 +115,7 @@ export default function MealsList({
                 >
                     {meals.map((meal) => (
                         <li key={meal.id}>
-                            <article className="relative flex h-full flex-col rounded-lg border border-zinc-200 bg-white shadow-sm transition-shadow hover:shadow-md">
-                                {/* Admin — menu 3 points en haut à droite */}
+                            <article className="relative flex h-full flex-col rounded-xl border border-warm-border bg-warm-subtle shadow-sm transition-shadow hover:shadow-md">
                                 <IsAdmin>
                                     <div className="absolute right-1 top-1 z-10">
                                         <PopoverActions
@@ -137,24 +135,22 @@ export default function MealsList({
                                     </div>
                                 </IsAdmin>
 
-                                {/* Contenu principal — cliquable vers le détail */}
                                 <Link
                                     href={`/meals/${meal.name}`}
-                                    className="flex flex-1 flex-col gap-1 rounded-t-lg p-3 pr-8 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-1"
+                                    className="flex flex-1 flex-col gap-1 rounded-t-xl p-3 pr-8 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-warm-accent focus-visible:ring-offset-1"
                                     aria-label={`Voir la recette ${ucFirst(meal.name)}`}
                                 >
-                                    <p className="line-clamp-2 text-sm font-semibold leading-snug text-zinc-900">
+                                    <p className="line-clamp-2 text-sm font-semibold leading-snug text-warm-primary">
                                         {ucFirst(meal.name)}
                                     </p>
                                     {meal.categoryMeal && (
-                                        <span className="mt-0.5 w-fit rounded-full bg-orange-50 px-2 py-0.5 text-xs font-medium text-orange-700">
+                                        <span className="mt-0.5 w-fit rounded-full bg-warm-accent/15 px-2 py-0.5 text-xs font-medium text-warm-primary">
                                             {meal.categoryMeal.name}
                                         </span>
                                     )}
                                 </Link>
 
-                                {/* Footer — actions compactes */}
-                                <div className="flex items-center justify-between border-t border-zinc-100 px-3 py-2">
+                                <div className="flex items-center justify-between border-t border-warm-border px-3 py-2">
                                     <AddToShoppingListForm
                                         type="meal"
                                         id={meal.name}
@@ -165,7 +161,7 @@ export default function MealsList({
                                             typeof navigator.share ===
                                                 "function" && (
                                                 <ShareButton
-                                                    className="text-zinc-400 hover:text-orange-500"
+                                                    className="text-warm-disabled hover:text-warm-accent"
                                                     title={`Recette : ${meal.name}`}
                                                     text="Découvre cette recette sur notre app !"
                                                     url={`${URL}/meals/${meal.name}`}
@@ -184,15 +180,15 @@ export default function MealsList({
                                             onClick={() =>
                                                 toggleLikeMeal(meal.name)
                                             }
-                                            className="flex size-8 items-center justify-center rounded-md transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500"
+                                            className="flex size-8 items-center justify-center rounded-xl transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-warm-accent"
                                         >
                                             <Heart
                                                 size={18}
                                                 aria-hidden="true"
                                                 className={`transition-colors ${
                                                     likedMeals.has(meal.name)
-                                                        ? "fill-red-500 text-red-500"
-                                                        : "text-zinc-400 hover:text-red-400"
+                                                        ? "fill-warm-danger text-warm-danger"
+                                                        : "text-warm-disabled hover:text-warm-danger"
                                                 }`}
                                             />
                                         </button>

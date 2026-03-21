@@ -152,8 +152,7 @@ const CreateComposition: React.FC<CreateCompositionProps>= ({
                     />
                     <div className="flex gap-3">
                         <div>
-                            {/* Champ pour la quantité */}
-                            <label htmlFor="quantity">Quantité</label>
+                            <label htmlFor="quantity" className="text-sm font-medium text-warm-primary">Quantité</label>
                             <input
                                 id="quantity"
                                 type="number"
@@ -175,8 +174,7 @@ const CreateComposition: React.FC<CreateCompositionProps>= ({
                         </div>
                         
                         <div>
-                            {/* Sélection de l'unité */}
-                            <label htmlFor="unit">Unité</label>
+                            <label htmlFor="unit" className="text-sm font-medium text-warm-primary">Unité</label>
                             <select
                                 id="unit"
                                 value={composition.unit}
@@ -216,7 +214,7 @@ const CreateComposition: React.FC<CreateCompositionProps>= ({
                     <FormErrorMessage message={error[index]?.quantity} />
                     <FormErrorMessage message={error[index]?.unit} />
 
-                    {form.length > 1 && <hr className="border-neutral-500" />}
+                    {form.length > 1 && <hr className="border-warm-border" />}
                 </div>
             ))}
 
@@ -232,7 +230,7 @@ const CreateComposition: React.FC<CreateCompositionProps>= ({
             </Button>
             <Button 
                 type="submit" 
-                variant="success" 
+                variant="default"
                 disabled= {isFormInvalid}
             >
                 {isLoading ? "Création de la composition en cours..." : "Valider la composition"}

@@ -20,7 +20,7 @@ const TableHeader = React.forwardRef<
   HTMLTableSectionElement,
   React.HTMLAttributes<HTMLTableSectionElement>
 >(({ className, ...props }, ref) => (
-  <thead ref={ref} className={cn("[&_tr]:border-b", className)} {...props} />
+  <thead ref={ref} className={cn("[&_tr]:border-b [&_tr]:border-warm-border", className)} {...props} />
 ))
 TableHeader.displayName = "TableHeader"
 
@@ -42,10 +42,7 @@ const TableFooter = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <tfoot
     ref={ref}
-    className={cn(
-      "border-t bg-muted/50 font-medium [&>tr]:last:border-b-0",
-      className
-    )}
+    className={cn("border-t border-warm-border bg-warm-muted font-medium [&>tr]:last:border-b-0", className)}
     {...props}
   />
 ))
@@ -58,7 +55,7 @@ const TableRow = React.forwardRef<
   <tr
     ref={ref}
     className={cn(
-      "border-b transition-colors hover:bg-muted/10 data-[state=selected]:bg-muted",
+      "border-b border-warm-border transition-colors hover:bg-warm-muted/50 data-[state=selected]:bg-warm-subtle",
       className
     )}
     {...props}
@@ -73,7 +70,7 @@ const TableHead = React.forwardRef<
   <th
     ref={ref}
     className={cn(
-      "h-10 px-2 text-sm text-left align-middle font-medium text-zinc-600 [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]",
+      "h-9 px-3 text-left align-middle text-xs font-semibold uppercase tracking-wide text-warm-secondary [&:has([role=checkbox])]:pr-0",
       className
     )}
     {...props}
@@ -88,7 +85,7 @@ const TableCell = React.forwardRef<
   <td
     ref={ref}
     className={cn(
-      "p-2 text-lg font-medium align-middle [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]",
+      "px-3 py-2.5 text-sm align-middle text-warm-primary [&:has([role=checkbox])]:pr-0",
       className
     )}
     {...props}
@@ -102,7 +99,7 @@ const TableCaption = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <caption
     ref={ref}
-    className={cn("mt-4 text-sm text-muted-foreground", className)}
+    className={cn("mt-4 text-xs text-warm-secondary", className)}
     {...props}
   />
 ))

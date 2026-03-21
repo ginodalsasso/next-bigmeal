@@ -2,176 +2,47 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ── Palette — source unique des valeurs hex ─────────────────── */
 :root {
-  --black: #0a0a0a;
-  --white: #f5f5fa;
-  --accent-color: #ff8c00;
+  --color-bg-base:        #FEFAE0;
+  --color-bg-subtle:      #FAEDCD;
+  --color-bg-muted:       #F5EDD8;
+  --color-text-primary:   #3D2C1E;
+  --color-text-secondary: #7C6A56;
+  --color-text-disabled:  #B0A090;
+  --color-accent:         #D4A373;
+  --color-accent-hover:   #C8915F;
+  --color-danger:         #C45B4A;
+  --color-border:         #E9EDC9;
+  --color-border-strong:  #D4CBA8;
+
+  /* Alias legacy shadcn */
+  --accent-color: var(--color-accent);
 }
 
-body {
-  font-family: ui-sans-serif, system-ui, sans-serif;
-  color: var(--white);
-  background-color: var(--black);
-}
-
-/* Cacher la scrollbar horizontalement */
-.scrollbar-hide {
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* Internet Explorer 10+ */
-}
-
-.scrollbar-hide::-webkit-scrollbar {
-  display: none; /* Chrome, Safari, Opera */
-}
-
-.button-icons {
-  @apply mr-2 size-4;
-}
-
-.h1-title {
-  @apply mb-4 text-center text-2xl font-bold text-zinc-900;
-}
-
-.h2-title {
-  @apply mb-4 flex items-center gap-3 text-lg font-semibold text-zinc-900;
-}
-
-.h2-icons {
-  @apply size-4 text-orange-500;
-}
-
-
-
-.cards-list {
-  @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-2;
-}
-
-.header-card {
-  @apply mb-4 rounded-lg border border-zinc-200 bg-zinc-50 p-5 text-center;
-}
-
-.card {
-  @apply mb-4 rounded-lg bg-white p-4 text-zinc-900;
-}
-
-.card-content {
-  @apply overflow-hidden rounded-lg border border-zinc-200 bg-zinc-50;
-}
-
-.centered-block {
-  @apply m-4 fixed inset-0 z-50 flex items-center justify-center;
-}
-
-.nav-links-desktop {
-  @apply text-gray-200 text-[18px] font-medium cursor-pointer hover:underline;
-};
-
-.align-icon {
-  @apply flex items-center gap-6;
-};
-
-.nav-links-mobile {
-  @apply text-gray-200 text-[22px] ;
-};
-
-/* style des input type: text / select / textarea */
-.input-text-select {
-  @apply w-full p-2 text-black rounded-md border focus:ring-2 focus:ring-accent-color focus:outline-accent-color;
-}
-
-.input-search {
-  @apply w-full rounded-md border border-neutral-700 bg-neutral-800 p-2 text-white placeholder-neutral-500 focus:border-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-500;
-}
-
-.error-form {
-  @apply text-red-500 text-sm mb-4 mx-auto;
-}
-
-.table-head {
-  @apply text-sm font-semibold text-zinc-500;
-}
-
-.table-cell {
-  @apply py-4;
-}
-
-.sticker-bg-white{
-  @apply bg-orange-500 text-white border-orange-500;
-}
-
-.sticker-bg-black{
-  @apply bg-white text-zinc-700 border-zinc-200 hover:bg-zinc-50 hover:border-zinc-300;
-}
-
-.label-filter {
-  @apply rounded-full cursor-pointer whitespace-nowrap border text-sm font-medium px-3 py-1.5 transition-colors duration-150;
-}
-
-.drawer-form {
-  @apply flex flex-col gap-5;
-}
-
-.drawer-label-input {
-  @apply flex flex-col gap-2;
-}
-
-.drawer-buttons-form {
-  @apply mt-4 flex flex-col-reverse gap-2;
-}
-
+/* ── Tokens shadcn (mode clair uniquement) ───────────────────── */
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 0 0% 3.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 0 0% 3.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 3.9%;
-    --primary: 0 0% 9%;
-    --primary-foreground: 0 0% 98%;
-    --secondary: 0 0% 96.1%;
-    --secondary-foreground: 0 0% 9%;
-    --muted: 0 0% 96.1%;
-    --muted-foreground: 0 0% 45.1%;
-    --accent: 0 0% 96.1%;
-    --accent-foreground: 0 0% 9%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 89.8%;
-    --input: 0 0% 89.8%;
-    --ring: 0 0% 3.9%;
-    --chart-1: 12 76% 61%;
-    --chart-2: 173 58% 39%;
-    --chart-3: 197 37% 24%;
-    --chart-4: 43 74% 66%;
-    --chart-5: 27 87% 67%;
-    --radius: 0.5rem;
-  }
-  .dark {
-    --background: 0 0% 3.9%;
-    --foreground: 0 0% 98%;
-    --card: 0 0% 3.9%;
-    --card-foreground: 0 0% 98%;
-    --popover: 0 0% 3.9%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 0 0% 98%;
-    --primary-foreground: 0 0% 9%;
-    --secondary: 0 0% 14.9%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 0 0% 14.9%;
-    --muted-foreground: 0 0% 63.9%;
-    --accent: 0 0% 14.9%;
-    --accent-foreground: 0 0% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 14.9%;
-    --input: 0 0% 14.9%;
-    --ring: 0 0% 83.1%;
-    --chart-1: 220 70% 50%;
-    --chart-2: 160 60% 45%;
-    --chart-3: 30 80% 55%;
-    --chart-4: 280 65% 60%;
-    --chart-5: 340 75% 55%;
+    --background:             52 93% 94%;
+    --foreground:             27 34% 18%;
+    --card:                   43 82% 89%;
+    --card-foreground:        27 34% 18%;
+    --popover:                52 93% 94%;
+    --popover-foreground:     27 34% 18%;
+    --primary:                30 53% 64%;
+    --primary-foreground:     27 34% 18%;
+    --secondary:              43 82% 89%;
+    --secondary-foreground:   27 34% 18%;
+    --muted:                  49 88% 96%;
+    --muted-foreground:       32 18% 41%;
+    --accent:                 30 53% 64%;
+    --accent-foreground:      27 34% 18%;
+    --destructive:            8 51% 53%;
+    --destructive-foreground: 52 93% 94%;
+    --border:                 67 50% 86%;
+    --input:                  67 50% 86%;
+    --ring:                   30 53% 64%;
+    --radius:                 0.75rem;
   }
 }
 
@@ -181,5 +52,121 @@ body {
   }
   body {
     @apply bg-background text-foreground;
+    font-family: ui-sans-serif, system-ui, sans-serif;
   }
+}
+
+/* ── Scrollbar ───────────────────────────────────────────────── */
+.scrollbar-hide {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* ── Icônes dans les boutons ─────────────────────────────────── */
+.button-icons {
+  @apply mr-2 size-4;
+}
+
+/* ── Titres ──────────────────────────────────────────────────── */
+.h1-title {
+  @apply mb-4 text-center text-2xl font-bold text-warm-primary;
+}
+
+.h2-title {
+  @apply mb-4 flex items-center gap-3 text-lg font-semibold text-warm-primary;
+}
+
+.h2-icons {
+  @apply size-4 text-warm-accent;
+}
+
+/* ── Grilles ─────────────────────────────────────────────────── */
+.cards-list {
+  @apply grid grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4;
+}
+
+/* ── Cards ───────────────────────────────────────────────────── */
+.header-card {
+  @apply mb-4 rounded-xl border border-warm-border bg-warm-subtle p-5 text-center;
+}
+
+.card {
+  @apply mb-4 rounded-xl bg-warm-subtle p-4 text-warm-primary;
+}
+
+.card-content {
+  @apply overflow-hidden rounded-xl border border-warm-border bg-warm-base;
+}
+
+/* ── Overlay centré ──────────────────────────────────────────── */
+.centered-block {
+  @apply fixed inset-0 z-50 m-4 flex items-center justify-center;
+}
+
+/* ── Navigation ──────────────────────────────────────────────── */
+.nav-links-desktop {
+  @apply cursor-pointer text-[18px] font-medium text-warm-secondary hover:text-warm-primary hover:underline;
+}
+
+.align-icon {
+  @apply flex items-center gap-6;
+}
+
+.nav-links-mobile {
+  @apply text-[22px] text-warm-primary;
+}
+
+/* ── Formulaires ─────────────────────────────────────────────── */
+.input-text-select {
+  @apply w-full rounded-xl border border-warm-border bg-warm-base p-2 text-warm-primary focus:outline-none focus:ring-2 focus:ring-warm-accent;
+}
+
+.input-search {
+  @apply w-full rounded-xl border border-warm-border bg-warm-base p-2 text-warm-primary focus:border-warm-accent focus:outline-none focus:ring-2 focus:ring-warm-accent;
+}
+
+.error-form {
+  @apply mx-auto mb-4 text-sm text-warm-danger;
+}
+
+/* ── Tableaux ────────────────────────────────────────────────── */
+.table-head {
+  @apply text-sm font-semibold text-warm-secondary;
+}
+
+.table-cell {
+  @apply py-4;
+}
+
+/* ── Filtres (pills) ─────────────────────────────────────────── */
+.label-filter {
+  @apply cursor-pointer whitespace-nowrap rounded-full border px-3 py-1.5 text-sm font-medium transition-colors duration-150;
+}
+
+.sticker-bg-white {
+  @apply border-warm-accent bg-warm-accent text-white;
+}
+
+.sticker-bg-black {
+  @apply border-warm-border bg-warm-base text-warm-primary hover:border-warm-border-strong hover:bg-warm-subtle;
+}
+
+/* ── Formulaires dans drawers ────────────────────────────────── */
+.drawer-form {
+  @apply flex flex-col gap-5;
+}
+
+.drawer-label-input {
+  @apply flex flex-col gap-2;
+}
+
+.drawer-label-input > label {
+  @apply text-sm font-medium text-warm-primary;
+}
+
+.drawer-buttons-form {
+  @apply mt-4 flex flex-col-reverse gap-2;
 }

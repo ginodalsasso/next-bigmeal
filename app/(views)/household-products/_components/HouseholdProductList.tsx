@@ -65,7 +65,7 @@ export default function HouseholdProductList({
             <IsUser>
                 <Drawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
                     <DrawerTrigger asChild>
-                        <Button variant="success" className="w-full" onClick={() => setIsDrawerOpen(true)}>
+                        <Button className="w-full" onClick={() => setIsDrawerOpen(true)}>
                             Ajouter un produit <Plus aria-hidden="true" />
                         </Button>
                     </DrawerTrigger>
@@ -81,14 +81,13 @@ export default function HouseholdProductList({
             <FilterItems options={filterOptions} onFilterChange={handleFilterChange} />
 
             {householdProducts.length === 0 ? (
-                <p className="py-12 text-center text-sm text-zinc-500">Aucun produit trouvé.</p>
+                <p className="py-12 text-center text-sm text-warm-secondary">Aucun produit trouvé.</p>
             ) : (
                 <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4" role="list">
                     {householdProducts.map((product) => (
                         <li key={product.id}>
-                            <article className="relative flex h-full flex-col rounded-lg border border-zinc-200 bg-white shadow-sm transition-shadow hover:shadow-md">
+                            <article className="relative flex h-full flex-col rounded-xl border border-warm-border bg-warm-subtle shadow-sm transition-shadow hover:shadow-md">
 
-                                {/* Menu actions en haut à droite */}
                                 <div className="absolute right-1 top-1 z-10">
                                     <PopoverActions
                                         id={product.id}
@@ -104,20 +103,18 @@ export default function HouseholdProductList({
                                     />
                                 </div>
 
-                                {/* Contenu principal */}
                                 <div className="flex flex-1 flex-col gap-1.5 p-3 pr-8">
-                                    <p className="line-clamp-2 text-sm font-semibold leading-snug text-zinc-900">
+                                    <p className="line-clamp-2 text-sm font-semibold leading-snug text-warm-primary">
                                         {ucFirst(product.name)}
                                     </p>
                                     {product.categoryHouseholdProduct?.name && (
-                                        <span className="w-fit rounded-full bg-orange-50 px-2 py-0.5 text-xs font-medium text-orange-700">
+                                        <span className="w-fit rounded-full bg-warm-accent/15 px-2 py-0.5 text-xs font-medium text-warm-primary">
                                             {product.categoryHouseholdProduct.name}
                                         </span>
                                     )}
                                 </div>
 
-                                {/* Footer — ajouter à la liste de courses */}
-                                <div className="border-t border-zinc-100 px-3 py-2">
+                                <div className="border-t border-warm-border px-3 py-2">
                                     <AddToShoppingListForm type="product" id={product.id} />
                                 </div>
                             </article>

@@ -1,21 +1,15 @@
 "use client";
 
-// Bibliothèques tierces
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
-// Composants UI
 import { Button } from "@/components/ui/button";
 import DeleteItem from "@/components/layout/DeleteItemDialog";
 
-// Types
 import { ShoppingListType } from "@/lib/types/schemas_interfaces";
-
-// Utils
 import { dateToString, translatedUnit, ucFirst } from "@/lib/utils";
 
-// Services
 import {
     fetchShoppingListAPI,
     markShoppingListAsExpiredAPI,
@@ -27,15 +21,11 @@ import { CheckCircle, Minus, Plus, ShoppingBag, Utensils } from "lucide-react";
 import LoadingSpinner from "@/components/layout/LoadingSpinner";
 import Link from "next/link";
 
-// _________________________ COMPONENT _________________________
 const ShoppingListPage = () => {
     const router = useRouter();
-    const [shoppingList, setShoppingList] = useState<ShoppingListType | null>(
-        null
-    );
+    const [shoppingList, setShoppingList] = useState<ShoppingListType | null>(null);
     const [loading, setLoading] = useState(true);
 
-    // _________________________ LOGIQUE _________________________
     useEffect(() => {
         const fetchShoppingList = async () => {
             try {
@@ -50,28 +40,18 @@ const ShoppingListPage = () => {
         fetchShoppingList();
     }, []);
 
-    // Transformer un item en coché ou non
     const toggleItemChecked = async (id: string, currentChecked: boolean) => {
         try {
             const csrfToken = await getCsrfToken();
-            if (!csrfToken) {
-                console.error("CSRF token invalide");
-                return;
-            }
-            // Calcul de l'état cible (inversion de l'état actuel)
+            if (!csrfToken) return;
             const newCheckedState = !currentChecked;
-
-            // Mise à jour optimiste (local)
             setShoppingList(
                 (prev) =>
                     prev && {
                         ...prev,
-                        items: prev.items.map((item) => {
-                            if (item.id === id) {
-                                return { ...item, isChecked: newCheckedState };
-                            }
-                            return item;
-                        }),
+                        items: prev.items.map((item) =>
+                            item.id === id ? { ...item, isChecked: newCheckedState } : item
+                        ),
                     }
             );
             await toggleItemCheckedAPI(id, newCheckedState, csrfToken);
@@ -81,21 +61,14 @@ const ShoppingListPage = () => {
         }
     };
 
-    // Marquer la liste de courses comme terminée
     const markShoppingListAsExpired = async () => {
         if (shoppingList) {
             const csrfToken = await getCsrfToken();
-            if (!csrfToken) {
-                console.error("CSRF token invalide");
-                return;
-            }
+            if (!csrfToken) return;
             try {
                 await markShoppingListAsExpiredAPI(shoppingList.id, csrfToken);
-
-                toast.success(
-                    "La liste de courses a été marquée comme terminée !"
-                );
-                router.push("/"); // Redirection vers la page d'accueil
+                toast.success("La liste de courses a été marquée comme terminée !");
+                router.push("/");
             } catch (error) {
                 console.error("Erreur lors de la mise à jour :", error);
                 toast.error("Impossible de marquer la liste comme terminée.");
@@ -103,28 +76,17 @@ const ShoppingListPage = () => {
         }
     };
 
-    // Vérifier si tous les ingrédients sont cochés
     const setShoppingListExpired = async () => {
         if (shoppingList) {
-            // Vérifier si la liste de courses correspond à l'ID
-            const list = shoppingList;
-            if (list) {
-                const items = list.items;
-                // Vérifier si tous les items sont cochés
-                const allChecked = items.every((item) => item.isChecked);
-
-                if (allChecked) {
-                    await markShoppingListAsExpired();
-                } else {
-                    toast.error("Tous les ingrédients ne sont pas cochés !");
-                    return false;
-                }
+            const allChecked = shoppingList.items.every((item) => item.isChecked);
+            if (allChecked) {
+                await markShoppingListAsExpired();
+            } else {
+                toast.error("Tous les ingrédients ne sont pas cochés !");
             }
         }
-        return false;
     };
 
-    // Suppression d'un ingrédient dans le state après suppression API
     const handleItemDeleted = (itemId: string) => {
         setShoppingList(
             (prev) =>
@@ -135,8 +97,6 @@ const ShoppingListPage = () => {
         );
     };
 
-    // Suppression d'un repas et de tous ses ingrédients associés du state local
-    // (l'appel API est géré par le composant DeleteItem)
     const handleMealDeleted = (mealId: string) => {
         setShoppingList((prev) =>
             prev && {
@@ -146,56 +106,43 @@ const ShoppingListPage = () => {
         );
     };
 
-    // Mise à jour de la quantité d'un ingrédient
-    const updateItemQuantity = async (id: string, newQuatity: number) => {
-        if (shoppingList) {
-            const csrfToken = await getCsrfToken();
-            if (!csrfToken) {
-                console.error("CSRF token invalide");
-                return;
-            }
-            try {
-                setShoppingList(
-                    (prev) =>
-                        prev && {
-                            // Mise à jour optimiste (local)
-                            ...prev,
-                            items: prev.items.map((item) => {
-                                // itération sur les items
-                                if (item.id === id) {
-                                    // Si l'ID correspond, on met à jour la quantité
-                                    return { ...item, quantity: newQuatity }; // on retourne l'item avec la nouvelle quantité
-                                }
-                                return item;
-                            }),
-                        }
-                );
-
-                await updateItemQuantityAPI(id, newQuatity, csrfToken);
-            } catch (error) {
-                console.error("Erreur lors de la modification:", error);
-                toast.error("Impossible de mettre à jour l'élément.");
-            }
+    const updateItemQuantity = async (id: string, newQuantity: number) => {
+        if (!shoppingList) return;
+        const csrfToken = await getCsrfToken();
+        if (!csrfToken) return;
+        try {
+            setShoppingList(
+                (prev) =>
+                    prev && {
+                        ...prev,
+                        items: prev.items.map((item) =>
+                            item.id === id ? { ...item, quantity: newQuantity } : item
+                        ),
+                    }
+            );
+            await updateItemQuantityAPI(id, newQuantity, csrfToken);
+        } catch (error) {
+            console.error("Erreur lors de la modification:", error);
+            toast.error("Impossible de mettre à jour l'élément.");
         }
     };
 
-    // _________________________ RENDU _________________________
     if (loading) return <LoadingSpinner />;
+
     if (!shoppingList) {
         return (
-            <div className="mt-8 rounded-lg border border-zinc-200 bg-zinc-50 p-8 text-center">
-                <ShoppingBag className="mx-auto mb-3 size-12 text-zinc-300" />
-                <h3 className="mb-1 text-lg font-medium text-zinc-500">
+            <div className="mt-8 rounded-xl border border-warm-border bg-warm-subtle p-8 text-center">
+                <ShoppingBag className="mx-auto mb-3 size-12 text-warm-disabled" />
+                <h3 className="mb-1 text-base font-semibold text-warm-secondary">
                     Aucune liste de courses
                 </h3>
-                <p className="text-sm text-zinc-400">
-                    Créez une nouvelle liste pour commencer vos courses
+                <p className="text-sm text-warm-disabled">
+                    Ajoutez des ingrédients ou des repas pour commencer
                 </p>
             </div>
         );
     }
 
-    // Extraire les repas uniques de la liste de courses (avec leur ID pour la suppression)
     const meals = Array.from(
         new Map(
             shoppingList.items
@@ -205,43 +152,38 @@ const ShoppingListPage = () => {
     );
 
     const checkedItemsCount = shoppingList.items.filter((item) => item.isChecked).length;
-    const progress = (checkedItemsCount / shoppingList.items.length) * 100; // Calcul du pourcentage de progression
+    const progress = (checkedItemsCount / shoppingList.items.length) * 100;
 
     return (
-        <div className="mx-auto">
+        <div className="mx-auto max-w-2xl space-y-4">
+
             {/* En-tête */}
             <header className="header-card">
-                <h1 className="h1-title">
-                    Liste de courses
-                </h1>
-                <div className="flex justify-between">
-                    <div>
-                        <p className="text-sm text-zinc-600">
+                <h1 className="h1-title">Liste de courses</h1>
+                <div className="flex items-end justify-between">
+                    <div className="text-left">
+                        <p className="text-sm text-warm-secondary">
                             Créée le {dateToString(shoppingList.createdAt)}
                         </p>
-                        <p className="mt-1 text-left text-sm font-medium text-orange-600">
-                            {shoppingList.items.length} Produits
+                        <p className="mt-0.5 text-sm font-semibold text-warm-accent">
+                            {shoppingList.items.length} produit{shoppingList.items.length > 1 ? "s" : ""}
                         </p>
                     </div>
                     <div className="text-right">
-                        <p className="text-sm font-medium text-zinc-600">
-                            Progression
+                        <p className="text-xs font-medium text-warm-secondary">
+                            {checkedItemsCount} / {shoppingList.items.length}
                         </p>
-                        <div className="mt-1 h-2 w-32 overflow-hidden rounded-full bg-zinc-200">
+                        <div className="mt-1 h-2 w-28 overflow-hidden rounded-full bg-warm-border">
                             <div
-                                className="h-full bg-orange-500 transition-all duration-500 ease-out"
+                                className="h-full bg-warm-accent transition-all duration-500 ease-out"
                                 style={{ width: `${progress}%` }}
                             />
                         </div>
-                        <p className="mt-1 text-xs text-zinc-500">
-                            {checkedItemsCount} sur {shoppingList.items.length}{" "}
-                            articles
-                        </p>
                     </div>
                 </div>
             </header>
 
-            {/* Affichage des repas */}
+            {/* Repas prévus */}
             {meals.length > 0 && (
                 <div className="card">
                     <h2 className="h2-title">
@@ -252,9 +194,12 @@ const ShoppingListPage = () => {
                         {meals.map((meal) => (
                             <div
                                 key={meal.id}
-                                className="flex items-center justify-between rounded-md bg-orange-50 px-3 py-2 text-sm text-orange-800"
+                                className="flex items-center justify-between rounded-xl bg-warm-accent/10 px-3 py-2 text-sm"
                             >
-                                <Link href={`/meals/${meal.name}`} className="cursor-pointer underline active:text-black">
+                                <Link
+                                    href={`/meals/${meal.name}`}
+                                    className="font-medium text-warm-primary underline-offset-2 hover:underline"
+                                >
                                     {ucFirst(meal.name)}
                                 </Link>
                                 <DeleteItem
@@ -268,101 +213,82 @@ const ShoppingListPage = () => {
                 </div>
             )}
 
-            {/* Liste des ingrédients */}
+            {/* Produits à acheter */}
             <div className="card">
                 <h2 className="h2-title">
                     <ShoppingBag className="h2-icons" />
                     Produits à acheter
                 </h2>
-                <div className="card-content">
-                    {shoppingList.items
-                        .map((item) => (
-                            <div key={item.id}>
-                                <div className="flex items-center justify-between p-3">
-                                    <div className="flex items-center gap-3">
-                                        <input
-                                            type="checkbox"
-                                            id={`item-${item.id}`}
-                                            className="size-5 cursor-pointer rounded-md"
-                                            checked={item.isChecked}
-                                            onChange={() =>
-                                                toggleItemChecked(
-                                                    item.id,
-                                                    item.isChecked ?? false
-                                                )
-                                            }
-                                        />
-                                        {/* Affichage de la gestion de quantité */}
-                                        <div>
-                                            <label
-                                                htmlFor={`item-${item.id}`}
-                                                className={`cursor-pointer select-none font-medium transition-all duration-200 ${
-                                                    item.isChecked
-                                                        ? "text-zinc-400 line-through"
-                                                        : "text-zinc-700"
-                                                }`}
-                                            >
-                                                {item.ingredient
-                                                    ? item.ingredient.name
-                                                    : item.product
-                                                    ? item.product.name
-                                                    : "Produit non trouvé"}
-                                                <span className="text-sm text-zinc-500">
-                                                    {item.ingredient
-                                                        ? ` (${item.ingredient.categoryIngredient.name})`
-                                                        : item.product
-                                                        ? ` (${item.product.categoryHouseholdProduct.name})`
-                                                        : ""}
-                                                </span>
-                                            </label>
+                <div className="card-content divide-y divide-warm-border">
+                    {shoppingList.items.map((item) => (
+                        <div key={item.id} className="flex items-center justify-between px-3 py-3">
+                            <div className="flex items-start gap-3">
+                                <input
+                                    type="checkbox"
+                                    id={`item-${item.id}`}
+                                    className="mt-0.5 size-4 cursor-pointer accent-warm-accent"
+                                    checked={item.isChecked}
+                                    onChange={() => toggleItemChecked(item.id, item.isChecked ?? false)}
+                                />
+                                <div>
+                                    <label
+                                        htmlFor={`item-${item.id}`}
+                                        className={`cursor-pointer select-none text-sm font-medium transition-all duration-200 ${
+                                            item.isChecked
+                                                ? "text-warm-disabled line-through"
+                                                : "text-warm-primary"
+                                        }`}
+                                    >
+                                        {item.ingredient
+                                            ? item.ingredient.name
+                                            : item.product
+                                            ? item.product.name
+                                            : "Produit non trouvé"}
+                                        <span className="ml-1 text-xs text-warm-secondary">
+                                            {item.ingredient
+                                                ? `(${item.ingredient.categoryIngredient.name})`
+                                                : item.product
+                                                ? `(${item.product.categoryHouseholdProduct.name})`
+                                                : ""}
+                                        </span>
+                                    </label>
 
-                                            <div className="mt-1 flex items-center gap-2">
-                                                <button
-                                                    onClick={() => updateItemQuantity(item.id, item.quantity - 1)}
-                                                    className="flex size-6 items-center justify-center rounded-full text-zinc-500 active:bg-zinc-200"
-                                                    disabled={ item.quantity <= 1 }
-                                                >
-                                                    <Minus size={16} />
-                                                </button>
-
-                                                <span
-                                                    className={`mx-1 text-sm ${
-                                                        item.isChecked
-                                                            ? "text-zinc-400 line-through"
-                                                            : "text-zinc-600"
-                                                    }`}
-                                                >
-                                                    {item.quantity}{" "}{(item.unit && translatedUnit(item.unit)) ??"x"}
-                                                </span>
-
-                                                <button
-                                                    onClick={() => updateItemQuantity(item.id, item.quantity + 1)}
-                                                    className="flex size-6 items-center justify-center rounded-full text-zinc-500 active:bg-zinc-200"
-                                                >
-                                                    <Plus size={16} />
-                                                </button>
-                                            </div>
-                                        </div>
+                                    <div className="mt-1 flex items-center gap-1.5">
+                                        <button
+                                            onClick={() => updateItemQuantity(item.id, item.quantity - 1)}
+                                            className="flex size-5 items-center justify-center rounded-full text-warm-secondary transition-colors active:bg-warm-subtle disabled:opacity-30"
+                                            disabled={item.quantity <= 1}
+                                        >
+                                            <Minus size={12} />
+                                        </button>
+                                        <span className={`min-w-8 text-center text-xs ${
+                                            item.isChecked ? "text-warm-disabled line-through" : "text-warm-secondary"
+                                        }`}>
+                                            {item.quantity}{" "}{(item.unit && translatedUnit(item.unit)) ?? "×"}
+                                        </span>
+                                        <button
+                                            onClick={() => updateItemQuantity(item.id, item.quantity + 1)}
+                                            className="flex size-5 items-center justify-center rounded-full text-warm-secondary transition-colors active:bg-warm-subtle"
+                                        >
+                                            <Plus size={12} />
+                                        </button>
                                     </div>
-
-                                    <DeleteItem
-                                        apiUrl="/api/shopping-list/item"
-                                        id={item.id}
-                                        onSubmit={handleItemDeleted}
-                                    />
                                 </div>
                             </div>
-                        ))}
+
+                            <DeleteItem
+                                apiUrl="/api/shopping-list/item"
+                                id={item.id}
+                                onSubmit={handleItemDeleted}
+                            />
+                        </div>
+                    ))}
                 </div>
             </div>
 
-            {/* Bouton terminer */}
-            <div className="mb-10 mt-2 flex justify-end">
-                <Button
-                    variant="success"
-                    className="w-full"
-                    onClick={setShoppingListExpired}
-                >
+            {/* Terminer */}
+            <div className="pb-6">
+                <Button variant="default" className="w-full" onClick={setShoppingListExpired}>
                     <CheckCircle className="button-icons" />
                     J&apos;ai terminé mes courses
                 </Button>

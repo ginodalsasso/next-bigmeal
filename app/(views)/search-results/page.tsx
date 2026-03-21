@@ -161,7 +161,7 @@ const SearchResultsPage: React.FC = () => {
                                                         <Heart
                                                             size={18}
                                                             aria-hidden="true"
-                                                            className={`transition-colors ${likedMeals.has(meal.name) ? "fill-red-500 text-red-500" : "text-zinc-400 hover:text-red-400"}`}
+                                                            className={`transition-colors ${likedMeals.has(meal.name) ? "fill-warm-danger text-warm-danger" : "text-warm-disabled hover:text-warm-danger"}`}
                                                         />
                                                     </button>
                                                 </IsUser>

@@ -67,8 +67,8 @@ const UpdateCategory = <T extends { id: string; name: string }>({
         <form action={handleSubmit} className="space-y-2">
             <FormErrorMessage message={error?.general} />
 
-            <label htmlFor="CategoryName" className="mb-2 text-lg font-bold">
-                Nouveau nom de catégorie:
+            <label htmlFor="CategoryName" className="text-sm font-medium text-warm-primary">
+                Nouveau nom de catégorie
             </label>
             <input
                 className="input-text-select"

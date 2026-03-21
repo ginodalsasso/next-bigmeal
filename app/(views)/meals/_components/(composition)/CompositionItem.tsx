@@ -12,33 +12,27 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { MoreVertical } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-// _________________________ COMPOSANT _________________________
 const CompositionItem = ({ composition, onUpdate, onDelete }: CompositionItemProps) => {
-
-    // _________________________ RENDU __________________
     return (
-        <div className="card-content group relative p-2 ">
+        <div className="card-content group relative p-2">
             <div className="flex items-center">
-                {/* Quantité et unité dans un badge */}
                 <Badge
                     variant="outline"
-                    className="mr-3 border-orange-100 bg-orange-50 font-medium text-orange-700"
+                    className="mr-3 shrink-0 border-warm-border bg-warm-accent/15 font-medium text-warm-primary"
                 >
                     {composition.quantity} {translatedUnit(composition.unit)}
                 </Badge>
 
-                {/* Nom d'ingrédient */}
-                <p className="flex-1 font-medium text-zinc-700">
+                <p className="flex-1 text-sm font-medium text-warm-primary">
                     {ucFirst(composition.ingredient?.name || "Ingrédient inconnu")}
                 </p>
 
-                {/* Menu d'actions admin avec Popover */}
                 <IsAdmin>
                     <div className="ml-auto">
                         <Popover>
                             <PopoverTrigger asChild>
                                 <Button variant="link" aria-label="Actions">
-                                    <MoreVertical className="text-zinc-500" aria-hidden="true" />
+                                    <MoreVertical className="text-warm-secondary" aria-hidden="true" />
                                 </Button>
                             </PopoverTrigger>
                             <PopoverContent className="w-auto">
@@ -52,9 +46,9 @@ const CompositionItem = ({ composition, onUpdate, onDelete }: CompositionItemPro
                                             />
                                         )}
                                     />
-                                    <DeleteItem 
-                                        apiUrl="/api/compositions" 
-                                        id={composition.id} 
+                                    <DeleteItem
+                                        apiUrl="/api/compositions"
+                                        id={composition.id}
                                         onSubmit={onDelete}
                                     />
                                 </div>

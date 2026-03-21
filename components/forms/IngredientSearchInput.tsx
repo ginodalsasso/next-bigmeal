@@ -49,7 +49,7 @@ export const IngredientSearchInput = ({ value, onSelect }: IngredientSearchInput
 
     return (
         <div className="relative">
-            <label htmlFor="ingrédient">Ingrédient</label>
+            <label htmlFor="ingrédient" className="text-sm font-medium text-warm-primary">Ingrédient</label>
             <input
                 className="input-text-select"
                 type="text"
@@ -60,13 +60,13 @@ export const IngredientSearchInput = ({ value, onSelect }: IngredientSearchInput
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="Patates, tomates..."
             />
-            {loading && <p className="text-sm">Chargement...</p>}
+            {loading && <p className="text-sm text-warm-secondary">Chargement...</p>}
             {results.length > 0 && (
-                <ul className="absolute z-10 w-full bg-white text-black shadow">
+                <ul className="absolute z-10 w-full overflow-hidden rounded-lg border border-warm-border bg-warm-base shadow-sm">
                     {results.map((item) => (
                         <li
                             key={item.id}
-                            className="cursor-pointer p-2 hover:bg-zinc-100"
+                            className="cursor-pointer px-3 py-2 text-sm text-warm-primary hover:bg-warm-subtle"
                             onClick={() => handleSelect(item)}
                         >
                             {item.name}

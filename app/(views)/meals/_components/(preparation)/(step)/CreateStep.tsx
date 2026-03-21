@@ -131,7 +131,7 @@ const CreatePreparation: React.FC<CreateStepProps> = ({
                 <div key={index} className="flex flex-col gap-3 pb-4">
                     {/* Champ pour le numéro de l'étape */}
                     <div className="flex items-center justify-between">    
-                        <strong>Étape {step.stepNumber}</strong>
+                        <strong className="text-sm font-semibold text-warm-primary">Étape {step.stepNumber}</strong>
 
                     {/* Bouton pour supprimer une ligne */}
                     <Button 
@@ -146,7 +146,7 @@ const CreatePreparation: React.FC<CreateStepProps> = ({
 
                     {/* Champ pour la description de l'étape */}
                     <div>
-                        <label htmlFor="description">
+                        <label htmlFor="description" className="text-sm font-medium text-warm-primary">
                             Description
                         </label>
                         <textarea
@@ -168,7 +168,7 @@ const CreatePreparation: React.FC<CreateStepProps> = ({
                     </div>
                     <FormErrorMessage message={error[index]?.stepNumber} />
                     <FormErrorMessage message={error[index]?.description} />
-                    {form.length > 1 && <hr className="border-neutral-500" />}
+                    {form.length > 1 && <hr className="border-warm-border" />}
                 </div>
             ))}
 
@@ -184,7 +184,7 @@ const CreatePreparation: React.FC<CreateStepProps> = ({
             {/* Bouton de soumission */}
             <Button 
                 type="submit" 
-                variant="success" 
+                variant="default" 
                 disabled={isLoading || form.length === 0}
             >
                 {isLoading ? "Création des étapes en cours..." : "Valider les étapes"}

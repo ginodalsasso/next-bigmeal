@@ -88,7 +88,7 @@ export default async function FavoritesPage({ searchParams }: searchParamsProps)
         console.error("Une erreur s'est produite lors de la récupération des repas :", error);
         return (
             <div className="flex min-h-screen items-center justify-center text-center">
-                <p className="text-red-500">Erreur lors de la récupération des ingrédients.</p>
+                <p className="text-warm-danger">Erreur lors de la récupération des ingrédients.</p>
             </div>
         );
     }

@@ -56,7 +56,7 @@ export default async function HouseholdProductPage( { searchParams }: searchPara
         console.error("Une erreur s'est produite lors de la récupération des produits ménagers :", error);
         return (
             <div className="flex min-h-screen items-center justify-center text-center">
-                <p className="text-red-500">Erreur lors de la récupération des produits ménagers.</p>
+                <p className="text-warm-danger">Erreur lors de la récupération des produits ménagers.</p>
             </div>
         );
     }

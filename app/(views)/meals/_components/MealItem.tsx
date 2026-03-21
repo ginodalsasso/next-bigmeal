@@ -1,23 +1,18 @@
 "use client";
 
-// Bibliothèques tierces
 import React, { useState } from "react";
 
-// Types
 import { CompositionType, MealType, PreparationType, StepType } from "@/lib/types/schemas_interfaces";
 
-// Composants
 import CreateComposition from "./(composition)/CreateComposition";
 import IsAdmin from "@/components/isAdmin";
 import CreatePreparation from "./(preparation)/CreatePreparation";
 import CreateStep from "./(preparation)/(step)/CreateStep";
 
-// Composants UI
 import { Button } from "@/components/ui/button";
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from "@/components/ui/drawer";
 import { Bookmark, ChefHat, ClipboardList, Plus, Sparkles, Utensils } from "lucide-react";
 
-// Constantes
 import CompositionItem from "./(composition)/CompositionItem";
 import PreparationItem from "./(preparation)/PreparationItem";
 import { ucFirst } from "@/lib/utils";
@@ -26,60 +21,44 @@ import ShareButton from "@/components/ShareButton";
 import { URL } from "@/lib/constants/api_routes";
 
 
-// _________________________ COMPOSANT _________________________
 export default function MealItem( {fetchedMeal}: { fetchedMeal: MealType }) {
 
-    // _________________________ ETATS _________________________
     const [meal, setMeal] = useState<MealType>(fetchedMeal);
     const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
     const [currentAction, setCurrentAction] = useState<"composition" | "preparation" | "step">("composition");
 
-    // _________________________ CRUD _________________________
-    // COMPOSITION
     const createComposition = (compositions: CompositionType[]) => {
         setMeal((prevMeal) => {
-            // Vérifie si `prevMeal` est nul ou non défini.
             if (!prevMeal) return prevMeal;
-    
-            // Retourne un nouvel objet pour `meal` avec la liste mise à jour des compositions
             return { ...prevMeal, compositions: [...compositions] };
         });
-        setIsDialogOpen(false); 
+        setIsDialogOpen(false);
     };
 
     const updateComposition = (updatedComposition: CompositionType) => {
         setMeal((prevMeal) => {
-            // Vérifie si `prevMeal` est nul ou non défini.
             if (!prevMeal) return prevMeal;
-    
-            // Mise à jour des compositions en parcourant le tableau `prevMeal.compositions`
             const updatedCompositions = prevMeal.compositions.map((composition) =>
-                // Si l'ID de la composition correspond à celui de `updatedComposition`
                 composition.id === updatedComposition.id
-                    ? { ...composition, ...updatedComposition } // On fusionne les propriétés existantes et mises à jour
-                    : composition // Sinon, on garde la composition inchangée
+                    ? { ...composition, ...updatedComposition }
+                    : composition
             );
-    
-            // Retourne un nouvel objet pour `meal` avec la liste mise à jour des compositions
             return { ...prevMeal, compositions: updatedCompositions };
         });
     };
-    
-    // Suppression d'un repas dans le state après suppression API
+
     const deleteComposition = (id: string) => {
         setMeal((prevMeal) => {
-            if (!prevMeal) return prevMeal; // Vérifie si prevMeal est nul ou non défini.
+            if (!prevMeal) return prevMeal;
             return {
-                ...prevMeal, // Copie des propriétés existantes
+                ...prevMeal,
                 compositions: prevMeal.compositions.filter(
-                    // Retourne toutes les compositions sauf celle avec l'ID correspondant
                     (composition) => composition.id !== id
                 ),
             };
         });
     };
 
-    // PREPARATION
     const createPreparation = (preparation: PreparationType) => {
         setMeal((prevMeal) => {
             if (!prevMeal) return prevMeal;
@@ -102,17 +81,14 @@ export default function MealItem( {fetchedMeal}: { fetchedMeal: MealType }) {
         });
     };
 
-    // STEPS
     const createStep = (steps: StepType[]) => {
         setMeal((prevMeal) => {
-            if (!prevMeal || !prevMeal.preparation) {
-                return prevMeal;
-            }
+            if (!prevMeal || !prevMeal.preparation) return prevMeal;
             return {
-                ...prevMeal, 
-                preparation: { 
+                ...prevMeal,
+                preparation: {
                     ...prevMeal.preparation,
-                    steps: { 
+                    steps: {
                         ...prevMeal.preparation?.steps,
                         steps: [...steps],
                     },
@@ -120,59 +96,66 @@ export default function MealItem( {fetchedMeal}: { fetchedMeal: MealType }) {
             };
         });
         setIsDialogOpen(false);
-    }
-    
-    // _________________________ RENDU _________________________
-    if (!meal) return  notFound();
+    };
+
+    if (!meal) return notFound();
 
     return (
-        <div className="mx-auto max-w-4xl space-y-8">
-            {/* En-tête du repas */}
-            <header className="header-card relative">
-                <div className="mx-auto mb-3 flex size-16 items-center justify-center rounded-full bg-orange-100 text-orange-500">
-                    <ChefHat size={28} aria-hidden="true" />
+        <div className="mx-auto max-w-4xl space-y-6">
+
+            {/* En-tête */}
+            <header className="relative rounded-xl border border-warm-border bg-warm-subtle p-6 text-center">
+                <div className="mx-auto mb-3 flex size-14 items-center justify-center rounded-full bg-warm-accent/15">
+                    <ChefHat size={26} className="text-warm-accent" aria-hidden="true" />
                 </div>
-                <h1 className="h1-title">{ucFirst(meal.name)}</h1>
-                <p className="mx-auto max-w-2xl text-sm text-zinc-500">
+                <h1 className="mb-1 text-2xl font-bold text-warm-primary">{ucFirst(meal.name)}</h1>
+                {meal.categoryMeal && (
+                    <span className="mb-2 inline-block rounded-full bg-warm-accent/15 px-3 py-0.5 text-xs font-medium text-warm-primary">
+                        {meal.categoryMeal.name}
+                    </span>
+                )}
+                <p className="mx-auto max-w-2xl text-sm text-warm-secondary">
                     {meal.description || "Aucune description disponible pour ce repas."}
                 </p>
                 <ShareButton
-                    className="absolute right-4 top-4 text-zinc-400 hover:text-orange-500"
+                    className="absolute right-4 top-4 text-warm-disabled hover:text-warm-accent"
                     title={meal.name}
                     text={meal.description || "Aucune description disponible pour ce repas."}
                     url={`${URL}/meals/${meal.name}`}
                 />
             </header>
 
-            {/* Boutons d'administration */}
+            {/* Conseil */}
+            <div className="flex items-start gap-3 rounded-xl border border-warm-border bg-warm-muted px-4 py-3">
+                <Bookmark size={16} className="mt-0.5 shrink-0 text-warm-accent" aria-hidden="true" />
+                <p className="text-sm text-warm-secondary">
+                    Préparez tous vos ingrédients à l&apos;avance pour faciliter la réalisation de cette recette.
+                </p>
+            </div>
+
+            {/* Options admin */}
             <IsAdmin>
-                <div className="rounded-lg border border-zinc-200 bg-white p-4 shadow-sm">
+                <div className="rounded-xl border border-warm-border bg-warm-subtle p-4">
                     <h2 className="h2-title">
                         <Sparkles className="h2-icons" />
                         Options d&apos;administration
                     </h2>
                     <Drawer open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                         <div className="flex flex-wrap gap-2">
-                            <Button 
-                                variant="success" 
+                            <Button
+                                variant="default"
                                 className="w-full"
-                                onClick={() => {
-                                    setCurrentAction("composition");
-                                    setIsDialogOpen(true);
-                                }}
+                                onClick={() => { setCurrentAction("composition"); setIsDialogOpen(true); }}
                             >
                                 <Utensils className="button-icons" />
                                 Ajouter des ingrédients
                             </Button>
 
                             {!meal.preparation && (
-                                <Button 
-                                    variant="success"
+                                <Button
+                                    variant="default"
                                     className="w-full"
-                                    onClick={() => {
-                                        setCurrentAction("preparation");
-                                        setIsDialogOpen(true);
-                                    }}
+                                    onClick={() => { setCurrentAction("preparation"); setIsDialogOpen(true); }}
                                 >
                                     <ClipboardList className="button-icons" />
                                     Ajouter une préparation
@@ -180,88 +163,51 @@ export default function MealItem( {fetchedMeal}: { fetchedMeal: MealType }) {
                             )}
 
                             {meal.preparation && (
-                                <Button 
-                                    variant="success"
+                                <Button
+                                    variant="default"
                                     className="w-full"
-                                    onClick={() => {
-                                        setCurrentAction("step");
-                                        setIsDialogOpen(true);
-                                    }}
+                                    onClick={() => { setCurrentAction("step"); setIsDialogOpen(true); }}
                                 >
                                     <Plus className="button-icons" />
                                     Ajouter des étapes
                                 </Button>
                             )}
                         </div>
-                        
+
                         <DrawerContent className="px-4">
                             <DrawerHeader>
                                 <DrawerTitle>
-                                    {currentAction === "composition" && (
-                                        <>
-                                            Ajouter des ingrédients
-                                        </>
-                                    )}
-                                    {currentAction === "preparation" && (
-                                        <>
-                                            Ajouter une préparation
-                                        </>
-                                    )}
-                                    {currentAction === "step" && (
-                                        <>
-                                            Ajouter des étapes
-                                        </>
-                                    )}
+                                    {currentAction === "composition" && "Ajouter des ingrédients"}
+                                    {currentAction === "preparation" && "Ajouter une préparation"}
+                                    {currentAction === "step" && "Ajouter des étapes"}
                                 </DrawerTitle>
                             </DrawerHeader>
-                            
+
                             {currentAction === "composition" && (
-                                <CreateComposition
-                                    mealId={meal.id}
-                                    onSubmit={createComposition}
-                                />
+                                <CreateComposition mealId={meal.id} onSubmit={createComposition} />
                             )}
-
                             {currentAction === "preparation" && (
-                                <CreatePreparation
-                                    mealId={meal.id}
-                                    onSubmit={createPreparation}
-                                />
+                                <CreatePreparation mealId={meal.id} onSubmit={createPreparation} />
                             )}
-
                             {currentAction === "step" && (
-                                <CreateStep
-                                    preparationId={meal.preparation?.id || ""}
-                                    onSubmit={createStep}
-                                />
+                                <CreateStep preparationId={meal.preparation?.id || ""} onSubmit={createStep} />
                             )}
                         </DrawerContent>
                     </Drawer>
                 </div>
             </IsAdmin>
 
-            {/* Note  */}
-            <div className="rounded-lg border border-amber-200 bg-amber-50 p-4 text-amber-800">
-                <div className="flex items-start">
-                    <Bookmark />
-                    <div className="ml-3">
-                        <h3 className="font-medium">Conseil de préparation</h3>
-                        <p className="mt-1 text-sm">
-                            Préparez tous vos ingrédients à l&apos;avance pour faciliter la réalisation de cette recette.
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <div className="grid gap-8 md:grid-cols-2">
-                {/* Liste des ingrédeints */}
+            {/* Contenu principal : ingrédients + préparation */}
+            <div className="grid gap-6 md:grid-cols-2">
+
                 <section className="card">
                     <h2 className="h2-title">
                         <Utensils className="h2-icons" />
-                        Liste des ingrédients
+                        Ingrédients
                     </h2>
-                    
+
                     {meal.compositions.length > 0 ? (
-                        <div className="space-y-4">
+                        <div className="space-y-2">
                             {meal.compositions.map((composition) => (
                                 <CompositionItem
                                     key={composition.id}
@@ -272,41 +218,34 @@ export default function MealItem( {fetchedMeal}: { fetchedMeal: MealType }) {
                             ))}
                         </div>
                     ) : (
-                        <div className="rounded-md bg-zinc-50 py-6 text-center">
-                            <Utensils className="mx-auto mb-3 size-8 text-zinc-300" />
-                            <p className="text-zinc-500">Aucun ingrédient disponible pour ce repas.</p>
-                            <p className="mt-1 text-sm text-zinc-400">
-                                Ajoutez des ingrédients en cliquant sur le bouton ci-dessus
-                            </p>
+                        <div className="rounded-xl bg-warm-muted py-6 text-center">
+                            <Utensils className="mx-auto mb-2 size-8 text-warm-disabled" />
+                            <p className="text-sm text-warm-secondary">Aucun ingrédient renseigné.</p>
                         </div>
                     )}
                 </section>
 
-                {/* section de préparation */}
                 <section className="card">
                     <h2 className="h2-title">
                         <ClipboardList className="h2-icons"/>
-                        Instructions de préparation
+                        Préparation
                     </h2>
-                    
+
                     {meal.preparation ? (
-                        <PreparationItem 
-                            key={meal.preparation.id} 
-                            fetchedPreparation={meal.preparation} 
+                        <PreparationItem
+                            key={meal.preparation.id}
+                            fetchedPreparation={meal.preparation}
                             onUpdate={updatePreparation}
                             onDelete={deletePreparation}
                         />
                     ) : (
-                        <div className="rounded-md bg-zinc-50 py-6 text-center">
-                            <ClipboardList className="mx-auto mb-3 text-zinc-300" />
-                            <p className="text-zinc-500">Aucune préparation disponible pour ce repas.</p>
-                            <p className="mt-1 text-sm text-zinc-400">
-                                Ajoutez une méthode de préparation en cliquant sur le bouton ci-dessus
-                            </p>
+                        <div className="rounded-xl bg-warm-muted py-6 text-center">
+                            <ClipboardList className="mx-auto mb-2 text-warm-disabled" />
+                            <p className="text-sm text-warm-secondary">Aucune préparation renseignée.</p>
                         </div>
                     )}
                 </section>
             </div>
         </div>
     );
-};
+}

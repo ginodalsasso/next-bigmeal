@@ -19,7 +19,7 @@ const Sidebar = () => {
 
     return (
         <IsUser>
-            <div className="sticky top-0 h-screen w-56 bg-neutral-900 py-6">
+            <div className="sticky top-0 h-screen w-56 bg-warm-base py-6">
                 <nav aria-label="Navigation principale">
                     <ul className="flex flex-col gap-1 px-3">
                         {links.map((link) => {
@@ -32,16 +32,16 @@ const Sidebar = () => {
                                     <Link
                                         href={link.url}
                                         aria-current={isActive ? "page" : undefined}
-                                        className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400 ${
+                                        className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-warm-accent ${
                                             isActive
-                                                ? "bg-orange-500/10 text-orange-400"
-                                                : "text-neutral-400 hover:bg-neutral-800 hover:text-white"
+                                                ? "bg-warm-accent/15 text-warm-primary"
+                                                : "text-warm-secondary hover:bg-warm-subtle hover:text-warm-primary"
                                         }`}
                                     >
                                         <Icon
                                             size={17}
                                             strokeWidth={isActive ? 2.5 : 1.75}
-                                            className={isActive ? "text-orange-400" : "text-neutral-500"}
+                                            className={isActive ? "text-warm-accent" : "text-warm-secondary"}
                                             aria-hidden="true"
                                         />
                                         {link.title}

@@ -5,24 +5,28 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-warm-accent focus-visible:ring-offset-1 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
   {
     variants: {
       variant: {
         default:
-          "rounded-md bg-orange-500 px-4 py-2 text-white hover:bg-orange-600 active:bg-orange-700",
+          "rounded-xl bg-warm-accent px-4 py-2 text-white hover:bg-warm-accent-hover active:bg-warm-accent-hover",
         destructive:
-          "rounded-md bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90",
+          "rounded-xl bg-warm-danger text-white shadow-sm hover:bg-warm-danger/90",
         outline:
-          "rounded-md border border-zinc-200 bg-white text-zinc-900 shadow-sm hover:border-zinc-300 hover:bg-zinc-50",
+          "rounded-xl border border-warm-border bg-warm-base text-warm-primary shadow-sm hover:border-warm-border-strong hover:bg-warm-subtle",
         secondary:
-          "rounded-md bg-zinc-100 text-zinc-900 hover:bg-zinc-200",
-        ghost:    "rounded-md text-zinc-900 hover:bg-zinc-100",
-        link:     "rounded-md text-orange-500 underline-offset-4 hover:underline",
-        success:  "rounded-md bg-emerald-600 px-4 py-2 text-white hover:bg-emerald-700 active:bg-emerald-800",
-        edit:     "rounded-md bg-zinc-700 px-4 py-2 text-white hover:bg-zinc-800 active:bg-zinc-900",
-        delete:   "rounded-md bg-red-600 px-4 py-2 text-white hover:bg-red-700 active:bg-red-800",
-        cancel:   "rounded-md border border-zinc-300 bg-white px-4 py-2 text-zinc-700 hover:bg-zinc-50",
+          "rounded-xl bg-warm-subtle text-warm-primary hover:bg-warm-muted",
+        ghost:
+          "rounded-xl text-warm-primary hover:bg-warm-subtle",
+        link:
+          "rounded-xl text-warm-accent underline-offset-4 hover:underline",
+        edit:
+          "rounded-xl bg-warm-secondary px-4 py-2 text-white hover:bg-warm-primary active:bg-warm-primary",
+        delete:
+          "rounded-xl bg-warm-danger px-4 py-2 text-white hover:bg-warm-danger/90 active:bg-warm-danger/80",
+        cancel:
+          "rounded-xl border border-warm-border bg-warm-base px-4 py-2 text-warm-secondary hover:bg-warm-subtle",
       },
       size: {
         default: "h-11 px-5",

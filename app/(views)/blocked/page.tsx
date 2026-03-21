@@ -14,8 +14,8 @@ export default function BlockedPage() {
                 aria-describedby="blocked-desc"
             >
                 <div className="mb-6 flex justify-center">
-                    <div className="flex size-16 items-center justify-center rounded-full bg-red-50">
-                        <ShieldOff className="size-8 text-red-500" aria-hidden="true" />
+                    <div className="flex size-16 items-center justify-center rounded-full bg-warm-danger/10">
+                        <ShieldOff className="size-8 text-warm-danger" aria-hidden="true" />
                     </div>
                 </div>
 

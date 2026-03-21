@@ -82,7 +82,7 @@ const UpdateComposition: React.FC<UpdateCompositionProps> = ({
             
             {/* Champ pour la quantité */}
             <div className="drawer-label-input">
-                <label htmlFor="quantity" className="text-sm font-semibold">
+                <label htmlFor="quantity" className="text-sm font-medium text-warm-primary">
                     Quantité
                 </label>
                 <input
@@ -100,7 +100,7 @@ const UpdateComposition: React.FC<UpdateCompositionProps> = ({
 
             {/* Sélecteur pour l'unité */}
             <div className="drawer-label-input">
-                <label htmlFor="unit" className="text-sm font-semibold">
+                <label htmlFor="unit" className="text-sm font-medium text-warm-primary">
                     Unité
                 </label>
                 <select

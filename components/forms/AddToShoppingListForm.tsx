@@ -77,7 +77,7 @@ const AddToShoppingListForm: React.FC<AddToShoppingListFormProps> = ({ type, id 
                     type="submit"
                     disabled={isLoading}
                     aria-label="Ajouter le repas à la liste de courses"
-                    className="flex size-8 items-center justify-center rounded-md bg-orange-500 text-white transition-colors hover:bg-orange-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-1 active:bg-orange-700 disabled:opacity-50"
+                    className="flex size-8 items-center justify-center rounded-md bg-warm-accent text-white transition-colors hover:bg-warm-accent-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-warm-accent focus-visible:ring-offset-1 active:bg-warm-accent-hover disabled:opacity-50"
                 >
                     <ShoppingCart size={16} aria-hidden="true" />
                 </button>
@@ -88,19 +88,19 @@ const AddToShoppingListForm: React.FC<AddToShoppingListFormProps> = ({ type, id 
     return (
         <form onSubmit={handleAddToShoppingList} className="flex w-full items-center justify-between gap-1">
             {/* Stepper */}
-            <div className="flex items-center rounded-md border border-zinc-200" role="group" aria-label="Quantité">
+            <div className="flex items-center rounded-md border border-warm-border" role="group" aria-label="Quantité">
                 <button
                     type="button"
                     onClick={decrement}
                     disabled={quantity.quantity <= 1 || isLoading}
                     aria-label="Diminuer la quantité"
-                    className="flex size-8 items-center justify-center rounded-l-md text-zinc-500 transition-colors hover:bg-zinc-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-orange-500 disabled:opacity-30"
+                    className="flex size-8 items-center justify-center rounded-l-md text-warm-secondary transition-colors hover:bg-warm-subtle focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-warm-accent disabled:opacity-30"
                 >
                     <Minus size={12} aria-hidden="true" />
                 </button>
 
                 <span
-                    className="min-w-7 select-none text-center text-sm font-semibold tabular-nums text-zinc-900"
+                    className="min-w-7 select-none text-center text-sm font-semibold tabular-nums text-warm-primary"
                     aria-live="polite"
                     aria-atomic="true"
                     aria-label={`Quantité : ${quantity.quantity}`}
@@ -113,7 +113,7 @@ const AddToShoppingListForm: React.FC<AddToShoppingListFormProps> = ({ type, id 
                     onClick={increment}
                     disabled={isLoading}
                     aria-label="Augmenter la quantité"
-                    className="flex size-8 items-center justify-center rounded-r-md text-zinc-500 transition-colors hover:bg-zinc-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-orange-500"
+                    className="flex size-8 items-center justify-center rounded-r-md text-warm-secondary transition-colors hover:bg-warm-subtle focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-warm-accent"
                 >
                     <Plus size={12} aria-hidden="true" />
                 </button>
@@ -124,7 +124,7 @@ const AddToShoppingListForm: React.FC<AddToShoppingListFormProps> = ({ type, id 
                 type="submit"
                 disabled={isLoading}
                 aria-label="Ajouter à la liste de courses"
-                className="flex size-8 items-center justify-center rounded-md bg-orange-500 text-white transition-colors hover:bg-orange-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-1 active:bg-orange-700 disabled:opacity-50"
+                className="flex size-8 items-center justify-center rounded-md bg-warm-accent text-white transition-colors hover:bg-warm-accent-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-warm-accent focus-visible:ring-offset-1 active:bg-warm-accent-hover disabled:opacity-50"
             >
                 <ShoppingCart size={15} aria-hidden="true" />
             </button>

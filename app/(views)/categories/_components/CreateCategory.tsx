@@ -70,8 +70,8 @@ const CreateCategory = <T,>({ apiUrl, onSubmit }: CreateCategoryProps<T>) => {
             <div className="flex flex-col gap-2">
                 <form action={handleSubmit} className="space-y-2">
                     <FormErrorMessage message={error?.general} />
-                    <label htmlFor="CategoryName" className="mb-2 text-lg font-bold">
-                        Nouvelle catégorie:
+                    <label htmlFor="CategoryName" className="text-sm font-medium text-warm-primary">
+                        Nouvelle catégorie
                     </label>
                     <input
                         className="input-text-select"

@@ -33,51 +33,51 @@ const ProfilePage = () => {
         fetchUser();
     }, []);
 
-
     const updateEmail = (newEmail: string) => {
-        setUser((prevUser) => 
+        setUser((prevUser) =>
             prevUser ? { ...prevUser, email: newEmail } : prevUser
         );
         setIsChangedEmail(false);
-    }
+    };
 
     if (loading) return <LoadingSpinner />;
     if (!user) return notFound();
 
     return (
-        <div className="mx-auto">
+        <div className="mx-auto max-w-2xl">
             {isChangedPassword ? (
-                <div className="rounded-lg shadow-md">
-                    <ResetPasswordForm onBackToProfile={() => setIsChangedPassword(false)} />
-                </div>
+                <ResetPasswordForm onBackToProfile={() => setIsChangedPassword(false)} />
             ) : (
-                <div>
+                <div className="space-y-4">
+
                     {/* En-tête du profil */}
-                    <div className="mb-4 flex flex-col items-center gap-4 rounded-lg border border-neutral-800 bg-neutral-900 p-5 text-white">
+                    <div className="flex items-center justify-between rounded-xl border border-warm-border bg-warm-subtle p-4">
                         <div className="flex items-center gap-3">
-                            <div className="rounded-full bg-neutral-800 p-2 text-orange-400">
-                                <User size={28} aria-hidden="true" />
+                            <div className="flex size-11 items-center justify-center rounded-full bg-warm-accent/15">
+                                <User size={22} className="text-warm-accent" aria-hidden="true" />
                             </div>
                             <div>
-                                <h1 className="text-lg font-semibold leading-tight">Mon profil</h1>
-                                <p className="text-sm text-neutral-400">{user.email}</p>
+                                <p className="text-sm font-semibold text-warm-primary">Mon profil</p>
+                                <p className="text-xs text-warm-secondary">{user.email}</p>
                             </div>
                         </div>
                         <Button
                             onClick={() => signOut()}
                             variant="ghost"
-                            className="w-full text-neutral-300 hover:bg-neutral-800 hover:text-white"
+                            size="sm"
+                            className="text-warm-danger hover:bg-warm-danger/10 hover:text-warm-danger"
                         >
-                            <LogOut size={16} aria-hidden="true" />
+                            <LogOut size={15} aria-hidden="true" />
                             Déconnexion
                         </Button>
                     </div>
+
                     <Tabs defaultValue="profile">
                         <TabsList className="mb-2 w-full">
-                            <TabsTrigger value="profile">
+                            <TabsTrigger value="profile" className="flex-1">
                                 Informations
                             </TabsTrigger>
-                            <TabsTrigger value="shoppingList">
+                            <TabsTrigger value="shoppingList" className="flex-1">
                                 Listes de courses
                             </TabsTrigger>
                         </TabsList>

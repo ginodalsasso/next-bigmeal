@@ -80,14 +80,14 @@ export default function InstallPrompt() {
     }
 
     return (
-        <div className="fixed inset-x-0 bottom-0 z-50 border-t border-neutral-800 bg-neutral-900 p-4 shadow-lg">
+        <div className="fixed inset-x-0 bottom-0 z-50 border-t border-warm-border bg-warm-base p-4 shadow-lg">
             <div className="flex flex-col space-y-2">
                 <div className="flex items-center justify-between">
-                    <h3 className="text-lg font-semibold">Installer l&apos;appli</h3>
+                    <h3 className="text-sm font-semibold text-warm-primary">Installer l&apos;appli</h3>
                     <button
                         onClick={() => setIsDismissed(true)}
                         aria-label="Fermer"
-                        className="rounded p-1 text-neutral-400 hover:text-neutral-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400"
+                        className="rounded-lg p-1 text-warm-secondary hover:bg-warm-subtle focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-warm-accent"
                     >
                         <X size={18} aria-hidden="true" />
                     </button>
@@ -104,25 +104,25 @@ export default function InstallPrompt() {
                         </Button>
 
                         {showIOSInstructions && (
-                            <div className="mt-2 rounded-lg bg-neutral-800 p-3 text-neutral-100">
-                                <p className="text-sm">
+                            <div className="mt-2 rounded-lg border border-warm-border bg-warm-subtle p-3">
+                                <p className="text-sm text-warm-primary">
                                     Pour installer cette application sur votre
                                     appareil iOS :
                                 </p>
-                                <ol className="mt-2 list-decimal pl-5 text-sm">
+                                <ol className="mt-2 list-decimal pl-5 text-sm text-warm-secondary">
                                     <li>
                                         Appuyez sur le bouton Partager
                                     </li>
                                     <li>
                                         Faites défiler et appuyez sur{" "}
                                         <span className="font-bold">
-                                            Sur l&apos;écran d&apos;accueil&quot;
+                                            &quot;Sur l&apos;écran d&apos;accueil&quot;
                                         </span>
                                     </li>
                                     <li>
                                         Appuyez sur{" "}
                                         <span className="font-bold">
-                                            Ajouter&quot;
+                                            &quot;Ajouter&quot;
                                         </span>{" "}
                                         en haut à droite
                                     </li>

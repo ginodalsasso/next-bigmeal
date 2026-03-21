@@ -1,4 +1,4 @@
-import { CalendarRange, Edit, IdCard, Mail, ShieldCheck, UserCog} from "lucide-react";
+import { CalendarRange, Edit, IdCard, Mail, ShieldCheck, UserCog } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ResetPasswordForm from "./ResetPasswordForm";
 import DeleteProfile from "./DeleteProfile";
@@ -25,14 +25,15 @@ const UserInformation = ({
     setIsChangedEmail,
     updateEmail,
 }: UserInformationProps) => {
-    
+
     return (
         <>
             {isChangedPassword ? (
                 <ResetPasswordForm onBackToProfile={() => setIsChangedPassword(false)} />
             ) : (
-                <>
-                    {/* Infos personnelles */}
+                <div className="space-y-4">
+
+                    {/* Informations personnelles */}
                     <div className="card">
                         <h2 className="h2-title">
                             <IdCard className="h2-icons" />
@@ -46,67 +47,47 @@ const UserInformation = ({
                                 onBackToProfile={() => setIsChangedEmail(false)}
                             />
                         ) : (
-                            <div className="card-content space-y-4 p-4">
-                                <div className="flex items-center align-middle">
-                                    <Mail
-                                        className="mr-3 text-zinc-500"
-                                        size={20}
-                                        aria-hidden="true"
-                                    />
-                                    <div>
-                                        <p className="text-zinc-500">
-                                            Adresse e-mail
-                                        </p>
-                                        <div className="flex items-center">
-                                            <p className="font-medium text-zinc-900">
+                            <div className="card-content divide-y divide-warm-border">
+
+                                <div className="flex items-center gap-3 p-3">
+                                    <Mail size={18} className="shrink-0 text-warm-secondary" aria-hidden="true" />
+                                    <div className="min-w-0 flex-1">
+                                        <p className="text-xs text-warm-secondary">Adresse e-mail</p>
+                                        <div className="flex items-center gap-2">
+                                            <p className="truncate text-sm font-medium text-warm-primary">
                                                 {user.email}
                                             </p>
                                             <button
-                                                onClick={() =>
-                                                    setIsChangedEmail(true)
-                                                }
+                                                onClick={() => setIsChangedEmail(true)}
                                                 aria-label="Modifier l'adresse e-mail"
-                                                className="ml-3 rounded text-orange-500 hover:text-orange-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500"
+                                                className="shrink-0 rounded text-warm-accent hover:text-warm-accent-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-warm-accent"
                                             >
-                                                <Edit size={18} aria-hidden="true" />
+                                                <Edit size={15} aria-hidden="true" />
                                             </button>
                                         </div>
                                     </div>
                                 </div>
 
-                                <div className="flex items-center">
-                                    <ShieldCheck
-                                        className="mr-3 text-zinc-500"
-                                        size={20}
-                                        aria-hidden="true"
-                                    />
+                                <div className="flex items-center gap-3 p-3">
+                                    <ShieldCheck size={18} className="shrink-0 text-warm-secondary" aria-hidden="true" />
                                     <div>
-                                        <p className="text-sm text-zinc-500">
-                                            Rôle
-                                        </p>
-                                        <p className="font-medium text-zinc-900">
-                                            {user.role === "ADMIN"
-                                                ? "Administrateur"
-                                                : "Utilisateur"}
+                                        <p className="text-xs text-warm-secondary">Rôle</p>
+                                        <p className="text-sm font-medium text-warm-primary">
+                                            {user.role === "ADMIN" ? "Administrateur" : "Utilisateur"}
                                         </p>
                                     </div>
                                 </div>
 
-                                <div className="flex items-center">
-                                    <CalendarRange
-                                        className="mr-3 text-zinc-500"
-                                        size={20}
-                                        aria-hidden="true"
-                                    />
+                                <div className="flex items-center gap-3 p-3">
+                                    <CalendarRange size={18} className="shrink-0 text-warm-secondary" aria-hidden="true" />
                                     <div>
-                                        <p className="text-sm text-zinc-500">
-                                            Date d&apos;inscription
-                                        </p>
-                                        <p className="font-medium text-zinc-900">
+                                        <p className="text-xs text-warm-secondary">Membre depuis</p>
+                                        <p className="text-sm font-medium text-warm-primary">
                                             {dateToString(user.createdAt)}
                                         </p>
                                     </div>
                                 </div>
+
                             </div>
                         )}
                     </div>
@@ -117,7 +98,7 @@ const UserInformation = ({
                             <UserCog className="h2-icons" />
                             Actions du compte
                         </h2>
-                        <div className="grid gap-4 md:grid-cols-2">
+                        <div className="grid gap-3 md:grid-cols-2">
                             <Button
                                 variant="edit"
                                 onClick={() => setIsChangedPassword(true)}
@@ -137,7 +118,8 @@ const UserInformation = ({
                             <DeleteProfile userId={user.id} />
                         </div>
                     </div>
-                </>
+
+                </div>
             )}
         </>
     );

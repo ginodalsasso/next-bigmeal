@@ -52,11 +52,11 @@ const ForgotPasswordForm = ({ onBackToLogin }: { onBackToLogin: () => void }) =>
     return (
         <div className="flex flex-col gap-2">
             <h2 className="h2-title">Réinitialisation du mot de passe</h2>
-            <p className="text-sm text-zinc-600">Saisissez votre email pour recevoir un lien de réinitialisation.</p>
+            <p className="text-sm text-warm-secondary">Saisissez votre email pour recevoir un lien de réinitialisation.</p>
 
             <FormErrorMessage message={error?.general} />
             <form onSubmit={handleSubmit}>
-                <label htmlFor="email">
+                <label htmlFor="email" className="text-sm font-medium text-warm-primary">
                     Adresse email
                 </label>
                 <input

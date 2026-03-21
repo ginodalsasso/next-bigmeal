@@ -13,12 +13,10 @@ const Navbar = () => {
     const searchContainerRef = useRef<HTMLDivElement>(null);
     const pathname = usePathname();
 
-    // Ferme la recherche au changement de route
     useEffect(() => {
         setToggleSearch(false);
     }, [pathname]);
 
-    // Ferme la recherche si clic en dehors
     useEffect(() => {
         if (!toggleSearch) return;
         const handleClickOutside = (e: MouseEvent) =>
@@ -31,16 +29,14 @@ const Navbar = () => {
         <IsUser>
             <nav aria-label="Navigation principale" className="w-full max-w-7xl px-4 py-3">
                 <div className="flex items-center justify-between">
-                    {/* Logo */}
                     <Link href="/" className="hidden items-center gap-1 lg:flex">
-                        <span className="text-xl font-bold tracking-tight text-orange-400">Big-Meal</span>
+                        <span className="text-xl font-bold tracking-tight text-warm-accent">Big-Meal</span>
                     </Link>
 
-                    {/* Actions desktop */}
                     <ul className="hidden list-none flex-row items-center gap-1 lg:flex">
                         <li>
                             <button
-                                className="rounded-lg p-2 text-neutral-400 transition-colors hover:bg-neutral-800 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400"
+                                className="rounded-lg p-2 text-warm-secondary transition-colors hover:bg-warm-subtle hover:text-warm-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-warm-accent"
                                 onClick={() => setToggleSearch(!toggleSearch)}
                                 aria-label="Rechercher"
                                 aria-expanded={toggleSearch}
@@ -51,7 +47,7 @@ const Navbar = () => {
                         <li>
                             <Link
                                 href="/profile"
-                                className="flex items-center rounded-lg p-2 text-neutral-400 transition-colors hover:bg-neutral-800 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400"
+                                className="flex items-center rounded-lg p-2 text-warm-secondary transition-colors hover:bg-warm-subtle hover:text-warm-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-warm-accent"
                                 aria-label="Profil"
                             >
                                 <UserRound size={18} aria-hidden="true" />
@@ -59,7 +55,7 @@ const Navbar = () => {
                         </li>
                         <li>
                             <button
-                                className="rounded-lg p-2 text-neutral-400 transition-colors hover:bg-red-500/10 hover:text-red-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400"
+                                className="rounded-lg p-2 text-warm-secondary transition-colors hover:bg-warm-danger/10 hover:text-warm-danger focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-warm-danger"
                                 onClick={() => signOut()}
                                 aria-label="Déconnexion"
                             >
@@ -76,7 +72,7 @@ const Navbar = () => {
 
                 {/* Overlay desktop */}
                 {toggleSearch && (
-                    <div className="fixed left-0 top-0 z-10 hidden h-screen w-full items-center justify-center bg-zinc-950/60 backdrop-blur-sm lg:flex">
+                    <div className="fixed left-0 top-0 z-10 hidden h-screen w-full items-center justify-center bg-warm-primary/30 backdrop-blur-sm lg:flex">
                         <div ref={searchContainerRef}>
                             <SearchBar onSearch={() => setToggleSearch(false)} />
                         </div>

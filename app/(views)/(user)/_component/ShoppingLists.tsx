@@ -1,43 +1,33 @@
-// Bibliothèques tierces
 import React, { useState } from "react";
 
-// Types et utils
 import { ShoppingListType } from "@/lib/types/schemas_interfaces";
 import { dateToString, translatedUnit, ucFirst } from "@/lib/utils";
 import DeleteItem from "@/components/layout/DeleteItemDialog";
 import API_ROUTES from "@/lib/constants/api_routes";
 import { ChevronDown, ShoppingCart, Utensils, ListChecks } from "lucide-react";
 
-// _________________________ TYPE _________________________
 interface ShoppingListsProps {
     shoppingLists: ShoppingListType[];
 }
 
-// _________________________ COMPONENT _________________________
 const ShoppingLists: React.FC<ShoppingListsProps> = ({ shoppingLists }) => {
     const [lists, setLists] = useState<ShoppingListType[]>(shoppingLists);
     const [openListId, setOpenListId] = useState<string | null>(null);
 
-    // Fonction pour supprimer une liste de courses
     const handleShoppingListDeleted = (id: string) => {
         setLists((prev) => prev.filter((list) => list.id !== id));
     };
 
-    // Fonction pour gérer l'ouverture/fermeture des details
     const toggleDetails = (id: string) => {
-        if (openListId === id) {
-            setOpenListId(null);
-        } else {
-            setOpenListId(id);
-        }
+        setOpenListId(openListId === id ? null : id);
     };
 
     if (lists.length === 0) {
         return (
-            <div className="py-10 text-center">
-                <ShoppingCart className="mx-auto mb-3 text-zinc-300" size={48} />
-                <p className="text-zinc-500">Aucune liste de courses enregistrée.</p>
-                <p className="mt-1 text-sm text-zinc-400">
+            <div className="rounded-xl border border-warm-border bg-warm-subtle py-10 text-center">
+                <ShoppingCart className="mx-auto mb-3 text-warm-disabled" size={40} />
+                <p className="text-sm font-medium text-warm-secondary">Aucune liste enregistrée.</p>
+                <p className="mt-1 text-xs text-warm-disabled">
                     Les listes que vous créerez apparaîtront ici.
                 </p>
             </div>
@@ -47,63 +37,62 @@ const ShoppingLists: React.FC<ShoppingListsProps> = ({ shoppingLists }) => {
     return (
         <div className="card">
             <h2 className="h2-title">
-                <ShoppingCart size={18} className="h2-icons" /> 
+                <ShoppingCart size={18} className="h2-icons" />
                 Mes listes de courses
             </h2>
-            <div className="space-y-4">
+            <div className="space-y-2">
                 {lists.map((list) => {
-                    // Extraire les repas uniques pour cette liste spécifique
                     const meals = Array.from(
                         new Set(
                             list.items
                                 .map((item) => item.meal?.name)
-                                .filter((mealName): mealName is string => !!mealName)
+                                .filter((name): name is string => !!name)
                         )
                     );
-
                     const isOpen = openListId === list.id;
 
-                    // Rendu de la liste de courses
                     return (
-                        <div key={list.id} className="card-content">
-                            <div 
-                                className="flex cursor-pointer items-center justify-between p-4"
+                        <div key={list.id} className="card-content overflow-hidden">
+
+                            {/* En-tête accordéon */}
+                            <button
+                                className="flex w-full cursor-pointer items-center justify-between p-3 text-left transition-colors hover:bg-warm-muted"
                                 onClick={() => toggleDetails(list.id)}
+                                aria-expanded={isOpen}
                             >
                                 <div>
-                                    <h3 className="font-medium text-zinc-800">
+                                    <p className="text-sm font-medium text-warm-primary">
                                         Liste du {dateToString(list.createdAt)}
-                                    </h3>
-                                    <p className="text-sm text-zinc-500">
-                                        {list.items.length} article{list.items.length > 1 ? 's' : ''}
+                                    </p>
+                                    <p className="text-xs text-warm-secondary">
+                                        {list.items.length} article{list.items.length > 1 ? "s" : ""}
                                     </p>
                                 </div>
-                                <ChevronDown 
-                                    className={`text-zinc-500 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} 
-                                    size={20} 
+                                <ChevronDown
+                                    className={`shrink-0 text-warm-secondary transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
+                                    size={18}
+                                    aria-hidden="true"
                                 />
-                            </div>
+                            </button>
 
-                            {/* Si la liste est ouverte */}
                             {isOpen && (
-                                <div className="p-4">
-                                    {/* Commentaire */}
+                                <div className="space-y-4 border-t border-warm-border p-3">
+
                                     {list.comment && (
-                                        <div className="mb-4 rounded border border-zinc-100 bg-zinc-50 p-3 text-amber-800">
-                                            <p className="text-sm">{list.comment}</p>
+                                        <div className="rounded-xl border border-warm-border bg-warm-muted px-3 py-2">
+                                            <p className="text-sm text-warm-secondary">{list.comment}</p>
                                         </div>
                                     )}
-                                    
-                                    {/* Affichage des repas de la liste de courses */}
+
                                     {meals.length > 0 && (
-                                        <div className="mb-5">
-                                            <h4 className="mb-3 flex items-center font-medium text-zinc-700">
-                                                <Utensils className="mr-2" size={16} />
+                                        <div>
+                                            <h4 className="mb-2 flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-warm-secondary">
+                                                <Utensils size={13} />
                                                 Plats ({meals.length})
                                             </h4>
-                                            <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
+                                            <div className="grid grid-cols-1 gap-1.5 md:grid-cols-2">
                                                 {meals.map((meal, index) => (
-                                                    <div key={index} className="rounded-md bg-orange-50 px-3 py-2 text-orange-800">
+                                                    <div key={index} className="rounded-xl bg-warm-accent/10 px-3 py-1.5 text-sm font-medium text-warm-primary">
                                                         {ucFirst(meal)}
                                                     </div>
                                                 ))}
@@ -111,26 +100,25 @@ const ShoppingLists: React.FC<ShoppingListsProps> = ({ shoppingLists }) => {
                                         </div>
                                     )}
 
-                                    {/* Affichage des items de la liste de courses */}
                                     <div>
-                                        <h4 className="mb-3 flex items-center font-medium text-zinc-700">
-                                            <ListChecks className="mr-2" size={16} />
+                                        <h4 className="mb-2 flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-warm-secondary">
+                                            <ListChecks size={13} />
                                             Ingrédients ({list.items.length})
                                         </h4>
-                                        <ul className="divide-y divide-zinc-100 rounded-md border border-zinc-200 bg-zinc-50">
+                                        <ul className="divide-y divide-warm-border overflow-hidden rounded-xl border border-warm-border bg-warm-base">
                                             {list.items.map((item) => (
-                                                <li key={item.id} className="flex items-center justify-between p-3">
+                                                <li key={item.id} className="flex items-center justify-between px-3 py-2 text-sm">
                                                     <span>
-                                                        <span className="font-medium text-zinc-700">
-                                                            {item.quantity}{item.unit ? translatedUnit(item.unit) + " " : "x "}
+                                                        <span className="font-medium text-warm-primary">
+                                                            {item.quantity}{item.unit ? " " + translatedUnit(item.unit) : "×"}{" "}
                                                         </span>
-                                                        <span className="text-zinc-700">
+                                                        <span className="text-warm-primary">
                                                             {item.ingredient?.name || "Ingrédient inconnu"}
                                                         </span>
                                                     </span>
                                                     {item.meal?.name && (
-                                                        <span className="ml-3 text-xs text-zinc-500">
-                                                            Pour &quot;{item.meal.name}&quot;
+                                                        <span className="ml-3 text-xs text-warm-secondary">
+                                                            {item.meal.name}
                                                         </span>
                                                     )}
                                                 </li>
@@ -138,8 +126,7 @@ const ShoppingLists: React.FC<ShoppingListsProps> = ({ shoppingLists }) => {
                                         </ul>
                                     </div>
 
-                                    {/* Bouton supprimer */}
-                                    <div className="mt-4 flex justify-end">
+                                    <div className="flex justify-end">
                                         <DeleteItem
                                             apiUrl={API_ROUTES.shoppingList.list}
                                             id={list.id}

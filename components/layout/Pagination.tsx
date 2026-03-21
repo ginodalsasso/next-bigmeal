@@ -33,7 +33,7 @@ export default function Pagination({ currentPage, hasNextPage }: PaginationProps
                 <span />
             )}
 
-            <span className="text-sm text-neutral-400" aria-current="page">
+            <span className="text-sm text-warm-secondary" aria-current="page">
                 Page {currentPage}
             </span>
 
