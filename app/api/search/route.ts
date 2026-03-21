@@ -4,10 +4,10 @@ import { NextRequest, NextResponse } from "next/server";
 
 
 export async function GET(req: NextRequest) {
-    const { searchParams } = new URL(req.url); // récupère les paramètres de l'URL
-    const query = searchParams.get("query"); // récupère la valeur du paramètre "query"
+    const { searchParams } = new URL(req.url);
+    const query = searchParams.get("query");
 
-    if (!query ) return NextResponse.json([]); // retourne un tableau vide si aucun paramètre "query" n'est fourni
+    if (!query) return NextResponse.json({ meals: [], ingredients: [] });
 
     const validatedQuery = searchConstraints.safeParse({ query });
 
@@ -25,7 +25,9 @@ export async function GET(req: NextRequest) {
                 select: {
                     id: true,
                     name: true,
-                    categoryMeal: { select: { name: true } },
+                    description: true,
+                    categoryMealId: true,
+                    categoryMeal: { select: { id: true, name: true } },
                 }
             }),
             db.ingredient.findMany({
@@ -34,27 +36,21 @@ export async function GET(req: NextRequest) {
                 select: {
                     id: true,
                     name: true,
-                    categoryIngredient: { select: { name: true } },
+                    season: true,
+                    categoryIngredientId: true,
+                    categoryIngredient: { select: { id: true, name: true } },
                 }
             }),
         ]);
 
-        return NextResponse.json([
-            ...meals.map((meal) => ({
-                id: meal.id,
-                name: meal.name,
-                category: meal.categoryMeal?.name,
-            })),
-            ...ingredients.map((ingredient) => ({
-                id: ingredient.id,
-                name: ingredient.name,
-                category: ingredient.categoryIngredient?.name,
-            })),
-        ]);
+        return NextResponse.json({
+            meals: meals.map((m) => ({ ...m, compositions: [], mealLikes: [] })),
+            ingredients: ingredients.map((i) => ({ ...i, compositions: [], shoppingListItems: [] })),
+        });
     } catch (error) {
         console.error("SEARCH_ERROR", error);
         return NextResponse.json({
-            message: "Erreur serveur, veuillez réessayer plus tard" 
+            message: "Erreur serveur, veuillez réessayer plus tard"
         }, { status: 500 });
     }
 }
