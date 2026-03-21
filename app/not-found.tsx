@@ -50,7 +50,7 @@ export default function NotFound() {
                         Retour
                     </Button>
 
-                    <Link href="/" legacyBehavior passHref>
+                    <Link href="/" passHref>
                         <Button
                             variant="default"
                             className="flex w-full items-center justify-center gap-2 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"

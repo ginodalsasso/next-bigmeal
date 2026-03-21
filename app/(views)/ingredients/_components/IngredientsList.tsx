@@ -12,6 +12,7 @@ import CreateIngredient from "./CreateIngredient";
 import UpdateIngredient from "./UpdateIngredient";
 import AddToShoppingListForm from "@/components/forms/AddToShoppingListForm";
 import IsUser from "@/components/isUser";
+import IsAdmin from "@/components/isAdmin";
 import FilterItems from "@/components/layout/FilterItems";
 import PopoverActions from "@/components/layout/PopoverActions";
 
@@ -94,20 +95,22 @@ export default function IngredientList({
                         <li key={ingredient.id}>
                             <article className="relative flex h-full flex-col rounded-xl border border-warm-border bg-warm-subtle shadow-sm transition-shadow hover:shadow-md">
 
-                                <div className="absolute right-1 top-1 z-10">
-                                    <PopoverActions
-                                        id={ingredient.id}
-                                        apiUrl="/api/ingredients"
-                                        onDelete={() => handleIngredientDeleted(ingredient.id)}
-                                        renderEditForm={(onClose) => (
-                                            <UpdateIngredient
-                                                ingredient={ingredient}
-                                                onSubmit={updateIngredient}
-                                                onCancel={onClose}
-                                            />
-                                        )}
-                                    />
-                                </div>
+                                <IsAdmin>
+                                    <div className="absolute right-1 top-1 z-10">
+                                        <PopoverActions
+                                            id={ingredient.id}
+                                            apiUrl="/api/ingredients"
+                                            onDelete={() => handleIngredientDeleted(ingredient.id)}
+                                            renderEditForm={(onClose) => (
+                                                <UpdateIngredient
+                                                    ingredient={ingredient}
+                                                    onSubmit={updateIngredient}
+                                                    onCancel={onClose}
+                                                />
+                                            )}
+                                        />
+                                    </div>
+                                </IsAdmin>
 
                                 <div className="flex flex-1 flex-col gap-1.5 p-3 pr-8">
                                     <p className="line-clamp-2 text-sm font-semibold leading-snug text-warm-primary">

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import IsUser from "../isUser";
+import IsAdmin from "../isAdmin";
 import {
     Carrot,
     Folder,
@@ -33,7 +34,6 @@ const Bottombar = () => {
         { icon: SprayCan,     title: "Produits ménagers", url: "/household-products" },
         { icon: Carrot,       title: "ingrédients",       url: "/ingredients" },
         { icon: Utensils,     title: "repas",             url: "/meals" },
-        { icon: Folder,       title: "catégories",        url: "/categories" },
     ];
 
     const quickLinks = [
@@ -122,6 +122,27 @@ const Bottombar = () => {
                                         </li>
                                     );
                                 })}
+
+                                <IsAdmin>
+                                    {(() => {
+                                        const isActive = pathname === "/categories" || pathname.startsWith("/categories/");
+                                        return (
+                                            <li>
+                                                <Link
+                                                    href="/categories"
+                                                    className={`flex items-center gap-4 rounded-xl px-4 py-3.5 text-base font-medium transition-colors duration-150 ${
+                                                        isActive
+                                                            ? "bg-warm-accent/15 text-warm-primary"
+                                                            : "text-warm-secondary hover:bg-warm-subtle hover:text-warm-primary"
+                                                    }`}
+                                                >
+                                                    <Folder size={20} strokeWidth={isActive ? 2.5 : 1.75} />
+                                                    {ucFirst("catégories")}
+                                                </Link>
+                                            </li>
+                                        );
+                                    })()}
+                                </IsAdmin>
 
                                 <li className="mt-4 border-t border-warm-border pt-4">
                                     <button

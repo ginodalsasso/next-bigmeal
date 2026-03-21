@@ -1,44 +1,60 @@
 "use client";
 
-// Bibliothèques tierces
-import { useState } from "react";
-import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { useState, useEffect, Suspense } from "react";
+import { signIn, useSession } from "next-auth/react";
+import { useRouter, useSearchParams } from "next/navigation";
 
-// Hooks personnalisés
 import { useFormValidation } from "@/app/hooks/useFormValidation";
-
-// Composants UI
 import FormErrorMessage from "@/components/forms/FormErrorMessage";
 import ForgotPasswordForm from "../_component/ForgotPasswordEmailForm";
-
-// Contraintes
 import { LoginConstraints } from "@/lib/constraints/forms_constraints";
 import PasswordInput from "@/components/forms/PasswordInput";
 import LoadingSpinner from "@/components/layout/LoadingSpinner";
 
+const OAUTH_ERROR_MESSAGES: Record<string, string> = {
+    OAuthSignin: "Erreur lors de la connexion OAuth. Veuillez réessayer.",
+    OAuthCallback: "Erreur de callback OAuth. Veuillez réessayer.",
+    OAuthCreateAccount: "Impossible de créer le compte. Veuillez réessayer.",
+    OAuthAccountNotLinked: "Cet email est déjà utilisé avec un autre fournisseur.",
+    CredentialsSignin: "Email ou mot de passe incorrect.",
+    Default: "Une erreur s'est produite lors de la connexion.",
+};
 
-export default function LoginPage() {
-    
+function LoginForm() {
     const router = useRouter();
-    const [isForgotPassword, setIsForgotPassword] = useState<boolean>(false); // Affichage conditionnel des formulaires
+    const searchParams = useSearchParams();
+    const { status } = useSession();
+
+    const callbackUrl = searchParams.get("callbackUrl") || "/";
+    const urlError = searchParams.get("error");
+
+    const [isForgotPassword, setIsForgotPassword] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    
-    
-    // Utilisation du hook de validation
+
     const { error, setError, validate } = useFormValidation(
         LoginConstraints,
-        ["email", "password"] // Liste des champs à valider
+        ["email", "password"]
     );
 
-    // Fonction pour se connecter avec les identifiants
+    useEffect(() => {
+        if (status === "authenticated") {
+            router.replace(callbackUrl);
+        }
+    }, [status, router, callbackUrl]);
+
+    useEffect(() => {
+        if (urlError) {
+            const message = OAUTH_ERROR_MESSAGES[urlError] ?? OAUTH_ERROR_MESSAGES.Default;
+            setError({ general: message });
+        }
+    }, [urlError, setError]);
+
     const credentialsAction = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const formData = new FormData(event.currentTarget);
         const email = formData.get("email")?.toString() || "";
         const password = formData.get("password")?.toString() || "";
 
-        // Validation via le hook
         const isValid = validate({ email, password });
         if (!isValid) return;
 
@@ -54,7 +70,7 @@ export default function LoginPage() {
             if (response?.error) {
                 setError({ general: "Email ou mot de passe incorrect." });
             } else {
-                router.push("/");
+                router.push(callbackUrl);
             }
         } catch (error) {
             console.error("Erreur lors de la connexion :", error);
@@ -64,14 +80,13 @@ export default function LoginPage() {
         }
     };
 
-    if(isLoading) {
+    if (isLoading || status === "loading") {
         return <LoadingSpinner />;
     }
 
     return (
         <div className="flex min-h-dvh flex-col items-center justify-center bg-white px-4 antialiased dark:bg-zinc-950">
-            <div className="relative w-full max-w-sm">            
-                {/* Affichage conditionnel des formulaires */}
+            <div className="relative w-full max-w-sm">
                 <div className={`absolute inset-0 z-10 transition-all duration-300 ${isForgotPassword ? 'translate-x-0 opacity-100' : 'pointer-events-none -translate-x-4 opacity-0'}`}>
                     {isForgotPassword && (
                         <ForgotPasswordForm onBackToLogin={() => setIsForgotPassword(false)} />
@@ -87,7 +102,6 @@ export default function LoginPage() {
                             </div>
                             <FormErrorMessage message={error?.general} />
 
-                            {/* Formulaire de connexion */}
                             <form onSubmit={credentialsAction} className="space-y-4">
                                 <div className="space-y-1.5">
                                     <label htmlFor="email" className="block text-sm font-medium text-zinc-900 dark:text-zinc-50">
@@ -111,9 +125,9 @@ export default function LoginPage() {
                                         <label htmlFor="password" className="block text-sm font-medium text-zinc-900 dark:text-zinc-50">
                                             Mot de passe
                                         </label>
-                                        <button 
-                                            type="button" 
-                                            className="text-xs font-medium text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-50" 
+                                        <button
+                                            type="button"
+                                            className="text-xs font-medium text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-50"
                                             onClick={() => setIsForgotPassword(true)}
                                         >
                                             Mot de passe oublié ?
@@ -128,10 +142,9 @@ export default function LoginPage() {
                                     />
                                 </div>
 
-                                {/* Bouton de connexion */}
-                                <button 
-                                    type="submit" 
-                                    disabled={isLoading} 
+                                <button
+                                    type="submit"
+                                    disabled={isLoading}
                                     className="mt-2 flex h-11 w-full items-center justify-center rounded-md bg-zinc-900 px-4 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-zinc-700 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-white dark:text-zinc-900 dark:hover:bg-zinc-200"
                                 >
                                     {isLoading ? "Connexion..." : "Se connecter"}
@@ -144,10 +157,9 @@ export default function LoginPage() {
                                 <div className="grow border-t border-zinc-200 dark:border-zinc-800"></div>
                             </div>
 
-                            { /* Connexion avec Google et GitHub */}
                             <div className="grid grid-cols-2 gap-3">
-                                <button 
-                                    onClick={() => signIn("google")} 
+                                <button
+                                    onClick={() => signIn("google", { callbackUrl })}
                                     type="button"
                                     className="flex h-11 items-center justify-center rounded-md border border-zinc-200 bg-transparent px-4 text-sm font-medium text-zinc-900 transition-colors hover:bg-zinc-50 dark:border-zinc-800 dark:text-zinc-50 dark:hover:bg-zinc-900"
                                 >
@@ -160,8 +172,8 @@ export default function LoginPage() {
                                     Google
                                 </button>
 
-                                <button 
-                                    onClick={() => signIn("github")} 
+                                <button
+                                    onClick={() => signIn("github", { callbackUrl })}
                                     type="button"
                                     className="flex h-11 items-center justify-center rounded-md border border-zinc-200 bg-transparent px-4 text-sm font-medium text-zinc-900 transition-colors hover:bg-zinc-50 dark:border-zinc-800 dark:text-zinc-50 dark:hover:bg-zinc-900"
                                 >
@@ -172,7 +184,6 @@ export default function LoginPage() {
                                 </button>
                             </div>
 
-                            {/* Lien création de compte */}
                             <div className="mt-8 text-center text-sm text-zinc-600 dark:text-zinc-400">
                                 Pas encore de compte ?{" "}
                                 <button
@@ -188,5 +199,13 @@ export default function LoginPage() {
                 </div>
             </div>
         </div>
+    );
+}
+
+export default function LoginPage() {
+    return (
+        <Suspense fallback={<LoadingSpinner />}>
+            <LoginForm />
+        </Suspense>
     );
 }
