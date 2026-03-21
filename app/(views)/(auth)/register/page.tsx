@@ -112,7 +112,7 @@ export default function RegisterPage() {
                         type="submit" 
                         className="w-full"
                         disabled={isLoading} 
-                        variant={isLoading ? "ghost" : "success"}
+                        variant={isLoading ? "ghost" : "default"}
                     >
                         {isLoading ? "Création en cours..." : "Créer un compte"}
                     </Button>
