@@ -30,9 +30,9 @@ export default function InstallPrompt() {
             !("MSStream" in window);
         setIsIOS(isAppleDevice);
 
-        // Vérifier si l'application est déjà installée
         setIsStandalone(
-            window.matchMedia("(display-mode: standalone)").matches
+            window.matchMedia("(display-mode: standalone)").matches ||
+            ("standalone" in navigator && (navigator as Navigator & { standalone: boolean }).standalone === true)
         );
 
         // Intercepter l'événement beforeinstallprompt pour les appareils non-iOS
