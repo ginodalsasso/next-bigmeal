@@ -149,7 +149,7 @@ const SearchResultsPage: React.FC = () => {
                                             </Link>
 
                                             <div className="flex items-center justify-between border-t border-zinc-100 px-3 py-2">
-                                                <AddToShoppingListForm type="meal" id={meal.name} />
+                                                <AddToShoppingListForm type="meal" id={meal.id} />
                                                 <IsUser>
                                                     <button
                                                         type="button"

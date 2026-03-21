@@ -1,5 +1,4 @@
 import API_ROUTES from "../constants/api_routes";
-import { IngredientUnit } from "../types/enums";
 
 export async function fetchShoppingListAPI() {
     try {
@@ -12,20 +11,15 @@ export async function fetchShoppingListAPI() {
     }
 }
 
-export async function createShoppingListMealAPI(mealId: string, ingredientId: string,  quantity: number, unit: IngredientUnit, csrfToken: string) {
+export async function createShoppingListMealAPI(mealId: string, csrfToken: string) {
     try {
-        const response = await fetch( API_ROUTES.shoppingList.list, {
+        const response = await fetch(API_ROUTES.shoppingList.meal, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 "X-CSRF-Token": csrfToken,
             },
-            body: JSON.stringify({
-                mealId,
-                ingredientId,
-                quantity,
-                unit,
-            }),
+            body: JSON.stringify({ id: mealId }),
         });
         if (!response.ok) throw new Error('Erreur lors de l\'ajout du repas à la liste de courses');
     } catch (error) {

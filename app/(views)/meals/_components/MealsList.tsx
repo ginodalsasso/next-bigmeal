@@ -153,7 +153,7 @@ export default function MealsList({
                                 <div className="flex items-center justify-between border-t border-warm-border px-3 py-2">
                                     <AddToShoppingListForm
                                         type="meal"
-                                        id={meal.name}
+                                        id={meal.id}
                                     />
 
                                     <div className="flex items-center gap-3">

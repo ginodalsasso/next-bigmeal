@@ -5,7 +5,6 @@ import { toast } from 'sonner';
 import { ShoppingListConstraints } from '@/lib/constraints/forms_constraints';
 import { AddProductToShoppingListFormType } from '@/lib/types/forms_interfaces';
 import { useFormValidation } from '@/app/hooks/useFormValidation';
-import { getMeal } from '@/lib/services/data_fetcher';
 import { createShoppingListIngredientAPI, createShoppingListMealAPI, createShoppingListProductAPI } from '@/lib/services/shopping_list_service';
 import { getCsrfToken } from 'next-auth/react';
 import { Minus, Plus, ShoppingCart } from 'lucide-react';
@@ -35,12 +34,8 @@ const AddToShoppingListForm: React.FC<AddToShoppingListFormProps> = ({ type, id 
         try {
             switch (type) {
                 case 'meal': {
-                    const meal = await getMeal(id);
-                    for (const composition of meal.compositions) {
-                        if (!csrfToken) { setError({ general: "Problème de sécurité, veuillez réessayer." }); return; }
-                        if (!composition.ingredient?.id) continue;
-                        await createShoppingListMealAPI(meal.id, composition.ingredient.id, composition.quantity, composition.unit, csrfToken);
-                    }
+                    if (!csrfToken) { setError({ general: "Problème de sécurité, veuillez réessayer." }); return; }
+                    await createShoppingListMealAPI(id, csrfToken);
                     toast('Les ingrédients du repas ont été ajoutés à la liste de courses');
                     break;
                 }

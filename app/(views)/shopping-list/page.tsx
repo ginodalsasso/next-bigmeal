@@ -106,6 +106,25 @@ const ShoppingListPage = () => {
         );
     };
 
+    const toggleAllItems = async () => {
+        if (!shoppingList) return;
+        const csrfToken = await getCsrfToken();
+        if (!csrfToken) return;
+        const allChecked = shoppingList.items.every((item) => item.isChecked);
+        const newCheckedState = !allChecked;
+        setShoppingList((prev) =>
+            prev && { ...prev, items: prev.items.map((item) => ({ ...item, isChecked: newCheckedState })) }
+        );
+        try {
+            await Promise.all(
+                shoppingList.items.map((item) => toggleItemCheckedAPI(item.id, newCheckedState, csrfToken))
+            );
+        } catch (error) {
+            console.error("Erreur lors de la sélection globale:", error);
+            toast.error("Impossible de mettre à jour les éléments.");
+        }
+    };
+
     const updateItemQuantity = async (id: string, newQuantity: number) => {
         if (!shoppingList) return;
         const csrfToken = await getCsrfToken();
@@ -215,13 +234,21 @@ const ShoppingListPage = () => {
 
             {/* Produits à acheter */}
             <div className="card">
-                <h2 className="h2-title">
-                    <ShoppingBag className="h2-icons" />
-                    Produits à acheter
-                </h2>
+                <div className="flex items-center justify-between">
+                    <h2 className="h2-title">
+                        <ShoppingBag className="h2-icons" />
+                        Produits à acheter
+                    </h2>
+                    <button
+                        onClick={toggleAllItems}
+                        className="text-xs font-medium text-warm-accent hover:underline"
+                    >
+                        {shoppingList.items.every((item) => item.isChecked) ? "Tout désélectionner" : "Tout sélectionner"}
+                    </button>
+                </div>
                 <div className="card-content divide-y divide-warm-border">
                     {shoppingList.items.map((item) => (
-                        <div key={item.id} className="flex items-center justify-between px-3 py-3">
+                        <div key={item.id} className="flex items-center justify-between p-3">
                             <div className="flex items-start gap-3">
                                 <input
                                     type="checkbox"
