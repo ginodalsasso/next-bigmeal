@@ -1,42 +1,29 @@
-// Bibliothèques tierces
 import React, { useState } from "react";
 import { toast } from "sonner";
 
-// Hooks personnalisés
 import { useFormValidation } from "@/app/hooks/useFormValidation";
-
-// Composants UI
 import FormErrorMessage from "@/components/forms/FormErrorMessage";
-import { Button } from "@/components/ui/button";
-
-// Contraintes et services
 import { ForgotPasswordConstraints } from "@/lib/constraints/forms_constraints";
 import { sendForgotPasswordEmailAPI } from "@/lib/services/auth_service";
 
-
-// _________________________ COMPONENT _________________________
 const ForgotPasswordForm = ({ onBackToLogin }: { onBackToLogin: () => void }) => {
-
-    // _________________________ ETATS _________________________
     const [recipient, setRecipient] = useState<{ email: string }>({ email: "" });
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
-    // Utilisation du hook de validation
     const { error, setError, validate } = useFormValidation(
         ForgotPasswordConstraints,
-        ["email"] // Liste des champs à valider
+        ["email"]
     );
 
-    // _________________________ LOGIQUE _________________________
-    // Fonction pour envoyer un email de réinitialisation du mot de passe
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        setIsLoading(true);
 
-        if (!validate(recipient)){
+        if (!validate(recipient)) {
             setError({ email: "Veuillez saisir un email valide." });
             return;
         }
+
+        setIsLoading(true);
 
         try {
             await sendForgotPasswordEmailAPI(recipient.email);
@@ -47,46 +34,50 @@ const ForgotPasswordForm = ({ onBackToLogin }: { onBackToLogin: () => void }) =>
         } finally {
             setIsLoading(false);
         }
-    }
+    };
 
     return (
-        <div className="flex flex-col gap-2">
-            <h2 className="h2-title">Réinitialisation du mot de passe</h2>
-            <p className="text-sm text-warm-secondary">Saisissez votre email pour recevoir un lien de réinitialisation.</p>
+        <div className="space-y-6">
+            <div className="text-center">
+                <h2 className="text-2xl font-semibold tracking-tight text-warm-primary">Mot de passe oublié</h2>
+                <p className="mt-2 text-sm text-warm-secondary">Saisissez votre email pour recevoir un lien de réinitialisation.</p>
+            </div>
 
             <FormErrorMessage message={error?.general} />
-            <form onSubmit={handleSubmit}>
-                <label htmlFor="email" className="text-sm font-medium text-warm-primary">
-                    Adresse email
-                </label>
-                <input
-                    id="email"
-                    name="email"
-                    type="email"
-                    className="input-text-select"
-                    placeholder="email@exemple.com"
-                    value={recipient.email}
-                    onChange={(e) => setRecipient({ email: e.target.value })}
-                />
-                <FormErrorMessage message={error?.email} />
 
-                <Button 
-                    type="submit" 
-                    className="my-2 w-full"
+            <form onSubmit={handleSubmit} className="space-y-4">
+                <div className="space-y-1.5">
+                    <label htmlFor="email" className="block text-sm font-medium text-warm-primary">
+                        Adresse email
+                    </label>
+                    <input
+                        id="email"
+                        name="email"
+                        type="email"
+                        className="input-text-select"
+                        placeholder="email@exemple.com"
+                        value={recipient.email}
+                        onChange={(e) => setRecipient({ email: e.target.value })}
+                    />
+                    <FormErrorMessage message={error?.email} />
+                </div>
+
+                <button
+                    type="submit"
                     disabled={isLoading || !recipient.email}
-                    variant={isLoading ? "ghost" : "default"}
+                    className="flex h-11 w-full items-center justify-center rounded-xl bg-warm-accent px-4 text-sm font-semibold text-warm-primary shadow-sm transition-colors hover:bg-warm-accent-hover disabled:cursor-not-allowed disabled:opacity-50"
                 >
                     {isLoading ? "Envoi en cours..." : "Envoyer le lien"}
-                </Button>
+                </button>
             </form>
 
-                <Button 
-                    type="button" 
-                    onClick={onBackToLogin} 
-                    variant="secondary"
-                >
-                    Retour à la connexion
-                </Button>
+            <button
+                type="button"
+                onClick={onBackToLogin}
+                className="flex h-11 w-full items-center justify-center rounded-xl border border-warm-border bg-transparent px-4 text-sm font-medium text-warm-primary transition-colors hover:bg-warm-subtle"
+            >
+                Retour à la connexion
+            </button>
         </div>
     );
 };

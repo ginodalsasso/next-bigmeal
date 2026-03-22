@@ -68,7 +68,11 @@ function LoginForm() {
             });
 
             if (response?.error) {
-                setError({ general: "Email ou mot de passe incorrect." });
+                if (response.code === "RATE_LIMIT") {
+                    setError({ general: "Trop de tentatives de connexion. Réessayez dans une heure." });
+                } else {
+                    setError({ general: "Email ou mot de passe incorrect." });
+                }
             } else {
                 router.push(callbackUrl);
             }
@@ -85,7 +89,7 @@ function LoginForm() {
     }
 
     return (
-        <div className="flex min-h-dvh flex-col items-center justify-center bg-white px-4 antialiased dark:bg-zinc-950">
+        <div className="flex min-h-dvh flex-col items-center justify-center bg-warm-base px-4">
             <div className="relative w-full max-w-sm">
                 <div className={`absolute inset-0 z-10 transition-all duration-300 ${isForgotPassword ? 'translate-x-0 opacity-100' : 'pointer-events-none -translate-x-4 opacity-0'}`}>
                     {isForgotPassword && (
@@ -97,18 +101,19 @@ function LoginForm() {
                     {!isForgotPassword && (
                         <div className="space-y-6">
                             <div className="text-center">
-                                <h2 className="text-2xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">Bienvenue</h2>
-                                <p className="mt-2 text-sm text-zinc-500 dark:text-zinc-400">Connectez-vous pour accéder à votre compte</p>
+                                <h2 className="text-2xl font-semibold tracking-tight text-warm-primary">Bienvenue</h2>
+                                <p className="mt-2 text-sm text-warm-secondary">Connectez-vous pour accéder à votre compte</p>
                             </div>
+
                             <FormErrorMessage message={error?.general} />
 
                             <form onSubmit={credentialsAction} className="space-y-4">
                                 <div className="space-y-1.5">
-                                    <label htmlFor="email" className="block text-sm font-medium text-zinc-900 dark:text-zinc-50">
+                                    <label htmlFor="email" className="block text-sm font-medium text-warm-primary">
                                         Adresse email
                                     </label>
                                     <input
-                                        className="block w-full rounded-md border border-zinc-200 bg-transparent px-3 py-2 text-sm text-zinc-900 transition-colors placeholder:text-zinc-400 focus:border-zinc-900 focus:outline-none focus:ring-1 focus:ring-zinc-900 dark:border-zinc-800 dark:text-zinc-50 dark:placeholder:text-zinc-600 dark:focus:border-zinc-50 dark:focus:ring-zinc-50"
+                                        className="input-text-select"
                                         type="email"
                                         id="email"
                                         name="email"
@@ -122,12 +127,12 @@ function LoginForm() {
 
                                 <div className="space-y-1.5">
                                     <div className="flex items-center justify-between">
-                                        <label htmlFor="password" className="block text-sm font-medium text-zinc-900 dark:text-zinc-50">
+                                        <label htmlFor="password" className="block text-sm font-medium text-warm-primary">
                                             Mot de passe
                                         </label>
                                         <button
                                             type="button"
-                                            className="text-xs font-medium text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-50"
+                                            className="text-xs font-medium text-warm-secondary hover:text-warm-primary"
                                             onClick={() => setIsForgotPassword(true)}
                                         >
                                             Mot de passe oublié ?
@@ -145,23 +150,23 @@ function LoginForm() {
                                 <button
                                     type="submit"
                                     disabled={isLoading}
-                                    className="mt-2 flex h-11 w-full items-center justify-center rounded-md bg-zinc-900 px-4 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-zinc-700 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-white dark:text-zinc-900 dark:hover:bg-zinc-200"
+                                    className="mt-2 flex h-11 w-full items-center justify-center rounded-xl bg-warm-accent px-4 text-sm font-semibold text-warm-primary shadow-sm transition-colors hover:bg-warm-accent-hover disabled:cursor-not-allowed disabled:opacity-50"
                                 >
                                     {isLoading ? "Connexion..." : "Se connecter"}
                                 </button>
                             </form>
 
-                            <div className="my-6 flex items-center">
-                                <div className="grow border-t border-zinc-200 dark:border-zinc-800"></div>
-                                <span className="mx-4 text-xs font-medium text-zinc-500 dark:text-zinc-400">Ou continuer avec</span>
-                                <div className="grow border-t border-zinc-200 dark:border-zinc-800"></div>
+                            <div className="flex items-center">
+                                <div className="grow border-t border-warm-border"></div>
+                                <span className="mx-4 text-xs font-medium text-warm-secondary">Ou continuer avec</span>
+                                <div className="grow border-t border-warm-border"></div>
                             </div>
 
                             <div className="grid grid-cols-2 gap-3">
                                 <button
                                     onClick={() => signIn("google", { callbackUrl })}
                                     type="button"
-                                    className="flex h-11 items-center justify-center rounded-md border border-zinc-200 bg-transparent px-4 text-sm font-medium text-zinc-900 transition-colors hover:bg-zinc-50 dark:border-zinc-800 dark:text-zinc-50 dark:hover:bg-zinc-900"
+                                    className="flex h-11 items-center justify-center rounded-xl border border-warm-border bg-transparent px-4 text-sm font-medium text-warm-primary transition-colors hover:bg-warm-subtle"
                                 >
                                     <svg className="mr-2 size-5" viewBox="0 0 24 24">
                                         <path fill="#EA4335" d="M5.26620003,9.76452941 C6.19878754,6.93863203 8.85444915,4.90909091 12,4.90909091 C13.6909091,4.90909091 15.2181818,5.50909091 16.4181818,6.49090909 L19.9090909,3 C17.7818182,1.14545455 15.0545455,0 12,0 C7.27006974,0 3.1977497,2.69829785 1.23999023,6.65002441 L5.26620003,9.76452941 Z"/>
@@ -175,7 +180,7 @@ function LoginForm() {
                                 <button
                                     onClick={() => signIn("github", { callbackUrl })}
                                     type="button"
-                                    className="flex h-11 items-center justify-center rounded-md border border-zinc-200 bg-transparent px-4 text-sm font-medium text-zinc-900 transition-colors hover:bg-zinc-50 dark:border-zinc-800 dark:text-zinc-50 dark:hover:bg-zinc-900"
+                                    className="flex h-11 items-center justify-center rounded-xl border border-warm-border bg-transparent px-4 text-sm font-medium text-warm-primary transition-colors hover:bg-warm-subtle"
                                 >
                                     <svg className="mr-2 size-5" viewBox="0 0 24 24" fill="currentColor">
                                         <path fillRule="evenodd" clipRule="evenodd" d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.603-3.369-1.342-3.369-1.342-.454-1.155-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836c.85.004 1.705.115 2.504.337 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.933.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.481C19.138 20.161 22 16.416 22 12c0-5.523-4.477-10-10-10z" />
@@ -184,12 +189,12 @@ function LoginForm() {
                                 </button>
                             </div>
 
-                            <div className="mt-8 text-center text-sm text-zinc-600 dark:text-zinc-400">
+                            <div className="text-center text-sm text-warm-secondary">
                                 Pas encore de compte ?{" "}
                                 <button
                                     type="button"
                                     onClick={() => router.push("/register")}
-                                    className="font-medium text-zinc-900 transition-colors hover:underline dark:text-zinc-50"
+                                    className="font-medium text-warm-primary transition-colors hover:underline"
                                 >
                                     Créer un compte
                                 </button>

@@ -1,51 +1,34 @@
 "use client";
 
-// Bibliothèques tierces
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
-// Hooks personnalisés
 import { useFormValidation } from "@/app/hooks/useFormValidation";
-
-// Composants UI
-import { Button } from "@/components/ui/button";
 import FormErrorMessage from "@/components/forms/FormErrorMessage";
-
-// Contraintes et services
 import { RegisterConstraints } from "@/lib/constraints/forms_constraints";
 import { registerUserAPI } from "@/lib/services/auth_service";
 import PasswordInput from "@/components/forms/PasswordInput";
 import LoadingSpinner from "@/components/layout/LoadingSpinner";
 
-// _________________________ COMPONENT _________________________
 export default function RegisterPage() {
-
-    // _________________________ ETATS _________________________
     const router = useRouter();
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
-    // Utilisation du hook de validation
     const { error, setError, validate } = useFormValidation(
         RegisterConstraints,
-        ["email", "password"] // Liste des champs à valider
+        ["email", "password"]
     );
 
-    const [formData, setFormData] = useState({ 
-        email: "", 
-        password: "" 
-    });
+    const [formData, setFormData] = useState({ email: "", password: "" });
 
-    // Création du compte utilisateur
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        setIsLoading(true);
-        setError(null); // Réinitialise les erreurs existantes
+        setError(null);
 
-        if (!validate(formData)) {
-            setIsLoading(false);
-            return;
-        }
+        if (!validate(formData)) return;
+
+        setIsLoading(true);
 
         try {
             await registerUserAPI(formData.email, formData.password);
@@ -58,25 +41,27 @@ export default function RegisterPage() {
         }
     };
 
-    if (isLoading) { <LoadingSpinner /> }
+    if (isLoading) {
+        return <LoadingSpinner />;
+    }
 
     return (
-        <div className="centered-block">
-            <div className="card transition-all duration-300">   
-                <div className="mb-6 text-center">
-                    <h2 className="text-2xl font-bold text-zinc-900">Inscription</h2>
-                    <p className="mt-2 text-sm text-zinc-600">Entrez vos informations pour créer un compte</p>
+        <div className="flex min-h-dvh flex-col items-center justify-center bg-warm-base px-4">
+            <div className="w-full max-w-sm space-y-6">
+                <div className="text-center">
+                    <h2 className="text-2xl font-semibold tracking-tight text-warm-primary">Inscription</h2>
+                    <p className="mt-2 text-sm text-warm-secondary">Entrez vos informations pour créer un compte</p>
                 </div>
 
                 <FormErrorMessage message={error?.general} />
 
                 <form className="space-y-4" onSubmit={handleSubmit}>
-                    <div>
-                        <label htmlFor="email" className="block font-medium text-zinc-700">
+                    <div className="space-y-1.5">
+                        <label htmlFor="email" className="block text-sm font-medium text-warm-primary">
                             Adresse email
                         </label>
                         <input
-                            className="input-text-select mt-1 w-full shadow-sm"
+                            className="input-text-select"
                             type="email"
                             id="email"
                             name="email"
@@ -85,51 +70,44 @@ export default function RegisterPage() {
                             autoComplete="email"
                             autoFocus
                             value={formData.email}
-                            onChange={(e) =>
-                                setFormData({ ...formData, email: e.target.value })
-                            }
+                            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                         />
                         <FormErrorMessage message={error?.email} />
                     </div>
 
-                <div>
-                    <PasswordInput 
-                        id="password"
-                        name="password"
-                        label="Mot de passe"
-                        placeholder="••••••••"
-                        value={formData.password}
-                        onChange={(e) =>
-                            setFormData({ ...formData, password: e.target.value })
-                        }
-                        error={error?.password}
-                        required
-                    />
-                </div>
+                    <div className="space-y-1.5">
+                        <PasswordInput
+                            id="password"
+                            name="password"
+                            label="Mot de passe"
+                            placeholder="••••••••"
+                            value={formData.password}
+                            onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                            error={error?.password}
+                            required
+                        />
+                    </div>
 
-
-                    <Button 
-                        type="submit" 
-                        className="w-full"
-                        disabled={isLoading} 
-                        variant={isLoading ? "ghost" : "default"}
+                    <button
+                        type="submit"
+                        disabled={isLoading}
+                        className="mt-2 flex h-11 w-full items-center justify-center rounded-xl bg-warm-accent px-4 text-sm font-semibold text-warm-primary shadow-sm transition-colors hover:bg-warm-accent-hover disabled:cursor-not-allowed disabled:opacity-50"
                     >
                         {isLoading ? "Création en cours..." : "Créer un compte"}
-                    </Button>
-
-                    <div className="mt-6 text-center">
-                        <p className="text-sm text-zinc-600">
-                            Déjà un compte ?{" "}
-                            <Button
-                                variant="link"
-                                onClick={() => router.push("/login")}
-                                className="font-medium text-blue-600 hover:text-blue-500"
-                            >
-                                Se connecter
-                            </Button>
-                        </p>
-                    </div>
+                    </button>
                 </form>
+
+                <div className="text-center text-sm text-warm-secondary">
+                    Déjà un compte ?{" "}
+                    <button
+                        type="button"
+                        onClick={() => router.push("/login")}
+                        className="font-medium text-warm-primary transition-colors hover:underline"
+                    >
+                        Se connecter
+                    </button>
+                </div>
             </div>
-        </div>);
-}    
+        </div>
+    );
+}

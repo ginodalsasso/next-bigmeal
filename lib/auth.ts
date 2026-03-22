@@ -1,6 +1,6 @@
 "server-only";
 
-import NextAuth from "next-auth";
+import NextAuth, { CredentialsSignin } from "next-auth";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { db } from "./db";
 import Credentials from "next-auth/providers/credentials";
@@ -69,8 +69,13 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                     }
                 } catch (error) {
                     console.error("Authentication error:", error);
-                    throw new Error((error as Error).message || "UNKNOWN_ERROR");
-                    ;
+                    const msg = (error as Error).message;
+                    if (msg === "Trop de requêtes. Réessayez plus tard.") {
+                        const err = new CredentialsSignin();
+                        err.code = "RATE_LIMIT";
+                        throw err;
+                    }
+                    throw new Error(msg || "UNKNOWN_ERROR");
                 }
             },
         }),
