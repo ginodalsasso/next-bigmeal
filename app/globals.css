@@ -121,11 +121,11 @@
 
 /* ── Formulaires ─────────────────────────────────────────────── */
 .input-text-select {
-  @apply w-full rounded-xl border border-warm-border bg-warm-base p-2 text-warm-primary focus:outline-none focus:ring-2 focus:ring-warm-accent;
+  @apply w-full rounded-xl border border-warm-border bg-warm-card p-2 text-warm-primary focus:outline-none focus:ring-2 focus:ring-warm-accent;
 }
 
 .input-search {
-  @apply w-full rounded-xl border border-warm-border bg-warm-base p-2 text-warm-primary focus:border-warm-accent focus:outline-none focus:ring-2 focus:ring-warm-accent;
+  @apply w-full rounded-xl border border-warm-border bg-warm-card p-2 text-warm-primary focus:border-warm-accent focus:outline-none focus:ring-2 focus:ring-warm-accent;
 }
 
 .error-form {

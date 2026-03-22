@@ -53,7 +53,7 @@ const Search: React.FC<SearchBarProps> = ({ onSearch }) => {
                     aria-expanded={suggestions.length > 0}
                     aria-autocomplete="list"
                     aria-controls="search-suggestions"
-                    className="w-full rounded-xl border border-warm-border bg-warm-base px-4 py-3 pr-12 text-warm-primary transition-all duration-200 focus:border-warm-accent focus:outline-none focus:ring-2 focus:ring-warm-accent"
+                    className="w-full rounded-xl border border-warm-border bg-warm-card px-4 py-3 pr-12 text-warm-primary transition-all duration-200 focus:border-warm-accent focus:outline-none focus:ring-2 focus:ring-warm-accent"
                     placeholder="Rechercher un plat ou un ingrédient..."
                     value={query}
                     onChange={(e) => handleChange(e.target.value)}

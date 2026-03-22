@@ -72,6 +72,12 @@ export default function MealsList({
         }
     };
 
+    const [canShare, setCanShare] = useState(false);
+
+    useEffect(() => {
+        setCanShare(typeof navigator !== "undefined" && typeof navigator.share === "function");
+    }, []);
+
     const filterOptions = (fetchedCategories ?? []).map((cat) => cat.name);
 
     const handleFilterChange = (selectedFilters: string[]) => {
@@ -157,9 +163,7 @@ export default function MealsList({
                                     />
 
                                     <div className="flex items-center gap-3">
-                                        {typeof navigator !== "undefined" &&
-                                            typeof navigator.share ===
-                                                "function" && (
+                                        {canShare && (
                                                 <ShareButton
                                                     className="text-warm-disabled hover:text-warm-accent"
                                                     title={`Recette : ${meal.name}`}
