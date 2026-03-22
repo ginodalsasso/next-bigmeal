@@ -115,7 +115,7 @@ export default function MealsList({
                 >
                     {meals.map((meal) => (
                         <li key={meal.id}>
-                            <article className="relative flex h-full flex-col rounded-xl border border-warm-border bg-warm-subtle shadow-sm transition-shadow hover:shadow-md">
+                            <article className="relative flex h-full flex-col rounded-xl border border-warm-border bg-warm-card shadow-sm transition-shadow hover:shadow-md">
                                 <IsAdmin>
                                     <div className="absolute right-1 top-1 z-10">
                                         <PopoverActions

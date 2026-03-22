@@ -110,9 +110,9 @@ const SearchResultsPage: React.FC = () => {
             <h1 className="h1-title">Résultats pour &laquo;&nbsp;{query}&nbsp;&raquo;</h1>
 
             {totalResults === 0 ? (
-                <div className="mt-8 rounded-lg border border-zinc-200 bg-zinc-50 p-8 text-center">
-                    <Search className="mx-auto mb-3 size-12 text-zinc-300" />
-                    <p className="text-sm text-zinc-500">Aucun résultat pour cette recherche.</p>
+                <div className="mt-8 rounded-lg border border-warm-border bg-warm-subtle p-8 text-center">
+                    <Search className="mx-auto mb-3 size-12 text-warm-disabled" />
+                    <p className="text-sm text-warm-secondary">Aucun résultat pour cette recherche.</p>
                 </div>
             ) : (
                 <>
@@ -126,7 +126,7 @@ const SearchResultsPage: React.FC = () => {
                             <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4" role="list">
                                 {mealResults.map((meal) => (
                                     <li key={meal.id}>
-                                        <article className="relative flex h-full flex-col rounded-lg border border-zinc-200 bg-white shadow-sm transition-shadow hover:shadow-md">
+                                        <article className="relative flex h-full flex-col rounded-lg border border-warm-border bg-warm-card shadow-sm transition-shadow hover:shadow-md">
 
                                             <IsAdmin>
                                                 <div className="absolute right-1 top-1 z-10">
@@ -147,20 +147,20 @@ const SearchResultsPage: React.FC = () => {
 
                                             <Link
                                                 href={`/meals/${meal.name}`}
-                                                className="flex flex-1 flex-col gap-1.5 p-3 pr-8 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-1"
+                                                className="flex flex-1 flex-col gap-1.5 p-3 pr-8 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-warm-accent focus-visible:ring-offset-1"
                                                 aria-label={`Voir la recette ${ucFirst(meal.name)}`}
                                             >
-                                                <p className="line-clamp-2 text-sm font-semibold leading-snug text-zinc-900">
+                                                <p className="line-clamp-2 text-sm font-semibold leading-snug text-warm-primary">
                                                     {ucFirst(meal.name)}
                                                 </p>
                                                 {meal.categoryMeal?.name && (
-                                                    <span className="w-fit rounded-full bg-orange-50 px-2 py-0.5 text-xs font-medium text-orange-700">
+                                                    <span className="w-fit rounded-full bg-warm-accent/15 px-2 py-0.5 text-xs font-medium text-warm-primary">
                                                         {meal.categoryMeal.name}
                                                     </span>
                                                 )}
                                             </Link>
 
-                                            <div className="flex items-center justify-between border-t border-zinc-100 px-3 py-2">
+                                            <div className="flex items-center justify-between border-t border-warm-border px-3 py-2">
                                                 <AddToShoppingListForm type="meal" id={meal.id} />
                                                 <IsUser>
                                                     <button
@@ -168,7 +168,7 @@ const SearchResultsPage: React.FC = () => {
                                                         aria-label={likedMeals.has(meal.name) ? "Retirer des favoris" : "Ajouter aux favoris"}
                                                         aria-pressed={likedMeals.has(meal.name)}
                                                         onClick={() => toggleLikeMeal(meal.name)}
-                                                        className="flex size-8 items-center justify-center rounded-md transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500"
+                                                        className="flex size-8 items-center justify-center rounded-md transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-warm-accent"
                                                     >
                                                         <Heart
                                                             size={18}
@@ -195,7 +195,7 @@ const SearchResultsPage: React.FC = () => {
                             <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4" role="list">
                                 {ingredientResults.map((ingredient) => (
                                     <li key={ingredient.id}>
-                                        <article className="relative flex h-full flex-col rounded-lg border border-zinc-200 bg-white shadow-sm transition-shadow hover:shadow-md">
+                                        <article className="relative flex h-full flex-col rounded-lg border border-warm-border bg-warm-card shadow-sm transition-shadow hover:shadow-md">
 
                                             <IsAdmin>
                                                 <div className="absolute right-1 top-1 z-10">
@@ -216,20 +216,20 @@ const SearchResultsPage: React.FC = () => {
 
                                             <Link
                                                 href={`/ingredients/${ingredient.name}`}
-                                                className="flex flex-1 flex-col gap-1.5 p-3 pr-8 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-1"
+                                                className="flex flex-1 flex-col gap-1.5 p-3 pr-8 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-warm-accent focus-visible:ring-offset-1"
                                                 aria-label={`Voir l'ingrédient ${ucFirst(ingredient.name)}`}
                                             >
-                                                <p className="line-clamp-2 text-sm font-semibold leading-snug text-zinc-900">
+                                                <p className="line-clamp-2 text-sm font-semibold leading-snug text-warm-primary">
                                                     {ucFirst(ingredient.name)}
                                                 </p>
                                                 {ingredient.categoryIngredient?.name && (
-                                                    <span className="w-fit rounded-full bg-orange-50 px-2 py-0.5 text-xs font-medium text-orange-700">
+                                                    <span className="w-fit rounded-full bg-warm-accent/15 px-2 py-0.5 text-xs font-medium text-warm-primary">
                                                         {ingredient.categoryIngredient.name}
                                                     </span>
                                                 )}
                                             </Link>
 
-                                            <div className="border-t border-zinc-100 px-3 py-2">
+                                            <div className="border-t border-warm-border px-3 py-2">
                                                 <AddToShoppingListForm type="ingredient" id={ingredient.id} />
                                             </div>
                                         </article>
@@ -248,7 +248,7 @@ const SearchResultsPage: React.FC = () => {
                             <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4" role="list">
                                 {productResults.map((product) => (
                                     <li key={product.id}>
-                                        <article className="relative flex h-full flex-col rounded-lg border border-zinc-200 bg-white shadow-sm transition-shadow hover:shadow-md">
+                                        <article className="relative flex h-full flex-col rounded-lg border border-warm-border bg-warm-card shadow-sm transition-shadow hover:shadow-md">
 
                                             <IsAdmin>
                                                 <div className="absolute right-1 top-1 z-10">
@@ -268,17 +268,17 @@ const SearchResultsPage: React.FC = () => {
                                             </IsAdmin>
 
                                             <div className="flex flex-1 flex-col gap-1.5 p-3 pr-8">
-                                                <p className="line-clamp-2 text-sm font-semibold leading-snug text-zinc-900">
+                                                <p className="line-clamp-2 text-sm font-semibold leading-snug text-warm-primary">
                                                     {ucFirst(product.name)}
                                                 </p>
                                                 {product.categoryHouseholdProduct?.name && (
-                                                    <span className="w-fit rounded-full bg-orange-50 px-2 py-0.5 text-xs font-medium text-orange-700">
+                                                    <span className="w-fit rounded-full bg-warm-accent/15 px-2 py-0.5 text-xs font-medium text-warm-primary">
                                                         {product.categoryHouseholdProduct.name}
                                                     </span>
                                                 )}
                                             </div>
 
-                                            <div className="border-t border-zinc-100 px-3 py-2">
+                                            <div className="border-t border-warm-border px-3 py-2">
                                                 <AddToShoppingListForm type="product" id={product.id} />
                                             </div>
                                         </article>

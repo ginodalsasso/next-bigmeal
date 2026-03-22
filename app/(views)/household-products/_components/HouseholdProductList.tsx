@@ -87,7 +87,7 @@ export default function HouseholdProductList({
                 <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4" role="list">
                     {householdProducts.map((product) => (
                         <li key={product.id}>
-                            <article className="relative flex h-full flex-col rounded-xl border border-warm-border bg-warm-subtle shadow-sm transition-shadow hover:shadow-md">
+                            <article className="relative flex h-full flex-col rounded-xl border border-warm-border bg-warm-card shadow-sm transition-shadow hover:shadow-md">
 
                                 <IsAdmin>
                                     <div className="absolute right-1 top-1 z-10">

@@ -14,6 +14,7 @@ export default {
   			foreground: 'hsl(var(--foreground))',
 			"accent-color": 'var(--accent-color)',
 			warm: {
+				card:     '#FEFDF8',
 				base:     '#FEFAE0',
 				subtle:   '#FAEDCD',
 				muted:    '#F5EDD8',
