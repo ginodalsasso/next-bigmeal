@@ -2,22 +2,16 @@ import { idConstraints } from "@/lib/constraints/forms_constraints";
 import { db } from "@/lib/db";
 import { verifyCSRFToken } from "@/lib/security/verifyCsrfToken";
 import { getUserSession } from "@/lib/security/getSession";
-import { getUser } from "@/lib/dal";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
     try {
-        const { error } = await getUserSession();
+        const { error, session } = await getUserSession();
         if (error) return error;
 
         const csrfTokenVerified = await verifyCSRFToken(req);
         if (!csrfTokenVerified) {
             return new NextResponse("CSRF Token is missing ou invalide", { status: 403 });
-        }
-
-        const user = await getUser();
-        if (!user) {
-            return new NextResponse("Utilisateur introuvable", { status: 404 });
         }
 
         const body = await req.json();
@@ -27,21 +21,25 @@ export async function POST(req: NextRequest) {
         }
 
         const { id: mealId } = validation.data;
+        const userId = session!.user.id;
 
-        const meal = await db.meal.findUnique({
-            where: { id: mealId },
-            include: { compositions: true },
-        });
+        const [meal, existingList] = await Promise.all([
+            db.meal.findUnique({ where: { id: mealId }, include: { compositions: true } }),
+            db.shoppingList.findFirst({ where: { userId, isExpired: false }, select: { id: true } }),
+        ]);
+
         if (!meal) {
             return NextResponse.json({ error: "Repas introuvable" }, { status: 404 });
         }
 
-        let shoppingList = user.shoppingList[0];
-        if (!shoppingList) {
-            shoppingList = await db.shoppingList.create({ data: { userId: user.id } });
-        }
+        const shoppingList = existingList ?? await db.shoppingList.create({ data: { userId } });
 
         const validCompositions = meal.compositions.filter(c => c.ingredientId);
+
+        if (validCompositions.length === 0) {
+            return NextResponse.json({ message: "Aucun ingrédient à ajouter" }, { status: 200 });
+        }
+
         const ingredientIds = validCompositions.map(c => c.ingredientId);
 
         const existingItems = await db.shoppingListItem.findMany({
@@ -49,7 +47,7 @@ export async function POST(req: NextRequest) {
         });
         const existingMap = new Map(existingItems.map(item => [item.ingredientId, item]));
 
-        const toUpdate = validCompositions
+        const toUpdateOps = validCompositions
             .filter(c => existingMap.has(c.ingredientId))
             .map(c => {
                 const existing = existingMap.get(c.ingredientId)!;
@@ -59,21 +57,24 @@ export async function POST(req: NextRequest) {
                 });
             });
 
-        const toCreate = validCompositions
+        const toCreateData = validCompositions
             .filter(c => !existingMap.has(c.ingredientId))
-            .map(c =>
-                db.shoppingListItem.create({
-                    data: {
-                        shoppingListId: shoppingList.id,
-                        mealId,
-                        ingredientId: c.ingredientId,
-                        quantity: c.quantity,
-                        unit: c.unit,
-                    },
-                })
-            );
+            .map(c => ({
+                shoppingListId: shoppingList.id,
+                mealId,
+                ingredientId: c.ingredientId,
+                quantity: c.quantity,
+                unit: c.unit,
+            }));
 
-        await db.$transaction([...toUpdate, ...toCreate]);
+        // createMany = 1 requête batch au lieu de N inserts séquentiels
+        // Promise.all = updates en parallèle, sans overhead de transaction
+        await Promise.all([
+            toCreateData.length > 0
+                ? db.shoppingListItem.createMany({ data: toCreateData })
+                : Promise.resolve(),
+            ...toUpdateOps,
+        ]);
 
         return NextResponse.json({ message: "Repas ajouté à la liste de courses" }, { status: 201 });
     } catch (error) {

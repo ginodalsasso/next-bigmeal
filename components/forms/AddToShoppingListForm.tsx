@@ -32,15 +32,18 @@ const AddToShoppingListForm: React.FC<AddToShoppingListFormProps> = ({ type, id 
         setError({});
         const csrfToken = await getCsrfToken();
         try {
+            if (!csrfToken) {
+                setError({ general: "Problème de sécurité, veuillez réessayer." });
+                setIsLoading(false);
+                return;
+            }
             switch (type) {
                 case 'meal': {
-                    if (!csrfToken) { setError({ general: "Problème de sécurité, veuillez réessayer." }); return; }
                     await createShoppingListMealAPI(id, csrfToken);
                     toast('Les ingrédients du repas ont été ajoutés à la liste de courses');
                     break;
                 }
                 case 'ingredient': {
-                    if (!csrfToken) { setError({ general: "Problème de sécurité, veuillez réessayer." }); return; }
                     if (!validate(quantity)) { setIsLoading(false); return; }
                     await createShoppingListIngredientAPI(id, quantity.quantity, csrfToken);
                     toast('Ingrédient ajouté à la liste de courses avec succès');
@@ -48,7 +51,6 @@ const AddToShoppingListForm: React.FC<AddToShoppingListFormProps> = ({ type, id 
                     break;
                 }
                 case 'product': {
-                    if (!csrfToken) { setError({ general: "Problème de sécurité, veuillez réessayer." }); return; }
                     if (!validate(quantity)) { setIsLoading(false); return; }
                     await createShoppingListProductAPI(id, quantity.quantity, csrfToken);
                     toast('Produit ajouté à la liste de courses avec succès');

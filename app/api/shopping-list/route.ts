@@ -1,6 +1,5 @@
-import { idConstraints, isCheckedShoppingListConstraints, ShoppingListConstraints } from "@/lib/constraints/forms_constraints";
+import { idConstraints, isCheckedShoppingListConstraints, ShoppingListItemConstraints } from "@/lib/constraints/forms_constraints";
 import { verifyCSRFToken } from "@/lib/security/verifyCsrfToken";
-import { getUser } from "@/lib/dal";
 import { db } from "@/lib/db";
 import { NextRequest, NextResponse } from "next/server";
 import { getUserSession } from "@/lib/security/getSession";
@@ -70,7 +69,7 @@ export async function GET() {
 
 export async function POST(req: NextRequest) {
     try {
-        const { error } = await getUserSession();
+        const { error, session } = await getUserSession();
         if (error) return error;
 
         const csrfTokenVerified = await verifyCSRFToken(req);
@@ -78,17 +77,9 @@ export async function POST(req: NextRequest) {
             return new NextResponse("Le token CSRF est manquant ou invalide", { status: 403 });
         }
 
-        const user = await getUser();
-        if (!user) {
-            return new NextResponse("Utilisateur introuvable", { status: 404 });
-        }
-
         const body = await req.json();
-        const { mealId = null, ingredientId, productId, unit, quantity} = body;
 
-        
-        // Valider et nettoyer les données
-        const validationResult = ShoppingListConstraints.safeParse(body);
+        const validationResult = ShoppingListItemConstraints.safeParse(body);
         if (!validationResult.success) {
             return NextResponse.json(
                 { error: validationResult.error.format() },
@@ -96,13 +87,15 @@ export async function POST(req: NextRequest) {
             );
         }
 
-        // Vérifie si une liste de courses existe
-        let shoppingList = user.shoppingList[0]; // Prendre la première liste de l'utilisateur
+        const { mealId = null, ingredientId, productId, unit, quantity } = validationResult.data;
+        const userId = session!.user.id;
+
+        let shoppingList = await db.shoppingList.findFirst({
+            where: { userId, isExpired: false },
+            select: { id: true },
+        });
         if (!shoppingList) {
-            // Si aucune liste n'existe, en créer une nouvelle
-            shoppingList = await db.shoppingList.create({
-                data: { userId: user.id },
-            });
+            shoppingList = await db.shoppingList.create({ data: { userId } });
         }
         // Vérifier si l'ingrédient (peu importe le repas) existe déjà dans la liste de courses basée sur ingredientId
         const existingItem = await db.shoppingListItem.findFirst({
