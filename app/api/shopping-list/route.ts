@@ -128,7 +128,7 @@ export async function POST(req: NextRequest) {
                     ingredientId,
                     productId,
                     quantity,
-                    unit: unit || null,
+                    unit: unit || null, // Unité peut être null si non spécifiée
                     mealId: mealId || null,
                 },
             });

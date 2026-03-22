@@ -208,22 +208,24 @@ export const ShoppingListConstraints = z.object({
 });
 
 const mongoIdOrNull = z.string().regex(/^[a-f\d]{24}$/i).nullable().optional();
-const unitValues = Object.values(IngredientUnit) as [string, ...string[]];
 
-export const ShoppingListItemConstraints = z.object({
-    quantity: z
-        .number({ message: "La quantité doit être un nombre" })
-        .min(0.1, "La quantité doit être supérieure à 0")
-        .max(10000, "La quantité doit être inférieure à 10000")
-        .positive("La quantité doit être un nombre positif."),
-    ingredientId: mongoIdOrNull,
-    productId: mongoIdOrNull,
-    mealId: mongoIdOrNull,
-    unit: z.enum(unitValues).nullable().optional(),
-}).refine(
-    data => data.ingredientId || data.productId,
-    { message: "Un ingrédient ou un produit doit être spécifié" }
-);
+export const ShoppingListItemConstraints = z
+    .object({
+        quantity: z
+            .number({ message: "La quantité doit être un nombre" })
+            .min(0.1, "La quantité doit être supérieure à 0")
+            .max(10000, "La quantité doit être inférieure à 10000")
+            .positive("La quantité doit être un nombre positif."),
+        ingredientId: mongoIdOrNull,
+        productId: mongoIdOrNull,
+        mealId: mongoIdOrNull,
+        unit: z.nativeEnum(IngredientUnit, {
+            message: "Veuillez sélectionner une unité",
+        }),
+    })
+    .refine((data) => data.ingredientId || data.productId, {
+        message: "Un ingrédient ou un produit doit être spécifié",
+    });
 
 export const isCheckedShoppingListConstraints = z.object({
     id: z.string(),

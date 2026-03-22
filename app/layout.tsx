@@ -35,7 +35,7 @@ export default function RootLayout({
                         </aside>
                         <main className="flex-1 overflow-hidden p-4 pb-20">{children}</main>
                     </div>
-                    <div className="fixed bottom-0 w-full border-t border-warm-border bg-warm-base lg:hidden">
+                    <div className="fixed bottom-0 z-40 w-full border-t border-warm-border bg-warm-base lg:hidden">
                         <Bottombar />
                     </div>
                     <Toaster />
