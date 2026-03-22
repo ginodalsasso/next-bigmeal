@@ -1,9 +1,9 @@
 import { useRouter } from "next/navigation";
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 import React from "react";
 import { Button } from "../ui/button";
 import { SearchIcon } from "lucide-react";
-import { useDebounce } from "@/app/hooks/useDebounce";
+import { useFuseSearch } from "@/app/hooks/useFuseSearch";
 
 interface SearchSuggestion {
     id: string;
@@ -18,58 +18,24 @@ const Search: React.FC<SearchBarProps> = ({ onSearch }) => {
 
     const [query, setQuery] = useState("");
     const [suggestions, setSuggestions] = useState<SearchSuggestion[]>([]);
-    const [loading, setLoading] = useState(false);
     const router = useRouter();
-    const abortRef = useRef<AbortController | null>(null);
+    const { search, ready } = useFuseSearch();
 
-    const debouncedQuery = useDebounce<string>(query, 150);
-
-    useEffect(() => {
-        if (!debouncedQuery || debouncedQuery.length < 2) {
-            setSuggestions([]);
-            return;
-        }
-
-        abortRef.current?.abort();
-        abortRef.current = new AbortController();
-
-        const fetchSuggestions = async () => {
-            setLoading(true);
-            try {
-                const response = await fetch(`/api/search?query=${debouncedQuery}`, {
-                    signal: abortRef.current!.signal,
-                });
-
-                if (!response.ok) throw new Error("Erreur lors de la recherche");
-
-                const data = await response.json();
-                const combinedQuery: SearchSuggestion[] = [
-                    ...(data.meals ?? []).map((m: SearchSuggestion) => ({ id: m.id, name: m.name })),
-                    ...(data.ingredients ?? []).map((i: SearchSuggestion) => ({ id: i.id, name: i.name })),
-                ];
-                setSuggestions(combinedQuery);
-            } catch (error: unknown) {
-                if (error instanceof Error && error.name !== "AbortError") {
-                    console.error("[API_ERROR] searchAPI", error);
-                }
-            }
-            setLoading(false);
-        };
-
-        fetchSuggestions();
-    }, [debouncedQuery]);
+    const handleChange = (value: string) => {
+        setQuery(value);
+        setSuggestions(value.length >= 2 ? search(value) : []);
+    };
 
     const handleResult = () => {
-        const url = `/search-results?query=${debouncedQuery}`;
-        router.push(url);
+        if (!query.trim()) return;
+        router.push(`/search-results?query=${query}`);
         setQuery("");
         setSuggestions([]);
         onSearch?.();
     };
 
     const handleItemResult = (item: SearchSuggestion) => {
-        const url = `/search-results?query=${item.name}`;
-        router.push(url);
+        router.push(`/search-results?query=${item.name}`);
         setQuery("");
         setSuggestions([]);
         onSearch?.();
@@ -90,10 +56,11 @@ const Search: React.FC<SearchBarProps> = ({ onSearch }) => {
                     className="w-full rounded-xl border border-warm-border bg-warm-base px-4 py-3 pr-12 text-warm-primary transition-all duration-200 focus:border-warm-accent focus:outline-none focus:ring-2 focus:ring-warm-accent"
                     placeholder="Rechercher un plat ou un ingrédient..."
                     value={query}
-                    onChange={(e) => setQuery(e.target.value || "")}
+                    onChange={(e) => handleChange(e.target.value)}
+                    onKeyDown={(e) => e.key === "Enter" && handleResult()}
                 />
                 <div className="absolute right-4 top-1/2 -translate-y-1/2">
-                    {loading ? (
+                    {!ready && query.length > 0 ? (
                         <div className="size-5 animate-spin rounded-full border-2 border-warm-accent border-t-transparent" aria-hidden="true" />
                     ) : (
                         <button
@@ -119,7 +86,7 @@ const Search: React.FC<SearchBarProps> = ({ onSearch }) => {
                                 tabIndex={0}
                                 className="cursor-pointer border-b border-warm-border px-4 py-3 text-sm text-warm-primary transition-colors duration-150 last:border-b-0 hover:bg-warm-subtle focus-visible:bg-warm-subtle focus-visible:outline-none"
                                 onClick={() => handleItemResult(item)}
-                                onKeyDown={(e) => e.key === 'Enter' && handleItemResult(item)}
+                                onKeyDown={(e) => e.key === "Enter" && handleItemResult(item)}
                             >
                                 {item.name}
                             </li>
@@ -132,7 +99,7 @@ const Search: React.FC<SearchBarProps> = ({ onSearch }) => {
                 </div>
             )}
 
-            {query.length >= 2 && suggestions.length === 0 && !loading && (
+            {query.length >= 2 && suggestions.length === 0 && ready && (
                 <div role="status" className="absolute mt-1 w-full rounded-xl border border-warm-border bg-warm-base px-4 py-3 text-sm text-warm-secondary shadow-lg">
                     Aucun résultat pour &quot;{query}&quot;
                 </div>

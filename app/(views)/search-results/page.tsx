@@ -3,7 +3,7 @@
 import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { Heart, Leaf, Search, Utensils } from "lucide-react";
+import { Heart, Leaf, Package, Search, Utensils } from "lucide-react";
 import { toast } from "sonner";
 import { getCsrfToken } from "next-auth/react";
 
@@ -15,8 +15,9 @@ import IsUser from "@/components/isUser";
 
 import UpdateMeal from "@/app/(views)/meals/_components/UpdateMeal";
 import UpdateIngredient from "@/app/(views)/ingredients/_components/UpdateIngredient";
+import UpdateHouseholdProduct from "@/app/(views)/household-products/_components/UpdateHouseholdProduct";
 
-import { MealType, IngredientType } from "@/lib/types/schemas_interfaces";
+import { MealType, IngredientType, HouseholdProductType } from "@/lib/types/schemas_interfaces";
 import { likedMealAPI } from "@/lib/services/meal_service";
 import { ucFirst } from "@/lib/utils";
 
@@ -28,6 +29,7 @@ const SearchResultsPage: React.FC = () => {
 
     const [mealResults, setMealResults] = useState<MealType[]>([]);
     const [ingredientResults, setIngredientResults] = useState<IngredientType[]>([]);
+    const [productResults, setProductResults] = useState<HouseholdProductType[]>([]);
     const [likedMeals, setLikedMeals] = useState<Set<string>>(new Set());
     const [loading, setLoading] = useState(true);
 
@@ -42,6 +44,7 @@ const SearchResultsPage: React.FC = () => {
                 const data = await response.json();
                 setMealResults(data.meals ?? []);
                 setIngredientResults(data.ingredients ?? []);
+                setProductResults(data.householdProducts ?? []);
             } catch (error) {
                 console.error("Error fetching search results", error);
             }
@@ -88,10 +91,19 @@ const SearchResultsPage: React.FC = () => {
         setIngredientResults((prev) => prev.filter((i) => i.id !== id));
     };
 
+    // _________________________ CRUD PRODUITS MÉNAGERS _________________________
+    const updateProduct = async (updatedProduct: HouseholdProductType) => {
+        setProductResults((prev) => prev.map((p) => p.id === updatedProduct.id ? { ...p, ...updatedProduct } : p));
+    };
+
+    const handleProductDeleted = (id: string) => {
+        setProductResults((prev) => prev.filter((p) => p.id !== id));
+    };
+
     // _________________________ RENDU _________________________
     if (loading) return <LoadingSpinner />;
 
-    const totalResults = mealResults.length + ingredientResults.length;
+    const totalResults = mealResults.length + ingredientResults.length + productResults.length;
 
     return (
         <>
@@ -219,6 +231,55 @@ const SearchResultsPage: React.FC = () => {
 
                                             <div className="border-t border-zinc-100 px-3 py-2">
                                                 <AddToShoppingListForm type="ingredient" id={ingredient.id} />
+                                            </div>
+                                        </article>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    )}
+                    {/* Produits ménagers */}
+                    {productResults.length > 0 && (
+                        <div className="card">
+                            <h2 className="h2-title">
+                                <Package className="h2-icons" />
+                                Produits ménagers ({productResults.length})
+                            </h2>
+                            <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4" role="list">
+                                {productResults.map((product) => (
+                                    <li key={product.id}>
+                                        <article className="relative flex h-full flex-col rounded-lg border border-zinc-200 bg-white shadow-sm transition-shadow hover:shadow-md">
+
+                                            <IsAdmin>
+                                                <div className="absolute right-1 top-1 z-10">
+                                                    <PopoverActions
+                                                        id={product.id}
+                                                        apiUrl="/api/household-products"
+                                                        onDelete={() => handleProductDeleted(product.id)}
+                                                        renderEditForm={(onClose) => (
+                                                            <UpdateHouseholdProduct
+                                                                householdProduct={product}
+                                                                onSubmit={updateProduct}
+                                                                onCancel={onClose}
+                                                            />
+                                                        )}
+                                                    />
+                                                </div>
+                                            </IsAdmin>
+
+                                            <div className="flex flex-1 flex-col gap-1.5 p-3 pr-8">
+                                                <p className="line-clamp-2 text-sm font-semibold leading-snug text-zinc-900">
+                                                    {ucFirst(product.name)}
+                                                </p>
+                                                {product.categoryHouseholdProduct?.name && (
+                                                    <span className="w-fit rounded-full bg-orange-50 px-2 py-0.5 text-xs font-medium text-orange-700">
+                                                        {product.categoryHouseholdProduct.name}
+                                                    </span>
+                                                )}
+                                            </div>
+
+                                            <div className="border-t border-zinc-100 px-3 py-2">
+                                                <AddToShoppingListForm type="product" id={product.id} />
                                             </div>
                                         </article>
                                     </li>
