@@ -4,7 +4,7 @@ import MealsList from "./_components/MealsList";
 
 // Service de récupération des repas
 import { getCategoriesMeal, getMeals } from "@/lib/services/data_fetcher";
-import Pagination from "@/components/layout/Pagination";
+import Pagination from "@/components/ui/Pagination";
 import { ensureArray } from "@/lib/utils";
 import { db } from "@/lib/db";
 import { getUserSession } from "@/lib/security/getSession";

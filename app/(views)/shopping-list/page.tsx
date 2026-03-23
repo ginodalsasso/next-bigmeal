@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
-import DeleteItem from "@/components/layout/DeleteItemDialog";
+import DeleteItem from "@/components/catalog/DeleteItemDialog";
 
 import { ShoppingListType } from "@/lib/types/schemas_interfaces";
 import { dateToString, translatedUnit, ucFirst } from "@/lib/utils";
@@ -18,7 +18,7 @@ import {
 } from "@/lib/services/shopping_list_service";
 import { getCsrfToken } from "next-auth/react";
 import { CheckCircle, Minus, Plus, ShoppingBag, Utensils } from "lucide-react";
-import LoadingSpinner from "@/components/layout/LoadingSpinner";
+import LoadingSpinner from "@/components/ui/LoadingSpinner";
 import Link from "next/link";
 
 const ShoppingListPage = () => {

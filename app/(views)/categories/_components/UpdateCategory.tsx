@@ -6,14 +6,14 @@ import { useFormValidation } from "@/app/hooks/useFormValidation";
 
 // Composants UI
 import { Button } from "@/components/ui/button";
-import FormErrorMessage from "@/components/forms/FormErrorMessage";
+import FormErrorMessage from "@/components/ui/FormErrorMessage";
 
 // Contraintes et services
 import { categoriesConstraints } from "@/lib/constraints/forms_constraints";
 import { updateCategoryAPI } from "@/lib/services/categories_service";
 import { UpdateCategoryProps } from "@/lib/types/props_interfaces";
 import { getCsrfToken } from "next-auth/react";
-import FormSubmitButton from "@/components/forms/FormSubmitButton";
+import FormSubmitButton from "@/components/ui/FormSubmitButton";
 
 type CategoryFormType = { name: string };
 

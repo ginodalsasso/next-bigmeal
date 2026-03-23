@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { toast } from "sonner";
 
 import { useFormValidation } from "@/app/hooks/useFormValidation";
-import FormErrorMessage from "@/components/forms/FormErrorMessage";
+import FormErrorMessage from "@/components/ui/FormErrorMessage";
 import { ForgotPasswordConstraints } from "@/lib/constraints/forms_constraints";
 import { sendForgotPasswordEmailAPI } from "@/lib/services/auth_service";
 

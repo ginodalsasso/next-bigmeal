@@ -14,12 +14,12 @@ import { ucFirst } from "@/lib/utils";
 
 import UpdateMeal from "./UpdateMeal";
 import AddToShoppingListForm from "@/components/forms/AddToShoppingListForm";
-import IsUser from "@/components/isUser";
-import FilterItems from "@/components/layout/FilterItems";
-import PopoverActions from "@/components/layout/PopoverActions";
-import ItemCard from "@/components/layout/ItemCard";
-import ItemGrid from "@/components/layout/ItemGrid";
-import ShareButton from "@/components/ShareButton";
+import IsUser from "@/components/auth/isUser";
+import FilterItems from "@/components/search/FilterItems";
+import PopoverActions from "@/components/catalog/PopoverActions";
+import ItemCard from "@/components/catalog/ItemCard";
+import ItemGrid from "@/components/catalog/ItemGrid";
+import ShareButton from "@/components/ui/ShareButton";
 import { Button } from "@/components/ui/button";
 
 type MealsListProps = {

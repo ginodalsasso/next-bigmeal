@@ -12,10 +12,10 @@ import { preparationConstraints } from "@/lib/constraints/forms_constraints";
 import { useFormValidation } from "@/app/hooks/useFormValidation";
 
 // Composants UI
-import FormErrorMessage from "@/components/forms/FormErrorMessage";
+import FormErrorMessage from "@/components/ui/FormErrorMessage";
 import { createPreparationAPI } from "@/lib/services/preparation_service";
 import { getCsrfToken } from "next-auth/react";
-import FormSubmitButton from "@/components/forms/FormSubmitButton";
+import FormSubmitButton from "@/components/ui/FormSubmitButton";
 
 // _________________________ COMPOSANT _________________________
 const CreatePreparation: React.FC<CreatePreparationProps> = ({

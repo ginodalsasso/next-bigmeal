@@ -5,7 +5,7 @@ import React, { useState } from "react";
 import { CompositionType, MealType, PreparationType, StepType } from "@/lib/types/schemas_interfaces";
 
 import CreateComposition from "./(composition)/CreateComposition";
-import IsAdmin from "@/components/isAdmin";
+import IsAdmin from "@/components/auth/isAdmin";
 import CreatePreparation from "./(preparation)/CreatePreparation";
 import CreateStep from "./(preparation)/(step)/CreateStep";
 
@@ -17,7 +17,7 @@ import CompositionItem from "./(composition)/CompositionItem";
 import PreparationItem from "./(preparation)/PreparationItem";
 import { ucFirst } from "@/lib/utils";
 import { notFound } from "next/navigation";
-import ShareButton from "@/components/ShareButton";
+import ShareButton from "@/components/ui/ShareButton";
 import { URL } from "@/lib/constants/api_routes";
 
 

@@ -1,7 +1,7 @@
 "use client";
 
 import InstallPrompt from "@/components/pwa/InstallPrompt";
-import IsNotAuthenticated from "@/components/isNotAuthenticated";
+import IsNotAuthenticated from "@/components/auth/isNotAuthenticated";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ShoppingCart, UtensilsCrossed, Leaf, ListChecks, ChevronRight } from "lucide-react";

@@ -5,8 +5,8 @@ import { toast } from "sonner";
 import { useFormValidation } from "@/app/hooks/useFormValidation";
 
 // Composants UI
-import FormErrorMessage from "@/components/forms/FormErrorMessage";
-import FormSubmitButton from "@/components/forms/FormSubmitButton";
+import FormErrorMessage from "@/components/ui/FormErrorMessage";
+import FormSubmitButton from "@/components/ui/FormSubmitButton";
 
 // Contraintes et services
 import { categoriesConstraints } from "@/lib/constraints/forms_constraints";

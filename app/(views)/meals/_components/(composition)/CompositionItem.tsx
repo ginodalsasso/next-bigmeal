@@ -2,9 +2,9 @@
 
 import React from "react";
 import { translatedUnit, ucFirst } from "@/lib/utils";
-import IsAdmin from "@/components/isAdmin";
-import DeleteItem from "@/components/layout/DeleteItemDialog";
-import EditItem from "@/components/layout/EditItemDrawer";
+import IsAdmin from "@/components/auth/isAdmin";
+import DeleteItem from "@/components/catalog/DeleteItemDialog";
+import EditItem from "@/components/catalog/EditItemDrawer";
 import UpdateComposition from "./UpdateComposition";
 import { CompositionItemProps } from "@/lib/types/props_interfaces";
 import { Badge } from "@/components/ui/badge";

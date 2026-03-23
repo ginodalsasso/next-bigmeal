@@ -19,13 +19,13 @@ import { translatedSeason, ucFirst } from "@/lib/utils";
 
 // Composants UI
 import { Button } from "@/components/ui/button";
-import FormErrorMessage from "@/components/forms/FormErrorMessage";
+import FormErrorMessage from "@/components/ui/FormErrorMessage";
 
 // Services
 import { getCategoriesIngredient } from "@/lib/services/data_fetcher";
 import { createIngredientAPI } from "@/lib/services/ingredients_service";
 import { getCsrfToken } from "next-auth/react";
-import FormSubmitButton from "@/components/forms/FormSubmitButton";
+import FormSubmitButton from "@/components/ui/FormSubmitButton";
 
 // _________________________ COMPOSANT _________________________
 const CreateIngredient: React.FC<CreateIngredientProps> = ({

@@ -5,11 +5,11 @@ import { signIn, useSession } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 import { useFormValidation } from "@/app/hooks/useFormValidation";
-import FormErrorMessage from "@/components/forms/FormErrorMessage";
+import FormErrorMessage from "@/components/ui/FormErrorMessage";
 import ForgotPasswordForm from "../_component/ForgotPasswordEmailForm";
 import { LoginConstraints } from "@/lib/constraints/forms_constraints";
 import PasswordInput from "@/components/forms/PasswordInput";
-import LoadingSpinner from "@/components/layout/LoadingSpinner";
+import LoadingSpinner from "@/components/ui/LoadingSpinner";
 
 const OAUTH_ERROR_MESSAGES: Record<string, string> = {
     OAuthSignin: "Erreur lors de la connexion OAuth. Veuillez réessayer.",

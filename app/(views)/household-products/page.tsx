@@ -4,7 +4,7 @@ import HouseholdProductList from "./_components/HouseholdProductList";
 
 // Service de récupération des ingrédients
 import { getCategoriesHouseholdProduct, getHouseholdProduct } from "@/lib/services/data_fetcher";
-import Pagination from "@/components/layout/Pagination";
+import Pagination from "@/components/ui/Pagination";
 import { ensureArray } from "@/lib/utils";
 
 // Forcer le rendu SSR

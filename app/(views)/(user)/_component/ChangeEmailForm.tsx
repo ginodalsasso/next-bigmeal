@@ -1,5 +1,5 @@
 import { useFormValidation } from "@/app/hooks/useFormValidation";
-import FormErrorMessage from "@/components/forms/FormErrorMessage";
+import FormErrorMessage from "@/components/ui/FormErrorMessage";
 import { Button } from "@/components/ui/button";
 import { ChangeEmailConstraints } from "@/lib/constraints/forms_constraints";
 import { updateEmailAPI } from "@/lib/services/user_service";

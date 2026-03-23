@@ -2,10 +2,10 @@
 
 import React, { useState } from "react";
 import { PreparationType, StepType } from "@/lib/types/schemas_interfaces";
-import IsAdmin from "@/components/isAdmin";
-import EditItem from "@/components/layout/EditItemDrawer";
+import IsAdmin from "@/components/auth/isAdmin";
+import EditItem from "@/components/catalog/EditItemDrawer";
 import UpdatePreparation from "./UpdatePreparation";
-import DeleteItem from "@/components/layout/DeleteItemDialog";
+import DeleteItem from "@/components/catalog/DeleteItemDialog";
 import StepItem from "./(step)/StepItem";
 import { PreparationItemProps } from "@/lib/types/props_interfaces";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";

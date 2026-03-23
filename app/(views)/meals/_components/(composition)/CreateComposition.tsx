@@ -17,8 +17,8 @@ import { translatedUnit } from "@/lib/utils";
 
 // Composants UI
 import { Button } from "@/components/ui/button";
-import FormErrorMessage from "@/components/forms/FormErrorMessage";
-import { IngredientSearchInput } from "@/components/forms/IngredientSearchInput";
+import FormErrorMessage from "@/components/ui/FormErrorMessage";
+import { IngredientSearchInput } from "@/components/search/IngredientSearchInput";
 
 // Services
 import { createCompositionAPI } from "@/lib/services/composition_service";

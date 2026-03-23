@@ -2,8 +2,8 @@
 
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
-import IsUser from "../isUser";
-import IsAdmin from "../isAdmin";
+import IsUser from "../auth/isUser";
+import IsAdmin from "../auth/isAdmin";
 import {
     Carrot,
     Folder,
@@ -17,7 +17,7 @@ import {
     X,
 } from "lucide-react";
 import { ucFirst } from "@/lib/utils";
-import IsNotAuthenticated from "../isNotAuthenticated";
+import IsNotAuthenticated from "../auth/isNotAuthenticated";
 import { signOut } from "next-auth/react";
 import { usePathname } from "next/navigation";
 

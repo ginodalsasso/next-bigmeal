@@ -4,7 +4,7 @@ import IngredientsList from "./_components/IngredientsList";
 
 // Service de récupération des ingrédients
 import { getCategoriesIngredient, getIngredients } from "@/lib/services/data_fetcher";
-import Pagination from "@/components/layout/Pagination";
+import Pagination from "@/components/ui/Pagination";
 import { ensureArray } from "@/lib/utils";
 
 // Forcer le rendu SSR

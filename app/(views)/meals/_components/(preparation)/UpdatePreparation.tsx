@@ -14,12 +14,12 @@ import { useFormValidation } from "@/app/hooks/useFormValidation";
 
 // Composants UI
 import { Button } from "@/components/ui/button";
-import FormErrorMessage from "@/components/forms/FormErrorMessage";
+import FormErrorMessage from "@/components/ui/FormErrorMessage";
 
 // Services
 import { updatePreparationAPI } from "@/lib/services/preparation_service";
 import { getCsrfToken } from "next-auth/react";
-import FormSubmitButton from "@/components/forms/FormSubmitButton";
+import FormSubmitButton from "@/components/ui/FormSubmitButton";
 
 // _________________________ TYPE _________________________
 type UpdatePreparationFormType = Omit<PreparationFormType, "mealId">;

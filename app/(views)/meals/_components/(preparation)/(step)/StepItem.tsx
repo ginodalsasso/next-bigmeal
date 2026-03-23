@@ -1,9 +1,9 @@
 "use client";
 
 import React from "react";
-import IsAdmin from "@/components/isAdmin";
-import EditItem from "@/components/layout/EditItemDrawer";
-import DeleteItem from "@/components/layout/DeleteItemDialog";
+import IsAdmin from "@/components/auth/isAdmin";
+import EditItem from "@/components/catalog/EditItemDrawer";
+import DeleteItem from "@/components/catalog/DeleteItemDialog";
 import UpdateStep from "./UpdateStep";
 import { StepItemProps } from "@/lib/types/props_interfaces";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";

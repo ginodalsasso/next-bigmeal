@@ -12,8 +12,8 @@ import { ForgotUserPasswordFormType } from '@/lib/types/forms_interfaces';
 import { resetForgottenPasswordAPI, verifyResetTokenAPI } from '@/lib/services/user_service';
 import { useFormValidation } from '@/app/hooks/useFormValidation';
 import { NewPasswordConstraints } from '@/lib/constraints/forms_constraints';
-import FormSubmitButton from '@/components/forms/FormSubmitButton';
-import FormErrorMessage from '@/components/forms/FormErrorMessage';
+import FormSubmitButton from '@/components/ui/FormSubmitButton';
+import FormErrorMessage from '@/components/ui/FormErrorMessage';
 import PasswordInput from '@/components/forms/PasswordInput';
 
 

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Eye, EyeClosed } from "lucide-react";
-import FormErrorMessage from "@/components/forms/FormErrorMessage";
+import FormErrorMessage from "@/components/ui/FormErrorMessage";
 
 interface PasswordInputProps {
     id?: string;

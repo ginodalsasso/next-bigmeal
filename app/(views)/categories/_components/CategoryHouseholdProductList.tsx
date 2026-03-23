@@ -4,11 +4,11 @@ import React, { useState } from "react";
 import { CategoryHouseholdProductType } from "@/lib/types/schemas_interfaces";
 import { ucFirst } from "@/lib/utils";
 
-import EditItemDrawer from "@/components/layout/EditItemDrawer";
-import DeleteItem from "@/components/layout/DeleteItemDialog";
+import EditItemDrawer from "@/components/catalog/EditItemDrawer";
+import DeleteItem from "@/components/catalog/DeleteItemDialog";
 import UpdateCategory from "./UpdateCategory";
 import CreateCategory from "./CreateCategory";
-import IsAdmin from "@/components/isAdmin";
+import IsAdmin from "@/components/auth/isAdmin";
 
 export default function CategoryHouseholdProductList({ fetchedCategories }: { fetchedCategories: CategoryHouseholdProductType[] }) {
     const [categories, setCategories] = useState<CategoryHouseholdProductType[]>(fetchedCategories);

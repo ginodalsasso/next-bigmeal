@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import ResetPasswordForm from "../_component/ResetPasswordForm";
 import { fetchUserProfileAPI } from "@/lib/services/user_service";
 import ShoppingLists from "../_component/ShoppingLists";
-import LoadingSpinner from "@/components/layout/LoadingSpinner";
+import LoadingSpinner from "@/components/ui/LoadingSpinner";
 import { LogOut, User } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import UserInformation from "../_component/UserInformation";

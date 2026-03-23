@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 import { ShoppingListType } from "@/lib/types/schemas_interfaces";
 import { dateToString, translatedUnit, ucFirst } from "@/lib/utils";
-import DeleteItem from "@/components/layout/DeleteItemDialog";
+import DeleteItem from "@/components/catalog/DeleteItemDialog";
 import API_ROUTES from "@/lib/constants/api_routes";
 import { ChevronDown, ShoppingCart, Utensils, ListChecks } from "lucide-react";
 

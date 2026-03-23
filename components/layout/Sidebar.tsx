@@ -2,8 +2,8 @@
 
 import Link from "next/link";
 import React from "react";
-import IsUser from "../isUser";
-import IsAdmin from "../isAdmin";
+import IsUser from "../auth/isUser";
+import IsAdmin from "../auth/isAdmin";
 import { Carrot, Folder, ShoppingCart, SprayCan, Utensils } from "lucide-react";
 import { usePathname } from "next/navigation";
 

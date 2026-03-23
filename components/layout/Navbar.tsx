@@ -2,9 +2,9 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import IsUser from "../isUser";
+import IsUser from "../auth/isUser";
 import { signOut } from "next-auth/react";
-import SearchBar from "./Search";
+import SearchBar from "../search/Search";
 import { LogOut, Search, UserRound } from "lucide-react";
 import { usePathname } from "next/navigation";
 

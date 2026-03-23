@@ -5,11 +5,11 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 import { useFormValidation } from "@/app/hooks/useFormValidation";
-import FormErrorMessage from "@/components/forms/FormErrorMessage";
+import FormErrorMessage from "@/components/ui/FormErrorMessage";
 import { RegisterConstraints } from "@/lib/constraints/forms_constraints";
 import { registerUserAPI } from "@/lib/services/auth_service";
 import PasswordInput from "@/components/forms/PasswordInput";
-import LoadingSpinner from "@/components/layout/LoadingSpinner";
+import LoadingSpinner from "@/components/ui/LoadingSpinner";
 
 export default function RegisterPage() {
     const router = useRouter();

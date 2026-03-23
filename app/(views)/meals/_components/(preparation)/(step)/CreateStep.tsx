@@ -13,7 +13,7 @@ import { newStepConstraints } from "@/lib/constraints/forms_constraints";
 
 // Composants UI
 import { Button } from "@/components/ui/button";
-import FormErrorMessage from "@/components/forms/FormErrorMessage";
+import FormErrorMessage from "@/components/ui/FormErrorMessage";
 
 // Services
 import { createStepAPI } from "@/lib/services/step_service";

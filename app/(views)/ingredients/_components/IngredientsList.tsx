@@ -11,11 +11,11 @@ import { SEASONS } from "@/lib/constants/ui_constants";
 import CreateIngredient from "./CreateIngredient";
 import UpdateIngredient from "./UpdateIngredient";
 import AddToShoppingListForm from "@/components/forms/AddToShoppingListForm";
-import IsUser from "@/components/isUser";
-import FilterItems from "@/components/layout/FilterItems";
-import PopoverActions from "@/components/layout/PopoverActions";
-import ItemCard from "@/components/layout/ItemCard";
-import ItemGrid from "@/components/layout/ItemGrid";
+import IsUser from "@/components/auth/isUser";
+import FilterItems from "@/components/search/FilterItems";
+import PopoverActions from "@/components/catalog/PopoverActions";
+import ItemCard from "@/components/catalog/ItemCard";
+import ItemGrid from "@/components/catalog/ItemGrid";
 
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerTrigger } from "@/components/ui/drawer";
 import { Button } from "@/components/ui/button";

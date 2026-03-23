@@ -8,10 +8,10 @@ import { toast } from "sonner";
 import { getCsrfToken } from "next-auth/react";
 
 import AddToShoppingListForm from "@/components/forms/AddToShoppingListForm";
-import LoadingSpinner from "@/components/layout/LoadingSpinner";
-import PopoverActions from "@/components/layout/PopoverActions";
-import IsAdmin from "@/components/isAdmin";
-import IsUser from "@/components/isUser";
+import LoadingSpinner from "@/components/ui/LoadingSpinner";
+import PopoverActions from "@/components/catalog/PopoverActions";
+import IsAdmin from "@/components/auth/isAdmin";
+import IsUser from "@/components/auth/isUser";
 
 import UpdateMeal from "@/app/(views)/meals/_components/UpdateMeal";
 import UpdateIngredient from "@/app/(views)/ingredients/_components/UpdateIngredient";

@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import ResetPasswordForm from "./ResetPasswordForm";
 import DeleteProfile from "./DeleteProfile";
 import ChangeEmailForm from "./ChangeEmailForm";
-import IsAdmin from "@/components/isAdmin";
+import IsAdmin from "@/components/auth/isAdmin";
 import Link from "next/link";
 import { dateToString } from "@/lib/utils";
 import { UserType } from "@/lib/types/schemas_interfaces";

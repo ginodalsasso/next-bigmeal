@@ -9,7 +9,7 @@ import { IngredientType } from "@/lib/types/schemas_interfaces";
 // Services
 import { fetchIngredientAPI } from "@/lib/services/ingredients_service";
 import { notFound } from "next/navigation";
-import LoadingSpinner from "@/components/layout/LoadingSpinner";
+import LoadingSpinner from "@/components/ui/LoadingSpinner";
 
 
 // _________________________ COMPONENT _________________________

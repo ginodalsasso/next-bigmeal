@@ -1,5 +1,5 @@
 import React from "react";
-import IsAdmin from "@/components/isAdmin";
+import IsAdmin from "@/components/auth/isAdmin";
 
 type ItemCardProps = {
     adminActions?: React.ReactNode;

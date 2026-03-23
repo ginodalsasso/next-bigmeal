@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 // Services
 import { deleteProfileAPI } from "@/lib/services/user_service";
 import { getCsrfToken } from "next-auth/react";
-import FormErrorMessage from "@/components/forms/FormErrorMessage";
+import FormErrorMessage from "@/components/ui/FormErrorMessage";
 
 
 interface DeleteProfileProps {

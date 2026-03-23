@@ -3,11 +3,11 @@ import { toast } from "sonner";
 
 import { useFormValidation } from "@/app/hooks/useFormValidation";
 import { Button } from "@/components/ui/button";
-import FormErrorMessage from "@/components/forms/FormErrorMessage";
+import FormErrorMessage from "@/components/ui/FormErrorMessage";
 import { ResetPasswordConstraints } from "@/lib/constraints/forms_constraints";
 import { resetPasswordAPI } from "@/lib/services/user_service";
 import { getCsrfToken } from "next-auth/react";
-import FormSubmitButton from "@/components/forms/FormSubmitButton";
+import FormSubmitButton from "@/components/ui/FormSubmitButton";
 import PasswordInput from "@/components/forms/PasswordInput";
 
 const ResetPasswordForm = ({ onBackToProfile }: { onBackToProfile: () => void }) => {
