@@ -1,17 +1,18 @@
 import React from "react";
-import { toast } from "sonner";
 
-import { useFormValidation } from "@/app/hooks/useFormValidation";
+import { useCrudForm } from "@/app/hooks/useCrudForm";
 import { Button } from "@/components/ui/button";
 import FormErrorMessage from "@/components/ui/FormErrorMessage";
-import { ResetPasswordConstraints } from "@/lib/constraints/forms_constraints";
-import { resetPasswordAPI } from "@/lib/services/user_service";
-import { getCsrfToken } from "next-auth/react";
 import FormSubmitButton from "@/components/ui/FormSubmitButton";
 import PasswordInput from "@/components/forms/PasswordInput";
 
+import { ResetPasswordConstraints } from "@/lib/constraints/forms_constraints";
+import { resetPasswordAPI } from "@/lib/services/user_service";
+
+type ResetPasswordFormType = { password: string; newPassword: string; confirmNewPassword: string };
+
 const ResetPasswordForm = ({ onBackToProfile }: { onBackToProfile: () => void }) => {
-    const { error, setError, validate } = useFormValidation(
+    const { error, setError, submit, isLoading } = useCrudForm<ResetPasswordFormType>(
         ResetPasswordConstraints,
         ["password"]
     );
@@ -21,31 +22,24 @@ const ResetPasswordForm = ({ onBackToProfile }: { onBackToProfile: () => void })
         const newPassword = formData.get("new-password")?.toString() || "";
         const confirmNewPassword = formData.get("confirm-password")?.toString() || "";
 
-        if (!validate({ password, newPassword, confirmNewPassword })) {
-            setError({ general: "Veuillez saisir un mot de passe valide." });
-            return;
-        }
-
         if (newPassword !== confirmNewPassword) {
             setError({ password: "Les mots de passe ne correspondent pas." });
             return;
         }
 
-        try {
-            const csrfToken = await getCsrfToken();
-            if (!csrfToken) return;
-            await resetPasswordAPI(password, newPassword, confirmNewPassword, csrfToken);
-            toast.success("Votre mot de passe a bien été modifié.");
-            onBackToProfile();
-        } catch (error) {
-            console.error("Erreur lors de la modification du mot de passe :", error);
-            setError({ general: "Impossible de modifier le mot de passe. Veuillez réessayer plus tard." });
-        }
+        await submit({
+            form: { password, newPassword, confirmNewPassword },
+            apiCall: (form, csrf) => resetPasswordAPI(form.password, form.newPassword, form.confirmNewPassword, csrf),
+            onSuccess: () => {},
+            successMessage: "Votre mot de passe a bien été modifié.",
+            errorMessage: "Impossible de modifier le mot de passe. Veuillez réessayer plus tard.",
+            onClose: onBackToProfile,
+        });
     };
 
     return (
         <div className="space-y-3">
-            <form className="card space-y-3" action={handleResetPassword}>
+            <form className="card space-y-3" onSubmit={async (e) => { e.preventDefault(); await handleResetPassword(new FormData(e.currentTarget)); }}>
                 <FormErrorMessage message={error?.general} />
 
                 <PasswordInput
@@ -89,7 +83,7 @@ const ResetPasswordForm = ({ onBackToProfile }: { onBackToProfile: () => void })
                     />
                 </div>
 
-                <FormSubmitButton className="w-full" defaultText="Modifier le mot de passe" />
+                <FormSubmitButton className="w-full" defaultText="Modifier le mot de passe" isPending={isLoading} />
             </form>
 
             <Button variant="secondary" className="w-full" onClick={onBackToProfile}>

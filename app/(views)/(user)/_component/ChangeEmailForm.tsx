@@ -1,11 +1,12 @@
-import { useFormValidation } from "@/app/hooks/useFormValidation";
+import { SubmitEvent } from "react";
+import { useCrudForm } from "@/app/hooks/useCrudForm";
 import FormErrorMessage from "@/components/ui/FormErrorMessage";
 import { Button } from "@/components/ui/button";
 import { ChangeEmailConstraints } from "@/lib/constraints/forms_constraints";
 import { updateEmailAPI } from "@/lib/services/user_service";
 import { UserType } from "@/lib/types/schemas_interfaces";
-import { getCsrfToken } from "next-auth/react";
-import { toast } from "sonner";
+
+type ChangeEmailFormType = { userId: string; email: string };
 
 const ChangeEmailForm = ({
     user,
@@ -16,52 +17,29 @@ const ChangeEmailForm = ({
     onSubmit: (updatedEmail: string) => void;
     onBackToProfile: () => void;
 }) => {
-    // _________________________ ETATS _________________________
-    // Utilisation du hook de validation
-    const { error, setError, validate } = useFormValidation(
+    const { error, submit, isLoading } = useCrudForm<ChangeEmailFormType>(
         ChangeEmailConstraints,
-        ["email"] // Liste des champs à valider
+        ["email", "userId"]
     );
 
-    const handlesumbit = async (formData: FormData) => {
-        const newEmail = formData.get("email")?.toString() || "";
-        
-        const form = {
-            userId: user.id,
-            email: newEmail,
-        };
-    
-        if (!validate(form)) {
-            setError({ general: "Veuillez saisir un email valide." });
-            return;
-        }
-    
-        try {
-            const csrfToken = await getCsrfToken();
-            if (!csrfToken) {
-                console.error("CSRF token invalide");
-                return;
-            }
-            
-            await updateEmailAPI(form, csrfToken);
-            
-            // Utiliser l'email du formulaire pour mettre à jour l'état
-            onSubmit(newEmail);
-            
-            toast.success("Votre email a bien été modifié.");
-            onBackToProfile();
-        } catch (error) {
-            console.error("Erreur lors de la modification de l'email :", error);
-            setError({
-                general: "Impossible de modifier l'email. Veuillez réessayer plus tard.",
-            });
-        }
+    const handleSubmit = async (e: SubmitEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        const formData = new FormData(e.currentTarget);
+        const email = formData.get("email")?.toString() || "";
+        await submit({
+            form: { userId: user.id, email },
+            apiCall: updateEmailAPI,
+            onSuccess: () => onSubmit(email),
+            successMessage: "Votre email a bien été modifié.",
+            errorMessage: "Impossible de modifier l'email. Veuillez réessayer plus tard.",
+            onClose: onBackToProfile,
+        });
     };
 
     return (
         <div className="my-2">
             <p className="font-medium">Modification de l&apos;email</p>
-            <form action={handlesumbit}>
+            <form onSubmit={handleSubmit}>
                 <FormErrorMessage message={error?.general} />
 
                 <div className="flex flex-col gap-2">
@@ -78,14 +56,8 @@ const ChangeEmailForm = ({
                     <FormErrorMessage message={error?.email} />
 
                     <div className="mt-2 flex gap-2">
-                        <Button type="submit" className="flex-1">
-                            Enregistrer
-                        </Button>
-                        <Button
-                            variant="cancel"
-                            onClick={onBackToProfile}
-                            className="flex-1"
-                        >
+                        <Button type="submit" className="flex-1" disabled={isLoading}>Enregistrer</Button>
+                        <Button variant="cancel" onClick={onBackToProfile} className="flex-1">
                             Annuler
                         </Button>
                     </div>

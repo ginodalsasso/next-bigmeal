@@ -1,108 +1,60 @@
-// Bibliothèques tierces
-import { useEffect, useState } from "react";
-import { toast } from "sonner";
+import { useEffect, useState, SubmitEvent } from "react";
 
-// Types et énumérations
 import { Season } from "@/lib/types/enums";
 import { CategoryIngredientType } from "@/lib/types/schemas_interfaces";
 import { UpdateIngredientProps } from "@/lib/types/props_interfaces";
 import { IngredientFormType } from "@/lib/types/forms_interfaces";
 
-// Contraintes et validation
 import { ingredientConstraints } from "@/lib/constraints/forms_constraints";
-import { useFormValidation } from "@/app/hooks/useFormValidation";
+import { useCrudForm } from "@/app/hooks/useCrudForm";
 
-// Utils
 import { translatedSeason, ucFirst } from "@/lib/utils";
 
-// Composants UI
 import { Button } from "@/components/ui/button";
 import FormErrorMessage from "@/components/ui/FormErrorMessage";
-
-// Services
-import { getCategoriesIngredient } from "@/lib/services/data_fetcher";
-import { updateIngredientAPI } from "@/lib/services/ingredients_service";
-import { getCsrfToken } from "next-auth/react";
 import FormSubmitButton from "@/components/ui/FormSubmitButton";
 
-// _________________________ COMPONENT _________________________
-const UpdateIngredient: React.FC<UpdateIngredientProps> = ({
-    ingredient,
-    onSubmit,
-    onCancel,
-}) => {
-    // _________________________ ETATS _________________________
-    const [categories, setCategories] = useState<CategoryIngredientType[]>([]);
-    const [selectedSeason, setSelectedSeason] = useState<string>("");
+import { getCategoriesIngredient } from "@/lib/services/data_fetcher";
+import { updateIngredientAPI } from "@/lib/services/ingredients_service";
 
-    // Hook de validation
-    const { error, setError, validate } = useFormValidation<IngredientFormType>(
+const UpdateIngredient: React.FC<UpdateIngredientProps> = ({ ingredient, onSubmit, onCancel }) => {
+    const [categories, setCategories] = useState<CategoryIngredientType[]>([]);
+    const [selectedSeason, setSelectedSeason] = useState<string>(ingredient.season ?? "");
+
+    const { error, setError, submit, isLoading } = useCrudForm<IngredientFormType>(
         ingredientConstraints,
-        [
-            "name", 
-            "season", 
-            "categoryIngredientId"
-        ]
+        ["name", "season", "categoryIngredientId"]
     );
 
-    // _________________________ LOGIQUE _________________________
-    // Récupérer les catégories d'ingrédients
     useEffect(() => {
-        const fetchCategories = async () => {
-            try {
-                const data: CategoryIngredientType[] = await getCategoriesIngredient();
-                setCategories(data); 
-
-            } catch (error) {
-                console.error("[FETCH_CATEGORIES_ERROR]", error);
-                setError({ general: "Erreur lors de la récupération des catégories." });
-            }
-        };
-
-        fetchCategories();
+        getCategoriesIngredient()
+            .then(setCategories)
+            .catch(() => setError({ general: "Erreur lors de la récupération des catégories." }));
     }, [setError]);
 
-    // Gère la soumission et l'update de l'ingrédient
-    const handleSubmit = async (formData: FormData) => {
-        // Récupérer les données du formulaire
-        const form: IngredientFormType = {
-            id: ingredient.id,
-            name: formData.get("name") as string,
-            season: formData.get("season") as string === "" ? undefined : (formData.get("season") as Season),
-            categoryIngredientId: formData.get("categoryIngredientId") as string,
-        };
-
-        // Valider les données du formulaire
-        if (!validate(form)) {
-            console.error("Validation échouée", error, form);
-            return;
-        }
-
-        
-        try {
-            const csrfToken = await getCsrfToken();
-            if (!csrfToken) {
-                console.error("CSRF token invalide");
-                return;
-            }
-            const updatedIngredient = await updateIngredientAPI(form, csrfToken);
-
-            onSubmit(updatedIngredient);
-            toast("Ingrédient modifié avec succès");
-            onCancel();
-        } catch (error) {
-            console.error("[UPDATE_INGREDIENT_ERROR]", error);
-            setError({ general: "Erreur lors de la mise à jour de l'ingrédient." });
-        }
+    const handleSubmit = async (e: SubmitEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        const formData = new FormData(e.currentTarget);
+        await submit({
+            form: {
+                id: ingredient.id,
+                name: formData.get("name") as string,
+                season: (formData.get("season") as string) === "" ? undefined : (formData.get("season") as Season),
+                categoryIngredientId: formData.get("categoryIngredientId") as string,
+            },
+            apiCall: updateIngredientAPI,
+            onSuccess: onSubmit,
+            successMessage: "Ingrédient modifié avec succès",
+            errorMessage: "Erreur lors de la mise à jour de l'ingrédient.",
+            onClose: onCancel,
+        });
     };
 
-    // _________________________ RENDU _________________________
     return (
-        <form action={handleSubmit} className="drawer-form">
+        <form className="drawer-form" onSubmit={handleSubmit}>
             <FormErrorMessage message={error?.general} />
 
             <div className="drawer-label-input">
-                {/* Champ pour le nom */}
                 <label htmlFor="name">Nom de l&apos;ingrédient</label>
                 <input
                     className="input-text-select"
@@ -117,7 +69,6 @@ const UpdateIngredient: React.FC<UpdateIngredientProps> = ({
                 <FormErrorMessage message={error?.name} />
             </div>
 
-            {/* Sélection pour la catégorie */}
             <div className="drawer-label-input">
                 <label htmlFor="categoryIngredientId">Catégorie de l&apos;ingrédient</label>
                 <select
@@ -129,7 +80,7 @@ const UpdateIngredient: React.FC<UpdateIngredientProps> = ({
                 >
                     <option value="">-- Choisir une catégorie --</option>
                     {categories.map((category) => (
-                        <option key={category.id}  value={category.id}>
+                        <option key={category.id} value={category.id}>
                             {ucFirst(category.name)}
                         </option>
                     ))}
@@ -137,9 +88,8 @@ const UpdateIngredient: React.FC<UpdateIngredientProps> = ({
                 <FormErrorMessage message={error?.categoryIngredientId} />
             </div>
 
-            {/* Sélection pour la saison */}
             <div className="drawer-label-input">
-                <label htmlFor="season">Saison (optionnel)</label>
+                <label>Saison (optionnel)</label>
                 <div className="flex flex-col gap-2">
                     {Object.values(Season).map((season) => (
                         <label
@@ -164,12 +114,9 @@ const UpdateIngredient: React.FC<UpdateIngredientProps> = ({
                 <FormErrorMessage message={error?.season} />
             </div>
 
-            {/* Boutons d'action */}
             <div className="drawer-buttons-form">
-                <Button variant="cancel" onClick={onCancel}>
-                    Annuler
-                </Button>
-                <FormSubmitButton />
+                <Button variant="cancel" onClick={onCancel}>Annuler</Button>
+                <FormSubmitButton isPending={isLoading} />
             </div>
         </form>
     );

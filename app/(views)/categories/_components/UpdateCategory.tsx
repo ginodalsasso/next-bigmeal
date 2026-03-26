@@ -1,70 +1,43 @@
-// Bibliothèques tierces
-import { toast } from "sonner";
+import { SubmitEvent } from "react";
+import { useCrudForm } from "@/app/hooks/useCrudForm";
 
-// Hooks personnalisés
-import { useFormValidation } from "@/app/hooks/useFormValidation";
-
-// Composants UI
 import { Button } from "@/components/ui/button";
 import FormErrorMessage from "@/components/ui/FormErrorMessage";
+import FormSubmitButton from "@/components/ui/FormSubmitButton";
 
-// Contraintes et services
 import { categoriesConstraints } from "@/lib/constraints/forms_constraints";
 import { updateCategoryAPI } from "@/lib/services/categories_service";
 import { UpdateCategoryProps } from "@/lib/types/props_interfaces";
-import { getCsrfToken } from "next-auth/react";
-import FormSubmitButton from "@/components/ui/FormSubmitButton";
 
 type CategoryFormType = { name: string };
 
-// _________________________ COMPONENT _________________________
 const UpdateCategory = <T extends { id: string; name: string }>({
     apiUrl,
     category,
     onSubmit,
-    onCancel
+    onCancel,
 }: UpdateCategoryProps<T>) => {
-
-    // _________________________ ETATS _________________________
-    const { error, setError, validate } = useFormValidation<CategoryFormType>(
+    const { error, submit, isLoading } = useCrudForm<CategoryFormType>(
         categoriesConstraints,
         ["name"]
     );
 
-    // _________________________ LOGIQUE _________________________
-    const handleSubmit = async (formData: FormData) => {
-        const categoryName = formData.get('CategoryName') as string;
-        
-        if (!validate({ name: categoryName })) {
-            return;
-        }
-        
-        try {
-            const csrfToken = await getCsrfToken();
-            if (!csrfToken) {
-                console.error("CSRF token invalide");
-                setError({ general: "Problème de sécurité, veuillez réessayer." });
-                return;
-            }
-            const updatedCategory = updateCategoryAPI(
-                category.id, 
-                categoryName, 
-                csrfToken, 
-                apiUrl
-            );
-            
-            onSubmit(await updatedCategory);
-            toast("Catégorie mise à jour avec succès");
-            onCancel(); // Fermer la modale ou le formulaire après succès
-        } catch (error) {
-            console.error("[UPDATE_CATEGORY_ERROR]", error);
-            setError({ general: "Erreur lors de la mise à jour de la catégorie." });
-        }
+    const handleSubmit = async (e: SubmitEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        const formData = new FormData(e.currentTarget);
+        const name = formData.get("CategoryName") as string;
+        await submit({
+            form: { name },
+            apiCall: (_form, csrf) => updateCategoryAPI(category.id, name, csrf, apiUrl),
+            onSuccess: onSubmit,
+            successMessage: "Catégorie mise à jour avec succès",
+            errorMessage: "Erreur lors de la mise à jour de la catégorie.",
+            onClose: onCancel,
+        });
     };
 
-    // _________________________ RENDU _________________________
     return (
-        <form action={handleSubmit} className="space-y-2">
+        <form className="space-y-2" onSubmit={handleSubmit}>
             <FormErrorMessage message={error?.general} />
 
             <label htmlFor="CategoryName" className="text-sm font-medium text-warm-primary">
@@ -86,7 +59,7 @@ const UpdateCategory = <T extends { id: string; name: string }>({
                 <Button type="button" onClick={onCancel} variant="secondary" className="w-full">
                     Annuler
                 </Button>
-                <FormSubmitButton />
+                <FormSubmitButton isPending={isLoading} />
             </div>
         </form>
     );

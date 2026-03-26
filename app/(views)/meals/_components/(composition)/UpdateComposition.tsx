@@ -1,90 +1,50 @@
 "use client";
 
-// Bibliothèques tierces
-import { toast } from "sonner";
-
-// Types et énumérations
+import { SubmitEvent } from "react";
 import { IngredientUnit } from "@/lib/types/enums";
 import { UpdateCompositionProps } from "@/lib/types/props_interfaces";
 import { UpdateCompositionFormType } from "@/lib/types/forms_interfaces";
 
-// Contraintes et validation
 import { updateCompositionConstraints } from "@/lib/constraints/forms_constraints";
-import { useFormValidation } from "@/app/hooks/useFormValidation";
+import { useCrudForm } from "@/app/hooks/useCrudForm";
 
-// Utils
 import { translatedUnit } from "@/lib/utils";
 
-// Composants UI
 import { Button } from "@/components/ui/button";
 import FormErrorMessage from "@/components/ui/FormErrorMessage";
-
-// Services
-import { updateCompositionAPI } from "@/lib/services/composition_service";
-import { getCsrfToken } from "next-auth/react";
 import FormSubmitButton from "@/components/ui/FormSubmitButton";
 
+import { updateCompositionAPI } from "@/lib/services/composition_service";
 
-// _________________________ COMPOSANT _________________________
-const UpdateComposition: React.FC<UpdateCompositionProps> = ({
-    initialComposition,
-    onSubmit,
-    onClose,
-}) => {
-    // _________________________ HOOKS _________________________
-
-    // Hook de validation
-    const { error, setError, validate  } = useFormValidation<UpdateCompositionFormType>(
+const UpdateComposition: React.FC<UpdateCompositionProps> = ({ initialComposition, onSubmit, onClose }) => {
+    const { error, submit, isLoading } = useCrudForm<UpdateCompositionFormType>(
         updateCompositionConstraints,
         ["quantity", "unit"]
     );
 
-    // _________________________ LOGIQUE _________________________
-    const handleSubmit = async (formData: FormData) => {
-        // Récupérer les données du formulaire
-        const form: UpdateCompositionFormType = {
-            id: initialComposition.id,
-            quantity: formData.get("quantity") ? Number(formData.get("quantity")) : 0, // Valeur par défaut 0 si non spécifiée
-            unit: formData.get("unit") as IngredientUnit,
-        };
-
-        // Validation des données avec le hook
-        if (!validate(form)) {
-            return;
-        }
-
-        
-        try {
-            const csrfToken = await getCsrfToken();
-            if (!csrfToken) {
-                console.error("CSRF token invalide");
-                return;
-            }
-            const updatedComposition = await updateCompositionAPI(
-                form, 
-                csrfToken
-            );
-            // Mettre à jour l'état parent via le callback
-            onSubmit(updatedComposition);
-
-            toast.success("Composition mise à jour avec succès !");
-            onClose(); // Fermer le Popover après la mise à jour
-        } catch (error) {
-            console.error("[UPDATE_COMPOSITION_ERROR]", error);
-            setError({ general: "Erreur lors de la mise à jour de la composition." });
-        }
+    const handleSubmit = async (e: SubmitEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        const formData = new FormData(e.currentTarget);
+        await submit({
+            form: {
+                id: initialComposition.id,
+                quantity: formData.get("quantity") ? Number(formData.get("quantity")) : 0,
+                unit: formData.get("unit") as IngredientUnit,
+            },
+            apiCall: updateCompositionAPI,
+            onSuccess: onSubmit,
+            successMessage: "Composition mise à jour avec succès",
+            errorMessage: "Erreur lors de la mise à jour de la composition.",
+            onClose,
+        });
     };
 
-    // _________________________ RENDU _________________________
     return (
-        <form className="drawer-form" action={handleSubmit}>
+        <form className="drawer-form" onSubmit={handleSubmit}>
             <FormErrorMessage message={error?.general} />
-            
-            {/* Champ pour la quantité */}
+
             <div className="drawer-label-input">
-                <label htmlFor="quantity" className="text-sm font-medium text-warm-primary">
-                    Quantité
-                </label>
+                <label htmlFor="quantity" className="text-sm font-medium text-warm-primary">Quantité</label>
                 <input
                     className="input-text-select"
                     type="number"
@@ -98,11 +58,8 @@ const UpdateComposition: React.FC<UpdateCompositionProps> = ({
                 <FormErrorMessage message={error?.quantity} />
             </div>
 
-            {/* Sélecteur pour l'unité */}
             <div className="drawer-label-input">
-                <label htmlFor="unit" className="text-sm font-medium text-warm-primary">
-                    Unité
-                </label>
+                <label htmlFor="unit" className="text-sm font-medium text-warm-primary">Unité</label>
                 <select
                     className="input-text-select"
                     id="unit"
@@ -120,12 +77,9 @@ const UpdateComposition: React.FC<UpdateCompositionProps> = ({
                 <FormErrorMessage message={error?.unit} />
             </div>
 
-            {/* Boutons d'action */}
             <div className="drawer-buttons-form">
-                <Button variant="cancel" onClick={onClose}>
-                    Annuler
-                </Button>
-                <FormSubmitButton />
+                <Button variant="cancel" onClick={onClose}>Annuler</Button>
+                <FormSubmitButton isPending={isLoading} />
             </div>
         </form>
     );

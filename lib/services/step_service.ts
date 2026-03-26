@@ -2,16 +2,22 @@ import API_ROUTES from "../constants/api_routes";
 
 export async function createStepAPI(stepData: object, csrfToken: string) {
     try {
-        const response = await fetch( API_ROUTES.step, {
+        const response = await fetch(API_ROUTES.step, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "X-CSRF-Token": csrfToken
+                "X-CSRF-Token": csrfToken,
             },
             body: JSON.stringify(stepData),
         });
-        
-        return response;
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.error || "Erreur lors de la création des étapes");
+        }
+
+        return data;
     } catch (error) {
         console.error("[API_ERROR] createStepAPI", error);
         throw error;

@@ -1,76 +1,42 @@
 "use client";
 
-// Bibliothèques tierces
-import { toast } from "sonner";
-
-// Types et énumérations
+import { SubmitEvent } from "react";
 import { PreparationFormType } from "@/lib/types/forms_interfaces";
 import { CreatePreparationProps } from "@/lib/types/props_interfaces";
 
-// Contraintes et validation
 import { preparationConstraints } from "@/lib/constraints/forms_constraints";
-import { useFormValidation } from "@/app/hooks/useFormValidation";
+import { useCrudForm } from "@/app/hooks/useCrudForm";
 
-// Composants UI
 import FormErrorMessage from "@/components/ui/FormErrorMessage";
-import { createPreparationAPI } from "@/lib/services/preparation_service";
-import { getCsrfToken } from "next-auth/react";
 import FormSubmitButton from "@/components/ui/FormSubmitButton";
 
-// _________________________ COMPOSANT _________________________
-const CreatePreparation: React.FC<CreatePreparationProps> = ({
-    mealId,
-    onSubmit,
-}) => {
-    // _________________________ HOOKS _________________________
-    // Hook de validation
-    const { error, setError, validate } = useFormValidation<PreparationFormType>(
+import { createPreparationAPI } from "@/lib/services/preparation_service";
+
+const CreatePreparation: React.FC<CreatePreparationProps> = ({ mealId, onSubmit }) => {
+    const { error, submit, isLoading } = useCrudForm<PreparationFormType>(
         preparationConstraints,
-        [
-            "prepTime", 
-            "cookTime", 
-        ]
+        ["prepTime", "cookTime"]
     );
 
-    // _________________________ LOGIQUE _________________________
-
-    // Gestion de la soumission du formulaire
-    const handleSubmit = async (formData: FormData) => {
-        // Récupérer les données du formulaire
-        const form = {
-            mealId,
-            id: formData.get("id") as string,
-            prepTime: formData.get("prepTime") ? Number(formData.get("prepTime")) : undefined,
-            cookTime: formData.get("cookTime") ? Number(formData.get("cookTime")) : undefined,
-        };
-
-        // // Valider les données du formulaire
-        if (!validate(form)) {
-            return;
-        }
-
-        try {
-            const csrfToken = await getCsrfToken();
-        
-            if (!csrfToken) {
-                console.error("CSRF token invalide");
-                return;
-            }
-            const createdPrepatation = await createPreparationAPI(form, csrfToken);
-            onSubmit(createdPrepatation);
-
-            toast("Préparation créé avec succès");
-        } catch (error) {
-            console.error("[CREATE_PREPARATION_ERROR]", error);
-            setError({ general: "Erreur lors de la création de la préparation." });
-        }
+    const handleSubmit = async (e: SubmitEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        const formData = new FormData(e.currentTarget);
+        await submit({
+            form: {
+                mealId,
+                prepTime: formData.get("prepTime") ? Number(formData.get("prepTime")) : undefined,
+                cookTime: formData.get("cookTime") ? Number(formData.get("cookTime")) : undefined,
+            },
+            apiCall: createPreparationAPI,
+            onSuccess: onSubmit,
+            successMessage: "Préparation créée avec succès",
+            errorMessage: "Erreur lors de la création de la préparation.",
+        });
     };
 
-    // _________________________ RENDU _________________________
     return (
-        <form className="flex flex-col gap-4" action={handleSubmit}>
+        <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
             <div className="flex gap-4">
-                {/* Champ pour le temps de préparation du plat */}
                 <div>
                     <label htmlFor="prepTime" className="text-sm font-medium text-warm-primary">
                         Temps de préparation en minutes (optionnel)
@@ -86,7 +52,6 @@ const CreatePreparation: React.FC<CreatePreparationProps> = ({
                     />
                 </div>
 
-                {/* Champ pour le temps de cuisson du plat */}
                 <div>
                     <label htmlFor="cookTime" className="text-sm font-medium text-warm-primary">
                         Temps de cuisson en minutes (optionnel)
@@ -105,11 +70,11 @@ const CreatePreparation: React.FC<CreatePreparationProps> = ({
             <FormErrorMessage message={error?.prepTime} />
             <FormErrorMessage message={error?.cookTime} />
 
-            {/* Bouton de soumission */}
             <div className="flex flex-col-reverse gap-2 lg:justify-end">
-                <FormSubmitButton 
+                <FormSubmitButton
                     defaultText="Valider la préparation"
                     loadingText="Création de la préparation en cours..."
+                    isPending={isLoading}
                 />
             </div>
         </form>

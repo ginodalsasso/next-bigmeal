@@ -2,16 +2,22 @@ import API_ROUTES from "../constants/api_routes";
 
 export async function createCompositionAPI(compositionData: object, csrfToken: string) {
     try {
-        const response = await fetch( API_ROUTES.compositions, {
+        const response = await fetch(API_ROUTES.compositions, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "X-CSRF-Token": csrfToken
+                "X-CSRF-Token": csrfToken,
             },
             body: JSON.stringify(compositionData),
         });
 
-        return response;
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.error || "Erreur lors de la création de la composition");
+        }
+
+        return data;
     } catch (error) {
         console.error("[API_ERROR] createCompositionAPI", error);
         throw error;

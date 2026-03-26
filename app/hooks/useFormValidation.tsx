@@ -1,50 +1,38 @@
 import { useState } from "react";
-import { ZodSchema } from "zod"; 
+import { ZodSchema } from "zod";
 
-// Définir un type générique pour les erreurs de validation
-// `Partial<Record<keyof T, string>>` signifie :
-// - Un objet où les clés sont les propriétés de `T` (grâce à `keyof T`)
-// - Les valeurs sont des chaînes (messages d'erreur), ou peuvent être absentes (grâce à `Partial`)
-// - Il y a une clé supplémentaire "general" pour les erreurs générales
-type ValidationErrors<T> = Partial<Record<keyof T | "general", string>>;
+// Erreurs par champ + clé "general" pour les erreurs non liées à un champ
+export type ValidationErrors<T> = Partial<Record<keyof T | "general", string>>;
 
-// Déclaration d'un hook personnalisé générique
-// - `<T extends object>` : Le hook accepte un type `T` qui doit être un objet.
-// - `constraints` : Une instance de `ZodSchema` qui valide des objets de type `T`.
+/**
+ * Valide un formulaire via un schéma Zod et expose les erreurs par champ.
+ * @param constraints - Schéma Zod du formulaire
+ * @param fields - Champs à valider
+ */
 export const useFormValidation = <T extends object>(
-    constraints: ZodSchema<T>, // `constraints` : Une instance de `ZodSchema` qui valide des objets de type `T`.
-    fields: (keyof T)[] // `fields` : Un tableau des propriétés de `T` (`keyof T` garantit que ce sont des clés valides de `T`).
+    constraints: ZodSchema<T>,
+    fields: (keyof T)[]
 ) => {
-
     const [error, setError] = useState<ValidationErrors<T> | null>(null);
 
-    // Fonction pour valider un objet de type `T` (le formulaire à valider)
     const validate = (form: T): boolean => {
-
         const validationResult = constraints.safeParse(form);
 
         if (!validationResult.success) {
-            const formattedErrors = validationResult.error.flatten();
+            const fieldErrors = validationResult.error.flatten().fieldErrors as Partial<Record<keyof T, string[]>>;
 
-            const fieldErrors = formattedErrors.fieldErrors as Partial<Record<keyof T, string[]>>;
-
-            // Initialisation de l'objet `errors` pour stocker le premier message d'erreur de chaque champ
             const errors: ValidationErrors<T> = {};
-
-            // Pour chaque champ à valider, extraire le premier message d'erreur (s'il existe)
             fields.forEach((field) => {
                 errors[field] = fieldErrors[field]?.[0];
             });
 
             setError(errors);
-
             return false;
         }
-        setError(null);
 
+        setError(null);
         return true;
     };
 
-    // Retourner les états et la fonction de validation pour utilisation dans les composants
     return { error, setError, validate };
 };

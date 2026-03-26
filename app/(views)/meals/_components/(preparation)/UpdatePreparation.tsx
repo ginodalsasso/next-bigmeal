@@ -1,100 +1,61 @@
 "use client";
 
-// Bibliothèques tierces
-import { toast } from "sonner";
-
-// Types et énumérations
-import { PreparationFormType } from "@/lib/types/forms_interfaces";
+import { SubmitEvent } from "react";
 import { UpdatePreparationProps } from "@/lib/types/props_interfaces";
 
-// Contraintes et validation
 import { updatePreparationConstraints } from "@/lib/constraints/forms_constraints";
-import { useFormValidation } from "@/app/hooks/useFormValidation";
+import { useCrudForm } from "@/app/hooks/useCrudForm";
 
-
-// Composants UI
 import { Button } from "@/components/ui/button";
 import FormErrorMessage from "@/components/ui/FormErrorMessage";
-
-// Services
-import { updatePreparationAPI } from "@/lib/services/preparation_service";
-import { getCsrfToken } from "next-auth/react";
 import FormSubmitButton from "@/components/ui/FormSubmitButton";
 
-// _________________________ TYPE _________________________
-type UpdatePreparationFormType = Omit<PreparationFormType, "mealId">;
+import { updatePreparationAPI } from "@/lib/services/preparation_service";
 
-// _________________________ COMPOSANT _________________________
-const UpdatePreparation: React.FC<UpdatePreparationProps> = ({
-    initialPreparation: preparation,
-    onSubmit,
-    onClose
-}) => {
+type UpdatePreparationFormType = { id: string; prepTime?: number; cookTime?: number };
 
-    // _________________________ HOOKS _________________________
-    // Hook de validation
-    const { error, setError, validate } = useFormValidation<UpdatePreparationFormType>(
+const UpdatePreparation: React.FC<UpdatePreparationProps> = ({ initialPreparation: preparation, onSubmit, onClose }) => {
+    const { error, submit, isLoading } = useCrudForm<UpdatePreparationFormType>(
         updatePreparationConstraints,
-        [
-            "prepTime", 
-            "cookTime"
-        ]
+        ["prepTime", "cookTime"]
     );
 
-    // _________________________ LOGIQUE _________________________
-    // Gestion de la soumission du formulaire
-    const handleSubmit = async (formData: FormData) => {
-        // Récupérer les données du formulaire
-        const form = {
-            id: preparation.id,
-            prepTime: formData.get("prepTime") ? Number(formData.get("prepTime")) : undefined,
-            cookTime: formData.get("cookTime") ? Number(formData.get("cookTime")) : undefined,
-        };
-
-        // Valider les données du formulaire
-        if (!validate(form)) {
-            return;
-        }
-        
-        try {
-            const csrfToken = await getCsrfToken();
-            if (!csrfToken) {
-                console.error("CSRF token invalide");
-                return;
-            }
-            const updatedPreparation = await updatePreparationAPI(form, csrfToken);
-            
-            onSubmit(updatedPreparation);
-            toast("Préparation mise à jour avec succès");
-            onClose();
-        } catch (error) {
-            console.error("[UPDATE_PREPARATION_ERROR]", error);
-            setError({ general: "Erreur lors de la mise à jour de la préparation." });
-        }
+    const handleSubmit = async (e: SubmitEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        const formData = new FormData(e.currentTarget);
+        await submit({
+            form: {
+                id: preparation.id,
+                prepTime: formData.get("prepTime") ? Number(formData.get("prepTime")) : undefined,
+                cookTime: formData.get("cookTime") ? Number(formData.get("cookTime")) : undefined,
+            },
+            apiCall: updatePreparationAPI,
+            onSuccess: onSubmit,
+            successMessage: "Préparation mise à jour avec succès",
+            errorMessage: "Erreur lors de la mise à jour de la préparation.",
+            onClose,
+        });
     };
 
-    // _________________________ RENDU _________________________
     return (
-        <form className="drawer-form" action={handleSubmit}>
+        <form className="drawer-form" onSubmit={handleSubmit}>
             <FormErrorMessage message={error?.general} />
 
-            {/* Champ pour le temps de préparation du plat */}
             <div className="drawer-label-input">
-            <label htmlFor="prepTime">Temps de préparation (minutes)</label>
+                <label htmlFor="prepTime">Temps de préparation (minutes)</label>
                 <input
                     className="input-text-select"
                     id="prepTime"
                     name="prepTime"
                     type="number"
                     placeholder="60"
-                    defaultValue={preparation.prepTime || ""}
+                    defaultValue={preparation.prepTime ?? ""}
                     autoComplete="off"
                     min={0}
                 />
                 <FormErrorMessage message={error?.prepTime} />
             </div>
 
-            {/* Champ pour le temps de cuisson du plat */}
             <div className="drawer-label-input">
                 <label htmlFor="cookTime">Temps de cuisson (minutes)</label>
                 <input
@@ -103,19 +64,16 @@ const UpdatePreparation: React.FC<UpdatePreparationProps> = ({
                     name="cookTime"
                     type="number"
                     placeholder="30"
-                    defaultValue={preparation.cookTime || ""}
+                    defaultValue={preparation.cookTime ?? ""}
                     autoComplete="off"
                     min={0}
                 />
                 <FormErrorMessage message={error?.cookTime} />
             </div>
 
-            {/* Boutons d'action */}
             <div className="drawer-buttons-form">
-                <Button variant="cancel" onClick={onClose}>
-                    Annuler
-                </Button>
-                <FormSubmitButton />
+                <Button variant="cancel" onClick={onClose}>Annuler</Button>
+                <FormSubmitButton isPending={isLoading} />
             </div>
         </form>
     );

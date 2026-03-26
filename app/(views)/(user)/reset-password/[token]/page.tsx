@@ -1,7 +1,7 @@
 'use client';
 
 // Bibliothèques tierces
-import React, { useEffect } from 'react';
+import React, { useEffect, useState, SubmitEvent } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 
@@ -21,9 +21,9 @@ import PasswordInput from '@/components/forms/PasswordInput';
 const ResetPasswordPage = () => {
 
     // _________________________ ETATS _________________________
-    const { token } = useParams(); 
+    const { token } = useParams();
     const router = useRouter();
-    // Utilisation du hook de validation
+    const [isLoading, setIsLoading] = useState(false);
     const { error, setError, validate } = useFormValidation<ForgotUserPasswordFormType>(
         NewPasswordConstraints,
         ["password", "confirmPassword"] // Liste des champs à valider
@@ -49,7 +49,9 @@ const ResetPasswordPage = () => {
     }, [token, setError]);
 
     
-    const handleSubmit = async (formData: FormData) => {
+    const handleSubmit = async (e: SubmitEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        const formData = new FormData(e.currentTarget);
         const password = formData.get('password')?.toString() || '';
         const confirmPassword = formData.get('confirm-password')?.toString() || '';
 
@@ -58,10 +60,9 @@ const ResetPasswordPage = () => {
             return;
         }
 
-        if (!validate({ password, confirmPassword })) {
-            return;
-        }
+        if (!validate({ password, confirmPassword })) return;
 
+        setIsLoading(true);
         try {
             if (!token) {
                 setError({ general: 'Token invalide' });
@@ -74,14 +75,16 @@ const ResetPasswordPage = () => {
         } catch (error) {
             console.error('Erreur lors de la réinitialisation du mot de passe :', error);
             setError({ general: 'Erreur lors de la réinitialisation du mot de passe' });
+        } finally {
+            setIsLoading(false);
         }
     };
 
     // _________________________ RENDU __________________
     return (
         <form
-            action={handleSubmit}
             className="card"
+            onSubmit={handleSubmit}
         >
             <h1 className="h1-title">Réinitialiser le mot de passe</h1>
             <FormErrorMessage message={error?.general} />
@@ -116,6 +119,7 @@ const ResetPasswordPage = () => {
             <FormSubmitButton
                 defaultText='Réinitialiser le mot de passe'
                 className='mt-4 w-full'
+                isPending={isLoading}
             />
         </form>
     );

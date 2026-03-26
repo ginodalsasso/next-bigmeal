@@ -36,6 +36,7 @@ export interface HouseholdProductFormErrorType {
 
 // ____________ MEALS
 export interface MealFormType {
+    id?: string;
     name: string;
     description?: string | null;
     categoryMealId: string;

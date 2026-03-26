@@ -1,81 +1,49 @@
 "use client";
 
-// Bibliothèques tierces
-import { useState } from "react";
-import { toast } from "sonner";
+import { useState, SubmitEvent } from "react";
 
-// Types et énumérations
 import { StepType } from "@/lib/types/schemas_interfaces";
 import { UpdateStepProps } from "@/lib/types/props_interfaces";
-
-// Contraintes et validation
-import { updateStepConstraints } from "@/lib/constraints/forms_constraints";
-import { useFormValidation } from "@/app/hooks/useFormValidation";
-
-// Composants UI
-import { Button } from "@/components/ui/button";
-import FormErrorMessage from "@/components/ui/FormErrorMessage";
-
-// Services
-import { updateStepAPI } from "@/lib/services/step_service";
-import { getCsrfToken } from "next-auth/react";
-import FormSubmitButton from "@/components/ui/FormSubmitButton";
 import { StepFormType } from "@/lib/types/forms_interfaces";
 
+import { updateStepConstraints } from "@/lib/constraints/forms_constraints";
+import { useCrudForm } from "@/app/hooks/useCrudForm";
 
-// _________________________ COMPOSANT _________________________
-const UpdateStep: React.FC<UpdateStepProps> = ({
-    initialStep,
-    onSubmit,
-    onClose,
-}) => {
-    // _________________________ HOOKS _________________________
+import { Button } from "@/components/ui/button";
+import FormErrorMessage from "@/components/ui/FormErrorMessage";
+import FormSubmitButton from "@/components/ui/FormSubmitButton";
+
+import { updateStepAPI } from "@/lib/services/step_service";
+
+const UpdateStep: React.FC<UpdateStepProps> = ({ initialStep, onSubmit, onClose }) => {
     const [step, setStep] = useState<StepType>(initialStep);
 
-    // Hook de validation
-    const { error, setError, validate  } = useFormValidation<StepFormType>(
+    const { error, submit, isLoading } = useCrudForm<StepFormType>(
         updateStepConstraints,
         ["description"]
     );
 
-    // _________________________ LOGIQUE _________________________
-    const handleSubmit = async (formData: FormData) => {
-        const form = {
-            id: step.id,
-            preparationId: step.preparationId,
-            stepNumber: step.stepNumber,
-            description: formData.get("description") as string,
-        };
-
-        // Validation des données avec le hook
-        if (!validate(form)) {
-            console.error("[VALIDATION_ERROR]", error);
-            return;
-        }
-        
-        try {
-            const csrfToken = await getCsrfToken();
-            if (!csrfToken) {
-                setError({ general: "Problème de sécurité, veuillez réessayer." });
-                return;
-            }
-            const updatedStep = await updateStepAPI(form, csrfToken);
-            // Mettre à jour l'état parent via le callback
-            onSubmit(updatedStep);
-            toast.success("Etape mise à jour avec succès !");
-            onClose(); // Fermer le Popover après la mise à jour
-        } catch (error) {
-            console.error("[UPDATE_STEP_ERROR]", error);
-            setError({ general: "Erreur lors de la mise à jour de l'étape." });
-        }
+    const handleSubmit = async (e: SubmitEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        const formData = new FormData(e.currentTarget);
+        await submit({
+            form: {
+                preparationId: step.preparationId,
+                stepNumber: step.stepNumber,
+                description: formData.get("description") as string,
+            },
+            apiCall: updateStepAPI,
+            onSuccess: onSubmit,
+            successMessage: "Étape mise à jour avec succès",
+            errorMessage: "Erreur lors de la mise à jour de l'étape.",
+            onClose,
+        });
     };
 
-    // _________________________ RENDU _________________________
     return (
-        <form className="drawer-form" action={handleSubmit}>
+        <form className="drawer-form" onSubmit={handleSubmit}>
             <FormErrorMessage message={error?.general} />
-            
-            {/* Champ pour la description de l'étape */}
+
             <div className="drawer-label-input">
                 <label className="text-sm font-medium text-warm-primary" htmlFor="description">
                     Description de l&apos;étape
@@ -87,20 +55,14 @@ const UpdateStep: React.FC<UpdateStepProps> = ({
                     placeholder="Ajouter les condiments..."
                     value={step.description}
                     className="input-text-select"
-
                     required
                 />
                 <FormErrorMessage message={error?.description} />
             </div>
 
             <div className="drawer-buttons-form">
-                <Button 
-                    variant="secondary"     
-                    onClick={onClose} 
-                >
-                    Annuler
-                </Button>
-                <FormSubmitButton />
+                <Button variant="secondary" onClick={onClose}>Annuler</Button>
+                <FormSubmitButton isPending={isLoading} />
             </div>
         </form>
     );

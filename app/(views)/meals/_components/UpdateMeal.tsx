@@ -1,106 +1,60 @@
-// Bibliothèques tierces
-import { useEffect, useState } from "react";
-import { toast } from "sonner";
+import { useEffect, useState, SubmitEvent } from "react";
 
-// Hooks personnalisés
-import { useFormValidation } from "@/app/hooks/useFormValidation";
-
-// Types
 import { CategoryMealType } from "@/lib/types/schemas_interfaces";
 import { UpdateMealProps } from "@/lib/types/props_interfaces";
+import { MealFormType } from "@/lib/types/forms_interfaces";
 
-// Contraintes et validation
 import { mealConstraints } from "@/lib/constraints/forms_constraints";
+import { useCrudForm } from "@/app/hooks/useCrudForm";
 
-// Utils
 import { ucFirst } from "@/lib/utils";
 
-// Composants UI
 import { Button } from "@/components/ui/button";
 import FormErrorMessage from "@/components/ui/FormErrorMessage";
-
-// Services
-import { getCategoriesMeal } from "@/lib/services/data_fetcher";
-import { updateMealAPI } from "@/lib/services/meal_service";
-import { getCsrfToken } from "next-auth/react";
 import FormSubmitButton from "@/components/ui/FormSubmitButton";
 
+import { getCategoriesMeal } from "@/lib/services/data_fetcher";
+import { updateMealAPI } from "@/lib/services/meal_service";
 
-// _________________________ COMPOSANT _________________________
-const UpdateMeal: React.FC<UpdateMealProps> = ({
-    meal, 
-    onSubmit,
-    onClose
-}) => {
-    // _________________________ ÉTATS _________________________
+const UpdateMeal: React.FC<UpdateMealProps> = ({ meal, onSubmit, onClose }) => {
     const [categories, setCategories] = useState<CategoryMealType[]>([]);
     const [selectedCategory, setSelectedCategory] = useState<string>(meal.categoryMealId);
 
-    // Hook de validation
-    const { error, setError, validate } = useFormValidation(
+    const { error, setError, submit, isLoading } = useCrudForm<MealFormType>(
         mealConstraints,
-        ["name", "categoryMealId", "description"]
+        ["id", "name", "description", "categoryMealId"]
     );
 
-    // _________________________ LOGIQUE _________________________
-    // Appel API pour récupérer les catégories de repas
     useEffect(() => {
-        const fetchCategories = async () => {
-            try {
-                const data: CategoryMealType[] = await getCategoriesMeal();
-                setCategories(data); 
-
-            } catch (error) {
-                console.error("[FETCH_CATEGORIES_ERROR]", error);
-                setError({ general: "Erreur lors de la récupération des catégories." });
-            }
-        };
-
-        fetchCategories();
+        getCategoriesMeal()
+            .then(setCategories)
+            .catch(() => setError({ general: "Erreur lors de la récupération des catégories." }));
     }, [setError]);
-        
 
-    // Soumission du formulaire
-    const handleSubmit = async (formData: FormData) => {
-        // Récupérer les données du formulaire
-        const form = {
-            id: meal.id,
-            name: formData.get("mealName") as string,
-            description: formData.get("mealDescription") as string === "" ? undefined : formData.get("mealDescription") as string,
-            categoryMealId: formData.get("categoryMealId") as string,
-        };
-
-        // Valider les données du formulaire
-        if (!validate(form)) {
-            return;
-        }
-        const csrfToken = await getCsrfToken();
-        if (!csrfToken) {
-            console.error("CSRF token invalide");
-            return;
-        }
-
-        try {
-            const updatedMeal = await updateMealAPI(form, csrfToken);
-            
-            onSubmit(updatedMeal);
-            toast("Repas mis à jour avec succès");
-            onClose();
-        } catch (error) {
-            console.error("[UPDATE_MEAL_ERROR]", error);
-            setError({ general: "Erreur lors de la mise à jour." });
-        }
+    const handleSubmit = async (e: SubmitEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        const formData = new FormData(e.currentTarget);
+        await submit({
+            form: {
+                id: meal.id,
+                name: formData.get("mealName") as string,
+                description: (formData.get("mealDescription") as string) === "" ? undefined : (formData.get("mealDescription") as string),
+                categoryMealId: formData.get("categoryMealId") as string,
+            },
+            apiCall: updateMealAPI,
+            onSuccess: onSubmit,
+            successMessage: "Repas mis à jour avec succès",
+            errorMessage: "Erreur lors de la mise à jour du repas.",
+            onClose,
+        });
     };
 
-
-    // _________________________ RENDU _________________________
     return (
-        <form action={handleSubmit} className="drawer-form">
+        <form className="drawer-form" onSubmit={handleSubmit}>
+            <FormErrorMessage message={error?.general} />
 
             <div className="drawer-label-input">
-                <label htmlFor="mealName">
-                    Nom du repas
-                </label>
+                <label htmlFor="mealName">Nom du repas</label>
                 <input
                     className="input-text-select"
                     type="text"
@@ -114,62 +68,45 @@ const UpdateMeal: React.FC<UpdateMealProps> = ({
                 <FormErrorMessage message={error?.name} />
             </div>
 
-            {/* Sélection pour la catégorie */}
             <div className="drawer-label-input">
-                <label htmlFor="categoryMealId">
-                    Catégorie du repas
-                </label>
-                {/* <div className="flex gap-4"> */}
-                    {categories.map((category) => (
-                        <label
-                            key={category.id}
-                            className={`label-filter ${
-                                selectedCategory === category.id
-                                    ? "sticker-bg-white"
-                                    : "sticker-bg-black"
-                            }`}
-                            onClick={() => setSelectedCategory(category.id)}
-                            htmlFor={`category-${category.id}`}
-                        >
-                            <input
-                                id={`category-${category.id}`}
-                                type="radio"
-                                name="categoryMealId"
-                                value={category.id}
-                                className="hidden"
-                                checked={selectedCategory === category.id}
-                                onChange={() => setSelectedCategory(category.id)}
-                                required
-                            />
-                            {ucFirst(category.name)}
-                        </label>
-                    ))}
-                {/* </div> */}
+                <label htmlFor="categoryMealId">Catégorie du repas</label>
+                {categories.map((category) => (
+                    <label
+                        key={category.id}
+                        className={`label-filter ${selectedCategory === category.id ? "sticker-bg-white" : "sticker-bg-black"}`}
+                        onClick={() => setSelectedCategory(category.id)}
+                        htmlFor={`category-${category.id}`}
+                    >
+                        <input
+                            id={`category-${category.id}`}
+                            type="radio"
+                            name="categoryMealId"
+                            value={category.id}
+                            className="hidden"
+                            checked={selectedCategory === category.id}
+                            onChange={() => setSelectedCategory(category.id)}
+                        />
+                        {ucFirst(category.name)}
+                    </label>
+                ))}
                 <FormErrorMessage message={error?.categoryMealId} />
             </div>
 
-            {/* Text area pour la description */}
             <div className="drawer-label-input">
-                <label htmlFor="mealDescription">
-                    Description du repas (optionnelle)
-                </label>
+                <label htmlFor="mealDescription">Description du repas (optionnelle)</label>
                 <textarea
                     className="input-text-select"
                     id="mealDescription"
                     name="mealDescription"
                     placeholder="Quelque chose à ajouter ?"
-                    defaultValue={meal.description? meal.description : ""}
+                    defaultValue={meal.description ?? ""}
                 />
                 <FormErrorMessage message={error?.description} />
             </div>
 
-
-            {/* Boutons d'action */}
             <div className="drawer-buttons-form">
-                <Button variant="cancel" onClick={onClose}>
-                    Annuler
-                </Button>
-                <FormSubmitButton />
+                <Button variant="cancel" onClick={onClose}>Annuler</Button>
+                <FormSubmitButton isPending={isLoading} />
             </div>
         </form>
     );

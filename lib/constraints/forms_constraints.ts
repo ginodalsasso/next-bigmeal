@@ -306,4 +306,5 @@ export const ChangeEmailConstraints = z.object({
         .min(3, "L'email doit comporter au moins 3 caractères")
         .max(100, "L'email doit comporter au maximum 100 caractères")
         .trim(),
+    userId: z.string(),
 });
