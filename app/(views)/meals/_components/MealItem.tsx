@@ -11,7 +11,8 @@ import CreateStep from "./(preparation)/(step)/CreateStep";
 
 import { Button } from "@/components/ui/button";
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from "@/components/ui/drawer";
-import { Bookmark, ChefHat, ClipboardList, Plus, Sparkles, Utensils } from "lucide-react";
+import { Bookmark, ChefHat, ClipboardList, Plus, Sparkles, Utensils, ArrowLeft } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 import CompositionItem from "./(composition)/CompositionItem";
 import PreparationItem from "./(preparation)/PreparationItem";
@@ -23,6 +24,7 @@ import { URL } from "@/lib/constants/api_routes";
 
 export default function MealItem( {fetchedMeal}: { fetchedMeal: MealType }) {
 
+    const router = useRouter();
     const [meal, setMeal] = useState<MealType>(fetchedMeal);
     const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
     const [currentAction, setCurrentAction] = useState<"composition" | "preparation" | "step">("composition");
@@ -102,6 +104,11 @@ export default function MealItem( {fetchedMeal}: { fetchedMeal: MealType }) {
 
     return (
         <div className="mx-auto max-w-4xl space-y-6">
+
+            <Button variant="ghost" size="sm" onClick={() => router.back()} className="text-warm-secondary hover:text-warm-primary">
+                <ArrowLeft size={16} />
+                Retour
+            </Button>
 
             {/* En-tête */}
             <header className="relative rounded-xl border border-warm-border bg-warm-subtle p-6 text-center">
