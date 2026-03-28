@@ -1,8 +1,10 @@
 import { auth } from "@/lib/auth";
 import UsersList from "./_component/UsersList";
-import { getUsers } from "@/lib/services/data_fetcher";
+import { getUsers } from "@/lib/services/user_fetcher";
 import { notFound, unauthorized } from "next/navigation";
 import { ShieldCheck } from "lucide-react";
+
+
 
 export default async function Dashboard() {
     const session = await auth();
