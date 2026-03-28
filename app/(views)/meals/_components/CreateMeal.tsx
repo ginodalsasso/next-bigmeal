@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, SubmitEvent } from "react";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 import { CategoryMealType } from "@/lib/types/schemas_interfaces";
 import { MealFormType } from "@/lib/types/forms_interfaces";
@@ -20,7 +20,6 @@ import { getCategoriesMeal } from "@/lib/services/data_fetcher";
 import { createMealAPI } from "@/lib/services/meal_service";
 
 const CreateMeal: React.FC<CreateMealProps> = ({ onSubmit }) => {
-    const router = useRouter();
     const [categories, setCategories] = useState<CategoryMealType[]>([]);
     const [selectedCategory, setSelectedCategory] = useState<string>("");
 
@@ -108,8 +107,8 @@ const CreateMeal: React.FC<CreateMealProps> = ({ onSubmit }) => {
             </div>
 
             <div className="drawer-buttons-form">
-                <Button variant="cancel" onClick={() => router.push("/meals")}>
-                    Revenir en arrière
+                <Button variant="cancel" asChild>
+                    <Link href="/meals">Revenir en arrière</Link>
                 </Button>
                 <FormSubmitButton
                     loadingText="Création du repas en cours..."

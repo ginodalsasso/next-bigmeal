@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { toast } from "sonner";
 
 import { useFormValidation } from "@/app/hooks/useFormValidation";
@@ -12,7 +12,6 @@ import PasswordInput from "@/components/forms/PasswordInput";
 import LoadingSpinner from "@/components/ui/LoadingSpinner";
 
 export default function RegisterPage() {
-    const router = useRouter();
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const { error, setError, validate } = useFormValidation(
@@ -99,13 +98,9 @@ export default function RegisterPage() {
 
                 <div className="text-center text-sm text-warm-secondary">
                     Déjà un compte ?{" "}
-                    <button
-                        type="button"
-                        onClick={() => router.push("/login")}
-                        className="font-medium text-warm-primary transition-colors hover:underline"
-                    >
+                    <Link href="/login" className="font-medium text-warm-primary transition-colors hover:underline">
                         Se connecter
-                    </button>
+                    </Link>
                 </div>
             </div>
         </div>

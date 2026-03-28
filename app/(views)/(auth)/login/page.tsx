@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, Suspense } from "react";
+import Link from "next/link";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 
@@ -191,13 +192,9 @@ function LoginForm() {
 
                             <div className="text-center text-sm text-warm-secondary">
                                 Pas encore de compte ?{" "}
-                                <button
-                                    type="button"
-                                    onClick={() => router.push("/register")}
-                                    className="font-medium text-warm-primary transition-colors hover:underline"
-                                >
+                                <Link href="/register" className="font-medium text-warm-primary transition-colors hover:underline">
                                     Créer un compte
-                                </button>
+                                </Link>
                             </div>
                         </div>
                     )}
