@@ -1,3 +1,4 @@
+import { cookies } from "next/headers";
 import API_ROUTES from "../constants/api_routes";
 
 export async function getCategoriesIngredient() {
@@ -150,7 +151,13 @@ export async function getLikedMeals(
 
 export async function getUsers() {
     try {
-        const response = await fetch(API_ROUTES.user.user, { cache: "no-store" });
+        const cookie = await cookies();
+        const response = await fetch(API_ROUTES.user.user, { 
+            cache: "no-store",
+            headers: {
+                'Cookie': cookie.toString() // Transmettre les cookies pour l'authentification
+            }
+        });
         if (!response.ok) throw new Error("Erreur lors de la récupération des utilisateurs.");
         return response.json();
     } catch (error) {
