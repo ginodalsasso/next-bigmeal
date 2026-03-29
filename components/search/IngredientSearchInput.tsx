@@ -1,55 +1,51 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import Fuse from "fuse.js";
 import { IngredientType } from "@/lib/types/schemas_interfaces";
 
 type IngredientSearchInputProps = {
     value: string;
     onSelect: (ingredient: IngredientType) => void;
-
 };
 
 export const IngredientSearchInput = ({ value, onSelect }: IngredientSearchInputProps) => {
-    const [query, setQuery] = useState(value) || ""; 
+    const [query, setQuery] = useState(value || "");
     const [results, setResults] = useState<IngredientType[]>([]);
-    const [loading, setLoading] = useState(false);
+    const fuseRef = useRef<Fuse<IngredientType> | null>(null);
+    const [ready, setReady] = useState(false);
 
     useEffect(() => {
-        if (!query || query.length < 3) {
+        fetch("/api/search")
+            .then((r) => r.json())
+            .then((data) => {
+                fuseRef.current = new Fuse(data.ingredients ?? [], {
+                    keys: ["name"],
+                    threshold: 0.35,
+                    includeScore: true,
+                    minMatchCharLength: 2,
+                });
+                setReady(true);
+            })
+            .catch((err) => console.error("[INGREDIENT_FUSE_SEARCH] Erreur de chargement de l'index", err));
+    }, []);
+
+    const handleChange = (val: string) => {
+        setQuery(val);
+        if (!fuseRef.current || val.length < 2) {
             setResults([]);
             return;
         }
-
-        const fetchResults = async () => {
-            setLoading(true);
-            try {
-                const response = await fetch(`/api/ingredients/search?query=${query}`, { 
-                    method: "GET",
-                    headers: { "Content-Type": "application/json" }
-                });
-                
-                const data = await response.json();
-
-                setResults(data);
-            } catch (error) {
-                console.error("[FETCH_INGREDIENTS_ERROR]", error);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        const timeout = setTimeout(fetchResults, 300);
-        return () => clearTimeout(timeout);
-    }, [query]);
+        setResults(fuseRef.current.search(val, { limit: 10 }).map((r) => r.item));
+    };
 
     const handleSelect = (ingredient: IngredientType) => {
-        console.log("[SELECTED_INGREDIENT]", ingredient);
         onSelect(ingredient);
         setQuery(ingredient.name);
         setResults([]);
-    }
+    };
 
     return (
         <div className="relative">
-            <label htmlFor="ingrédient" className="text-sm font-medium text-warm-primary">Ingrédient</label>
+            <label htmlFor="ingredient" className="text-sm font-medium text-warm-primary">Ingrédient</label>
             <input
                 className="input-text-select"
                 type="text"
@@ -57,10 +53,12 @@ export const IngredientSearchInput = ({ value, onSelect }: IngredientSearchInput
                 name="ingredient"
                 autoComplete="off"
                 value={query}
-                onChange={(e) => setQuery(e.target.value)}
+                onChange={(e) => handleChange(e.target.value)}
                 placeholder="Patates, tomates..."
             />
-            {loading && <p className="text-sm text-warm-secondary">Chargement...</p>}
+            {!ready && query.length > 0 && (
+                <div className="absolute right-3 top-9 size-4 animate-spin rounded-full border-2 border-warm-accent border-t-transparent" aria-hidden="true" />
+            )}
             {results.length > 0 && (
                 <ul className="absolute z-10 w-full overflow-hidden rounded-lg border border-warm-border bg-warm-base shadow-sm">
                     {results.map((item) => (
