@@ -95,7 +95,6 @@ const CreateIngredient: React.FC<CreateIngredientProps> = ({ onSubmit, onClose }
                         <label
                             key={season}
                             htmlFor={`season-${season}`}
-                            onClick={() => setSelectedSeason(season)}
                             className={`label-filter ${selectedSeason === season ? "sticker-bg-white" : "sticker-bg-black"}`}
                         >
                             <input

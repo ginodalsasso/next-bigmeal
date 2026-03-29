@@ -12,14 +12,14 @@ export interface FilterGroup {
 interface FilterItemsProps {
     groups: FilterGroup[];
     initialFilters?: string[];
-    onFilterChange: (filters: string[]) => void;
+    onFilterChange: (filters: string[], isReset?: boolean) => void;
 }
 
 const FilterItems: React.FC<FilterItemsProps> = ({ groups, initialFilters = [], onFilterChange }) => {
     const [selectedFilters, setSelectedFilters] = useState<string[]>(initialFilters);
-    const [isPending, startTransition] = useTransition(); // Permet de différer l'exécution de la fonction onFilterChange pour éviter les blocages d'interface lors de mises à jour lourdes
+    const [isPending, startTransition] = useTransition();
 
-    const allOptions = groups.flatMap((g) => g.options); // Aplatit toutes les options pour vérifier si on a des filtres à afficher
+    const allOptions = groups.flatMap((g) => g.options);
     const showLabels = groups.length > 1;
 
     const toggleFilter = (value: string) => {
@@ -32,7 +32,7 @@ const FilterItems: React.FC<FilterItemsProps> = ({ groups, initialFilters = [], 
 
     const resetFilters = () => {
         setSelectedFilters([]);
-        startTransition(() => onFilterChange([]));
+        startTransition(() => onFilterChange([], true));
     };
 
     if (allOptions.length === 0) return null;

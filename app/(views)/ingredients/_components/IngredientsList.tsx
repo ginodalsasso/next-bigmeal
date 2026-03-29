@@ -83,7 +83,7 @@ export default function IngredientList({
             <IsUser>
                 <Drawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
                     <DrawerTrigger asChild>
-                        <Button className="w-full" onClick={() => setIsDrawerOpen(true)}>
+                        <Button className="w-full">
                             Ajouter un ingrédient <Plus aria-hidden="true" />
                         </Button>
                     </DrawerTrigger>

@@ -3,7 +3,7 @@ import { MEALS_PER_PAGE } from "@/lib/constants/ui_constants";
 import MealsList from "./_components/MealsList";
 
 // Service de récupération des repas
-import { getCategoriesMeal, getMeals } from "@/lib/services/data_fetcher";
+import { getCategoriesMeal, getLikedMeals, getMeals } from "@/lib/services/data_fetcher";
 import Pagination from "@/components/ui/Pagination";
 import { ensureArray } from "@/lib/utils";
 import { db } from "@/lib/db";
@@ -13,10 +13,11 @@ import { getUserSession } from "@/lib/security/getSession";
 export const dynamic = "force-dynamic";
 
 interface searchParamsProps {
-    searchParams: Promise<{ 
+    searchParams: Promise<{
         page?: string;
-        categories?: string[]; // Paramètre de catégorie pour le filtrage
-    }> | undefined 
+        categories?: string[];
+        liked?: string;
+    }> | undefined
 }
 
 export default async function MealPage({ searchParams }: searchParamsProps) {
@@ -31,14 +32,13 @@ export default async function MealPage({ searchParams }: searchParamsProps) {
         const page = parseInt(params?.page  || '1', 10) as number; 
         const itemsPerPage = parseInt(MEALS_PER_PAGE, 10); // Grille mosaïque : 24 items (multiple de 4)
         
-        const categories = ensureArray(params?.categories); // Vérifie si les paramètres de recherche existent et s'ils sont des tableaux
-        
+        const categories = ensureArray(params?.categories);
+        const likedFilter = params?.liked === "true";
+
         // _________________________ API _________________________
-        const meals = await getMeals(
-            (page - 1) * itemsPerPage, 
-            itemsPerPage,
-            categories,
-        );
+        const meals = likedFilter
+            ? await getLikedMeals((page - 1) * itemsPerPage, itemsPerPage, categories)
+            : await getMeals((page - 1) * itemsPerPage, itemsPerPage, categories);
 
         const categoryNames = await getCategoriesMeal();
 

@@ -83,12 +83,25 @@ export default function MealsList({
     const categoryOptions = (fetchedCategories ?? []).map((cat) => cat.name);
     const filterGroups = [{ label: "Catégorie", options: categoryOptions }];
     const initialFilters = searchParams.getAll("categories").filter((f) => categoryOptions.includes(f));
+    const likedFilter = searchParams.get("liked") === "true";
 
-    const handleFilterChange = (selectedFilters: string[]) => {
+    const handleFilterChange = (selectedFilters: string[], isReset?: boolean) => {
         const params = new URLSearchParams();
         selectedFilters
             .filter((f) => categoryOptions.includes(f))
             .forEach((cat) => params.append("categories", cat));
+        if (likedFilter && !isReset) params.set("liked", "true");
+        router.replace(`/meals?${params.toString()}`);
+    };
+
+    const handleLikedFilterToggle = () => {
+        const params = new URLSearchParams(searchParams.toString());
+        params.delete("page");
+        if (likedFilter) {
+            params.delete("liked");
+        } else {
+            params.set("liked", "true");
+        }
         router.replace(`/meals?${params.toString()}`);
     };
 
@@ -106,6 +119,22 @@ export default function MealsList({
                     Ajouter un repas <Plus aria-hidden="true" />
                 </Button>
             </IsUser>
+            <IsUser>
+                <button
+                    type="button"
+                    onClick={handleLikedFilterToggle}
+                    aria-pressed={likedFilter}
+                    className={`label-filter sticker-bg-black mt-4 flex items-center gap-1.5`}
+                >
+                    <Heart
+                        size={12}
+                        aria-hidden="true"
+                        className={likedFilter ? "fill-warm-danger" : ""}
+                    />
+                    Mes favoris
+                </button>
+            </IsUser>
+
 
             <FilterItems
                 groups={filterGroups}
