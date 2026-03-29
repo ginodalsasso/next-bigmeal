@@ -9,8 +9,8 @@ import { getUserByEmail } from "./dal";
 import GoogleProvider from "next-auth/providers/google";
 import GitHubProvider from "next-auth/providers/github";
 import rateLimit from "./security/rateLimit";
+import { verifyPassword } from "./security/verifyPassword";
 import { NextRequest } from "next/server";
-import API_ROUTES from "./constants/api_routes";
 
 const LIMIT = 5; // Nombre maximal de requêtes
 const INTERVAL = 60 * 60 * 1000; // Intervalle en millisecondes (1 heure)
@@ -32,7 +32,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             // Fonction pour vérifier les identifiants
             authorize: async (credentials, req) => {
                 try {
-                    // Appliquer la limitation de débit
                     rateLimit(req as NextRequest, LIMIT, INTERVAL);
 
                     const { email, password } =
@@ -40,42 +39,32 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
                     const user = await getUserByEmail(email);
 
-                    if (!user || !user.password) {
-                        throw new Error("INVALID_CREDENTIALS");
+                    if (!user || !user.password || !user.emailVerified) {
+                        const err = new CredentialsSignin();
+                        err.code = "INVALID_CREDENTIALS";
+                        throw err;
                     }
 
-                    if (!user.emailVerified) {
-                        throw new Error("EMAIL_NOT_VERIFIED");
-                    }
-
-                    const response = await fetch(`${API_ROUTES.auth.verifyPassword}`, {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({
-                            inputPassword: password,
-                            hashedPassword: user.password,
-                        }),
-                    });
-                    
-                    const { isValid } = await response.json();
+                    const isValid = await verifyPassword(password, user.password);
                     if (!isValid) {
-                        throw new Error("Identifiants incorrects");
+                        const err = new CredentialsSignin();
+                        err.code = "INVALID_CREDENTIALS";
+                        throw err;
                     }
 
                     return {
                         ...user,
-                        role: user.role ?? "USER", // Rôle par défaut
-                        status: user.status ?? "PENDING", // Statut par défaut
-                    }
+                        role: user.role ?? "USER",
+                        status: user.status ?? "PENDING",
+                    };
                 } catch (error) {
+                    if (error instanceof CredentialsSignin) throw error;
+
+                    // Erreur inattendue (DB, réseau, etc.)
                     console.error("Authentication error:", error);
-                    const msg = (error as Error).message;
-                    if (msg === "Trop de requêtes. Réessayez plus tard.") {
-                        const err = new CredentialsSignin();
-                        err.code = "RATE_LIMIT";
-                        throw err;
-                    }
-                    throw new Error(msg || "UNKNOWN_ERROR");
+                    const err = new CredentialsSignin();
+                    err.code = "UNKNOWN_ERROR";
+                    throw err;
                 }
             },
         }),
@@ -138,7 +127,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             }
 
             // Redirection interne sûre (ex: page d'origine avant auth)
-            if (url.startsWith(baseUrl)) return url;
+            if (url.startsWith(baseUrl + "/") || url === baseUrl) return url;
 
             return "/";
         },

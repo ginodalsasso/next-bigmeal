@@ -23,7 +23,6 @@ const dynamicRoutePatterns = [
     /^\/meals\/[a-zA-Z0-9-]+$/,
 ];
 
-// Routes publiques (sans authentification)
 const publicRoutes = ["/", "/login", "/register", "/offline", "/blocked"];
 
 export async function proxy(req: NextRequest) {
@@ -46,7 +45,6 @@ export async function proxy(req: NextRequest) {
     const userStatus = token?.status as string | undefined;
 
     if (publicRoutes.includes(path)) {
-        // Redirige les utilisateurs approuvés hors de la page login
         if (path === "/login" && isLoggedIn && userStatus === "APPROVED") {
             return NextResponse.redirect(new URL("/", nextUrl.origin));
         }
@@ -85,7 +83,6 @@ export async function proxy(req: NextRequest) {
         "camera=(), microphone=(), geolocation=()"
     );
 
-    // HSTS uniquement en production (HTTPS)
     if (isProduction) {
         response.headers.set(
             "Strict-Transport-Security",

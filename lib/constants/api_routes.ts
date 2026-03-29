@@ -7,7 +7,6 @@ export const URL = `${apiBaseUrl}`;
 
 const authRoutes = {
     register: `${BASE_URL}/auth/register`,
-    verifyPassword: `${BASE_URL}/auth/verify-password`,
 };
 
 const userRoutes = {

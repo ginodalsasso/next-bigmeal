@@ -75,6 +75,7 @@ function LoginForm() {
                     setError({ general: "Email ou mot de passe incorrect." });
                 }
             } else {
+                router.refresh();
                 router.push(callbackUrl);
             }
         } catch (error) {
