@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { PreparationType, StepType } from "@/lib/types/schemas_interfaces";
 import IsAdmin from "@/components/auth/isAdmin";
 import EditItem from "@/components/catalog/EditItemDrawer";
@@ -17,8 +17,14 @@ const PreparationItem = ({ fetchedPreparation, onUpdate, onDelete }: Preparation
 
     const [preparation, setPreparation] = useState<PreparationType>(fetchedPreparation);
 
+    useEffect(() => {
+        if (fetchedPreparation.steps) {
+            setPreparation((prev) => ({ ...prev, steps: fetchedPreparation.steps }));
+        }
+    }, [fetchedPreparation.steps]);
+
     const updatePreparation = async (updatedPreparation: PreparationType) => {
-        setPreparation(updatedPreparation);
+        setPreparation((prev) => ({ ...prev, ...updatedPreparation, steps: prev.steps }));
         await onUpdate(updatedPreparation);
     };
 
@@ -35,10 +41,10 @@ const PreparationItem = ({ fetchedPreparation, onUpdate, onDelete }: Preparation
     const deleteStep = (id: string) => {
         setPreparation((prevPreparation) => {
             if (!prevPreparation) return prevPreparation;
-            return {
-                ...prevPreparation,
-                steps: prevPreparation.steps.filter((step) => step.id !== id),
-            };
+            const reorderedSteps = prevPreparation.steps
+                .filter((step) => step.id !== id)
+                .map((step, index) => ({ ...step, stepNumber: index + 1 }));
+            return { ...prevPreparation, steps: reorderedSteps };
         });
     };
 

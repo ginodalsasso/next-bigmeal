@@ -28,6 +28,7 @@ const UpdateStep: React.FC<UpdateStepProps> = ({ initialStep, onSubmit, onClose 
         const formData = new FormData(e.currentTarget);
         await submit({
             form: {
+                id: step.id,
                 preparationId: step.preparationId,
                 stepNumber: step.stepNumber,
                 description: formData.get("description") as string,

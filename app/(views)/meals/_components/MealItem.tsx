@@ -64,7 +64,7 @@ export default function MealItem( {fetchedMeal}: { fetchedMeal: MealType }) {
     const createPreparation = (preparation: PreparationType) => {
         setMeal((prevMeal) => {
             if (!prevMeal) return prevMeal;
-            return { ...prevMeal, preparation };
+            return { ...prevMeal, preparation: { ...preparation, steps: [] } };
         });
         setIsDialogOpen(false);
     };
@@ -90,10 +90,7 @@ export default function MealItem( {fetchedMeal}: { fetchedMeal: MealType }) {
                 ...prevMeal,
                 preparation: {
                     ...prevMeal.preparation,
-                    steps: {
-                        ...prevMeal.preparation?.steps,
-                        steps: [...steps],
-                    },
+                    steps: [...steps],
                 },
             };
         });
@@ -248,7 +245,16 @@ export default function MealItem( {fetchedMeal}: { fetchedMeal: MealType }) {
                     ) : (
                         <div className="rounded-xl bg-warm-muted py-6 text-center">
                             <ClipboardList className="mx-auto mb-2 text-warm-disabled" />
-                            <p className="text-sm text-warm-secondary">Aucune préparation renseignée.</p>
+                            <p className="mb-3 text-sm text-warm-secondary">Aucune préparation renseignée.</p>
+                            <IsAdmin>
+                                <Button
+                                    variant="default"
+                                    onClick={() => { setCurrentAction("preparation"); setIsDialogOpen(true); }}
+                                >
+                                    <Plus className="button-icons" />
+                                    Ajouter une préparation
+                                </Button>
+                            </IsAdmin>
                         </div>
                     )}
                 </section>

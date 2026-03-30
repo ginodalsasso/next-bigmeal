@@ -83,6 +83,7 @@ export interface PreparationFormType {
 }
 
 export interface StepFormType {
+    id?: string;
     preparationId: string;
     stepNumber: number;
     description: string;
