@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, SubmitEvent } from "react";
+import { SubmitEvent, useState } from "react";
 
 import { StepType } from "@/lib/types/schemas_interfaces";
 import { UpdateStepProps } from "@/lib/types/props_interfaces";

@@ -41,7 +41,7 @@ export async function GET ( req: NextRequest, { params }: Props){
                         prepTime: true,
                         cookTime: true,
                         steps: {
-                            select: { id: true, stepNumber: true, description: true, imageUrl: true },
+                            select: { id: true, preparationId: true, stepNumber: true, description: true, imageUrl: true },
                             orderBy: { stepNumber: "asc" }
                         }
                     }
