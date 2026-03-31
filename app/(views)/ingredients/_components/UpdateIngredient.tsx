@@ -19,7 +19,7 @@ import { updateIngredientAPI } from "@/lib/services/ingredients_service";
 
 const UpdateIngredient: React.FC<UpdateIngredientProps> = ({ ingredient, onSubmit, onCancel }) => {
     const [categories, setCategories] = useState<CategoryIngredientType[]>([]);
-    const [selectedSeason, setSelectedSeason] = useState<string>(ingredient.season ?? "");
+    const [selectedSeason, setSelectedSeason] = useState<string | undefined>(ingredient.season ?? undefined);
 
     const { error, setError, submit, isLoading } = useCrudForm<IngredientFormType>(
         ingredientConstraints,
@@ -91,24 +91,16 @@ const UpdateIngredient: React.FC<UpdateIngredientProps> = ({ ingredient, onSubmi
             <div className="drawer-label-input">
                 <label>Saison (optionnel)</label>
                 <div className="flex flex-col gap-2">
+                    <input type="hidden" name="season" value={selectedSeason ?? ""} />
                     {Object.values(Season).map((season) => (
-                        <label
+                        <button
                             key={season}
-                            htmlFor={`season-${season}`}
-                            onClick={() => setSelectedSeason(season)}
+                            type="button"
+                            onClick={() => setSelectedSeason(selectedSeason === season ? undefined : season)}
                             className={`label-filter ${selectedSeason === season ? "sticker-bg-white" : "sticker-bg-black"}`}
                         >
-                            <input
-                                id={`season-${season}`}
-                                type="radio"
-                                name="season"
-                                className="hidden"
-                                value={season}
-                                checked={selectedSeason === season}
-                                onChange={() => setSelectedSeason(season)}
-                            />
                             {translatedSeason(season)}
-                        </label>
+                        </button>
                     ))}
                 </div>
                 <FormErrorMessage message={error?.season} />

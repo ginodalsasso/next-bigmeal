@@ -18,7 +18,6 @@ import { updateMealAPI } from "@/lib/services/meal_service";
 
 const UpdateMeal: React.FC<UpdateMealProps> = ({ meal, onSubmit, onClose }) => {
     const [categories, setCategories] = useState<CategoryMealType[]>([]);
-    const [selectedCategory, setSelectedCategory] = useState<string>(meal.categoryMealId);
 
     const { error, setError, submit, isLoading } = useCrudForm<MealFormType>(
         mealConstraints,
@@ -70,25 +69,20 @@ const UpdateMeal: React.FC<UpdateMealProps> = ({ meal, onSubmit, onClose }) => {
 
             <div className="drawer-label-input">
                 <label htmlFor="categoryMealId">Catégorie du repas</label>
-                {categories.map((category) => (
-                    <label
-                        key={category.id}
-                        className={`label-filter ${selectedCategory === category.id ? "sticker-bg-white" : "sticker-bg-black"}`}
-                        onClick={() => setSelectedCategory(category.id)}
-                        htmlFor={`category-${category.id}`}
-                    >
-                        <input
-                            id={`category-${category.id}`}
-                            type="radio"
-                            name="categoryMealId"
-                            value={category.id}
-                            className="hidden"
-                            checked={selectedCategory === category.id}
-                            onChange={() => setSelectedCategory(category.id)}
-                        />
-                        {ucFirst(category.name)}
-                    </label>
-                ))}
+                <select
+                    className="input-text-select"
+                    name="categoryMealId"
+                    id="categoryMealId"
+                    defaultValue={meal.categoryMealId}
+                    required
+                >
+                    <option value="">-- Choisir une catégorie --</option>
+                    {categories.map((category) => (
+                        <option key={category.id} value={category.id}>
+                            {ucFirst(category.name)}
+                        </option>
+                    ))}
+                </select>
                 <FormErrorMessage message={error?.categoryMealId} />
             </div>
 

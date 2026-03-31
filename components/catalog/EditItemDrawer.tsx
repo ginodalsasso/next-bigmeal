@@ -14,7 +14,7 @@ interface EditItemProps {
 }
 
 const EditItem: React.FC<EditItemProps> = ({ renderEditForm }) => {
-    const [isDrawerOpen, setIsDrawerOpen] = useState(false); 
+    const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
     return (
         <Drawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
@@ -27,7 +27,7 @@ const EditItem: React.FC<EditItemProps> = ({ renderEditForm }) => {
                 <DrawerHeader>
                     <DrawerTitle>Formulaire d&apos;édition</DrawerTitle>
                 </DrawerHeader>
-                    {renderEditForm(() => setIsDrawerOpen(false))}  
+                    {renderEditForm(() => setIsDrawerOpen(false))}
             </DrawerContent>
         </Drawer>
     );
