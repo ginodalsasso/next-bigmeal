@@ -25,17 +25,19 @@ export default function RootLayout({
             </head>
             <body className="flex flex-col antialiased">
                 <SessionProvider>
-                    <header className="flex justify-center border-b border-warm-border bg-warm-base">
-                        <Navbar />
-                    </header>
-                    <div className="flex">
-                        <aside className="hidden border-r border-warm-border lg:block">
-                            <Sidebar />
-                        </aside>
-                        <main className="flex-1 overflow-hidden p-4 pb-20">{children}</main>
-                    </div>
-                    <div className="fixed bottom-0 z-40 w-full border-t border-warm-border bg-warm-base lg:hidden">
-                        <Bottombar />
+                    <div data-vaul-drawer-wrapper className="flex flex-col">
+                        <header className="flex justify-center border-b border-warm-border bg-warm-base">
+                            <Navbar />
+                        </header>
+                        <div className="flex">
+                            <aside className="hidden border-r border-warm-border lg:block">
+                                <Sidebar />
+                            </aside>
+                            <main className="flex-1 overflow-hidden p-4 pb-20">{children}</main>
+                        </div>
+                        <div className="fixed bottom-0 z-40 w-full border-t border-warm-border bg-warm-base lg:hidden">
+                            <Bottombar />
+                        </div>
                     </div>
                     <Toaster />
                 </SessionProvider>
