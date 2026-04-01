@@ -1,17 +1,35 @@
+"use client";
+
 import React, { useState } from "react";
 
-import { ShoppingListType } from "@/lib/types/schemas_interfaces";
 import { dateToString, translatedUnit, ucFirst } from "@/lib/utils";
 import DeleteItem from "@/components/catalog/DeleteItemDialog";
 import API_ROUTES from "@/lib/constants/api_routes";
 import { ChevronDown, ShoppingCart, Utensils, ListChecks } from "lucide-react";
+import { Unit } from "@prisma/client";
+
+type ShoppingListItem = {
+    id: string;
+    quantity: number;
+    unit: Unit | null;
+    ingredient: { id: string; name: string } | null;
+    meal: { id: string; name: string } | null;
+    product: { id: string; name: string } | null;
+};
+
+type ShoppingList = {
+    id: string;
+    comment: string | null;
+    createdAt: Date;
+    items: ShoppingListItem[];
+};
 
 interface ShoppingListsProps {
-    shoppingLists: ShoppingListType[];
+    shoppingLists: ShoppingList[];
 }
 
 const ShoppingLists: React.FC<ShoppingListsProps> = ({ shoppingLists }) => {
-    const [lists, setLists] = useState<ShoppingListType[]>(shoppingLists);
+    const [lists, setLists] = useState<ShoppingList[]>(shoppingLists);
     const [openListId, setOpenListId] = useState<string | null>(null);
 
     const handleShoppingListDeleted = (id: string) => {

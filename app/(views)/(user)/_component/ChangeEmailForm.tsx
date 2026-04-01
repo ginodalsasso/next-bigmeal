@@ -1,10 +1,9 @@
-import { SubmitEvent } from "react";
+import { FormEvent } from "react";
 import { useCrudForm } from "@/app/hooks/useCrudForm";
 import FormErrorMessage from "@/components/ui/FormErrorMessage";
 import { Button } from "@/components/ui/button";
 import { ChangeEmailConstraints } from "@/lib/constraints/forms_constraints";
 import { updateEmailAPI } from "@/lib/services/user_service";
-import { UserType } from "@/lib/types/schemas_interfaces";
 
 type ChangeEmailFormType = { userId: string; email: string };
 
@@ -13,7 +12,7 @@ const ChangeEmailForm = ({
     onSubmit,
     onBackToProfile,
 }: {
-    user: UserType;
+    user: { id: string; email: string };
     onSubmit: (updatedEmail: string) => void;
     onBackToProfile: () => void;
 }) => {
@@ -22,7 +21,7 @@ const ChangeEmailForm = ({
         ["email", "userId"]
     );
 
-    const handleSubmit = async (e: SubmitEvent<HTMLFormElement>) => {
+    const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
         const email = formData.get("email")?.toString() || "";
