@@ -1,15 +1,10 @@
-// Composant listant les repas
 import { MEALS_PER_PAGE } from "@/lib/constants/ui_constants";
 import MealsList from "./_components/MealsList";
-
-// Service de récupération des repas
-import { getCategoriesMeal, getLikedMeals, getMeals } from "@/lib/services/data_fetcher";
 import Pagination from "@/components/ui/Pagination";
 import { ensureArray } from "@/lib/utils";
 import { db } from "@/lib/db";
 import { getUserSession } from "@/lib/security/getSession";
 
-// Forcer le rendu SSR
 export const dynamic = "force-dynamic";
 
 interface searchParamsProps {
@@ -21,61 +16,61 @@ interface searchParamsProps {
 }
 
 export default async function MealPage({ searchParams }: searchParamsProps) {
-    
     try {
         const { session } = await getUserSession();
         const userId = session?.user?.id;
-        
-        // _________________________ PARAMETRES __________________
-        const params  = await searchParams; // Attendre la résolution de la promesse pour obtenir les paramètres de recherche
-        // Récupérer le numéro de page à partir des paramètres de recherche, ou 1 par défaut
-        const page = parseInt(params?.page  || '1', 10) as number; 
-        const itemsPerPage = parseInt(MEALS_PER_PAGE, 10); // Grille mosaïque : 24 items (multiple de 4)
-        
-        const categories = ensureArray(params?.categories);
-        const likedFilter = params?.liked === "true";
 
-        // _________________________ API _________________________
-        const meals = likedFilter
-            ? await getLikedMeals((page - 1) * itemsPerPage, itemsPerPage, categories)
-            : await getMeals((page - 1) * itemsPerPage, itemsPerPage, categories);
-
-        const categoryNames = await getCategoriesMeal();
-
-        // _________________________ LIKES ______________________
-        let likedMealNames: string[] = [];
-
-        
-        const likedMeals = await db.mealLike.findMany({
-            where: { userId },
-            select: {
-                meal: {
-                    select: {
-                        name: true,
-                    },
-                },
-            },
-        });
-        
-        likedMealNames = likedMeals.map((like) => like.meal.name);
-
-        // _________________________ RENDU __________________
         if (!userId) {
             return <p className="text-center text-zinc-500">Veuillez vous connecter pour voir vos favoris.</p>;
         }
 
+        const params      = await searchParams;
+        const page        = parseInt(params?.page || '1', 10);
+        const itemsPerPage = parseInt(MEALS_PER_PAGE, 10);
+        const categories  = ensureArray(params?.categories);
+        const likedFilter = params?.liked === "true";
+
+        const categoryFilter = categories.length > 0 ? { name: { in: categories } } : undefined;
+
+        const [meals, categoryNames, likedMeals] = await Promise.all([
+            db.meal.findMany({
+                where: {
+                    ...(likedFilter && { mealLikes: { some: { userId } } }),
+                    categoryMeal: categoryFilter,
+                },
+                skip: (page - 1) * itemsPerPage,
+                take: itemsPerPage,
+                orderBy: { name: 'desc' },
+                select: {
+                    id: true,
+                    name: true,
+                    description: true,
+                    categoryMealId: true,
+                    categoryMeal: { select: { id: true, name: true } },
+                },
+            }),
+            db.categoryMeal.findMany({
+                orderBy: { name: 'asc' },
+                select: { id: true, name: true },
+            }),
+            db.mealLike.findMany({
+                where: { userId },
+                select: { meal: { select: { name: true } } },
+            }),
+        ]);
+
+        const likedMealNames = likedMeals.map((like) => like.meal.name);
+
         return (
             <div>
-                <MealsList 
+                <MealsList
                     fetchedMeals={meals}
                     fetchedCategories={categoryNames}
                     fetchedlikedMeals={likedMealNames}
                 />
-
-                {/* Pagination */}
                 <Pagination
-                    currentPage={page} 
-                    hasNextPage={meals.length === itemsPerPage} 
+                    currentPage={page}
+                    hasNextPage={meals.length === itemsPerPage}
                 />
             </div>
         );
@@ -83,8 +78,8 @@ export default async function MealPage({ searchParams }: searchParamsProps) {
         console.error("Une erreur s'est produite lors de la récupération des repas :", error);
         return (
             <div className="flex min-h-screen items-center justify-center text-center">
-                <p className="text-warm-danger">Erreur lors de la récupération des ingrédients.</p>
+                <p className="text-warm-danger">Erreur lors de la récupération des repas.</p>
             </div>
         );
     }
-    }
+}

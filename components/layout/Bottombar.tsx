@@ -110,7 +110,7 @@ const Bottombar = () => {
                                         <li key={link.title}>
                                             <Link
                                                 href={link.url}
-                                                className={`flex items-center gap-4 rounded-xl px-4 py-3.5 text-base font-medium transition-colors duration-150 ${
+                                                className={`flex items-center gap-4 rounded-xl px-4 py-3.5 text-base font-medium transition-colors duration-150 active:bg-warm-accent/15 active:text-warm-primary ${
                                                     isActive
                                                         ? "bg-warm-accent/15 text-warm-primary"
                                                         : "text-warm-secondary hover:bg-warm-subtle hover:text-warm-primary"
@@ -130,7 +130,7 @@ const Bottombar = () => {
                                             <li>
                                                 <Link
                                                     href="/categories"
-                                                    className={`flex items-center gap-4 rounded-xl px-4 py-3.5 text-base font-medium transition-colors duration-150 ${
+                                                    className={`flex items-center gap-4 rounded-xl px-4 py-3.5 text-base font-medium transition-colors duration-150 active:bg-warm-accent/15 active:text-warm-primary ${
                                                         isActive
                                                             ? "bg-warm-accent/15 text-warm-primary"
                                                             : "text-warm-secondary hover:bg-warm-subtle hover:text-warm-primary"

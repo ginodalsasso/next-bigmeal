@@ -40,7 +40,7 @@ export default function MealItem( {fetchedMeal}: { fetchedMeal: MealType }) {
     const updateComposition = (updatedComposition: CompositionType) => {
         setMeal((prevMeal) => {
             if (!prevMeal) return prevMeal;
-            const updatedCompositions = prevMeal.compositions.map((composition) =>
+            const updatedCompositions = (prevMeal.compositions ?? []).map((composition) =>
                 composition.id === updatedComposition.id
                     ? { ...composition, ...updatedComposition }
                     : composition
@@ -54,7 +54,7 @@ export default function MealItem( {fetchedMeal}: { fetchedMeal: MealType }) {
             if (!prevMeal) return prevMeal;
             return {
                 ...prevMeal,
-                compositions: prevMeal.compositions.filter(
+                compositions: (prevMeal.compositions ?? []).filter(
                     (composition) => composition.id !== id
                 ),
             };
@@ -210,7 +210,7 @@ export default function MealItem( {fetchedMeal}: { fetchedMeal: MealType }) {
                         Ingrédients
                     </h2>
 
-                    {meal.compositions.length > 0 ? (
+                    {meal.compositions && meal.compositions.length > 0 ? (
                         <div className="space-y-2">
                             {meal.compositions.map((composition) => (
                                 <CompositionItem

@@ -1,60 +1,63 @@
-// Composant de liste des ingrédients
 import { INGREDIENTS_PER_PAGE } from "@/lib/constants/ui_constants";
 import IngredientsList from "./_components/IngredientsList";
-
-// Service de récupération des ingrédients
-import { getCategoriesIngredient, getIngredients } from "@/lib/services/data_fetcher";
 import Pagination from "@/components/ui/Pagination";
 import { ensureArray } from "@/lib/utils";
+import { db } from "@/lib/db";
+import { Season } from "@prisma/client";
 
-// Forcer le rendu SSR
 export const dynamic = "force-dynamic";
 
 interface searchParamsProps {
-    searchParams: Promise<{ 
-        page?: string;  // Paramètre de page pour la pagination
-        categories?: string[];  // Paramètre de catégorie pour le filtrage
-        season?: string[]  // Paramètre de saison pour le filtrage
+    searchParams: Promise<{
+        page?: string;
+        categories?: string[];
+        season?: string[]
     }> | undefined
 }
 
-export default async function IngredientPage( { searchParams }: searchParamsProps) {
+export default async function IngredientPage({ searchParams }: searchParamsProps) {
     try {
-        const params  = await searchParams; // Attendre la résolution de la promesse pour obtenir les paramètres de recherche
-
-        // Gestion de la pagination
-        const page = parseInt(params?.page || "1", 10);
+        const params      = await searchParams;
+        const page        = parseInt(params?.page || "1", 10);
         const itemsPerPage = parseInt(INGREDIENTS_PER_PAGE, 10);
-    
-        // Vérifie si les paramètres de recherche existent et s'ils sont des tableaux
-        const categories = ensureArray(params?.categories);
-        const season = ensureArray(params?.season);
-    
-        // Paginer avec take=5 ingrédients par page et skip=(page-1)*5 ingrédients
-        // getIngredients(skip, take) : skip = le nombre d'ingrédients à ignorer, take = le nombre d'ingrédients à récupérer
-        const ingredients = await getIngredients(
-            (page - 1) * itemsPerPage, // page - 1 pour ignorer les ingrédients de la page précédente, 5 pour prendre 5 ingrédients
-            itemsPerPage,  
-            categories, 
-            season
-        ); 
+        const categories  = ensureArray(params?.categories);
+        const seasons     = ensureArray(params?.season);
 
-        const categoryNames = await getCategoriesIngredient();
+        const [ingredients, categoryNames] = await Promise.all([
+            db.ingredient.findMany({
+                where: {
+                    categoryIngredient: categories.length > 0 ? { name: { in: categories } } : undefined,
+                    season: seasons.length > 0 ? { in: seasons as Season[] } : undefined,
+                },
+                skip: (page - 1) * itemsPerPage,
+                take: itemsPerPage,
+                orderBy: { name: 'desc' },
+                select: {
+                    id: true,
+                    name: true,
+                    season: true,
+                    categoryIngredientId: true,
+                    categoryIngredient: { select: { id: true, name: true } },
+                },
+            }),
+            db.categoryIngredient.findMany({
+                orderBy: { name: 'asc' },
+                select: { id: true, name: true },
+            }),
+        ]);
 
         return (
             <div>
-                <IngredientsList 
-                    fetchedIngredients={ingredients} 
+                <IngredientsList
+                    fetchedIngredients={ingredients}
                     fetchedCategories={categoryNames}
                 />
-
-                {/* Pagination */}
                 <Pagination
-                    currentPage={page} 
-                    hasNextPage={ingredients.length === itemsPerPage}  
+                    currentPage={page}
+                    hasNextPage={ingredients.length === itemsPerPage}
                 />
             </div>
-        ); 
+        );
     } catch (error) {
         console.error("Une erreur s'est produite lors de la récupération des ingrédients :", error);
         return (

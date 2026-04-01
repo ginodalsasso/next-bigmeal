@@ -1,4 +1,5 @@
-import { IngredientUnit, Season, UserStatus } from './enums';
+import { UserStatus } from './enums';
+import { Season, Unit } from "@prisma/client";
 
 
 // TYPES SCHEMA
@@ -6,24 +7,24 @@ export interface CategoryIngredientType {
     id: string;
     name: string;
 
-    // Relation One-to-Many 
-    ingredients: IngredientType[];
+    // Relation One-to-Many
+    ingredients?: IngredientType[];
 }
 
 
 export interface CategoryMealType {
     id: string;
-    name: string; 
+    name: string;
 
     // Relation One-to-Many
-    meals: MealType[];
+    meals?: MealType[];
 }
 
 export interface CategoryHouseholdProductType {
     id: string;
     name: string;
 
-    householdProducts: HouseholdProductType[];
+    householdProducts?: HouseholdProductType[];
 }
 
 
@@ -38,48 +39,48 @@ export interface HouseholdProductType {
     name: string;
 
     // Clé étrangère : Lie le produit à sa catégorie
-    categoryHouseholdProductId: string;
+    categoryHouseholdProductId?: string;
     categoryHouseholdProduct: CategoryHouseholdProductType;
 
     // Relation One-to-Many
-    shoppingListItems: ShoppingListItemType[];
+    shoppingListItems?: ShoppingListItemType[];
 }
 
 
 export interface IngredientType {
-    id: string; 
-    name: string; 
-    season?: Season; 
+    id: string;
+    name: string;
+    season: Season | null;
 
     // Clé étrangère : Lie l'ingrédient à sa catégorie
-    categoryIngredientId: string;
+    categoryIngredientId?: string;
     categoryIngredient: CategoryIngredientType;
 
     // Relation One-to-Many
-    compositions: CompositionType[];
+    compositions?: CompositionType[];
 
     // Relation One-to-Many
-    shoppingListItems: ShoppingListItemType[];
+    shoppingListItems?: ShoppingListItemType[];
 }
 
 
 export interface MealType {
-    id: string; 
-    name: string; 
-    description?: string; 
+    id: string;
+    name: string;
+    description?: string | null;
 
     // Clé étrangère : Lie le repas à sa catégorie
-    categoryMealId: string;
-    categoryMeal: CategoryMealType;
+    categoryMealId?: string;
+    categoryMeal?: CategoryMealType;
 
-    preparation?: PreparationType; 
+    preparation?: PreparationType;
 
     // Relation One-to-Many
-    compositions: CompositionType[];
+    compositions?: CompositionType[];
 
-    // Relation One-to-Many 
-    shoppingListItems: ShoppingListItemType[];
-    mealLikes: MealLikeType[];
+    // Relation One-to-Many
+    shoppingListItems?: ShoppingListItemType[];
+    mealLikes?: MealLikeType[];
 }
 
 export interface MealLikeType {
@@ -98,7 +99,7 @@ export interface CompositionType {
     ingredientId: string; // Clé étrangère
     mealId: string; // Clé étrangère
 
-    unit: IngredientUnit; 
+    unit: Unit; 
     quantity: number;
 
     // Relations
@@ -133,32 +134,30 @@ export interface StepType {
 export interface ShoppingListType {
     id: string; 
     userId: string; // Clé étrangère
-    comment?: string;
+    comment: string | null;
     
     isExpired: boolean;
     createdAt: Date;
 
     // Relation Many-to-One
-    user: UserType;
-    items : ShoppingListItemType[];
+    user?: UserType;
+    items: ShoppingListItemType[];
 }
 
 export interface ShoppingListItemType {
     id: string;
-    shoppingListId: string; // Clé étrangère
+    shoppingListId: string;
 
-    // Clés étrangères optionnelles (nullable dans le schéma Prisma)
     ingredientId: string | null;
     mealId: string | null;
     productId: string | null;
 
     quantity: number;
-    unit: IngredientUnit | null; // Optionnel dans le schéma Prisma (Unit?)
-    comment?: string;
-    isChecked?: boolean;
+    unit: Unit | null;
+    comment: string | null;
+    isChecked: boolean | null;
 
-    // Relations (nullable car les FK sont optionnelles)
-    shoppingList: ShoppingListType;
+    shoppingList?: ShoppingListType;
     ingredient: IngredientType | null;
     meal: MealType | null;
     product: HouseholdProductType | null;

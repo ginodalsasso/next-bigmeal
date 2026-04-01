@@ -58,7 +58,7 @@ const IngredientDetailPage = ({ params }: { params: Promise<{ ingredientName: st
                 {ingredient.categoryIngredient?.name || "Catégorie non disponible"}
             </p>
             {ingredient.season && <p>Saison: {ingredient.season}</p>}
-            {ingredient.compositions.length > 0 ? (
+            {ingredient.compositions && ingredient.compositions.length > 0 ? (
                 ingredient.compositions.map((composition) => (
                     <div key={composition.id}>
                         <p>{composition.meal.name}</p>
