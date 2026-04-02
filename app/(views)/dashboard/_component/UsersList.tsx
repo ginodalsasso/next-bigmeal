@@ -1,8 +1,8 @@
-import { UserType } from "@/lib/types/schemas_interfaces";
+import { UserListItem } from "@/lib/types/api_responses";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import UpdateUserStatus from "./UpdateUserStatus";
 
-export default function UsersList({ fetchedUsers }: { fetchedUsers: UserType[] }) {
+export default function UsersList({ fetchedUsers }: { fetchedUsers: UserListItem[] }) {
     return (
         <div className="overflow-hidden rounded-xl border border-warm-border bg-warm-subtle">
             <div className="border-b border-warm-border px-4 py-3">

@@ -1,6 +1,6 @@
 import { useEffect, useState, SubmitEvent } from "react";
 
-import { Season } from "@/lib/types/enums";
+import { Season } from "@prisma/client";
 import { CategoryIngredientType } from "@/lib/types/schemas_interfaces";
 import { UpdateIngredientProps } from "@/lib/types/props_interfaces";
 import { IngredientFormType } from "@/lib/types/forms_interfaces";

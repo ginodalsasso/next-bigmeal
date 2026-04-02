@@ -1,6 +1,9 @@
 import API_ROUTES from "../constants/api_routes";
+import { MealFormType } from "../types/forms_interfaces";
+import { MealType } from "../types/schemas_interfaces";
+import { MessageResponse } from "../types/api_responses";
 
-export async function createMealAPI(mealData: object, csrfToken: string) {
+export async function createMealAPI(mealData: MealFormType, csrfToken: string): Promise<MealType> {
     try {
         const response = await fetch( API_ROUTES.meals, {
             method: "POST",
@@ -22,7 +25,7 @@ export async function createMealAPI(mealData: object, csrfToken: string) {
     }
 }
 
-export async function updateMealAPI(mealData: object, csrfToken: string) {
+export async function updateMealAPI(mealData: MealFormType, csrfToken: string): Promise<MealType> {
     try {
         const response = await fetch( API_ROUTES.meals, {
             method: "PUT",
@@ -44,7 +47,7 @@ export async function updateMealAPI(mealData: object, csrfToken: string) {
     }
 }
 
-export async function likedMealAPI(mealName: string, csrfToken: string) {
+export async function likedMealAPI(mealName: string, csrfToken: string): Promise<MessageResponse> {
     try {
         const response = await fetch( `${API_ROUTES.meals}/${mealName}/like`, {
             method: "POST",

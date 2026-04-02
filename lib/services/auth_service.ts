@@ -1,6 +1,6 @@
 import API_ROUTES from "../constants/api_routes";
 
-export async function registerUserAPI(email: string, password: string) {
+export async function registerUserAPI(email: string, password: string): Promise<void> {
     try {
         const response = await fetch( API_ROUTES.auth.register, {
             method: "POST",
@@ -20,7 +20,7 @@ export async function registerUserAPI(email: string, password: string) {
     }
 }
 
-export async function sendForgotPasswordEmailAPI(email: string) {
+export async function sendForgotPasswordEmailAPI(email: string): Promise<void> {
     try {
         const response = await fetch( API_ROUTES.resetPassword.sendEmail, {
             method: "POST",

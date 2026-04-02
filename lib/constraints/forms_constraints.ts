@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { Season, IngredientUnit, UserStatus } from "../types/enums";
+import { Season, Unit, Status } from "@prisma/client";
 
 // _________________________ CONTRAINTES DE VALIDATION _________________________
 
@@ -119,7 +119,7 @@ export const newCompositionConstraints = z.array(
             .min(0.1, "La quantité doit être supérieure à 0")
             .max(1000, "La quantité doit être inférieure à 1000")
             .positive("La quantité doit être un nombre positif."),
-        unit: z.nativeEnum(IngredientUnit, {
+        unit: z.nativeEnum(Unit, {
             message: "Veuillez sélectionner une unité",
         }),
     })
@@ -132,7 +132,7 @@ export const updateCompositionConstraints = z.object({
         .min(0.1, "La quantité doit être supérieure à 0")
         .max(1000, "La quantité doit être inférieure à 1000")
         .positive("La quantité doit être un nombre positif."),
-    unit: z.nativeEnum(IngredientUnit, {
+    unit: z.nativeEnum(Unit, {
         message: "Veuillez sélectionner une unité",
     }),
 });
@@ -219,7 +219,7 @@ export const ShoppingListItemConstraints = z
         ingredientId: mongoIdOrNull,
         productId: mongoIdOrNull,
         mealId: mongoIdOrNull,
-        unit: z.nativeEnum(IngredientUnit, {
+        unit: z.nativeEnum(Unit, {
             message: "Veuillez sélectionner une unité",
         }),
     })
@@ -296,7 +296,7 @@ export const ResetPasswordConstraints = z.object({
 
 export const UpdateUserStatusConstraints = z.object({
     userId: z.string(),
-    status: z.nativeEnum(UserStatus),
+    status: z.nativeEnum(Status),
 });      
 
 export const ChangeEmailConstraints = z.object({

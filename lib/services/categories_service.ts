@@ -1,3 +1,4 @@
+
 export async function createCategoryAPI(name: string, csrfToken: string, apiUrl: string) {
     try {
         const response = await fetch(apiUrl, {

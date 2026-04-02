@@ -1,6 +1,8 @@
 import API_ROUTES from "../constants/api_routes";
+import { HouseholdProductFormType } from "../types/forms_interfaces";
+import { HouseholdProductType } from "../types/schemas_interfaces";
 
-export async function createHouseholdProductAPI(householdProductData: object, csrfToken: string) {
+export async function createHouseholdProductAPI(householdProductData: HouseholdProductFormType, csrfToken: string): Promise<HouseholdProductType> {
     try {
         const response = await fetch( API_ROUTES.householdProduct, {
             method: "POST",
@@ -22,7 +24,7 @@ export async function createHouseholdProductAPI(householdProductData: object, cs
     }
 }
 
-export async function updateHouseholdProductAPI(householdProductData: object, csrfToken: string) {
+export async function updateHouseholdProductAPI(householdProductData: HouseholdProductFormType, csrfToken: string): Promise<HouseholdProductType> {
     try {
         const response = await fetch( API_ROUTES.householdProduct, {
             method: "PUT",

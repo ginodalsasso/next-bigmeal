@@ -11,8 +11,7 @@ import FormErrorMessage from "@/components/ui/FormErrorMessage";
 import FormSubmitButton from "@/components/ui/FormSubmitButton";
 
 import { updatePreparationAPI } from "@/lib/services/preparation_service";
-
-type UpdatePreparationFormType = { id: string; prepTime?: number; cookTime?: number };
+import { UpdatePreparationFormType } from "@/lib/types/forms_interfaces";
 
 const UpdatePreparation: React.FC<UpdatePreparationProps> = ({ initialPreparation: preparation, onSubmit, onClose }) => {
     const { error, submit, isLoading } = useCrudForm<UpdatePreparationFormType>(

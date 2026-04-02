@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 
 import { CompositionFormErrorType, CompositionFormType } from "@/lib/types/forms_interfaces";
-import { IngredientUnit } from "@/lib/types/enums";
+import { Unit } from "@prisma/client";
 import { CreateCompositionProps } from "@/lib/types/props_interfaces";
 
 import { newCompositionConstraints } from "@/lib/constraints/forms_constraints";
@@ -21,12 +21,12 @@ import { X } from "lucide-react";
 const CreateComposition: React.FC<CreateCompositionProps> = ({ mealId, onSubmit }) => {
     const [isLoading, setIsLoading] = useState(false);
     const [form, setForm] = useState<CompositionFormType[]>([
-        { ingredientId: "", mealId, quantity: 0, unit: IngredientUnit.GRAM },
+        { ingredientId: "", mealId, quantity: 0, unit: Unit.GRAM },
     ]);
     const [error, setError] = useState<{ general: string } & Record<number, CompositionFormErrorType>>({ general: "" });
 
     const addNewLine = () => {
-        setForm((prev) => [...prev, { ingredientId: "", mealId, quantity: 0, unit: IngredientUnit.GRAM }]);
+        setForm((prev) => [...prev, { ingredientId: "", mealId, quantity: 0, unit: Unit.GRAM }]);
     };
 
     const removeLine = (index: number) => {
@@ -113,7 +113,7 @@ const CreateComposition: React.FC<CreateCompositionProps> = ({ mealId, onSubmit 
                                 onChange={(e) =>
                                     setForm((prev) =>
                                         prev.map((comp, i) =>
-                                            i === index ? { ...comp, unit: e.target.value as IngredientUnit } : comp
+                                            i === index ? { ...comp, unit: e.target.value as Unit } : comp
                                         )
                                     )
                                 }
@@ -121,7 +121,7 @@ const CreateComposition: React.FC<CreateCompositionProps> = ({ mealId, onSubmit 
                                 required
                             >
                                 <option value="">-- Choisir une unité --</option>
-                                {Object.values(IngredientUnit).map((unit) => (
+                                {Object.values(Unit).map((unit) => (
                                     <option key={unit} value={unit}>
                                         {translatedUnit(unit)}
                                     </option>

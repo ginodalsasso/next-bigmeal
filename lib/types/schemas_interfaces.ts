@@ -1,5 +1,6 @@
-import { UserStatus } from './enums';
-import { Season, Unit } from "@prisma/client";
+import { Season, Unit, Status } from "@prisma/client";
+
+export type Role = "USER" | "ADMIN";
 
 
 // TYPES SCHEMA
@@ -7,7 +8,6 @@ export interface CategoryIngredientType {
     id: string;
     name: string;
 
-    // Relation One-to-Many
     ingredients?: IngredientType[];
 }
 
@@ -16,7 +16,6 @@ export interface CategoryMealType {
     id: string;
     name: string;
 
-    // Relation One-to-Many
     meals?: MealType[];
 }
 
@@ -38,11 +37,9 @@ export interface HouseholdProductType {
     id: string;
     name: string;
 
-    // Clé étrangère : Lie le produit à sa catégorie
     categoryHouseholdProductId?: string;
-    categoryHouseholdProduct: CategoryHouseholdProductType;
+    categoryHouseholdProduct?: CategoryHouseholdProductType;
 
-    // Relation One-to-Many
     shoppingListItems?: ShoppingListItemType[];
 }
 
@@ -52,14 +49,10 @@ export interface IngredientType {
     name: string;
     season: Season | null;
 
-    // Clé étrangère : Lie l'ingrédient à sa catégorie
     categoryIngredientId?: string;
-    categoryIngredient: CategoryIngredientType;
+    categoryIngredient?: CategoryIngredientType;
 
-    // Relation One-to-Many
     compositions?: CompositionType[];
-
-    // Relation One-to-Many
     shoppingListItems?: ShoppingListItemType[];
 }
 
@@ -69,24 +62,20 @@ export interface MealType {
     name: string;
     description?: string | null;
 
-    // Clé étrangère : Lie le repas à sa catégorie
     categoryMealId?: string;
     categoryMeal?: CategoryMealType;
 
     preparation?: PreparationType;
 
-    // Relation One-to-Many
     compositions?: CompositionType[];
-
-    // Relation One-to-Many
     shoppingListItems?: ShoppingListItemType[];
     mealLikes?: MealLikeType[];
 }
 
 export interface MealLikeType {
-    id: string; 
-    mealId: string; // Clé étrangère
-    userId: string; // Clé étrangère
+    id: string;
+    mealId: string;
+    userId: string;
 
     meal: MealType;
     user: UserType;
@@ -96,50 +85,46 @@ export interface MealLikeType {
 
 export interface CompositionType {
     id: string;
-    ingredientId: string; // Clé étrangère
-    mealId: string; // Clé étrangère
+    ingredientId: string;
+    mealId: string;
 
-    unit: Unit; 
+    unit: Unit;
     quantity: number;
 
-    // Relations
-    ingredient: IngredientType; // Référence à l'ingrédient associé
-    meal: MealType; // Référence au repas associé
+    ingredient: IngredientType;
+    meal: MealType;
 }
 
 export interface PreparationType {
     id: string;
-    mealId: string; // Clé étrangère
-    // Relation Many-to-One
+    mealId: string;
     meal: MealType;
 
     prepTime: number;
-    cookTime?: number;
+    cookTime: number | null;
 
     steps: StepType[];
-
 }
 
 export interface StepType {
     id: string;
-    preparationId: string; // Clé étrangère
+    preparationId: string;
     preparation: PreparationType;
 
     stepNumber: number;
     description: string;
-    imageUrl?: string;
+    imageUrl: string | null;
 }
 
 
 export interface ShoppingListType {
-    id: string; 
-    userId: string; // Clé étrangère
+    id: string;
+    userId: string;
     comment: string | null;
-    
+
     isExpired: boolean;
     createdAt: Date;
 
-    // Relation Many-to-One
     user?: UserType;
     items: ShoppingListItemType[];
 }
@@ -155,7 +140,7 @@ export interface ShoppingListItemType {
     quantity: number;
     unit: Unit | null;
     comment: string | null;
-    isChecked: boolean | null;
+    isChecked: boolean;
 
     shoppingList?: ShoppingListType;
     ingredient: IngredientType | null;
@@ -166,14 +151,16 @@ export interface ShoppingListItemType {
 
 export interface UserType {
     id: string;
-    email: string;
-    password: string;
+    name: string | null;
+    email: string | null;
+    emailVerified: Date | null;
+    password: string | null;
+    image: string | null;
+    role: Role | null;
+    status: Status;
     createdAt: Date;
-    role: string;
-    status: UserStatus;
-    emailVerified: Date;
+    updatedAt: Date;
 
-    // Relation One-to-Many
     shoppingList: ShoppingListType[];
     mealLikes: MealLikeType[];
 }
@@ -182,6 +169,6 @@ export interface UserType {
 export interface UserContextType {
     id: string;
     username: string;
-    role: string;
+    role: Role | null;
     shoppingList: ShoppingListType[];
 }

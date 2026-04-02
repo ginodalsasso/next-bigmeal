@@ -2,8 +2,9 @@
 
 import { cookies } from "next/headers";
 import API_ROUTES from "../constants/api_routes";
+import { UserListItem } from "../types/api_responses";
 
-export async function getUsers() {
+export async function getUsers(): Promise<UserListItem[]> {
     try {
         const cookie = await cookies();
         const response = await fetch(API_ROUTES.user.user, {

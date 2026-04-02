@@ -1,4 +1,4 @@
-import { IngredientUnit, Season } from './enums';
+import { Unit, Season } from '@prisma/client';
 
 
 // TYPES FORMULAIRES
@@ -56,13 +56,13 @@ export interface CompositionFormType {
     ingredientId: string;
     mealId: string;
     quantity: number;
-    unit: IngredientUnit;
+    unit: Unit;
 }
 
 export interface UpdateCompositionFormType {
     id: string;
     quantity: number;
-    unit?: IngredientUnit;
+    unit?: Unit;
 }
 
 // FORMULAIRE D'ERREUR COMPOSITION
@@ -78,6 +78,12 @@ export interface CompositionFormErrorType {
 export interface PreparationFormType {
     mealId: string;
     id?: string;
+    prepTime?: number;
+    cookTime?: number;
+}
+
+export interface UpdatePreparationFormType {
+    id: string;
     prepTime?: number;
     cookTime?: number;
 }
@@ -123,7 +129,7 @@ export interface ForgotUserPasswordFormType {
 // ____________ SHOPPING LIST
 export interface AddProductToShoppingListFormType {
     quantity: number;
-    unit?: IngredientUnit;
+    unit?: Unit;
 }
 
 export interface AddProductToShoppingListFormErrorType {

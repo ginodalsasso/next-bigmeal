@@ -1,6 +1,8 @@
 "server-only";
 
 import NextAuth, { CredentialsSignin } from "next-auth";
+import type { Role } from "@/lib/types/schemas_interfaces";
+import type { Status } from "@prisma/client";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { db } from "./db";
 import Credentials from "next-auth/providers/credentials";
@@ -55,8 +57,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
                     return {
                         ...user,
-                        role: user.role ?? "USER",
-                        status: user.status ?? "PENDING",
+                        role: (user.role ?? "USER") as Role,
+                        status: (user.status ?? "PENDING") as Status,
                     };
                 } catch (error) {
                     if (error instanceof CredentialsSignin) throw error;
@@ -109,8 +111,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         async session({ session, token }) {
             if (session.user) {
                 session.user.id = token.id as string;
-                session.user.role = token.role as string; 
-                session.user.status = token.status as string;
+                session.user.role = token.role as Role;
+                session.user.status = token.status as Status;
             }
             return session;
         },

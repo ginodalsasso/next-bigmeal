@@ -1,7 +1,7 @@
 "use client";
 
 import { SubmitEvent } from "react";
-import { IngredientUnit } from "@/lib/types/enums";
+import { Unit } from "@prisma/client";
 import { UpdateCompositionProps } from "@/lib/types/props_interfaces";
 import { UpdateCompositionFormType } from "@/lib/types/forms_interfaces";
 
@@ -29,7 +29,7 @@ const UpdateComposition: React.FC<UpdateCompositionProps> = ({ initialCompositio
             form: {
                 id: initialComposition.id,
                 quantity: formData.get("quantity") ? Number(formData.get("quantity")) : 0,
-                unit: formData.get("unit") as IngredientUnit,
+                unit: formData.get("unit") as Unit,
             },
             apiCall: updateCompositionAPI,
             onSuccess: onSubmit,
@@ -68,7 +68,7 @@ const UpdateComposition: React.FC<UpdateCompositionProps> = ({ initialCompositio
                     required
                 >
                     <option value="">-- Choisir une unité --</option>
-                    {Object.values(IngredientUnit).map((unit) => (
+                    {Object.values(Unit).map((unit) => (
                         <option key={unit} value={unit}>
                             {translatedUnit(unit)}
                         </option>

@@ -1,6 +1,9 @@
 import API_ROUTES from "../constants/api_routes";
+import { PreparationFormType, UpdatePreparationFormType } from "../types/forms_interfaces";
+import { PreparationType } from "../types/schemas_interfaces";
+import { MessageResponse } from "../types/api_responses";
 
-export async function createPreparationAPI(preparationData: object, csrfToken: string) {
+export async function createPreparationAPI(preparationData: PreparationFormType, csrfToken: string): Promise<PreparationType> {
     try {
         const response = await fetch( API_ROUTES.preparation, {
             method: "POST",
@@ -24,8 +27,8 @@ export async function createPreparationAPI(preparationData: object, csrfToken: s
     }
 }
 
-export async function updatePreparationAPI(preparationData: object, csrfToken: string) {
-    
+export async function updatePreparationAPI(preparationData: UpdatePreparationFormType, csrfToken: string): Promise<PreparationType> {
+
     if (!preparationData || Object.keys(preparationData).length === 0) {
         throw new Error("Les données de mise à jour sont invalides.");
     }
@@ -53,7 +56,7 @@ export async function updatePreparationAPI(preparationData: object, csrfToken: s
 }
 
 
-export async function deletePreparationAPI(preparationId: string, csrfToken: string) {
+export async function deletePreparationAPI(preparationId: string, csrfToken: string): Promise<MessageResponse> {
     try {
         const response = await fetch( `${API_ROUTES.preparation}/${preparationId}`, {
             method: "DELETE",
@@ -62,13 +65,13 @@ export async function deletePreparationAPI(preparationId: string, csrfToken: str
                 "X-CSRF-Token": csrfToken
             },
         });
-        
+
         const data = await response.json();
-        
+
         if (!response.ok) {
             throw new Error(data.message || "Erreur inconnue");
         }
-        
+
         return data;
     } catch (error) {
         console.error("[API_ERROR] deletePreparationAPI", error);

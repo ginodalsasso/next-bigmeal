@@ -1,6 +1,8 @@
 import API_ROUTES from "../constants/api_routes";
+import { StepFormType } from "../types/forms_interfaces";
+import { StepType } from "../types/schemas_interfaces";
 
-export async function createStepAPI(stepData: object, csrfToken: string) {
+export async function createStepAPI(stepData: StepFormType[], csrfToken: string): Promise<StepType[]> {
     try {
         const response = await fetch(API_ROUTES.step, {
             method: "POST",
@@ -24,7 +26,7 @@ export async function createStepAPI(stepData: object, csrfToken: string) {
     }
 }
 
-export async function updateStepAPI(stepData: object, csrfToken: string) {
+export async function updateStepAPI(stepData: StepFormType, csrfToken: string): Promise<StepType> {
     try {
         const response = await fetch( API_ROUTES.step, {
             method: "PUT",

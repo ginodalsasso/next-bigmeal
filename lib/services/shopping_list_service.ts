@@ -1,6 +1,7 @@
 import API_ROUTES from "../constants/api_routes";
+import { ShoppingListType } from "../types/schemas_interfaces";
 
-export async function fetchShoppingListAPI() {
+export async function fetchShoppingListAPI(): Promise<ShoppingListType | null> {
     try {
         const response = await fetch( API_ROUTES.shoppingList.list);
         if (!response.ok) throw new Error("Erreur lors de la récupération de la liste.");
@@ -11,7 +12,7 @@ export async function fetchShoppingListAPI() {
     }
 }
 
-export async function createShoppingListMealAPI(mealId: string, csrfToken: string) {
+export async function createShoppingListMealAPI(mealId: string, csrfToken: string): Promise<void> {
     try {
         const response = await fetch(API_ROUTES.shoppingList.meal, {
             method: 'POST',
@@ -29,7 +30,7 @@ export async function createShoppingListMealAPI(mealId: string, csrfToken: strin
 }
 
 
-export async function createShoppingListIngredientAPI(ingredientId: string, quantity: number, csrfToken: string) {
+export async function createShoppingListIngredientAPI(ingredientId: string, quantity: number, csrfToken: string): Promise<void> {
     try {
         const response = await fetch( API_ROUTES.shoppingList.list, {
             method: 'POST',
@@ -49,7 +50,7 @@ export async function createShoppingListIngredientAPI(ingredientId: string, quan
     }
 }
 
-export async function createShoppingListProductAPI(productId: string, quantity: number, csrfToken: string) {
+export async function createShoppingListProductAPI(productId: string, quantity: number, csrfToken: string): Promise<void> {
     try {
         const response = await fetch( API_ROUTES.shoppingList.list, {
             method: 'POST',
@@ -71,7 +72,7 @@ export async function createShoppingListProductAPI(productId: string, quantity: 
 }
 
 
-export async function toggleItemCheckedAPI(id: string, isChecked: boolean, csrfToken: string) {
+export async function toggleItemCheckedAPI(id: string, isChecked: boolean, csrfToken: string): Promise<void> {
     try {
         const response = await fetch( API_ROUTES.shoppingList.list, {
             method: "PUT",
@@ -88,7 +89,7 @@ export async function toggleItemCheckedAPI(id: string, isChecked: boolean, csrfT
     }
 }
 
-export async function markShoppingListAsExpiredAPI(id: string, csrfToken: string) {
+export async function markShoppingListAsExpiredAPI(id: string, csrfToken: string): Promise<void> {
     try {
         const response = await fetch( API_ROUTES.shoppingList.list, {
             method: "PUT",
@@ -105,7 +106,7 @@ export async function markShoppingListAsExpiredAPI(id: string, csrfToken: string
     }
 }
 
-export async function deleteMealFromShoppingListAPI(mealId: string, csrfToken: string) {
+export async function deleteMealFromShoppingListAPI(mealId: string, csrfToken: string): Promise<void> {
     try {
         const response = await fetch(API_ROUTES.shoppingList.meal, {
             method: "DELETE",
@@ -122,7 +123,7 @@ export async function deleteMealFromShoppingListAPI(mealId: string, csrfToken: s
     }
 }
 
-export async function updateItemQuantityAPI(id: string, quantity: number, csrfToken: string) {
+export async function updateItemQuantityAPI(id: string, quantity: number, csrfToken: string): Promise<void> {
     try {
         const response = await fetch( API_ROUTES.shoppingList.item, {
             method: "PATCH",

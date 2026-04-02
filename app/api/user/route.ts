@@ -1,7 +1,7 @@
 import { UpdateUserStatusConstraints } from "@/lib/constraints/forms_constraints";
 import { db } from "@/lib/db";
 import { getAdminSession } from "@/lib/security/getSession";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 
 export async function GET() {
@@ -33,13 +33,13 @@ export async function GET() {
 }
 
 
-export async function PATCH(request: Request) {
+export async function PATCH(req: NextRequest) {
     try {
         const { error } = await getAdminSession();
         if (error) return error;
 
 
-        const { userId, status } = await request.json();
+        const { userId, status } = await req.json();
 
         if (!userId || !status) {
             return new Response(JSON.stringify({ 

@@ -1,8 +1,10 @@
 import { signOut } from "next-auth/react";
+import { Status } from "@prisma/client";
 import API_ROUTES from "../constants/api_routes";
+import { UserProfileResponse } from "../types/api_responses";
 
 
-export async function fetchUserProfileAPI() {
+export async function fetchUserProfileAPI(): Promise<UserProfileResponse> {
     try {
         const response = await fetch( API_ROUTES.user.profile,
             { method: "GET",
@@ -22,7 +24,7 @@ export async function fetchUserProfileAPI() {
 }
 
 
-export async function deleteProfileAPI(userId: string, csrfToken: string) {
+export async function deleteProfileAPI(userId: string, csrfToken: string): Promise<void> {
     try {
         const response = await fetch( API_ROUTES.user.profile, {
             method: "DELETE",
@@ -45,7 +47,7 @@ export async function deleteProfileAPI(userId: string, csrfToken: string) {
     }
 }
 
-export async function resetPasswordAPI(password: string, newPassword: string, confirmNewPassword: string, csrfToken: string) {
+export async function resetPasswordAPI(password: string, newPassword: string, confirmNewPassword: string, csrfToken: string): Promise<void> {
     try {
         const response = await fetch( API_ROUTES.user.profile, {
             method: "PUT",
@@ -66,7 +68,7 @@ export async function resetPasswordAPI(password: string, newPassword: string, co
     }
 }
 
-export async function verifyResetTokenAPI(token: string | string[]) {
+export async function verifyResetTokenAPI(token: string | string[]): Promise<void> {
     try {
         const response = await fetch( API_ROUTES.resetPassword.verifyToken, {
             method: "POST",
@@ -85,13 +87,13 @@ export async function verifyResetTokenAPI(token: string | string[]) {
     }
 }
 
-export async function resetForgottenPasswordAPI(token: string | string[], password: string) {
+export async function resetForgottenPasswordAPI(token: string | string[], password: string): Promise<void> {
     try {
         const response = await fetch( API_ROUTES.resetPassword.resetPassword, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": `Bearer ${token}` 
+                "Authorization": `Bearer ${token}`
             },
             body: JSON.stringify({ password }),
         });
@@ -106,7 +108,7 @@ export async function resetForgottenPasswordAPI(token: string | string[], passwo
     }
 }
 
-export async function confirmEmailAPI(token: string | string[]) {
+export async function confirmEmailAPI(token: string | string[]): Promise<Response> {
     try {
         const response = await fetch( API_ROUTES.confirmEmail.confirmEmail, {
             method: "POST",
@@ -123,7 +125,7 @@ export async function confirmEmailAPI(token: string | string[]) {
     }
 }
 
-export async function updateUserStatusAPI(userId: string, status: string, csrfToken: string) {
+export async function updateUserStatusAPI(userId: string, status: Status, csrfToken: string): Promise<void> {
     try {
         const response = await fetch( API_ROUTES.user.user, {
             method: "PATCH",
@@ -144,7 +146,7 @@ export async function updateUserStatusAPI(userId: string, status: string, csrfTo
     }
 }
 
-export async function updateEmailAPI(userData: object, csrfToken: string) {
+export async function updateEmailAPI(userData: { userId: string; email: string }, csrfToken: string): Promise<void> {
     try {
         const response = await fetch( API_ROUTES.user.profile, {
             method: "PATCH",

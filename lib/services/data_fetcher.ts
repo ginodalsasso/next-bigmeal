@@ -1,6 +1,12 @@
 import API_ROUTES from "../constants/api_routes";
+import {
+    CategoryHouseholdProductType,
+    CategoryIngredientType,
+    CategoryMealType,
+    MealType,
+} from "../types/schemas_interfaces";
 
-export async function getCategoriesIngredient() {
+export async function getCategoriesIngredient(): Promise<CategoryIngredientType[]> {
     try {
         const response = await fetch( API_ROUTES.categories.ingredient, { cache: 'no-store' });
         if (!response.ok) throw new Error("Erreur lors de la récupération des catégories.");
@@ -11,7 +17,7 @@ export async function getCategoriesIngredient() {
     }
 }
 
-export async function getCategoriesMeal() {
+export async function getCategoriesMeal(): Promise<CategoryMealType[]> {
     try {
         const response = await fetch( API_ROUTES.categories.meal, { cache: 'no-store' });
         if (!response.ok) throw new Error("Erreur lors de la récupération des catégories.");
@@ -22,7 +28,7 @@ export async function getCategoriesMeal() {
     }
 }
 
-export async function getCategoriesHouseholdProduct() {
+export async function getCategoriesHouseholdProduct(): Promise<CategoryHouseholdProductType[]> {
     try {
         const response = await fetch( API_ROUTES.categories.householdProduct, { cache: 'no-store' });
         if (!response.ok) throw new Error("Erreur lors de la récupération des catégories.");
@@ -35,7 +41,7 @@ export async function getCategoriesHouseholdProduct() {
 
 
 
-export async function getMeal(mealName: string) {
+export async function getMeal(mealName: string): Promise<MealType> {
     try {
         const response = await fetch(`${API_ROUTES.meals}/${mealName}`, { cache: "no-store" });
         if (!response.ok) throw new Error("Erreur lors de la récupération du repas.");
@@ -47,20 +53,17 @@ export async function getMeal(mealName: string) {
 }
 
 export async function getLikedMeals(
-        skip = 0, 
-        take = 10, 
-        categories: string[] = [], 
-)  {
+        skip = 0,
+        take = 10,
+        categories: string[] = [],
+): Promise<MealType[]> {
     try {
         const url = new URL(`${API_ROUTES.meals}/favorites`);
-        // Gestion de la pagination
-        // skip = le nombre de repas à ignorer, take = le nombre de repas à récupérer
         url.searchParams.append('skip', skip.toString());
         url.searchParams.append('take', take.toString());
 
-        // Gestion des filtres (qui sont des tableaux)
         categories.forEach(category => url.searchParams.append('categories', category));
-    
+
         const response = await fetch(url.toString(), { cache: "no-store" });
 
         if (!response.ok) throw new Error("Erreur lors de la récupération des repas.");
@@ -70,5 +73,3 @@ export async function getLikedMeals(
         throw new Error("Impossible de récupérer les repas.");
     }
 }
-
-
