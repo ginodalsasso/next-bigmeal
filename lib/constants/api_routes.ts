@@ -35,6 +35,7 @@ const preparationRoute = `${BASE_URL}/preparation`;
 const stepRoute = `${BASE_URL}/step`;
 const ingredientsRoute = `${BASE_URL}/ingredients`;
 const mealsRoute = `${BASE_URL}/meals`;
+const mealsImportRoute = `${BASE_URL}/meals/import`;
 const householdProductRoute = `${BASE_URL}/household-products`;
 const shoppingListRoute = {
     list: `${BASE_URL}/shopping-list`,
@@ -54,6 +55,7 @@ const API_ROUTES = {
     step: stepRoute,
     ingredients: ingredientsRoute,
     meals: mealsRoute,
+    mealsImport: mealsImportRoute,
     shoppingList: shoppingListRoute,
     householdProduct: householdProductRoute,
 };

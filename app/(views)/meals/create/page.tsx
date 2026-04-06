@@ -9,6 +9,7 @@ import CreateComposition from "../_components/(composition)/CreateComposition";
 import CreatePreparation from "../_components/(preparation)/CreatePreparation";
 import CreateStep from "../_components/(preparation)/(step)/CreateStep";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 // Types
 import { MealType, PreparationType } from "@/lib/types/schemas_interfaces";
@@ -89,7 +90,12 @@ const CreateMealPage = () => {
     return (
         <div className="mx-auto max-w-2xl">
 
-            <h1 className="text-center text-2xl font-bold">Nouveau repas</h1>
+            <div className="flex items-center justify-between">
+                <h1 className="text-2xl font-bold">Nouveau repas</h1>
+                <Button variant="outline" asChild>
+                    <Link href="/meals/import">Importer via IA</Link>
+                </Button>
+            </div>
 
             {/* Progress Bar */}
             <p className="mt-3 text-center text-sm">{ progress }</p>
