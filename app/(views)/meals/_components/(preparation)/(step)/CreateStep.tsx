@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 
 import { StepFormErrorType, StepFormType } from "@/lib/types/forms_interfaces";
 import { CreateStepProps } from "@/lib/types/props_interfaces";

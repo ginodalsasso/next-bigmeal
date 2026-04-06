@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { toast } from 'sonner';
 import { ShoppingListConstraints } from '@/lib/constraints/forms_constraints';
 import { AddProductToShoppingListFormType } from '@/lib/types/forms_interfaces';

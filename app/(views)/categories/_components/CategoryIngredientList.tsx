@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 import { CategoryIngredientType } from "@/lib/types/schemas_interfaces";
 import { ucFirst } from "@/lib/utils";
 

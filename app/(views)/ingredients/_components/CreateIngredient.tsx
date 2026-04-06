@@ -1,6 +1,6 @@
 "use client";
 
-import React, { SubmitEvent, useEffect, useState } from "react";
+import { SubmitEvent, useEffect, useState } from "react";
 
 import { Season } from "@prisma/client";
 import { CategoryIngredientType } from "@/lib/types/schemas_interfaces";

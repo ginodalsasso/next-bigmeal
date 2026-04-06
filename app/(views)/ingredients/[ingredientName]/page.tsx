@@ -1,7 +1,7 @@
 "use client";
 
 // Bibliothèques tierces
-import React, { useEffect, useState, use } from "react";
+import { useEffect, useState, use } from "react";
 
 // Types
 import { IngredientType } from "@/lib/types/schemas_interfaces";

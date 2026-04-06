@@ -1,4 +1,3 @@
-import React from "react";
 
 type ItemGridProps<T extends { id: string }> = {
     items: T[];

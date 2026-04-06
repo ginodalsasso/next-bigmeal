@@ -1,7 +1,7 @@
 "use client";
 
 // Bibliothèques tierces
-import React, { useState } from "react";
+import { useState } from "react";
 
 // Composants
 import CreateMeal from "../_components/CreateMeal";

@@ -1,5 +1,4 @@
 import { Share2 } from 'lucide-react';
-import React from 'react'
 import { toast } from 'sonner';
 
 type ShareButtonProps = {

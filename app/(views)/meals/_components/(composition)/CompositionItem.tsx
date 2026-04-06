@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import { translatedUnit, ucFirst } from "@/lib/utils";
 import IsAdmin from "@/components/auth/isAdmin";
 import DeleteItem from "@/components/catalog/DeleteItemDialog";

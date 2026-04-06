@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState, SubmitEvent } from "react";
+import { useEffect, useState, SubmitEvent } from "react";
 
 import { CategoryHouseholdProductType } from "@/lib/types/schemas_interfaces";
 import { HouseholdProductFormType } from "@/lib/types/forms_interfaces";

@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import IsAdmin from "@/components/auth/isAdmin";
 import EditItem from "@/components/catalog/EditItemDrawer";
 import DeleteItem from "@/components/catalog/DeleteItemDialog";

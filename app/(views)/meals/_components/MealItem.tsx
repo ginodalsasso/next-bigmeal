@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 
 import { CompositionType, MealType, PreparationType, StepType } from "@/lib/types/schemas_interfaces";
 

@@ -1,7 +1,7 @@
 'use client';
 
 // Bibliothèques tierces
-import React, { useEffect, useState, SubmitEvent } from 'react';
+import { useEffect, useState, SubmitEvent } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 

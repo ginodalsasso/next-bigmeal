@@ -1,7 +1,7 @@
 "use client";
 
 // Bibliothèques tierces
-import React, { useState } from "react";
+import { useState } from "react";
 
 // Composants UI
 import { AlertDialog, AlertDialogTrigger, AlertDialogContent, AlertDialogHeader, AlertDialogFooter, AlertDialogTitle, AlertDialogDescription } from "@/components/ui/alert-dialog";

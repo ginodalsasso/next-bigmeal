@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { PreparationType, StepType } from "@/lib/types/schemas_interfaces";
 import IsAdmin from "@/components/auth/isAdmin";
 import EditItem from "@/components/catalog/EditItemDrawer";
