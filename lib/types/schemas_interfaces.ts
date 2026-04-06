@@ -27,12 +27,6 @@ export interface CategoryHouseholdProductType {
 }
 
 
-export interface CategoryType {
-    id: string;
-    name: string;
-}
-
-
 export interface HouseholdProductType {
     id: string;
     name: string;
@@ -72,7 +66,7 @@ export interface MealType {
     mealLikes?: MealLikeType[];
 }
 
-export interface MealLikeType {
+interface MealLikeType {
     id: string;
     mealId: string;
     userId: string;
@@ -163,12 +157,4 @@ export interface UserType {
 
     shoppingList: ShoppingListType[];
     mealLikes: MealLikeType[];
-}
-
-
-export interface UserContextType {
-    id: string;
-    username: string;
-    role: Role | null;
-    shoppingList: ShoppingListType[];
 }

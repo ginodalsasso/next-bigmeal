@@ -3,7 +3,6 @@ import { UserType } from "./schemas_interfaces";
 
 export type MessageResponse = { message: string };
 export type UserListItem = Pick<UserType, 'id' | 'email' | 'role' | 'status' | 'createdAt'>;
-export type ErrorResponse = { error: string };
 
 export type UserProfileResponse = {
     id: string;
