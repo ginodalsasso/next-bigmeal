@@ -1,8 +1,8 @@
 import API_ROUTES from "../constants/api_routes";
-import { IngredientFormType } from "../types/forms_interfaces";
+import { IngredientFormData } from "../constraints/forms_constraints";
 import { IngredientType } from "../types/schemas_interfaces";
 
-export async function createIngredientAPI(ingredientData: IngredientFormType, csrfToken: string): Promise<IngredientType> {
+export async function createIngredientAPI(ingredientData: IngredientFormData, csrfToken: string): Promise<IngredientType> {
     try {
         const response = await fetch( API_ROUTES.ingredients, {
             method: "POST",
@@ -25,7 +25,7 @@ export async function createIngredientAPI(ingredientData: IngredientFormType, cs
 }
 
 
-export async function updateIngredientAPI(ingredientData: IngredientFormType, csrfToken: string): Promise<IngredientType> {
+export async function updateIngredientAPI(ingredientData: IngredientFormData, csrfToken: string): Promise<IngredientType> {
     try {
         const response = await fetch( API_ROUTES.ingredients, {
             method: "PUT",

@@ -3,9 +3,8 @@
 import { SubmitEvent } from "react";
 import { Unit } from "@prisma/client";
 import { UpdateCompositionProps } from "@/lib/types/props_interfaces";
-import { UpdateCompositionFormType } from "@/lib/types/forms_interfaces";
 
-import { updateCompositionConstraints } from "@/lib/constraints/forms_constraints";
+import { updateCompositionConstraints, UpdateCompositionFormData } from "@/lib/constraints/forms_constraints";
 import { useCrudForm } from "@/app/hooks/useCrudForm";
 
 import { translatedUnit } from "@/lib/utils";
@@ -17,7 +16,7 @@ import FormSubmitButton from "@/components/ui/FormSubmitButton";
 import { updateCompositionAPI } from "@/lib/services/composition_service";
 
 const UpdateComposition: React.FC<UpdateCompositionProps> = ({ initialComposition, onSubmit, onClose }) => {
-    const { error, submit, isLoading } = useCrudForm<UpdateCompositionFormType>(
+    const { error, submit, isLoading } = useCrudForm<UpdateCompositionFormData>(
         updateCompositionConstraints,
         ["quantity", "unit"]
     );

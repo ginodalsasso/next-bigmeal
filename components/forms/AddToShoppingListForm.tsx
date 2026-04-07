@@ -2,8 +2,7 @@
 
 import { useState } from 'react';
 import { toast } from 'sonner';
-import { ShoppingListConstraints } from '@/lib/constraints/forms_constraints';
-import { AddProductToShoppingListFormType } from '@/lib/types/forms_interfaces';
+import { ShoppingListConstraints, AddToShoppingListFormData } from '@/lib/constraints/forms_constraints';
 import { useFormValidation } from '@/app/hooks/useFormValidation';
 import { createShoppingListIngredientAPI, createShoppingListMealAPI, createShoppingListProductAPI } from '@/lib/services/shopping_list_service';
 import { getCsrfToken } from 'next-auth/react';
@@ -15,10 +14,10 @@ interface AddToShoppingListFormProps {
 }
 
 const AddToShoppingListForm: React.FC<AddToShoppingListFormProps> = ({ type, id }) => {
-    const [quantity, setQuantity] = useState<AddProductToShoppingListFormType>({ quantity: 1 });
+    const [quantity, setQuantity] = useState<AddToShoppingListFormData>({ quantity: 1 });
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
-    const { error, setError, validate } = useFormValidation<AddProductToShoppingListFormType>(
+    const { error, setError, validate } = useFormValidation<AddToShoppingListFormData>(
         ShoppingListConstraints,
         ["quantity"]
     );

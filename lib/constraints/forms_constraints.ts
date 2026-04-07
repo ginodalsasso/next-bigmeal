@@ -56,6 +56,7 @@ export const categoriesConstraints = z.object({
 
 
 export const ingredientConstraints = z.object({
+    id: z.string().optional(),
     name: z
         .string()
         .min(3, "Le nom doit comporter au moins 3 caractères")
@@ -75,6 +76,7 @@ export const ingredientConstraints = z.object({
 });
 
 export const householdProductConstraints = z.object({
+    id: z.string().optional(),
     name: z
         .string()
         .min(3, "Le nom doit comporter au moins 3 caractères")
@@ -91,6 +93,7 @@ export const householdProductConstraints = z.object({
 
 
 export const mealConstraints = z.object({
+    id: z.string().optional(),
     name: z
         .string()
         .min(3, "Le nom doit comporter au moins 3 caractères")
@@ -104,8 +107,7 @@ export const mealConstraints = z.object({
         .min(10, "La description doit comporter au moins 10 caractères")
         .max(2000, "La description doit comporter au maximum 2000 caractères")
         .nullable()
-        .optional()
-        .default(null),
+        .optional(),
     categoryMealId: z.string().min(1, "Une catégorie est obligatoire"),
 });
 
@@ -308,3 +310,20 @@ export const ChangeEmailConstraints = z.object({
         .trim(),
     userId: z.string(),
 });
+
+
+// _________________________ TYPES DÉRIVÉS _________________________
+export type IngredientFormData       = z.infer<typeof ingredientConstraints>;
+export type HouseholdProductFormData = z.infer<typeof householdProductConstraints>;
+export type MealFormData             = z.infer<typeof mealConstraints>;
+export type CompositionFormData      = z.infer<typeof newCompositionConstraints>[number];
+export type UpdateCompositionFormData = z.infer<typeof updateCompositionConstraints>;
+export type PreparationFormData      = z.infer<typeof preparationConstraints>;
+export type UpdatePreparationFormData = z.infer<typeof updatePreparationConstraints>;
+export type StepFormData             = z.infer<typeof newStepConstraints>[number];
+export type UpdateStepFormData       = z.infer<typeof updateStepConstraints>;
+export type AddToShoppingListFormData = z.infer<typeof ShoppingListConstraints>;
+export type NewPasswordFormData      = z.infer<typeof NewPasswordConstraints>;
+
+export type CompositionFormError = Partial<Record<keyof CompositionFormData | 'general', string>>;
+export type StepFormError        = Partial<Record<keyof StepFormData | 'general', string>>;

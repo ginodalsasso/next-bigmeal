@@ -3,10 +3,9 @@
 import { useEffect, useState, SubmitEvent } from "react";
 
 import { CategoryHouseholdProductType } from "@/lib/types/schemas_interfaces";
-import { HouseholdProductFormType } from "@/lib/types/forms_interfaces";
 import { CreateHouseholdProductProps } from "@/lib/types/props_interfaces";
 
-import { householdProductConstraints } from "@/lib/constraints/forms_constraints";
+import { householdProductConstraints, HouseholdProductFormData } from "@/lib/constraints/forms_constraints";
 import { useCrudForm } from "@/app/hooks/useCrudForm";
 
 import { ucFirst } from "@/lib/utils";
@@ -21,7 +20,7 @@ import { createHouseholdProductAPI } from "@/lib/services/household_product_serv
 const CreateHouseholdProduct: React.FC<CreateHouseholdProductProps> = ({ onSubmit, onClose }) => {
     const [categories, setCategories] = useState<CategoryHouseholdProductType[]>([]);
 
-    const { error, setError, submit, isLoading } = useCrudForm<HouseholdProductFormType>(
+    const { error, setError, submit, isLoading } = useCrudForm<HouseholdProductFormData>(
         householdProductConstraints,
         ["name", "categoryHouseholdProductId"]
     );

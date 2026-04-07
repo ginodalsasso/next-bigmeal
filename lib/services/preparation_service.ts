@@ -1,9 +1,9 @@
 import API_ROUTES from "../constants/api_routes";
-import { PreparationFormType, UpdatePreparationFormType } from "../types/forms_interfaces";
+import { PreparationFormData, UpdatePreparationFormData } from "../constraints/forms_constraints";
 import { PreparationType } from "../types/schemas_interfaces";
 import { MessageResponse } from "../types/api_responses";
 
-export async function createPreparationAPI(preparationData: PreparationFormType, csrfToken: string): Promise<PreparationType> {
+export async function createPreparationAPI(preparationData: PreparationFormData, csrfToken: string): Promise<PreparationType> {
     try {
         const response = await fetch( API_ROUTES.preparation, {
             method: "POST",
@@ -27,7 +27,7 @@ export async function createPreparationAPI(preparationData: PreparationFormType,
     }
 }
 
-export async function updatePreparationAPI(preparationData: UpdatePreparationFormType, csrfToken: string): Promise<PreparationType> {
+export async function updatePreparationAPI(preparationData: UpdatePreparationFormData, csrfToken: string): Promise<PreparationType> {
 
     if (!preparationData || Object.keys(preparationData).length === 0) {
         throw new Error("Les données de mise à jour sont invalides.");

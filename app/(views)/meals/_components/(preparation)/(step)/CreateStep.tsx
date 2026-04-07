@@ -2,10 +2,9 @@
 
 import { useState } from "react";
 
-import { StepFormErrorType, StepFormType } from "@/lib/types/forms_interfaces";
 import { CreateStepProps } from "@/lib/types/props_interfaces";
 
-import { newStepConstraints } from "@/lib/constraints/forms_constraints";
+import { newStepConstraints, StepFormData, StepFormError } from "@/lib/constraints/forms_constraints";
 import { submitWithCsrf } from "@/app/hooks/useCrudForm";
 
 import { Button } from "@/components/ui/button";
@@ -16,10 +15,10 @@ import { X } from "lucide-react";
 
 const CreateStep: React.FC<CreateStepProps> = ({ preparationId, onSubmit }) => {
     const [isLoading, setIsLoading] = useState(false);
-    const [form, setForm] = useState<StepFormType[]>([
+    const [form, setForm] = useState<StepFormData[]>([
         { preparationId, stepNumber: 1, description: "", imageUrl: null },
     ]);
-    const [error, setError] = useState<{ general: string } & Record<number, Partial<StepFormErrorType>>>({ general: "" });
+    const [error, setError] = useState<{ general: string } & Record<number, Partial<StepFormError>>>({ general: "" });
 
     const addNewLine = () => {
         setForm((prev) => {
@@ -44,10 +43,10 @@ const CreateStep: React.FC<CreateStepProps> = ({ preparationId, onSubmit }) => {
         const validationResult = newStepConstraints.safeParse(form);
 
         if (!validationResult.success) {
-            const formattedErrors: Record<number, StepFormErrorType> = {};
+            const formattedErrors: Record<number, StepFormError> = {};
             validationResult.error.errors.forEach((err) => {
                 const index = err.path[0] as number;
-                const key = err.path[1] as keyof StepFormErrorType;
+                const key = err.path[1] as keyof StepFormError;
                 if (!formattedErrors[index]) formattedErrors[index] = {};
                 formattedErrors[index][key] = err.message;
             });

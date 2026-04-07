@@ -4,9 +4,8 @@ import { SubmitEvent, useState } from "react";
 
 import { StepType } from "@/lib/types/schemas_interfaces";
 import { UpdateStepProps } from "@/lib/types/props_interfaces";
-import { StepFormType } from "@/lib/types/forms_interfaces";
 
-import { updateStepConstraints } from "@/lib/constraints/forms_constraints";
+import { updateStepConstraints, UpdateStepFormData } from "@/lib/constraints/forms_constraints";
 import { useCrudForm } from "@/app/hooks/useCrudForm";
 
 import { Button } from "@/components/ui/button";
@@ -18,7 +17,7 @@ import { updateStepAPI } from "@/lib/services/step_service";
 const UpdateStep: React.FC<UpdateStepProps> = ({ initialStep, onSubmit, onClose }) => {
     const [step, setStep] = useState<StepType>(initialStep);
 
-    const { error, submit, isLoading } = useCrudForm<StepFormType>(
+    const { error, submit, isLoading } = useCrudForm<UpdateStepFormData>(
         updateStepConstraints,
         ["description"]
     );

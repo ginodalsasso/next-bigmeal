@@ -3,7 +3,7 @@
 import { SubmitEvent } from "react";
 import { UpdatePreparationProps } from "@/lib/types/props_interfaces";
 
-import { updatePreparationConstraints } from "@/lib/constraints/forms_constraints";
+import { updatePreparationConstraints, UpdatePreparationFormData } from "@/lib/constraints/forms_constraints";
 import { useCrudForm } from "@/app/hooks/useCrudForm";
 
 import { Button } from "@/components/ui/button";
@@ -11,10 +11,9 @@ import FormErrorMessage from "@/components/ui/FormErrorMessage";
 import FormSubmitButton from "@/components/ui/FormSubmitButton";
 
 import { updatePreparationAPI } from "@/lib/services/preparation_service";
-import { UpdatePreparationFormType } from "@/lib/types/forms_interfaces";
 
 const UpdatePreparation: React.FC<UpdatePreparationProps> = ({ initialPreparation: preparation, onSubmit, onClose }) => {
-    const { error, submit, isLoading } = useCrudForm<UpdatePreparationFormType>(
+    const { error, submit, isLoading } = useCrudForm<UpdatePreparationFormData>(
         updatePreparationConstraints,
         ["prepTime", "cookTime"]
     );

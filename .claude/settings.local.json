@@ -1,7 +1,8 @@
 {
   "permissions": {
     "allow": [
-      "Bash(ls -la \"C:\\\\laragon\\\\www\\\\next-bigmeal\\\\app\\\\\\(views\\)\\\\\\(auth\\)\")"
+      "Bash(ls -la \"C:\\\\laragon\\\\www\\\\next-bigmeal\\\\app\\\\\\(views\\)\\\\\\(auth\\)\")",
+      "Bash(find C:\\\\laragon\\\\www\\\\next-bigmeal:*)"
     ]
   }
 }

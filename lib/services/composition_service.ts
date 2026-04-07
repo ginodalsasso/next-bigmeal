@@ -1,8 +1,8 @@
 import API_ROUTES from "../constants/api_routes";
-import { CompositionFormType, UpdateCompositionFormType } from "../types/forms_interfaces";
+import { CompositionFormData, UpdateCompositionFormData } from "../constraints/forms_constraints";
 import { CompositionType } from "../types/schemas_interfaces";
 
-export async function createCompositionAPI(compositionData: CompositionFormType[], csrfToken: string): Promise<CompositionType[]> {
+export async function createCompositionAPI(compositionData: CompositionFormData[], csrfToken: string): Promise<CompositionType[]> {
     try {
         const response = await fetch(API_ROUTES.compositions, {
             method: "POST",
@@ -27,7 +27,7 @@ export async function createCompositionAPI(compositionData: CompositionFormType[
 }
 
 
-export async function updateCompositionAPI(compositionData: UpdateCompositionFormType, csrfToken: string): Promise<CompositionType> {
+export async function updateCompositionAPI(compositionData: UpdateCompositionFormData, csrfToken: string): Promise<CompositionType> {
     try {
         const response = await fetch( API_ROUTES.compositions, {
             method: "PUT",

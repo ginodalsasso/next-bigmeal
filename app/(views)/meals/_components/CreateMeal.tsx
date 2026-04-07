@@ -4,10 +4,9 @@ import { useEffect, useState, SubmitEvent } from "react";
 import Link from "next/link";
 
 import { CategoryMealType } from "@/lib/types/schemas_interfaces";
-import { MealFormType } from "@/lib/types/forms_interfaces";
 import { CreateMealProps } from "@/lib/types/props_interfaces";
 
-import { mealConstraints } from "@/lib/constraints/forms_constraints";
+import { mealConstraints, MealFormData } from "@/lib/constraints/forms_constraints";
 import { useCrudForm } from "@/app/hooks/useCrudForm";
 
 import { ucFirst } from "@/lib/utils";
@@ -23,7 +22,7 @@ const CreateMeal: React.FC<CreateMealProps> = ({ onSubmit }) => {
     const [categories, setCategories] = useState<CategoryMealType[]>([]);
     const [selectedCategory, setSelectedCategory] = useState<string>("");
 
-    const { error, setError, submit, isLoading } = useCrudForm<MealFormType>(
+    const { error, setError, submit, isLoading } = useCrudForm<MealFormData>(
         mealConstraints,
         ["name", "description", "categoryMealId"]
     );

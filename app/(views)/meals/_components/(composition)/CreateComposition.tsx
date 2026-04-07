@@ -2,11 +2,10 @@
 
 import { useState } from "react";
 
-import { CompositionFormErrorType, CompositionFormType } from "@/lib/types/forms_interfaces";
 import { Unit } from "@prisma/client";
 import { CreateCompositionProps } from "@/lib/types/props_interfaces";
 
-import { newCompositionConstraints } from "@/lib/constraints/forms_constraints";
+import { newCompositionConstraints, CompositionFormData, CompositionFormError } from "@/lib/constraints/forms_constraints";
 import { submitWithCsrf } from "@/app/hooks/useCrudForm";
 
 import { translatedUnit } from "@/lib/utils";
@@ -20,10 +19,10 @@ import { X } from "lucide-react";
 
 const CreateComposition: React.FC<CreateCompositionProps> = ({ mealId, onSubmit }) => {
     const [isLoading, setIsLoading] = useState(false);
-    const [form, setForm] = useState<CompositionFormType[]>([
+    const [form, setForm] = useState<CompositionFormData[]>([
         { ingredientId: "", mealId, quantity: 0, unit: Unit.GRAM },
     ]);
-    const [error, setError] = useState<{ general: string } & Record<number, CompositionFormErrorType>>({ general: "" });
+    const [error, setError] = useState<{ general: string } & Record<number, CompositionFormError>>({ general: "" });
 
     const addNewLine = () => {
         setForm((prev) => [...prev, { ingredientId: "", mealId, quantity: 0, unit: Unit.GRAM }]);
@@ -41,10 +40,10 @@ const CreateComposition: React.FC<CreateCompositionProps> = ({ mealId, onSubmit 
         const validationResult = newCompositionConstraints.safeParse(form);
 
         if (!validationResult.success) {
-            const formattedErrors: Record<number, CompositionFormErrorType> = {};
+            const formattedErrors: Record<number, CompositionFormError> = {};
             validationResult.error.errors.forEach((err) => {
                 const index = err.path[0] as number;
-                const key = err.path[1] as keyof CompositionFormErrorType;
+                const key = err.path[1] as keyof CompositionFormError;
                 if (!formattedErrors[index]) formattedErrors[index] = {};
                 formattedErrors[index][key] = err.message;
             });

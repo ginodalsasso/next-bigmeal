@@ -1,10 +1,9 @@
 "use client";
 
 import { SubmitEvent } from "react";
-import { PreparationFormType } from "@/lib/types/forms_interfaces";
 import { CreatePreparationProps } from "@/lib/types/props_interfaces";
 
-import { preparationConstraints } from "@/lib/constraints/forms_constraints";
+import { preparationConstraints, PreparationFormData } from "@/lib/constraints/forms_constraints";
 import { useCrudForm } from "@/app/hooks/useCrudForm";
 
 import FormErrorMessage from "@/components/ui/FormErrorMessage";
@@ -13,7 +12,7 @@ import FormSubmitButton from "@/components/ui/FormSubmitButton";
 import { createPreparationAPI } from "@/lib/services/preparation_service";
 
 const CreatePreparation: React.FC<CreatePreparationProps> = ({ mealId, onSubmit }) => {
-    const { error, submit, isLoading } = useCrudForm<PreparationFormType>(
+    const { error, submit, isLoading } = useCrudForm<PreparationFormData>(
         preparationConstraints,
         ["prepTime", "cookTime"]
     );

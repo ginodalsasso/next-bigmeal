@@ -1,9 +1,9 @@
 import API_ROUTES from "../constants/api_routes";
-import { MealFormType } from "../types/forms_interfaces";
+import { MealFormData } from "../constraints/forms_constraints";
 import { MealType } from "../types/schemas_interfaces";
 import { MessageResponse } from "../types/api_responses";
 
-export async function createMealAPI(mealData: MealFormType, csrfToken: string): Promise<MealType> {
+export async function createMealAPI(mealData: MealFormData, csrfToken: string): Promise<MealType> {
     try {
         const response = await fetch( API_ROUTES.meals, {
             method: "POST",
@@ -25,7 +25,7 @@ export async function createMealAPI(mealData: MealFormType, csrfToken: string): 
     }
 }
 
-export async function updateMealAPI(mealData: MealFormType, csrfToken: string): Promise<MealType> {
+export async function updateMealAPI(mealData: MealFormData, csrfToken: string): Promise<MealType> {
     try {
         const response = await fetch( API_ROUTES.meals, {
             method: "PUT",

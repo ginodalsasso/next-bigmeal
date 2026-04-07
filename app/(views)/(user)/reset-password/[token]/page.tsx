@@ -5,13 +5,10 @@ import { useEffect, useState, SubmitEvent } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 
-// Types
-import { ForgotUserPasswordFormType } from '@/lib/types/forms_interfaces';
-
 // Services
 import { resetForgottenPasswordAPI, verifyResetTokenAPI } from '@/lib/services/user_service';
 import { useFormValidation } from '@/app/hooks/useFormValidation';
-import { NewPasswordConstraints } from '@/lib/constraints/forms_constraints';
+import { NewPasswordConstraints, NewPasswordFormData } from '@/lib/constraints/forms_constraints';
 import FormSubmitButton from '@/components/ui/FormSubmitButton';
 import FormErrorMessage from '@/components/ui/FormErrorMessage';
 import PasswordInput from '@/components/forms/PasswordInput';
@@ -24,7 +21,7 @@ const ResetPasswordPage = () => {
     const { token } = useParams();
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
-    const { error, setError, validate } = useFormValidation<ForgotUserPasswordFormType>(
+    const { error, setError, validate } = useFormValidation<NewPasswordFormData>(
         NewPasswordConstraints,
         ["password", "confirmPassword"] // Liste des champs à valider
     );

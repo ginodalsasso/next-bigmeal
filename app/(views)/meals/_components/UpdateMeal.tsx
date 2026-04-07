@@ -2,9 +2,8 @@ import { useEffect, useState, SubmitEvent } from "react";
 
 import { CategoryMealType } from "@/lib/types/schemas_interfaces";
 import { UpdateMealProps } from "@/lib/types/props_interfaces";
-import { MealFormType } from "@/lib/types/forms_interfaces";
 
-import { mealConstraints } from "@/lib/constraints/forms_constraints";
+import { mealConstraints, MealFormData } from "@/lib/constraints/forms_constraints";
 import { useCrudForm } from "@/app/hooks/useCrudForm";
 
 import { ucFirst } from "@/lib/utils";
@@ -19,7 +18,7 @@ import { updateMealAPI } from "@/lib/services/meal_service";
 const UpdateMeal: React.FC<UpdateMealProps> = ({ meal, onSubmit, onClose }) => {
     const [categories, setCategories] = useState<CategoryMealType[]>([]);
 
-    const { error, setError, submit, isLoading } = useCrudForm<MealFormType>(
+    const { error, setError, submit, isLoading } = useCrudForm<MealFormData>(
         mealConstraints,
         ["id", "name", "description", "categoryMealId"]
     );

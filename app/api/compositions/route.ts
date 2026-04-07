@@ -1,7 +1,6 @@
 import { db } from "@/lib/db";
 import { NextRequest, NextResponse } from "next/server";
-import { CompositionFormType } from "@/lib/types/forms_interfaces";
-import { idConstraints, newCompositionConstraints, updateCompositionConstraints } from "@/lib/constraints/forms_constraints";
+import { idConstraints, newCompositionConstraints, updateCompositionConstraints, CompositionFormData } from "@/lib/constraints/forms_constraints";
 import { verifyCSRFToken } from "@/lib/security/verifyCsrfToken";
 import { getAdminSession, getUserSession } from "@/lib/security/getSession";
 
@@ -16,7 +15,7 @@ export async function POST(req: NextRequest) {
             return new NextResponse("CSRF Token is missing or invalid", { status: 403 });
         }
             
-        const body: CompositionFormType[] = await req.json();
+        const body: CompositionFormData[] = await req.json();
 
         if (!Array.isArray(body)) {
             return NextResponse.json(

@@ -3,9 +3,8 @@ import { useEffect, useState, SubmitEvent } from "react";
 import { Season } from "@prisma/client";
 import { CategoryIngredientType } from "@/lib/types/schemas_interfaces";
 import { UpdateIngredientProps } from "@/lib/types/props_interfaces";
-import { IngredientFormType } from "@/lib/types/forms_interfaces";
 
-import { ingredientConstraints } from "@/lib/constraints/forms_constraints";
+import { ingredientConstraints, IngredientFormData } from "@/lib/constraints/forms_constraints";
 import { useCrudForm } from "@/app/hooks/useCrudForm";
 
 import { translatedSeason, ucFirst } from "@/lib/utils";
@@ -21,7 +20,7 @@ const UpdateIngredient: React.FC<UpdateIngredientProps> = ({ ingredient, onSubmi
     const [categories, setCategories] = useState<CategoryIngredientType[]>([]);
     const [selectedSeason, setSelectedSeason] = useState<string | undefined>(ingredient.season ?? undefined);
 
-    const { error, setError, submit, isLoading } = useCrudForm<IngredientFormType>(
+    const { error, setError, submit, isLoading } = useCrudForm<IngredientFormData>(
         ingredientConstraints,
         ["name", "season", "categoryIngredientId"]
     );
