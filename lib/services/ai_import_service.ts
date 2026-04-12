@@ -7,10 +7,15 @@ import {
 const OLLAMA_BASE_URL = process.env.OLLAMA_BASE_URL ?? "http://localhost:11434";
 
 const models = {
-    image: "gemini-3-flash-preview:cloud",
-    text: "gemma3:1b",
-    url: "gemma3:4b",
+    image: { name: "gemma4:31b-cloud", timeout: 50000 },
+    text: { name: "gemma3:4b", timeout: 20000 },
+    url: { name: "gemma3:4b", timeout: 20000 },
 };
+
+function getTimeout(modelName: string): number {
+    const model = Object.values(models).find((model) => model.name === modelName);
+    return model ? model.timeout : 20000; // timeout par défaut de 20s    
+}
 
 const UNIT_LIST = VALID_UNITS.join(", ");
 
@@ -32,7 +37,7 @@ function buildPrompt(
             {
             "name": "string (nom en français, minuscules)",
             "quantity": number (positif),
-            "unit": "string (DOIT être exactement l'une de : ${UNIT_LIST}. Choisir la plus proche. Défaut : PIECE)",
+            "unit": "string (DOIT être exactement l'une de : ${UNIT_LIST}. Choisir l'unité cohérente avec la recette : GRAM/KILOGRAM pour les solides pesés, LITER/CENTILITER/MILLILITER pour les liquides, TEASPOON/TABLESPOON/PINCH pour épices et condiments en petites doses, CUP pour les mesures volumétriques anglo-saxonnes, SLICE/HANDFUL/BUNCH pour des portions naturelles, PIECE pour tout le reste. Défaut : PIECE)",
             "categoryIngredient": "string (DOIT être exactement l'une de ces valeurs : ${ingredientCategories.join(", ")})"
             }
         ],
@@ -49,7 +54,7 @@ function buildPrompt(
         - Les noms d'ingrédients en minuscules
         - categoryMeal DOIT être exactement l'une des valeurs listées ci-dessus (choisis la plus proche sémantiquement)
         - categoryIngredient DOIT être exactement l'une des valeurs listées ci-dessus (choisis la plus proche sémantiquement)
-        - L'unité DOIT être exactement l'une de : ${UNIT_LIST}
+        - L'unité DOIT être exactement l'une de : ${UNIT_LIST} — choisie selon la nature de l'ingrédient et le contexte de la recette (ex: farine → GRAM, eau → MILLILITER, sel → TEASPOON, carotte / oignon, poireau / œuf → PIECE)
         - prepTime et cookTime en minutes (entiers)
         - Les étapes numérotées à partir de 1
         - Retourne UNIQUEMENT le JSON, rien d'autre
@@ -61,6 +66,7 @@ async function ollamaChat(
     prompt: string,
     base64Image?: string,
 ): Promise<string> {
+    const timeout = getTimeout(model);
     const message: Record<string, unknown> = {
         role: "user",
         content: prompt,
@@ -81,7 +87,7 @@ async function ollamaChat(
                 temperature: 0.1, // basse température pour plus de cohérence et moins d'inventions
             },
         }),
-        signal: AbortSignal.timeout(20000), 
+        signal: AbortSignal.timeout(timeout),
     });
 
     if (!response.ok) {
@@ -106,7 +112,7 @@ export async function extractRecipeFromImage(
     void mimeType;
 
     const prompt = `Analyse cette image de recette de cuisine.\n${buildPrompt(mealCategories, ingredientCategories)}`;
-    const text = await ollamaChat(models.image, prompt, base64Image);
+    const text = await ollamaChat(models.image.name, prompt, base64Image);
 
     return parseAndValidateAIResponse(text);
 }
@@ -121,7 +127,7 @@ export async function extractRecipeFromText(
     }
 
     const prompt = `Voici le contenu textuel d'une recette de cuisine :\n\n${text.slice(0, 12000)}\n\n${buildPrompt(mealCategories, ingredientCategories)}`;
-    const aiResponse = await ollamaChat(models.text, prompt);
+    const aiResponse = await ollamaChat(models.text.name, prompt);
 
     return parseAndValidateAIResponse(aiResponse);
 }
@@ -184,7 +190,7 @@ export async function extractRecipeFromUrl(
     }
 
     const prompt = `Voici le contenu textuel d'une page web contenant une recette de cuisine :\n\n${pageText.slice(0, 12000)}\n\n${buildPrompt(mealCategories, ingredientCategories)}`;
-    const aiResponse = await ollamaChat(models.url, prompt);
+    const aiResponse = await ollamaChat(models.url.name, prompt);
 
     return parseAndValidateAIResponse(aiResponse);
 }
