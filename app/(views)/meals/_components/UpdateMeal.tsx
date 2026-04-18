@@ -72,7 +72,7 @@ const UpdateMeal: React.FC<UpdateMealProps> = ({ meal, onSubmit, onClose }) => {
                     className="input-text-select"
                     name="categoryMealId"
                     id="categoryMealId"
-                    defaultValue={meal.categoryMealId}
+                    value={meal.categoryMealId}
                     required
                 >
                     <option value="">-- Choisir une catégorie --</option>

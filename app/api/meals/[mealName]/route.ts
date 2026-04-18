@@ -22,6 +22,7 @@ export async function GET ( req: NextRequest, { params }: Props){
                 id: true,
                 name: true,
                 description: true,
+                categoryMealId: true,
                 categoryMeal: {
                     select: { id: true, name: true }
                 },

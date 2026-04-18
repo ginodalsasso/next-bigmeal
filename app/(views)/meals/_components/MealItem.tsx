@@ -8,6 +8,8 @@ import CreateComposition from "./(composition)/CreateComposition";
 import IsAdmin from "@/components/auth/isAdmin";
 import CreatePreparation from "./(preparation)/CreatePreparation";
 import CreateStep from "./(preparation)/(step)/CreateStep";
+import UpdateMeal from "./UpdateMeal";
+import PopoverActions from "@/components/catalog/PopoverActions";
 
 import { Button } from "@/components/ui/button";
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from "@/components/ui/drawer";
@@ -28,6 +30,10 @@ export default function MealItem( {fetchedMeal}: { fetchedMeal: MealType }) {
     const [meal, setMeal] = useState<MealType>(fetchedMeal);
     const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
     const [currentAction, setCurrentAction] = useState<"composition" | "preparation" | "step">("composition");
+
+    const updateMeal = async (updatedMeal: MealType) => {
+        setMeal(updatedMeal);
+    };
 
     const createComposition = (compositions: CompositionType[]) => {
         setMeal((prevMeal) => {
@@ -109,6 +115,22 @@ export default function MealItem( {fetchedMeal}: { fetchedMeal: MealType }) {
 
             {/* En-tête */}
             <header className="relative rounded-xl border border-warm-border bg-warm-subtle p-6 text-center">
+                <IsAdmin>
+                    <div className="absolute right-4 top-4">
+                        <PopoverActions
+                            id={meal.id}
+                            apiUrl="/api/meals"
+                            onDelete={() => router.refresh()}
+                            renderEditForm={(onClose) => (
+                                <UpdateMeal
+                                    meal={meal}
+                                    onSubmit={updateMeal}
+                                    onClose={onClose}
+                                />
+                            )}
+                        />
+                    </div>
+                </IsAdmin>
                 <div className="mx-auto mb-3 flex size-14 items-center justify-center rounded-full bg-warm-accent/15">
                     <ChefHat size={26} className="text-warm-accent" aria-hidden="true" />
                 </div>
@@ -122,7 +144,7 @@ export default function MealItem( {fetchedMeal}: { fetchedMeal: MealType }) {
                     {meal.description || "Aucune description disponible pour ce repas."}
                 </p>
                 <ShareButton
-                    className="absolute right-4 top-4 text-warm-disabled hover:text-warm-accent"
+                    className="absolute right-4 bottom-4 text-warm-disabled hover:text-warm-accent"
                     title={meal.name}
                     text={meal.description || "Aucune description disponible pour ce repas."}
                     url={`${URL}/meals/${meal.name}`}
