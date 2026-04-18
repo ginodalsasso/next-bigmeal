@@ -6,6 +6,7 @@ import Link from "next/link";
 import { getCsrfToken } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import LoadingSpinner from "@/components/ui/LoadingSpinner";
+import { MealType } from "@/lib/types/schemas_interfaces";
 import {
     importRecipeFromImageAPI,
     importRecipeFromUrlAPI,
@@ -63,13 +64,14 @@ const ImportRecipePage = () => {
 
         try {
             setLoading(true);
+            let meal: MealType;
             switch (mode) {
                 case "image":
                     if (!selectedFile) {
                         setError("Veuillez sélectionner une image");
                         return;
                     }
-                    await importRecipeFromImageAPI(selectedFile, csrfToken);
+                    meal = await importRecipeFromImageAPI(selectedFile, csrfToken);
                     break;
                 case "url":
                     if (!urlInput.trim()) {
@@ -82,21 +84,21 @@ const ImportRecipePage = () => {
                         setError("URL invalide");
                         return;
                     }
-                    await importRecipeFromUrlAPI(urlInput.trim(), csrfToken);
+                    meal = await importRecipeFromUrlAPI(urlInput.trim(), csrfToken);
                     break;
                 case "text":
                     if (textInput.trim().length < 100) {
                         setError("Le texte est trop court, collez le contenu complet de la page");
                         return;
                     }
-                    await importRecipeFromTextAPI(textInput.trim(), csrfToken);
+                    meal = await importRecipeFromTextAPI(textInput.trim(), csrfToken);
                     break;
                 default:
                     setError("Mode d'importation inconnu");
                     return;
             }
 
-            router.push("/meals");
+            router.push(`/meals/${meal.name}`);
         } catch (err) {
             const message = err instanceof Error ? err.message : "Erreur lors de l'import";
             setError(message);

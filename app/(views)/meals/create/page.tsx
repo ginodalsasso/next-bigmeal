@@ -21,6 +21,7 @@ const CreateMealPage = () => {
 
     // _________________________ ETATS _________________________
     const [createdMealId, setCreatedMealId] = useState<string | null>(null);
+    const [createdMealName, setCreatedMealName] = useState<string | null>(null);
     const [createdPreparationId, setCreatedPreparationId] = useState<string | null>(null);
     const [currentStep, setCurrentStep] = useState<
         "createMeal" |
@@ -56,6 +57,7 @@ const CreateMealPage = () => {
     // Callback pour la création de repas
     const handleMealCreated = (meal: MealType) => {
         setCreatedMealId(meal.id);
+        setCreatedMealName(meal.name);
         setCurrentStep("createComposition");
     };
 
@@ -72,8 +74,13 @@ const CreateMealPage = () => {
     
     const handleStepCreated = () => {
         setCreatedMealId(null);
+        setCreatedMealName(null);
         setCreatedPreparationId(null);
-        router.push("/meals");
+        if (createdMealName) {
+            router.push(`/meals/${createdMealName}`);
+        } else {
+            router.push("/meals");
+        }
     }
 
     const goBack = () => {

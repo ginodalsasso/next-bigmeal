@@ -144,7 +144,7 @@ export default function MealItem( {fetchedMeal}: { fetchedMeal: MealType }) {
                     {meal.description || "Aucune description disponible pour ce repas."}
                 </p>
                 <ShareButton
-                    className="absolute right-4 bottom-4 text-warm-disabled hover:text-warm-accent"
+                    className="absolute bottom-4 right-4 text-warm-disabled hover:text-warm-accent"
                     title={meal.name}
                     text={meal.description || "Aucune description disponible pour ce repas."}
                     url={`${URL}/meals/${meal.name}`}
