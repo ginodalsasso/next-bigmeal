@@ -83,7 +83,4 @@ Next BigMeal is a web application designed for food enthusiasts to create, manag
 
 Next BigMeal is a versatile platform for managing recipes and meal planning. Its robust session management and user-friendly design make it an ideal tool for food enthusiasts, with scalability to incorporate future enhancements.
 
-![Frame 76](https://github.com/user-attachments/assets/b7bd10a2-af43-42a7-9e40-6b58dbabf878)
-![Frame 77](https://github.com/user-attachments/assets/e74252bf-8971-414d-a611-7f598e7eb842)
-![Frame 78](https://github.com/user-attachments/assets/13671d09-f81f-4469-9d4d-94ad39df9f09)
-![Frame 79](https://github.com/user-attachments/assets/3fae0901-fe94-4a30-97cb-3accabf25e6e)
+![Frame 76](https://github.com/user-attachments/assets/8a327032-0dce-4919-bf40-352d94fcd189)
